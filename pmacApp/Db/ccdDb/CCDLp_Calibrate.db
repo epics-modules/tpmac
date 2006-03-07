@@ -1,0 +1,57 @@
+# CA stands for Channel Access Link
+# Process passive TRUE (PP) or process passive FALSE (NPP).
+# Maximize severity (MS or NMS), is TRUE or FALSE. It determines if alarm
+# severity is propagated across links.
+# (see examples in scan.db and
+# - "EPICS IOC Application Developer's Guide", Chapter 4.
+# - "EPICS Record Reference Manual", Chapter 1.
+
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-04")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)Dmhmv") {
+  field(DESC, "KBM horiz. to vert. distance")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1000.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ai, "$(assy)aH") {
+  field(DESC, "HFM angle")
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(INP, "$(angleHFM)ActPos CA NMS")
+  field(SCAN, "2 second")
+# field(PINI, "yes")
+  field(PREC, "3")
+  field(EGU, "(mrad)")
+}
+
+record(bo, "$(assy)mLink") {
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Mirr.Unlink")
+  field(ONAM, "Mirr.Link")
+}
+ 
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "500")
+}
+

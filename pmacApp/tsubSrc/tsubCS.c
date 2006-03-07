@@ -15,18 +15,11 @@
 #include	<dbCommon.h>
 #include	<recSup.h>
 
-#define TSUB_DIAGNOSTIC tsubCSDebug
-
-#if TSUB_DIAGNOSTIC
-volatile int TSUB_DIAGNOSTIC = 0;
+volatile int tsubCSDebug = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
-#else
-#define TSUB_TRACE(level,code)      ;
-#endif
+#define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubCSDebug == (level)) ) { code } }
 
-
-/*===========================================
+/* ===========================================
  * tsubCSAp - Aperture Initialization
  */
 long tsubCSAp
@@ -37,7 +30,27 @@ long tsubCSAp
  	return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubCSApSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ */
+long tsubCSApSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubCSApMtr - Aperture Motors To Drives           |  ACCEL CSAv      |  ACCEL CSAh      |   xxx (biocat?)   |
  *	oa = x1  (x_center)                          | d1=top,d2=piggy  | d1=out,f2=piggy  | d1=bottom,d2=piggy|
  *	ob = x2  (x_size)                            |    d2 < 0        |    d2 < 0        |   d2 > 0          |
@@ -76,7 +89,7 @@ long tsubCSApMtr
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubCSApDrv - Horizontal Aperture Drives          |  ACCEL CSAv      |  ACCEL CSAh      |   xxx (biocat?)   |
  *	oa = x1  (x_center)                          | d1=top,d2=piggy  | d1=out,f2=piggy  | d1=bottom,d2=piggy|
  *	ob = x2  (x_size)                            |    d2 < 0        |    d2 < 0        |   d2 > 0          |
@@ -121,7 +134,7 @@ long tsubCSApDrv
  	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubCSApAxs - Horizontal Aperture Axes            |  ACCEL CSAv      |  ACCEL CSAh      |   xxx (biocat?)   |
  *	oa0 = m1 (m_position)                        | d1=top,d2=piggy  | d1=out,f2=piggy  | d1=bottom,d2=piggy|
  *	oa1 = d1 (d_out or d_top)    -- independent  |    d2 < 0        |    d2 < 0        |   d2 > 0          |
@@ -166,7 +179,7 @@ long tsubCSApAxs
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubCSApSpeed - Speed propagation spreadsheet
  *	oa0 = m1    (m_position)                        |  ACCEL CSAv      |  ACCEL CSAh      |
  *	ob0 = m2    (m_size)                            | d1=top,d2=piggy  | d1=out,f2=piggy  |
@@ -200,7 +213,7 @@ long tsubCSApSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubCSApSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubCSDebug > 1) printf ("tsubCSApSpeed: called with n=%f \n",pRec->nla);
 
 	if ( pRec->a  == 0.0 || pRec->b  == 0.0 ||
              pRec->a3 == 0.0 || pRec->b3 == 0.0 ) {
@@ -239,7 +252,7 @@ long tsubCSApSpeed
 	   if ( pRec->a2  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
 	   if ( pRec->a2 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
 	   else {
-/* Speed of center is the same as the speed of the first blade */
+/* In piggy-back slit the speed of center is the same as the speed of the first blade */
 	      d1 = fabs( 1000.0 *  pRec->a * pRec->a3 );   /* d1=m1*scale1 */
               prcn = fabs( pRec->a2 / d1 );
 	   }
@@ -249,10 +262,9 @@ long tsubCSApSpeed
 	   if ( pRec->b2  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
 	   if ( pRec->b2 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
 	   else {
-/* Speed of slit size is the sum of the speeds of each blade */
-	      d1 = fabs( 1000.0 *  pRec->a * pRec->a3 );   /* d1=m1*scale1 */
+/* In piggy-back slit the speed of size is the same as the speed of the second blade */
 	      d2 = fabs( 1000.0 *  pRec->b * pRec->b3 );   /* d2=m2*scale2 */
-              prcn = fabs( pRec->b2 / (d1+d2) );
+              prcn = fabs( pRec->b2 / d2 );
 	   }
 	}
 	else
@@ -270,14 +282,14 @@ long tsubCSApSpeed
 	d1 = fabs( 1000.0 *  m1 * pRec->a3 );            /* d1=m1*scale1 */
 	d2 = fabs( 1000.0 *  m2 * pRec->b3 );            /* d2=m2*scale2 */
 	x1 = d1;                                         /* center */
-	x2 = d1 + d2;                                    /* size */
+	x2 = d2;                                         /* size */
 	pRec->oa0 = m1;
 	pRec->ob0 = m2;
 	pRec->oa1 = d1;
 	pRec->ob1 = d2;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-/*	printf ("tsubCSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); */
+  	if (tsubCSDebug > 1) printf ("tsubCSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); 
 	return (ifail);
 }
 

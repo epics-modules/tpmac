@@ -1,0 +1,30 @@
+### This database is for incrementing-decrementing some PV
+### It is derived from RqsTwkMem.db.
+### Sergey Stepanov 2006.02.01
+
+record(ao, "$(pv)Inc$(i)") {
+  field(DESC, "Increment")
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pv)IncOut$(i)") {
+  field(DESC, "Increment out")
+  field(OUT, "$(pv).VAL PP MS")
+  field(DOL, "$(pv)IncCalc$(i).VAL PP MS")
+  field(OMSL, "closed_loop")
+}
+
+record(ao, "$(pv)IncSign$(i)") {
+  field(DESC, "Increment sign")
+  field(FLNK, "$(pv)IncOut$(i).PROC PP MS")
+}
+
+record(calc, "$(pv)IncCalc$(i)") {
+  field(DESC, "Increment calc")
+  field(CALC, "A+(B*C)")
+  field(INPA, "$(pv).VAL NPP MS")
+  field(INPB, "$(pv)Inc$(i).VAL NPP MS")
+  field(INPC, "$(pv)IncBmp$(i).VAL NPP MS")
+}
+
+

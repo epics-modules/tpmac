@@ -1,0 +1,14 @@
+These are GMCA beam delivery databases. They are similar to BioCAT downstrieam
+support databases except for the the fact that positive angles correespond to
+moving up and the RotOrigin distance is measured between the center of rotation
+and closest motor. Motor-1 is downstream; motor-2 is upstram. Two motors in 
+the coordinate system provide delivery deviation at the centre of rotation and 
+angle as combined motion.
+The databases are similar to those of the mirror support with the difference
+that the center or rotation is not in the middle between the two motors, but
+at a remote point defined by the RotOrigin distance. See BD_Calibrate.db and
+CalibBDSt.adl for more details.
+
+-- Sergey
+
+

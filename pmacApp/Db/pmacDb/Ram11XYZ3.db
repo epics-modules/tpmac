@@ -1,0 +1,75 @@
+record(ao, "$(assy)RamTA0") {
+  field(DESC, "TA0")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @DP:$60450")
+}
+
+record(ao, "$(assy)RamTS0") {
+  field(DESC, "TS0")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @DP:$60451")
+}
+
+record(ao, "$(assy)RamX0") {
+  field(DESC, "X0")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @DP:$60452")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamX1") {
+  field(DESC, "X1")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$60453")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamX2") {
+  field(DESC, "X2")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$60454")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamY0") {
+  field(DESC, "Y0")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @DP:$60455")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamY1") {
+  field(DESC, "Y1")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$60456")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamY2") {
+  field(DESC, "Y2")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$60457")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamZ0") {
+  field(DESC, "Z0")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @DP:$60458")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamZ1") {
+  field(DESC, "Z1")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$60459")
+  field(PREC, "3")
+}
+
+record(ao, "$(assy)RamZ2") {
+  field(DESC, "Z2")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(S) @F:$6045A")
+  field(PREC, "3")
+}
+

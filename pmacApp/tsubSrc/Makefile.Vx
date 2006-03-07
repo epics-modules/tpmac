@@ -8,13 +8,21 @@ USR_CFLAGS += -DDEBUG
 
 # Tsub sources
 SRCS.c  += ../tsubSeq.c
+SRCS.c  += ../tsubBD.c
+SRCS.c  += ../tsubCCD.c
 SRCS.c  += ../tsubCS.c
+# SRCS.c  += ../tsubDN.c
 SRCS.c  += ../tsubHS.c
 SRCS.c  += ../tsubMD.c
 SRCS.c  += ../tsubMI.c
 SRCS.c  += ../tsubMO.c
+# SRCS.c  += ../tsubMObm.c
+SRCS.c  += ../tsubSH.c
 SRCS.c  += ../tsubTB.c
+SRCS.c  += ../tsubX.c
 SRCS.c  += ../tsubXY.c
+SRCS.c  += ../tsubXYZ.c
+SRCS.c  += ../tsubAcc65e.c
 
 LIBOBJS = $(SRCS.c:../%.c=%.o)
 LIBNAME = tsubLib

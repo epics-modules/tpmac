@@ -15,17 +15,12 @@
 
 void msleep_ms( unsigned long milliseconds );
 
-#define TSUB_DIAGNOSTIC tsubHSApDebug
-
-#if TSUB_DIAGNOSTIC
-volatile int TSUB_DIAGNOSTIC = 0;
+volatile int tsubHSDebug = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
-#else
-#define TSUB_TRACE(level,code)      ;
-#endif
+#define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubHSDebug == (level)) ) { code } }
 
-/*===========================================
+
+/* ===========================================
  * tsubHSAp - Initialization
  */
 long tsubHSAp
@@ -36,7 +31,27 @@ long tsubHSAp
  	return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubHSApSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ */
+long tsubHSApSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubHSApMtr - Motors To Drives
  *	oa = x1
  *	ob = x2
@@ -56,6 +71,8 @@ long tsubHSApMtr
 	struct tsubRecord *	pRec
 )
 {
+	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
+
 	if (pRec->nla == 0.0)
 	{
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0;         /* d1=m1*scale1+offset1 */
@@ -66,12 +83,12 @@ long tsubHSApMtr
 		pRec->oa1 = pRec->a * pRec->a1;                    /* d1=m1*scale1 */
 		pRec->ob1 = pRec->b * pRec->b1;                    /* d2=m2*scale2 */
 	}
-	pRec->oa =       0.5         * (pRec->ob1 + pRec->oa1);    /* x1=0.5*(d2+d1) */
-	pRec->ob = (1 - 2 * pRec->i) * (pRec->ob1 - pRec->oa1);    /* x2=inv*(d2-d1) */
+	pRec->oa =       0.5 * (pRec->ob1 + pRec->oa1);            /* x1=0.5*(d2+d1) */
+	pRec->ob =       inv * (pRec->ob1 - pRec->oa1);            /* x2=inv*(d2-d1) */
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubHSApDrv - Drives
  *	oa = x1
  *	ob = x2
@@ -91,6 +108,8 @@ long tsubHSApDrv
 	struct tsubRecord *	pRec
 )
 {
+	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
+
 	if ( (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) )
 	{
@@ -106,12 +125,12 @@ long tsubHSApDrv
 		pRec->oa0 = (pRec->a) / pRec->a1;                  /* m1=d1/scale1 */
 		pRec->ob0 = (pRec->b) / pRec->b1;                  /* m2=d2/scale2 */
 	}
-	pRec->oa =       0.5         * (pRec->b + pRec->a);        /* x1=0.5*(d2+d1) */
-	pRec->ob = (1 - 2 * pRec->i) * (pRec->b - pRec->a);        /* x2=inv*(d2-d1) */
+	pRec->oa = 0.5 * (pRec->b + pRec->a);                      /* x1=0.5*(d2+d1) */
+	pRec->ob = inv * (pRec->b - pRec->a);                      /* x2=inv*(d2-d1) */
  	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubHSApAxs - Axes
  *	oa0 = m1
  *	oa1 = d1
@@ -131,13 +150,15 @@ long tsubHSApAxs
 	struct tsubRecord *	pRec
 )
 {
-	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) )
+	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
+
+	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) || (inv == 0.0) )
 	{
 		return (-1);
 	}
 
-	pRec->oa1 = pRec->a - (0.5 - pRec->i) * pRec->b;           /* d1=x1-0.5*inv*x2 */
-	pRec->ob1 = pRec->a + (0.5 - pRec->i) * pRec->b;           /* d2=x1+0.5*inv*x2 */
+	pRec->oa1 = pRec->a - 0.5 * pRec->b / inv;                 /* d1=x1-0.5*inv*x2 */
+	pRec->ob1 = pRec->a + 0.5 * pRec->b / inv;                 /* d2=x1+0.5*inv*x2 */
 
 	if (pRec->nla == 0.0)
 	{
@@ -152,7 +173,7 @@ long tsubHSApAxs
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubHSApSpeed - Speed propagation spreadsheet
  *	oa0 = m1
  *	ob0 = m2
@@ -181,14 +202,14 @@ long tsubHSApSpeed
 {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2;
-	long inv = 1 - 2 * pRec->i;
+	double inv = 1. - 2. * pRec->i;
 	long ifail = 0;
 /* Disable next record processing in order to avoid infinite loop.
  * This actually points to a record linked to the SDIS field of the tsub.
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubHSApSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubHSDebug > 1) printf ("tsubHSApSpeed: called with n=%f \n",pRec->nla);
 
 	if ( pRec->a  == 0.0 || pRec->b  == 0.0 ||
              pRec->a3 == 0.0 || pRec->b3 == 0.0 ) {
@@ -266,7 +287,7 @@ long tsubHSApSpeed
 	pRec->ob1 = d2;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-/*	printf ("tsubHSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); */
+  	if (tsubHSDebug > 1) printf ("tsubHSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
 

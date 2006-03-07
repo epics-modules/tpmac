@@ -40,14 +40,24 @@ record(ai, "$(d2)$(val)") {
 }
 
 record(ai, "$(x1)$(val)") {
-  field(PREC, "4")
+  field(PREC, "5")
   field(EGU, "$(egu_x1)")
   field(DESC, "$(desc_x1)")
 }
 
 record(ai, "$(x2)$(val)") {
-  field(PREC, "4")
+  field(PREC, "5")
   field(EGU, "$(egu_x2)")
   field(DESC, "$(desc_x2)")
+}
+
+# Added by Sergey 2005/04/23: synchronize ActPos and RqsPos:
+record(tsub, "$(assy)Sync") {
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Sync")
+  field(INPA, "$(m1)ActPos NPP MS")
+  field(INPB, "$(m2)ActPos NPP MS")
+  field(OUTA, "$(m1)RqsPos PP MS")
+  field(OUTB, "$(m2)RqsPos PP MS")
 }
 

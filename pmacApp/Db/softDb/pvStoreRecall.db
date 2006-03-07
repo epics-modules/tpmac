@@ -1,0 +1,21 @@
+### This database is for storing-recalling some PV
+### It is derived from RqsTwkMem.db.
+### Sergey Stepanov 2006.02.01
+
+record(ao, "$(pv)Sto$(i)") {
+  field(OUT, "$(pv)Mem$(i).VAL PP MS")
+  field(DOL, "$(pv).VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pv)Mem$(i)") {
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pv)Rcl$(i)") {
+  field(OUT, "$(pv).VAL PP MS")
+  field(DOL, "$(pv)Mem$(i).VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(PREC, "$(prec)")
+}

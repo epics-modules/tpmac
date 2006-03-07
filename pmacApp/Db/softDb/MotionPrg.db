@@ -4,6 +4,8 @@ record(mbbo, "$(assy)Motion") {
   field(ONST, "Slew")
   field(TWST, "Backlash")
   field(THST, "Position")
+  field(ZRSV, "MAJOR")
+  field(ONSV, "MINOR")
 }
 
 record(sel, "$(assy)ArgPROG") {

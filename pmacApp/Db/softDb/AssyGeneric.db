@@ -18,10 +18,13 @@ record(bi, "$(assy)Ready") {
   field(ONAM, "Ready")
 }
 
+# A: RunPrg: 0=Idle, 1=Running                       (bkgfix1pcs.db)
+# B: Motion: 0=None, 1=Slew, 2=Backlash, 3=Position  (MotionPrg.db)
+#
 record(calc, "$(assy)ReadyCALC") {
   field(CALC, "(A=0)&&(B#0)")
-  field(INPB, "$(assy)Motion.VAL NPP MS")
   field(INPA, "$(assy)RunPrg.VAL NPP MS")
+  field(INPB, "$(assy)Motion.VAL NPP MS")
 }
 
 record(fanout, "$(assy)ChangedFLNK") {
@@ -45,5 +48,37 @@ record(fanout, "$(assy)ScaleFanD") {
   field(LNK1, "$(assy)RqsPosTsubMtr.PROC PP MS")
   field(LNK2, "$(assy)RqsBklTsubMtr.PROC PP MS")
   field(LNK3, "$(assy)ActPosTsubMtr.PROC PP MS")
+}
+
+#---------------------------------------------------------------
+# Added by Sergey on 2005/12/21. This is a timout trigger.
+# The timout value has to be calculated externally and loaded
+# into TmoTrigger.LNK1 before pushing "Start" (or entering the
+# RqsPos if Autostart=On). After the timeout interval, the TmoTrigger 
+# copies DOL1 (==1) into TimeOut.VAL. In order to catch that even one
+# has to either monitor TimeOut.PROC or reset TimeOut.VAL to 0 before
+# the start. 
+#
+# The seq record fields (the record can work with up to 10 imput-output pairs).
+# SELM=Select Mechanism (All, Specified, Mask),
+# SELN=Link Selection (for Specified or Mask), 
+# DOL1=Input Link-1,
+# DLY1=Delay-1,
+# LNK1=Output Link-1
+#
+# For more info on Sequence Record (seq) see:
+# http://www.aps.anl.gov/asd/controls/epics/EpicsDocumentation/AppDevManuals/RecordRef/Recordref-34.html
+#
+record(seq, "$(assy)TmoTrigger") {
+  field(SELM, "Specified")
+  field(SELN, "1")
+  field(DOL1, "1")
+  field(DLY1, "0")
+  field(LNK1, "$(assy)TimeOut PP MS")
+}
+
+record(ao, "$(assy)TimeOut") {
+  field(PINI, "YES")
+  field(DOL, "0.0")
 }
 

@@ -1,0 +1,19 @@
+These are databases for CCD detector:
+
+CCDSt provide coordinated motions for 3-motor CCD detector support.
+The coordinate system consists of 3 motors:
+- one horizontal slide (detector motion along the beam)
+- two vertical slides (upstream and downstream) defining
+  detector angle 2*Theta and keeping detector face perpendicular
+  to the X-ray beam.
+See more details in file "detector_equations_Sergey.ppt"
+and in files CCDSt_Calibrate.db and CalibCCDSt.adl.
+
+CCDLp is a 1-motor assembly providing lateral motion of CCD detector.
+It is very similar to MDCs (Modular Coordinated System) with the
+exception that the calibration takes into accound coordinate system
+shift due to reflection from mirror.
+
+-- Sergey
+
+

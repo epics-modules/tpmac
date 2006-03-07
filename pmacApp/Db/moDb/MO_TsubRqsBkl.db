@@ -1,0 +1,152 @@
+record(calc, "$(assy)RqsBklSDISm") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)RqsBklTsubAxs.PACT NPP MS")
+  field(INPB, "$(assy)RqsBklTsubDrv.PACT NPP MS")
+}
+
+record(calc, "$(assy)RqsBklSDISd") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)RqsBklTsubAxs.PACT NPP MS")
+  field(INPB, "$(assy)RqsBklTsubMtr.PACT NPP MS")
+}
+
+record(calc, "$(assy)RqsBklSDISx") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)RqsBklTsubDrv.PACT NPP MS")
+  field(INPB, "$(assy)RqsBklTsubMtr.PACT NPP MS")
+}
+
+record(tsub, "$(assy)RqsBklTsubMtr") {
+  field(SDIS, "$(assy)RqsBklSDISm.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Mtr")
+  field(OUTA, "$(x1)RqsBkl PP MS")
+  field(OUTB, "$(x2)RqsBkl PP MS")
+  field(OTA1, "$(d1)RqsBkl PP MS")
+  field(OTB1, "$(d2)RqsBkl PP MS")
+  field(INPA, "$(m1)RqsBkl NPP MS")
+  field(INPB, "$(m2)RqsBkl NPP MS")
+  field(INPG, "$(assy)ESinTheta NPP MS")
+  field(INPH, "$(assy)EvLambda NPP MS")
+  field(INPI, "$(assy)BeamOffset NPP MS")
+  field(INPM, "$(d1)ActPos NPP MS")
+  field(INPP, "$(x1)ActPos NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "1")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(tsub, "$(assy)RqsBklTsubDrv") {
+  field(SDIS, "$(assy)RqsBklSDISd.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Drv")
+  field(OUTA, "$(x1)RqsBkl PP MS")
+  field(OUTB, "$(x2)RqsBkl PP MS")
+  field(OTA0, "$(m1)RqsBkl PP MS")
+  field(OTB0, "$(m2)RqsBkl PP MS")
+  field(INPA, "$(d1)RqsBkl NPP MS")
+  field(INPB, "$(d2)RqsBkl NPP MS")
+  field(INPG, "$(assy)ESinTheta NPP MS")
+  field(INPH, "$(assy)EvLambda NPP MS")
+  field(INPI, "$(assy)BeamOffset NPP MS")
+  field(INPM, "$(d1)ActPos NPP MS")
+  field(INPP, "$(x1)ActPos NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "1")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(tsub, "$(assy)RqsBklTsubAxs") {
+  field(SDIS, "$(assy)RqsBklSDISx.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Axs")
+  field(OTA0, "$(m1)RqsBkl PP MS")
+  field(OTA1, "$(d1)RqsBkl PP MS")
+  field(OTB0, "$(m2)RqsBkl PP MS")
+  field(OTB1, "$(d2)RqsBkl PP MS")
+  field(INPA, "$(x1)RqsBkl NPP MS")
+  field(INPB, "$(x2)RqsBkl NPP MS")
+  field(INPF, "$(assy)TrolleyFlag NPP MS")
+  field(INPG, "$(assy)ESinTheta NPP MS")
+  field(INPH, "$(assy)EvLambda NPP MS")
+  field(INPI, "$(assy)BeamOffset NPP MS")
+  field(INPM, "$(d1)ActPos NPP MS")
+  field(INPP, "$(x1)ActPos NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "1")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(ao, "$(m1)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubMtr.PROC PP MS")
+}
+
+record(ao, "$(d1)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubDrv.PROC PP MS")
+  field(PREC, "4")
+}
+
+record(ao, "$(m2)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubMtr.PROC PP MS")
+}
+
+record(ao, "$(d2)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubDrv.PROC PP MS")
+  field(PREC, "2")
+}
+
+record(ao, "$(x1)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubAxs1.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(x2)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubAxs2.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(calc, "$(assy)RqsBklSDISx1") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)RqsBklTsubAxs2.PACT NPP MS")
+  field(INPB, "$(assy)RqsBklSDISx.VAL PP MS")
+}
+
+record(calc, "$(assy)RqsBklSDISx2") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)RqsBklTsubAxs1.PACT NPP MS")
+  field(INPB, "$(assy)RqsBklSDISx.VAL PP MS")
+}
+
+record(tsub, "$(assy)RqsBklTsubAxs1") {
+  field(SDIS, "$(assy)RqsBklSDISx1.VAL PP MS")
+  field(FLNK, "$(assy)RqsBklTsubAxs.PROC PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Axs1")
+  field(OUTA, "$(x2)RqsBkl PP MS")
+  field(INPA, "$(x1)RqsBkl NPP MS")
+  field(INPH, "$(assy)EvLambda NPP MS")
+  field(INPP, "$(x1)ActPos NPP MS")
+  field(NLA, "1")
+}
+
+record(tsub, "$(assy)RqsBklTsubAxs2") {
+  field(SDIS, "$(assy)RqsBklSDISx2.VAL PP MS")
+  field(FLNK, "$(assy)RqsBklTsubAxs.PROC PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Axs2")
+  field(OUTA, "$(x1)RqsBkl PP MS")
+  field(INPA, "$(x2)RqsBkl NPP MS")
+  field(INPH, "$(assy)EvLambda NPP MS")
+  field(INPQ, "$(x2)ActPos NPP MS")
+  field(NLA, "1")
+}
+

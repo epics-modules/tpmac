@@ -1,5 +1,3 @@
-/* @(#) pmacVme.c 1.6 97/05/06 */
-
 /* pmacVme.c -  EPICS Device Driver Library for Turbo PMAC2-VME Ultralite
  *
  * Author       Oleg A. Makarov
@@ -171,9 +169,6 @@ typedef struct  /* PMAC_CTLR */
 	SEM_ID		ioMbxLockSem;
 	SEM_ID		ioMbxReceiptSem;
 	SEM_ID		ioMbxReadmeSem;
-	SEM_ID		ioAscLockSem;
-	SEM_ID		ioAscReadmeSem;
-	SEM_ID		ioGatBufferSem;
 	char		firmwareVersion[PMAC_STRLEN_FWVER];
 } PMAC_CTLR;
 
@@ -184,8 +179,6 @@ typedef struct  /* PMAC_CTLR */
 
 PMAC_LOCAL void pmacMbxReceiptISR (PMAC_CTLR * pPmacCtlr);
 PMAC_LOCAL void pmacMbxReadmeISR (PMAC_CTLR * pPmacCtlr);
-PMAC_LOCAL void pmacAscInISR (PMAC_CTLR * pPmacCtlr);
-PMAC_LOCAL void pmacGatBufferISR (PMAC_CTLR * pPmacCtlr);
 
 /*
  * GLOBALS
@@ -194,7 +187,7 @@ PMAC_LOCAL void pmacGatBufferISR (PMAC_CTLR * pPmacCtlr);
 char * pmacVmeVersion = "@(#) pmacVme.c 1.6 97/05/06";
 
 #if PMAC_DIAGNOSTICS
-volatile int	pmacVmeDebug = 2;		/* must be > 0 to see messages */
+volatile int	pmacVmeDebug = 0;		/* must be > 0 to see messages */
 #endif
 
 /*
@@ -290,8 +283,9 @@ long pmacVmeConfig
 		pPmacCtlr->enabledDpram = FALSE;
 	}
 			
+/*	status = devRegisterAddress ("PMAC BASE", atVMEA32, */
 	status = devRegisterAddress ("PMAC BASE", atVMEA24,
-				(void *) pPmacCtlr->vmebusBase, PMAC_MEM_SIZE_BASE,
+				pPmacCtlr->vmebusBase, PMAC_MEM_SIZE_BASE,
 				(void *) &(pPmacCtlr->pBase));
 	if (!RTN_SUCCESS(status))
 	{
@@ -316,8 +310,9 @@ long pmacVmeConfig
 
 	if ( pPmacCtlr->enabledDpram )
 	{
+/*		status = devRegisterAddress ("PMAC DPRAM", atVMEA32, */
 		status = devRegisterAddress ("PMAC DPRAM", atVMEA24,
-					(void *) pPmacCtlr->vmebusDpram, PMAC_MEM_SIZE_DPRAM,
+					pPmacCtlr->vmebusDpram, PMAC_MEM_SIZE_DPRAM,
 					(void *) &(pPmacCtlr->pDpramBase));
 		if (!RTN_SUCCESS(status))
 		{
@@ -351,16 +346,16 @@ long pmacVmeConfig
 	if ( pPmacCtlr->ioMbxReceiptSem == NULL)
 	{
 		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
+		printf ("%s: Failure creating ioMbxReceiptSem binary semaphore.\n",
 			MyName);
 		return (status);
 	}
 
 	pPmacCtlr->ioMbxReadmeSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioMbxReceiptSem == NULL)
+	if ( pPmacCtlr->ioMbxReadmeSem == NULL)
 	{
 		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
+		printf ("%s: Failure creating ioMbxReadmeSem binary semaphore.\n",
 			MyName);
 		return (status);
 	}
@@ -369,34 +364,7 @@ long pmacVmeConfig
 	if ( pPmacCtlr->ioMbxLockSem == NULL)
 	{
 		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
-			MyName);
-		return (status);
-	}
-			
-	pPmacCtlr->ioAscReadmeSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioAscReadmeSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
-			MyName);
-		return (status);
-	}
-
-	pPmacCtlr->ioAscLockSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioAscLockSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
-			MyName);
-		return (status);
-	}
-			
-	pPmacCtlr->ioGatBufferSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioGatBufferSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating binary semaphore.\n",
+		printf ("%s: Failure creating ioMbxLockSem binary semaphore.\n",
 			MyName);
 		return (status);
 	}
@@ -437,30 +405,6 @@ long pmacVmeConfig
 				MyName, pPmacCtlr->irqVector + 1);
 	)
 
-	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector + 1,
-				pmacAscInISR, (void *) pPmacCtlr);
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure to connect interrupt.\n",
-			MyName);
-		return (status);
-	}
-			
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Connecting to interrupt vector %d\n",
-				MyName, pPmacCtlr->irqVector + 2);
-	)
-
-	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector + 2,
-				pmacGatBufferISR, (void *) pPmacCtlr);
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure to connect interrupt.\n",
-			MyName);
-		return (status);
-	}
-			
 	PMAC_DEBUG
 	(	1,
 		printf ("%s: Enabling interrupt level %d\n",
@@ -491,7 +435,7 @@ long pmacVmeConfig
 
 	PMAC_DEBUG
 	(	1,
-		printf ("%s: enabledBase = %d, enabledDpram=%d, therfore enabled=%d\n",
+		printf ("%s: enabledBase = %d, enabledDpram=%d, therefore enabled=%d\n",
 				MyName,
 			        pPmacCtlr->enabledBase,
 			        pPmacCtlr->enabledDpram,
@@ -520,6 +464,7 @@ PMAC_LOCAL long pmacVmeInit (void)
 	/* char *	MyName = "pmacVmeInit"; */
 	int		i;
 	PMAC_CTLR	*pPmacCtlr;
+	STATUS		semStatus;
 	
 	pmacVmeConfigLock = 1;
 
@@ -536,9 +481,8 @@ PMAC_LOCAL long pmacVmeInit (void)
 		{
 			if ( pPmacCtlr->presentBase & pPmacCtlr->enabledBase )
 			{
-				semGive (pPmacCtlr->ioMbxLockSem);	
-				semGive (pPmacCtlr->ioAscLockSem);
-			
+				semStatus=semGive (pPmacCtlr->ioMbxLockSem);
+				printf ("pmacVmeInit: semStatus=%d, card=%d \n",semStatus, i);	
 				pPmacCtlr->activeBase = TRUE;
 			}
 			
@@ -570,13 +514,17 @@ PMAC_LOCAL void pmacMbxReceiptISR
 )
 {
 	char *	MyName = "pmacMbxReceiptISR";
+	STATUS	semStatus;
 
 	PMAC_DEBUG
 	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ MbxReceipt for ctlr %d\n", MyName, pPmacCtlr->ctlr);
+		PMAC_MESSAGE ("%s: PMAC IRQ MbxReceipt for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	)
 	
-	semGive (pPmacCtlr->ioMbxReceiptSem);
+	semStatus=semGive (pPmacCtlr->ioMbxReceiptSem);
+	if ( semStatus ) {
+	   PMAC_MESSAGE ("%s: semStatus=%d card=%d\n", MyName, semStatus, pPmacCtlr->ctlr,0,0,0); 
+	}
 	
 	return;
 }
@@ -595,7 +543,7 @@ PMAC_LOCAL void pmacMbxReadmeISR
 
 	PMAC_DEBUG
 	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ MbxReadme for ctlr %d\n", MyName, pPmacCtlr->ctlr);
+		PMAC_MESSAGE ("%s: PMAC IRQ MbxReadme for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	)
 	
 	semGive (pPmacCtlr->ioMbxReadmeSem);
@@ -722,10 +670,11 @@ PMAC_LOCAL char pmacMbxRead
 	char	*errmsg
 )
 {
-    /* char *	MyName = "pmacMbxRead"; */
+    char *	MyName = "pmacMbxRead";/*  */
     int		i;
     char	terminator;
     PMAC_CTLR	*pPmacCtlr;
+    STATUS stat;
     
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
@@ -735,7 +684,8 @@ PMAC_LOCAL char pmacMbxRead
     while ( terminator == 0)
     {
 	pPmacCtlr->pBase->mailbox.MB[1].data = 0;
-	semTake( pPmacCtlr->ioMbxReadmeSem, WAIT_FOREVER);
+	stat = semTake( pPmacCtlr->ioMbxReadmeSem, WAIT_TIMEOUT);
+	if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX README FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	terminator = pmacMbxIn (ctlr, &readbuf[i], errmsg);
 	i += PMAC_BASE_MBX_REGS_IN;
     }
@@ -756,10 +706,11 @@ PMAC_LOCAL char pmacMbxWrite
 	char	*writebuf
 )
 {
-    /* char *	MyName = "pmacMbxWrite"; */
+    char *	MyName = "pmacMbxWrite";/*  */
     int		i;
     char	terminator;
     PMAC_CTLR	*pPmacCtlr;
+    STATUS stat;
     
     pPmacCtlr = &pmacVmeCtlr[ctlr];
 
@@ -769,7 +720,8 @@ PMAC_LOCAL char pmacMbxWrite
     while ( terminator == 0 ) 
     {
 	terminator = pmacMbxOut (ctlr, &writebuf[i]);
-	semTake (pPmacCtlr->ioMbxReceiptSem, WAIT_FOREVER);
+	stat = semTake (pPmacCtlr->ioMbxReceiptSem, WAIT_TIMEOUT);
+	if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX RECEIPT FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	i += PMAC_BASE_MBX_REGS_OUT;
     }
 
@@ -788,15 +740,17 @@ long pmacMbxLock
 )
 {
     char *	MyName = "pmacMbxLock";
+    STATUS stat;
     PMAC_CTLR	*pPmacCtlr;
 
     pPmacCtlr = &pmacVmeCtlr[ctlr];
 	PMAC_DEBUG
 	(	7,
-		PMAC_MESSAGE ("%s: PMAC MBX LOCK %d\n", MyName, pPmacCtlr->ctlr);
+		PMAC_MESSAGE ("%s: PMAC MBX LOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	)
     
-    semTake (pPmacCtlr->ioMbxLockSem, WAIT_FOREVER);
+    stat = semTake (pPmacCtlr->ioMbxLockSem, WAIT_TIMEOUT);
+    if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX LOCK FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
     return (0);
 }
 
@@ -816,48 +770,10 @@ long pmacMbxUnlock
     pPmacCtlr = &pmacVmeCtlr[ctlr];
 	PMAC_DEBUG
 	(	7,
-		PMAC_MESSAGE ("%s: PMAC MBX UNLOCK %d\n", MyName, pPmacCtlr->ctlr);
+		PMAC_MESSAGE ("%s: PMAC MBX UNLOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
 	)
     
     semGive (pPmacCtlr->ioMbxLockSem);
-    return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscLock - Lock PMAC ASCII buffer for ctlr
- *
- */
-long pmacAscLock
-(
-	int	ctlr
-)
-{
-    /* char *	MyName = "pmacAscLock"; */
-    PMAC_CTLR	*pPmacCtlr;
-
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    semTake (pPmacCtlr->ioAscLockSem, WAIT_FOREVER);
-    return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscUnlock - Unlock PMAC ASCII buffer for ctlr
- *
- */
-long pmacAscUnlock
-(
-	int	ctlr
-)
-{
-    /* char *	MyName = "pmacAscUnlock"; */
-    PMAC_CTLR	*pPmacCtlr;
-
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    semGive (pPmacCtlr->ioAscLockSem);
     return (0);
 }
 
@@ -906,7 +822,17 @@ PMAC_DPRAM * pmacRamAddr
 	PMAC_DEBUG
 	(	2,
 		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
-			      ctlr, pCtlr->pDpramBase, offset, pDpram);
+			      ctlr, pCtlr->pDpramBase, offset, pDpram,0,0);
+	)
+/* This is a workaround to restore PMAC clock synchronization in case of 2 PMACS -- Sergey, Oleg 2006.01.30 */
+/* (At the end of IOC startup script set pmacVmeDebug=1 for about 2s and 6s after booting IOC) */
+	PMAC_DEBUG
+	(	1,
+		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d\n",ctlr,0,0,0,0,0);
+		/* PMAC_MESSAGE ("\n",0,0,0,0,0,0); */
+		/* printf ("pmacRamAddr:  Controller #%d\n",ctlr); */
+		/* printf ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
+			      ctlr, (int)pCtlr->pDpramBase, offset, (int)pDpram); */
 	)
 
 
@@ -1168,316 +1094,4 @@ PMAC_LOCAL long pmacRamGetL
 	*pVal = valD;
 
 	return (0);
-}
-
-
-/*******************************************************************************
- *
- * pmacAscInISR - ASCII Host-Input Buffer Ready Interrupt Service Routine
- *
- */
-PMAC_LOCAL void pmacAscInISR
-(
-	PMAC_CTLR	*pPmacCtlr
-)
-{
-	char *	MyName = "pmacAscInISR";
-
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ AscIn for ctlr %d\n", MyName, pPmacCtlr->ctlr);
-	)
-	
-	semGive (pPmacCtlr->ioAscReadmeSem);
-	
-	return;
-}
-
-
-/*******************************************************************************
- *
- * pmacAscH2p - Put ASCII Word
- *
- */
-PMAC_LOCAL long pmacAscH2p
-(
-	int	ctlr,
-	long	off,
-	int	val
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + off);
-	*pRam = (short) val;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscP2h - Get Ascii word
- *
- */
-PMAC_LOCAL long pmacAscP2h
-(
-	int	ctlr,
-	long	off,
-	int *	pVal
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + off);
-	*pVal = (int) *pRam;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscOutStatus - Read ASCII Host-Output-Control Flag
- *
- */
-PMAC_LOCAL long pmacAscOutStatus
-(
-	int	ctlr,
-	int *	pVal
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xE9C);
-	*pVal = (int) ((*pRam) & 0x0001);
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscOutComplete - Set ASCII Host Output Complete Flag
- *
- */
-PMAC_LOCAL long pmacAscOutComplete
-(
-	int	ctlr
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xE9C);
-	*pRam = (short) 0x0001;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscOutCtrlChar - Send ASCII Host-Output Control Character
- *
- */
-PMAC_LOCAL long pmacAscOutCtrlChar
-(
-	int	ctlr,
-	int	ctrlchar
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xE9E);
-	*pRam = ((short) ctrlchar) & 0x00ff;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscOutString - Write ASCII Host-Output Transfer Buffer
- *
- */
-PMAC_LOCAL long pmacAscOutString
-(
-	int	ctlr,
-	char *	string
-)
-{
-	PMAC_DPRAM *	pRam;
-	short		charPair;
-	short		buffer[PMAC_ASC_IN_BUFLEN/2];
-	int		terminated;
-	int		i;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xEA0);
-
-	buffer[(PMAC_ASC_OUT_BUFLEN/2)-1] = 0x0000;
-	strncpy ( (char *) buffer, string, PMAC_ASC_OUT_BUFLEN - 1);
-
-	terminated = FALSE;
-	for (i=0; !terminated; i++)
-	{
-		charPair = buffer[i];
-		pRam[i] = BYTESWAP (charPair);
-		if ( (LSB(charPair) == NULL) || (MSB(charPair) == NULL) )
-		{
-			terminated = TRUE;
-		}
-	}
-
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscOutBuffer - Read ASCII Host-Output Transfer Buffer
- *
- */
-PMAC_LOCAL long pmacAscOutBuffer
-(
-	int	ctlr,
-	char *	string
-)
-{
-	int		i;
-	PMAC_DPRAM *	pRam;
-	short		charPair;
-	short		buffer[PMAC_ASC_OUT_BUFLEN/2];
-	int		terminated;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xEA0);
-	
-	terminated = FALSE;
-	for (i=0; !terminated; i++)
-	{
-		charPair = pRam[i];
-		buffer[i] = BYTESWAP (charPair);
-		if ( (LSB(charPair) == NULL) || (MSB(charPair) == NULL) )
-		{
-			terminated = TRUE;
-		}
-	}
-	strcpy (string, (char *) buffer);
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscInStatus - Read ASCII Host-Input Control Word
- *
- */
-PMAC_LOCAL long pmacAscInStatus
-(
-	int	ctlr,
-	int *	pVal
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF40);
-	*pVal = (int) *pRam;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscInEnable - Set ASCII Host-Input Enable
- *
- */
-PMAC_LOCAL long pmacAscInEnable
-(
-	int	ctlr
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF40);
-	*pRam = 0;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscInCount - Determine Number Of ASCII Characters In Host-Input Buffer
- *
- */
-PMAC_LOCAL long pmacAscInCount
-(
-	int	ctlr,
-	int *	pVal
-)
-{
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF42);
-	*pVal = (int) *pRam;
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacAscInString - Read ASCII Host-Input Transfer Buffer
- *
- */
-PMAC_LOCAL long pmacAscInString
-(
-	int	ctlr,
-	char *	string
-)
-{
-	int		i;
-	PMAC_DPRAM *	pRam;
-	short		charPair;
-	short		buffer[PMAC_ASC_IN_BUFLEN/2];
-	int		terminated;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF44);
-	
-	terminated = FALSE;
-	for (i=0; !terminated; i++)
-	{
-		charPair = pRam[i];
-		buffer[i] = BYTESWAP (charPair);
-		if ( (LSB(charPair) == NULL) || (MSB(charPair) == NULL) )
-		{
-			terminated = TRUE;
-		}
-	}
-	strcpy (string, (char *) buffer);
-	return (0);
-}
-
-/*******************************************************************************
- *
- * pmacGatBufferISR - interrupt service routine for DPRAM Data Gathering Buffer
- *
- */
-PMAC_LOCAL void pmacGatBufferISR
-(
-	PMAC_CTLR	*pPmacCtlr
-)
-{
-	char *	MyName = "pmacGatBufferISR";
-
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ GatBuffer for ctlr %d\n", MyName, pPmacCtlr->ctlr);
-	)
-	
-	semGive (pPmacCtlr->ioGatBufferSem);
-	
-	return;
-}
-
-/*******************************************************************************
- *
- * pmacGatBufferSem - semaphorel routine for DPRAM Data Gathering Buffer
- *
- */
-PMAC_LOCAL void pmacGatBufferSem
-(
-	int	ctlr
-)
-{
-	/* char * MyName = "pmacGatBufferSem"; */
-	PMAC_CTLR	*pPmacCtlr;
-
-	pPmacCtlr = &pmacVmeCtlr[ctlr];
-
-	semTake( pPmacCtlr->ioGatBufferSem, WAIT_FOREVER);
-	
-	return;
 }

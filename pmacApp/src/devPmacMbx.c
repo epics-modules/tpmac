@@ -1,5 +1,3 @@
-/* @(#) devPmacMbx.c 1.8 97/05/06 */
-
 /* devPmacMbx.c -  EPICS Device Support for PMAC-VME Mailbox */
 
 /*
@@ -61,6 +59,7 @@ OWNED RIGHTS.
  * .01  6-7-95        tac     initial
  * .02  7-24-96       wfl     ifdef'ed out use of status record
  * .03  7-03-97       wfl     ifdef'ed out use of load record
+ * 2.1  2-27-04       oam     updated for epics 3.14.5
  */
 
 /*
@@ -117,7 +116,8 @@ OWNED RIGHTS.
 /* local includes */
 
 #include	<drvPmac.h>
-
+#include "recGbl.h"
+#include "epicsExport.h"
 /*
  * DEFINES
  */
@@ -145,7 +145,6 @@ OWNED RIGHTS.
 /*
  * TYPEDEFS
  */
-
 typedef struct  /* PMAC_DSET_AI */
 {
 	long		number;
@@ -272,6 +271,7 @@ typedef struct  /* PMAC_DSET_LOAD */
 } PMAC_DSET_LOAD;
 #endif
 
+
 typedef struct  /* PMAC_MBX_DPVT */
 {
 	PMAC_MBX_IO	MbxIo;
@@ -332,7 +332,7 @@ LOCAL void devPmacMbxCallback (CALLBACK * pCallback);
  * GLOBALS
  */
 
-char * devPmacMbxVersion = "@(#) devPmacMbx.c 1.8 97/05/06";
+char * devPmacMbxVersion = "@(#) devPmacMbx.c 2.1 2004/02/27";
 
 #if PMAC_DIAGNOSTICS
 volatile int devPmacMbxDebug = 0;
@@ -429,6 +429,7 @@ PMAC_DSET_STATUS devPmacMbxStatus =
 	NULL,
 	devPmacMbxStatus_read
 };
+epicsExportAddress(dset,devPmacMbxStatus);
 #endif
 
 PMAC_DSET_SI devPmacMbxSi =
@@ -461,7 +462,19 @@ PMAC_DSET_LOAD devPmacMbxLoad =
 	NULL,
 	devPmacMbxLoad_proc
 };
+epicsExportAddress(dset,devPmacMbxLoad);
 #endif
+epicsExportAddress(dset,devPmacMbxAi);
+epicsExportAddress(dset,devPmacMbxAo);
+epicsExportAddress(dset,devPmacMbxBi);
+epicsExportAddress(dset,devPmacMbxBo);
+epicsExportAddress(dset,devPmacMbxLi);
+epicsExportAddress(dset,devPmacMbxLo);
+epicsExportAddress(dset,devPmacMbxMbbi);
+epicsExportAddress(dset,devPmacMbxMbbo);
+epicsExportAddress(dset,devPmacMbxSi);
+epicsExportAddress(dset,devPmacMbxSo);
+
 
 /*
  * LOCALS
@@ -537,7 +550,7 @@ LOCAL long devPmacMbxAi_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -571,7 +584,7 @@ LOCAL long devPmacMbxBi_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -605,7 +618,7 @@ LOCAL long devPmacMbxLi_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -639,7 +652,7 @@ LOCAL long devPmacMbxMbbi_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -674,7 +687,7 @@ LOCAL long devPmacMbxStatus_init
 		PMAC_DEBUG
 		(	1,
    			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -709,7 +722,7 @@ LOCAL long devPmacMbxAo_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -745,7 +758,7 @@ LOCAL long devPmacMbxBo_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -781,7 +794,7 @@ LOCAL long devPmacMbxLo_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -817,7 +830,7 @@ LOCAL long devPmacMbxMbbo_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: card %d parm %s\n", MyName,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -853,7 +866,7 @@ LOCAL long devPmacMbxSi_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: name %s card %d parm %s\n", MyName, pRec->name,
-				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -889,7 +902,7 @@ LOCAL long devPmacMbxSo_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: name %s card %d parm %s\n", MyName, pRec->name,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -926,7 +939,7 @@ LOCAL long devPmacMbxLoad_init
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ("%s: name %s card %d parm %s\n", MyName, pRec->name,
-				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
@@ -967,8 +980,8 @@ static long devPmacMbxAi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
-			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
+			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro,0,0,0,0);
 		)
 
 		sscanf (pMbxIo->response, "%lf", &valD);
@@ -1007,8 +1020,8 @@ static long devPmacMbxAi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
-			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
+			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro,0,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1042,7 +1055,7 @@ LOCAL long devPmacMbxBi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		sscanf (pMbxIo->response, "%ld", &valL);
@@ -1060,7 +1073,7 @@ LOCAL long devPmacMbxBi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1094,7 +1107,7 @@ LOCAL long devPmacMbxLi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		sscanf (pMbxIo->response, "%ld", &valL);
@@ -1112,7 +1125,7 @@ LOCAL long devPmacMbxLi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1146,7 +1159,7 @@ LOCAL long devPmacMbxMbbi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		sscanf (pMbxIo->response, "%ld", &valL);
@@ -1164,7 +1177,7 @@ LOCAL long devPmacMbxMbbi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1199,7 +1212,7 @@ LOCAL long devPmacMbxStatus_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		sscanf (pMbxIo->response, "%ld", &valL);
@@ -1217,7 +1230,7 @@ LOCAL long devPmacMbxStatus_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1252,7 +1265,7 @@ LOCAL long devPmacMbxAo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		return (0);
@@ -1280,7 +1293,7 @@ LOCAL long devPmacMbxAo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1314,7 +1327,7 @@ LOCAL long devPmacMbxBo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		return (0);
@@ -1329,7 +1342,7 @@ LOCAL long devPmacMbxBo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1362,7 +1375,7 @@ LOCAL long devPmacMbxLo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		return (0);
@@ -1377,7 +1390,7 @@ LOCAL long devPmacMbxLo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1411,7 +1424,7 @@ LOCAL long devPmacMbxMbbo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		return (0);
@@ -1426,7 +1439,7 @@ LOCAL long devPmacMbxMbbo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1458,7 +1471,7 @@ LOCAL long devPmacMbxSi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		pRec->val[39] = '\0';
@@ -1484,7 +1497,7 @@ LOCAL long devPmacMbxSi_read
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1516,7 +1529,7 @@ LOCAL long devPmacMbxSo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		switch (pRec->out.value.vmeio.signal)
@@ -1539,7 +1552,7 @@ LOCAL long devPmacMbxSo_write
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command);
+			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
 		drvPmacMbxScan (pMbxIo);
@@ -1572,7 +1585,7 @@ LOCAL long devPmacMbxLoad_proc
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s message [%s]\n", MyName, pRec->name, pMbxIo->errmsg);
+			PMAC_MESSAGE ("%s: %s message [%s]\n", MyName, pRec->name, pMbxIo->errmsg,0,0,0);
 		)
 
 		pRec->val = pMbxIo->terminator;
@@ -1589,8 +1602,8 @@ LOCAL long devPmacMbxLoad_proc
 
 		PMAC_TRACE
 		(	2,
-			PMAC_MESSAGE ("%s: %s download [%s]\n", MyName, pRec->name, pMbxIo->command);
-			PMAC_MESSAGE ("%s: %s upload [%s]\n", MyName, pRec->name, pMbxIo->response);
+			PMAC_MESSAGE ("%s: %s download [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
+			PMAC_MESSAGE ("%s: %s upload [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
 		drvPmacFldScan (pMbxIo);
@@ -1625,7 +1638,7 @@ LOCAL void devPmacMbxCallback
 
 	PMAC_TRACE
 	(	2,
-		PMAC_MESSAGE ("%s: CALLBACK [%s].\n", MyName, pRec->name);
+		PMAC_MESSAGE ("%s: CALLBACK [%s].\n", MyName, pRec->name,0,0,0,0);
 	)
 
         dbScanLock (pRec);

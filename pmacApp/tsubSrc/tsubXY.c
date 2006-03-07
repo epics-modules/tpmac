@@ -13,17 +13,11 @@
 #include	<dbCommon.h>
 #include	<recSup.h>
 
-#define TSUB_DIAGNOSTIC tsubXYPsDebug
-
-#if TSUB_DIAGNOSTIC
-volatile int TSUB_DIAGNOSTIC = 0;
+volatile int tsubXYDebug = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
-#else
-#define TSUB_TRACE(level,code)      ;
-#endif
+#define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubXYDebug == (level)) ) { code } }
 
-/*===========================================
+/* ===========================================
  * tsubXYPs - Assembly-XY Initialization
  */
 long tsubXYPs
@@ -34,7 +28,27 @@ long tsubXYPs
 	return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubXYPsSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ */
+long tsubXYPsSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubXYPsMtr - Assembly-XY Motors
  *	oa1 = d1
  *	ob1 = d2
@@ -64,7 +78,7 @@ long tsubXYPsMtr
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubXYPsDrv - Assembly-XY Drives
  *	oa0 = m1
  *	ob0 = m2
@@ -99,7 +113,7 @@ long tsubXYPsDrv
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubXYPsSpeed - Speed propagation spreadsheet
  *	oa0 = m1
  *	ob0 = m2
@@ -129,7 +143,7 @@ long tsubXYPsSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubXYPsSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubXYDebug > 1) printf ("tsubXYPsSpeed: called with n=%f \n",pRec->nla);
 
 	if ( pRec->a  == 0.0 || pRec->b  == 0.0 ||
              pRec->a3 == 0.0 || pRec->b3 == 0.0 ) {
@@ -181,7 +195,7 @@ long tsubXYPsSpeed
 	pRec->ob0 = m2;
 	pRec->oa1 = d1;
 	pRec->ob1 = d2;
-/*	printf ("tsubXYPsSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); */
+  	if (tsubXYDebug > 1) printf ("tsubXYPsSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
 

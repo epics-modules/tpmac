@@ -88,16 +88,6 @@ typedef struct  /* PMAC_RAM_IO */
   	void *		pParm;
 } PMAC_RAM_IO;
 
-typedef struct  /* PMAC_GAT_IO */
-{
-	int		srcEna;
-	int		srcIx;
-	int		srcType;
-  	int		numVal;
-	long *		pValL;
-	double *	pValD;
-} PMAC_GAT_IO;
-
 /* ---- Sergey ----- */
 long pmacDrvConfig (int	cardNumber, int	scanMtrRate, int scanBkgRate, int scanVarRate, int disableMbx);
 PMAC_LOCAL long drvPmac_report (int level);
@@ -117,27 +107,15 @@ int pmacOpnShow ( int card, int index);
 char drvPmacMbxWriteRead ( int card, char *writebuf, char *readbuf, char *errmsg);
 PMAC_LOCAL void drvPmacMbxScanInit(int card);
 int drvPmacMbxTask(int card);
-PMAC_LOCAL void drvPmacFldScanInit(int card);
-long drvPmacFldLoop(int card, char *download, char *upload, char *message);
-int drvPmacFldTask (int	card);
 int drvPmacMtrTask(int card);
 PMAC_LOCAL void drvPmacMtrScanInit(int card);
 int drvPmacBkgTask(int card);
 PMAC_LOCAL void drvPmacBkgScanInit(int card);
 int drvPmacVarTask(int card);
 PMAC_LOCAL void drvPmacVarScanInit(int card);
-long drvPmacGatAlloc(int card, int src, double *pDouble, int nelm);
-int drvPmacGatRead(int card);
-long drvPmacGatRequest(short card, short source, char *other, void (*pFunc)(), void *pParm, PMAC_GAT_IO **ppGatIo);
-PMAC_LOCAL void drvPmacGatScanInit(int card);
-long drvPmacGatSources(int card);
-int drvPmacGatTask(int	card);
 long drvPmacDpramRequest (short card, short pmacAdrOfs, char *pmacAdrSpec, void (*pFunc)(void *), void *pParm, PMAC_RAM_IO **ppRamIo);
 PMAC_LOCAL long drvPmacRamGetData(PMAC_RAM_IO *pRamIo);
 PMAC_LOCAL long drvPmacRamPutData(PMAC_RAM_IO *pRamIo);
 void drvPmacMbxScan (PMAC_MBX_IO *pMbxIo);
-void drvPmacFldScan(PMAC_MBX_IO *pMbxIo);
-long drvPmacGatScan(int card, CALLBACK *pCallback);
-
 
 #endif /* __INCdrvPmacH */

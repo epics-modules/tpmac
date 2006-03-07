@@ -1,6 +1,6 @@
-#include "base.dbd"
-
 include "statusRecord.dbd"
 include "tsubRecord.dbd"
-include "pmac.dbd"
+include "statusDevice.dbd"
+
+include "add_pmac.dbd"
 

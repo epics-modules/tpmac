@@ -69,6 +69,8 @@
 #define GEN_SIZE_OFFSET
 #include	<tsubRecord.h>
 #undef  GEN_SIZE_OFFSET
+#include "recGbl.h"
+#include "epicsExport.h"
 
 /* Create RSET - Record Support Entry Table*/
 #define report NULL
@@ -89,7 +91,7 @@ static long get_graphic_double();
 static long get_control_double();
 static long get_alarm_double();
 
-struct rset tsubRSET={
+rset tsubRSET={
 	RSETNUMBER,
 	report,
 	initialize,
@@ -108,6 +110,7 @@ struct rset tsubRSET={
 	get_graphic_double,
 	get_control_double,
 	get_alarm_double };
+epicsExportAddress(rset,tsubRSET);
 
 static void alarm();
 static long do_sub();

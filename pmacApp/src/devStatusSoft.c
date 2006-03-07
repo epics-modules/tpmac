@@ -1,6 +1,3 @@
-/* devStatusSoft.c */
-/* share/src/dev  @(#)devStatusSoft.c	1.9	6/3/93 */
-
 /* devStatusSoft.c - Device Support Routines for Soft Status Input */
 /*
  *      Author:		Janet Anderson
@@ -32,6 +29,7 @@
  * .01  11-11-91        jba     Moved set of alarm stat and sevr to macros
  * .02	03-13-92	jba	ANSI C changes
  * .03  10-10-92        jba     replaced code with recGblGetLinkValue call
+ * 2.1  2-27-04       oam     updated for epics 3.14.5
 */
 
 
@@ -48,7 +46,7 @@
 #include	<module_types.h>
 
 #include	<statusRecord.h>
-
+#include "epicsExport.h"
 /* Create the dset for devStatusSoft */
 static long init_record();
 static long read_status();
@@ -60,13 +58,14 @@ struct {
 	DEVSUPFUN	init_record;
 	DEVSUPFUN	get_ioint_info;
 	DEVSUPFUN	read_status;
-}devStatusSoft={
+} devStatusSoft={
 	5,
 	NULL,
 	NULL,
 	init_record,
 	NULL,
 	read_status};
+epicsExportAddress(dset,devStatusSoft);	
 
 static long init_record( struct statusRecord *pstatus )
 {

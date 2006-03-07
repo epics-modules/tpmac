@@ -1,0 +1,6 @@
+These are 1D or X-positioner databases -- same as modular drives (one motor
+in coordinate system).
+See X_Calibrate.db and CalibXPs.adl for more details.
+
+-- Sergey
+

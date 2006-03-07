@@ -1,0 +1,577 @@
+# Digital input reading:
+#----------------------
+
+record(status, "$(P)IN") {
+  field(DESC, "Accessory 65E:IN")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S0 @X:$(IN)")
+  field(LK00, "$(P)bi0.PROC PP MS")
+  field(LK01, "$(P)bi1.PROC PP MS")
+  field(LK02, "$(P)bi2.PROC PP MS")
+  field(LK03, "$(P)bi3.PROC PP MS")
+  field(LK04, "$(P)bi4.PROC PP MS")
+  field(LK05, "$(P)bi5.PROC PP MS")
+  field(LK06, "$(P)bi6.PROC PP MS")
+  field(LK07, "$(P)bi7.PROC PP MS")
+  field(LK08, "$(P)bi8.PROC PP MS")
+  field(LK09, "$(P)bi9.PROC PP MS")
+  field(LK10, "$(P)bi10.PROC PP MS")
+  field(LK11, "$(P)bi11.PROC PP MS")
+  field(LK12, "$(P)bi12.PROC PP MS")
+  field(LK13, "$(P)bi13.PROC PP MS")
+  field(LK14, "$(P)bi14.PROC PP MS")
+  field(LK15, "$(P)bi15.PROC PP MS")
+  field(LK16, "$(P)bi16.PROC PP MS")
+  field(LK17, "$(P)bi17.PROC PP MS")
+  field(LK18, "$(P)bi18.PROC PP MS")
+  field(LK19, "$(P)bi19.PROC PP MS")
+  field(LK20, "$(P)bi20.PROC PP MS")
+  field(LK21, "$(P)bi21.PROC PP MS")
+  field(LK22, "$(P)bi22.PROC PP MS")
+  field(LK23, "$(P)bi23.PROC PP MS")
+}
+
+record(bi, "$(P)bi0") {
+  field(INP, "$(P)IN.BI00 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi1") {
+  field(INP, "$(P)IN.BI01 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi2") {
+  field(INP, "$(P)IN.BI02 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi3") {
+  field(INP, "$(P)IN.BI03 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi4") {
+  field(INP, "$(P)IN.BI04 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi5") {
+  field(INP, "$(P)IN.BI05 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi6") {
+  field(INP, "$(P)IN.BI06 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi7") {
+  field(INP, "$(P)IN.BI07 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi8") {
+  field(INP, "$(P)IN.BI08 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi9") {
+  field(INP, "$(P)IN.BI09 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi10") {
+  field(INP, "$(P)IN.BI10 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi11") {
+  field(INP, "$(P)IN.BI11 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi12") {
+  field(INP, "$(P)IN.BI12 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi13") {
+  field(INP, "$(P)IN.BI13 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi14") {
+  field(INP, "$(P)IN.BI14 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi15") {
+  field(INP, "$(P)IN.BI15 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi16") {
+  field(INP, "$(P)IN.BI16 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi17") {
+  field(INP, "$(P)IN.BI17 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi18") {
+  field(INP, "$(P)IN.BI18 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi19") {
+  field(INP, "$(P)IN.BI19 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi20") {
+  field(INP, "$(P)IN.BI20 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi21") {
+  field(INP, "$(P)IN.BI21 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi22") {
+  field(INP, "$(P)IN.BI22 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)bi23") {
+  field(INP, "$(P)IN.BI23 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+
+# Digital output setting:
+#-----------------------
+record(status, "$(P)OUT_rb") {
+  field(DESC, "Accessory 65E:OUT_rb")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S0 @Y:$(OUT)")
+  field(LK00, "$(P)rb0.PROC PP MS")
+  field(LK01, "$(P)rb1.PROC PP MS")
+  field(LK02, "$(P)rb2.PROC PP MS")
+  field(LK03, "$(P)rb3.PROC PP MS")
+  field(LK04, "$(P)rb4.PROC PP MS")
+  field(LK05, "$(P)rb5.PROC PP MS")
+  field(LK06, "$(P)rb6.PROC PP MS")
+  field(LK07, "$(P)rb7.PROC PP MS")
+  field(LK08, "$(P)rb8.PROC PP MS")
+  field(LK09, "$(P)rb9.PROC PP MS")
+  field(LK10, "$(P)rb10.PROC PP MS")
+  field(LK11, "$(P)rb11.PROC PP MS")
+  field(LK12, "$(P)rb12.PROC PP MS")
+  field(LK13, "$(P)rb13.PROC PP MS")
+  field(LK14, "$(P)rb14.PROC PP MS")
+  field(LK15, "$(P)rb15.PROC PP MS")
+  field(LK16, "$(P)rb16.PROC PP MS")
+  field(LK17, "$(P)rb17.PROC PP MS")
+  field(LK18, "$(P)rb18.PROC PP MS")
+  field(LK19, "$(P)rb19.PROC PP MS")
+  field(LK20, "$(P)rb20.PROC PP MS")
+  field(LK21, "$(P)rb21.PROC PP MS")
+  field(LK22, "$(P)rb22.PROC PP MS")
+  field(LK23, "$(P)rb23.PROC PP MS")
+}
+
+record(bi, "$(P)rb0") {
+  field(INP, "$(P)OUT_rb.BI00 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb1") {
+  field(INP, "$(P)OUT_rb.BI01 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb2") {
+  field(INP, "$(P)OUT_rb.BI02 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb3") {
+  field(INP, "$(P)OUT_rb.BI03 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb4") {
+  field(INP, "$(P)OUT_rb.BI04 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb5") {
+  field(INP, "$(P)OUT_rb.BI05 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb6") {
+  field(INP, "$(P)OUT_rb.BI06 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb7") {
+  field(INP, "$(P)OUT_rb.BI07 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb8") {
+  field(INP, "$(P)OUT_rb.BI08 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb9") {
+  field(INP, "$(P)OUT_rb.BI09 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb10") {
+  field(INP, "$(P)OUT_rb.BI10 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb11") {
+  field(INP, "$(P)OUT_rb.BI11 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb12") {
+  field(INP, "$(P)OUT_rb.BI12 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb13") {
+  field(INP, "$(P)OUT_rb.BI13 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb14") {
+  field(INP, "$(P)OUT_rb.BI14 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb15") {
+  field(INP, "$(P)OUT_rb.BI15 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb16") {
+  field(INP, "$(P)OUT_rb.BI16 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb17") {
+  field(INP, "$(P)OUT_rb.BI17 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb18") {
+  field(INP, "$(P)OUT_rb.BI18 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb19") {
+  field(INP, "$(P)OUT_rb.BI19 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb20") {
+  field(INP, "$(P)OUT_rb.BI20 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb21") {
+  field(INP, "$(P)OUT_rb.BI21 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb22") {
+  field(INP, "$(P)OUT_rb.BI22 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb23") {
+  field(INP, "$(P)OUT_rb.BI23 NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(longout, "$(P)OUT") {
+  field(DESC, "Accessory 65E:OUT")
+  field(DTYP, "PMAC-VME ASCII")
+  field(OUT, "#C$(C) S0 @WY:$(OUT),")
+  field(FLNK, "$(P)TRBK.PROC PP MS") 
+}
+
+# INAM - Init Routine Name
+# SNAM - Subroutine Name
+record(tsub, "$(P)TSUB") {
+  field(SDIS, "$(P)TRBK.PACT NPP MS") 
+  field(DESC, "Accessory 65E:TSUB")
+  field(INAM, "tsubAcc65eIni")
+  field(SNAM, "tsubAcc65eOut") 
+  field(OUTA, "$(P)OUT PP MS") 
+  field(IPA0, "$(P)bo0  NPP MS") 
+  field(IPA1, "$(P)bo1  NPP MS") 
+  field(IPA2, "$(P)bo2  NPP MS") 
+  field(IPA3, "$(P)bo3  NPP MS") 
+  field(IPA4, "$(P)bo4  NPP MS") 
+  field(IPA5, "$(P)bo5  NPP MS") 
+  field(IPA6, "$(P)bo6  NPP MS") 
+  field(IPA7, "$(P)bo7  NPP MS") 
+  field(IPA8, "$(P)bo8  NPP MS") 
+  field(IPA9, "$(P)bo9  NPP MS") 
+  field(IPB0, "$(P)bo10 NPP MS") 
+  field(IPB1, "$(P)bo11 NPP MS") 
+  field(IPB2, "$(P)bo12 NPP MS") 
+  field(IPB3, "$(P)bo13 NPP MS") 
+  field(IPB4, "$(P)bo14 NPP MS") 
+  field(IPB5, "$(P)bo15 NPP MS") 
+  field(IPB6, "$(P)bo16 NPP MS") 
+  field(IPB7, "$(P)bo17 NPP MS") 
+  field(IPB8, "$(P)bo18 NPP MS") 
+  field(IPB9, "$(P)bo19 NPP MS") 
+  field(IPC0, "$(P)bo20 NPP MS") 
+  field(IPC1, "$(P)bo21 NPP MS") 
+  field(IPC2, "$(P)bo22 NPP MS") 
+  field(IPC3, "$(P)bo23 NPP MS") 
+}
+
+# INAM - Init Routine Name
+# SNAM - Subroutine Name
+record(tsub, "$(P)TRBK") {
+  field(SDIS, "$(P)TSUB.PACT NPP MS") 
+  field(DESC, "Accessory 65E:TSUB")
+  field(INAM, "tsubAcc65eIni")
+  field(SNAM, "tsubAcc65eRbk") 
+  field(INPA, "$(P)OUT NPP MS") 
+  field(OTA0, "$(P)bo0  PP MS") 
+  field(OTA1, "$(P)bo1  PP MS") 
+  field(OTA2, "$(P)bo2  PP MS") 
+  field(OTA3, "$(P)bo3  PP MS") 
+  field(OTA4, "$(P)bo4  PP MS") 
+  field(OTA5, "$(P)bo5  PP MS") 
+  field(OTA6, "$(P)bo6  PP MS") 
+  field(OTA7, "$(P)bo7  PP MS") 
+  field(OTA8, "$(P)bo8  PP MS") 
+  field(OTA9, "$(P)bo9  PP MS") 
+  field(OTB0, "$(P)bo10 PP MS") 
+  field(OTB1, "$(P)bo11 PP MS") 
+  field(OTB2, "$(P)bo12 PP MS") 
+  field(OTB3, "$(P)bo13 PP MS") 
+  field(OTB4, "$(P)bo14 PP MS") 
+  field(OTB5, "$(P)bo15 PP MS") 
+  field(OTB6, "$(P)bo16 PP MS") 
+  field(OTB7, "$(P)bo17 PP MS") 
+  field(OTB8, "$(P)bo18 PP MS") 
+  field(OTB9, "$(P)bo19 PP MS") 
+  field(OTC0, "$(P)bo20 PP MS") 
+  field(OTC1, "$(P)bo21 PP MS") 
+  field(OTC2, "$(P)bo22 PP MS") 
+  field(OTC3, "$(P)bo23 PP MS") 
+}
+
+record(bo,"$(P)bo0") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo1") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo2") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo3") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo4") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo5") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo6") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo7") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo8") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo9") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo10") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo11") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo12") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo13") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo14") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo15") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo16") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo17") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo18") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo19") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo20") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo21") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo22") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+
+record(bo,"$(P)bo23") {
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 
+

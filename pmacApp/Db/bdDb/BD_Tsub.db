@@ -1,0 +1,106 @@
+record(calc, "$(assy)$(val)SDISm") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)$(val)TsubAxs.PACT NPP MS")
+  field(INPB, "$(assy)$(val)TsubDrv.PACT NPP MS")
+}
+
+record(calc, "$(assy)$(val)SDISd") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)$(val)TsubAxs.PACT NPP MS")
+  field(INPB, "$(assy)$(val)TsubMtr.PACT NPP MS")
+}
+
+record(calc, "$(assy)$(val)SDISx") {
+  field(CALC, "A|B")
+  field(INPA, "$(assy)$(val)TsubDrv.PACT NPP MS")
+  field(INPB, "$(assy)$(val)TsubMtr.PACT NPP MS")
+}
+
+record(tsub, "$(assy)$(val)TsubMtr") {
+  field(SDIS, "$(assy)$(val)SDISm.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Mtr")
+  field(OUTA, "$(x1)$(val) PP MS")
+  field(OUTB, "$(x2)$(val) PP MS")
+  field(OTA1, "$(d1)$(val) PP MS")
+  field(OTB1, "$(d2)$(val) PP MS")
+  field(INPA, "$(m1)$(val) NPP MS")
+  field(INPB, "$(m2)$(val) NPP MS")
+  field(INPK, "$(assy)BaseLength NPP MS")
+  field(INPL, "$(assy)RotOrigin NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "$(nla)")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(tsub, "$(assy)$(val)TsubDrv") {
+  field(SDIS, "$(assy)$(val)SDISd.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Drv")
+  field(OUTA, "$(x1)$(val) PP MS")
+  field(OUTB, "$(x2)$(val) PP MS")
+  field(OTA0, "$(m1)$(val) PP MS")
+  field(OTB0, "$(m2)$(val) PP MS")
+  field(INPA, "$(d1)$(val) NPP MS")
+  field(INPB, "$(d2)$(val) NPP MS")
+  field(INPK, "$(assy)BaseLength NPP MS")
+  field(INPL, "$(assy)RotOrigin NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "$(nla)")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(tsub, "$(assy)$(val)TsubAxs") {
+  field(SDIS, "$(assy)$(val)SDISx.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Axs")
+  field(OTA0, "$(m1)$(val) PP MS")
+  field(OTA1, "$(d1)$(val) PP MS")
+  field(OTB0, "$(m2)$(val) PP MS")
+  field(OTB1, "$(d2)$(val) PP MS")
+  field(INPA, "$(x1)$(val) NPP MS")
+  field(INPB, "$(x2)$(val) NPP MS")
+  field(INPK, "$(assy)BaseLength NPP MS")
+  field(INPL, "$(assy)RotOrigin NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(IPB0, "$(d2)Offset NPP MS")
+  field(IPB1, "$(d2)Scale NPP MS")
+  field(NLA, "$(nla)")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(ao, "$(m1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubMtr.PROC PP MS")
+}
+
+record(ao, "$(d1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
+  field(PREC, "3")
+}
+
+record(ao, "$(x1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubAxs.PROC PP MS")
+  field(PREC, "3")
+}
+
+record(ao, "$(m2)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubMtr.PROC PP MS")
+}
+
+record(ao, "$(d2)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
+  field(PREC, "3")
+}
+
+record(ao, "$(x2)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubAxs.PROC PP MS")
+  field(PREC, "3")
+}
+

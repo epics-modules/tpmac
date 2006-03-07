@@ -13,7 +13,7 @@
 #include	<dbCommon.h>
 #include	<recSup.h>
 
-#define   PI2360 ((double) 1.7453292e-2)
+#define   PI2360 ((double) 1.7453292519943295769236907684886e-2)	/* = 2*pi/360 */
 #define   DEG2RAD(deg) ((deg) * PI2360)
 #define   RAD2DEG(rad) ((rad) / PI2360)
 #define		SIND(deg)	sin(DEG2RAD(deg))
@@ -26,7 +26,7 @@ volatile int tsubMODebug = 0;
 double coQB, siQB;                      /* added by Sergey 2001/04/20 */
 
 /*####################################################################*/
-/*=========================================== - Energy Initialization
+/* =========================================== - Energy Initialization
  * tsubMOEn - Energy Initialization
  */
 long tsubMOEn
@@ -37,18 +37,40 @@ long tsubMOEn
  	return (0);
 }
 
-/*=========================================== - Energy Motors
+
+/* ===========================================
+ * tsubMOEnSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ */
+long tsubMOEnSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+
+	return (0);
+}
+
+
+/* =========================================== - Energy Motors
  * tsubMOEnMtr - Energy Motors
- *	oa = x1  (=E)        a0 = d1:Offset
- *	ob = x2  (=L)        a1 = d1:Scale
- *	oa1 = d1 (=QB)       b0 = d2:Offset
- *	ob1 = d2 (=t2)       b1 = d2:Scale
- *	a = m1               m = d1:ActPos (QB:ActPos)
- *	b = m2               p = x1:ActPos (E:ActPos)
- *	g = ESinTheta
- *	h = EvLambda
- *	i = BeamOffset
- *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
+ *	oa = x1  (=E)      a = m1
+ *	ob = x2  (=L)      b = m2
+ *	oa1 = d1 (=QB)     g = ESinTheta  
+ *	ob1 = d2 (=t2)     h = EvLambda   
+ *	oa2 = m1_int       i = BeamOffset 
+ *	oa3 = m1_fra       a0 = d1:Offset
+ *	                   a1 = d1:Scale
+ *	                   b0 = d2:Offset
+ *	                   b1 = d2:Scale
+ *                         m = d1:ActPos (QB:ActPos)
+ *                         p = x1:ActPos (E:ActPos)
+ *	                   nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
 long tsubMOEnMtr
 (
@@ -68,6 +90,8 @@ long tsubMOEnMtr
 		{
 			pRec->ob = pRec->h / pRec->oa;                        /* L=EvLambda/E         */
 		}
+                pRec->oa2 = (long)(pRec->a);
+		pRec->oa3 = pRec->a - pRec->oa2;
 	}
 	else				/* -Relative Motion- */
 	{
@@ -97,18 +121,20 @@ long tsubMOEnMtr
 	return (0);
 }
 
-/*=========================================== - Energy Drives
+/* =========================================== - Energy Drives
  * tsubMOEnDrv - Energy Drives
- *	oa = x1  (=E)        a0 = d1:Offset
- *	ob = x2  (=L)        a1 = d1:Scale
- *	oa0 = m1             b0 = d2:Offset
- *	ob0 = m2             b1 = d2:Scale
- *	a = d1   (=QB)       m = d1:ActPos (QB:ActPos)
- *	b = d2   (=t2)       p = x1:ActPos (E:ActPos)
- *	g = ESinTheta
- *	h = EvLambda
- *	i = BeamOffset
- *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
+ *	oa = x1  (=E)      a = d1   (=QB) 
+ *	ob = x2  (=L)      b = d2   (=t2) 
+ *	oa0 = m1           g = ESinTheta  
+ *	ob0 = m2           h = EvLambda   
+ *	oa2 = m1_int       i = BeamOffset 
+ *      oa3 = m1_fra       a0 = d1:Offset
+ *                         a1 = d1:Scale
+ *                         b0 = d2:Offset
+ *	                   b1 = d2:Scale
+ *                         m = d1:ActPos (QB:ActPos)
+ *                         p = x1:ActPos (E:ActPos)
+ *	                   nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
 long tsubMOEnDrv
 (
@@ -133,6 +159,8 @@ long tsubMOEnDrv
 		{
 			pRec->ob = pRec->h / pRec->oa;                        /* L=EvLambda/E           */
 		}
+                pRec->oa2 = (long)(pRec->oa0);
+		pRec->oa3 = pRec->oa0 - pRec->oa2;
 	}
 	else				/* -Relative Motion- */
 	{
@@ -162,19 +190,21 @@ long tsubMOEnDrv
 	return (0);
 }
 
-/*=========================================== - Energy Axes
+/* =========================================== - Energy Axes
  * tsubMOEnAxs - Energy Axes
- *	oa0 = m1               a0 = d1:Offset
- *	oa1 = d1 (=QB)         a1 = d1:Scale
- *	ob0 = m2               b0 = d2:Offset
- *	ob1 = d2 (=t2)         b1 = d2:Scale
- *	a = x1                 m = d1:ActPos     (QB:ActPos)
- *	b = x2                 p = x1:ActPos     (E:ActPos)
- *	f = TrolleyFlag
- *	g = ESinTheta
- *	h = EvLambda
- *	i = BeamOffset
- *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
+ *	oa0 = m1           a = x1          
+ *	oa1 = d1 (=QB)     b = x2          
+ *	ob0 = m2           f = TrolleyFlag 
+ *	ob1 = d2 (=t2)     g = ESinTheta   
+ *	oa2 = m1_int       h = EvLambda    
+ *	oa3 = m1_fra       i = BeamOffset  
+ *	                   a0 = d1:Offset
+ *	                   a1 = d1:Scale
+ *	                   b0 = d2:Offset
+ *	                   b1 = d2:Scale
+ *                         m = d1:ActPos     (QB:ActPos)
+ *                         p = x1:ActPos     (E:ActPos)
+ *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
 long tsubMOEnAxs
 (
@@ -191,7 +221,10 @@ long tsubMOEnAxs
 	{
 		if ( pRec->a != 0.0 )                                         /* if E#0                 */
 		{
-			pRec->oa1 = RAD2DEG (asin (pRec->g / pRec->a));       /* QB=asin(EsinTheta/E)   */
+		        siQB = pRec->g / pRec->a;                             /* sin(QB)                */
+                        if      (siQB > 1.0)  pRec->oa1 = 90.0;
+                        else if (siQB < -1.0) pRec->oa1 = -90.0;
+			else                  pRec->oa1 = RAD2DEG (asin(siQB)); /* QB=asin(EsinTheta/E)   */
 		}
 		pRec->oa0 = (pRec->oa1 - pRec->a0) / pRec->a1;                /* m1=(d1-offset1)/scale1 */
 		siQB = SIND(pRec->oa1);                                       /* sin(QB)                */
@@ -203,6 +236,8 @@ long tsubMOEnAxs
 		   	pRec->ob1 = pRec->i / (2.0 * coQB);                   /* d2=t2=BeamOffset/[2*cos(QB)] */
 			pRec->ob0 = (pRec->ob1 - pRec->b0) / pRec->b1;        /* m2=(d2-offset2)/scale2       */
 		}
+                pRec->oa2 = (long)(pRec->oa0);
+		pRec->oa3 = pRec->oa0 - pRec->oa2;
 	}
 
 	else	/* --------------------Relative Motion----------------------- */
@@ -210,14 +245,16 @@ long tsubMOEnAxs
 		if ( pRec->p != 0.0 )                                         /* if E#0                */
 		{
 			siQB = pRec->g / pRec->p;                             /* sin(QB)=(EsinTheta/E) */
-			if ( siQB < 1.0 )
-			{
-				 coQB = sqrt( 1.0 - siQB*siQB );
-			}
-			else
-			{
+			if ( siQB > 1.0 ) {
 				 siQB = 1.0;
 				 coQB = 0.0;
+			}
+			if ( siQB < -1.0 ) {
+				 siQB = -1.0;
+				 coQB =  0.0;
+			}
+			else {
+				 coQB = sqrt( 1.0 - siQB*siQB );
 			}
 			if ( coQB != 0.0 )
 			{
@@ -253,7 +290,7 @@ long tsubMOEnAxs
 	return (0);
 }
 
-/*=========================================== - Axes Energy To Lambda
+/* =========================================== - Axes Energy To Lambda
  * tsubMOEnAxs1 - Axes Energy To Lambda
  *	oa = L               h = EvLambda
  *	a = E                p = x1:ActPos
@@ -282,7 +319,7 @@ long tsubMOEnAxs1
 	return (0);
 }
 
-/*=========================================== - Axes Lamdba To Energy
+/* =========================================== - Axes Lamdba To Energy
  * tsubMOEnAx2 - Axes Lamdba To Energy
  *	oa = E               h = EvLambda
  *	a = L                q = x2:ActPos
@@ -311,7 +348,7 @@ long tsubMOEnAxs2
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMOEnSpeed - Speed propagation spreadsheet
  *	oa0 = m1   (=rotary)
  *	ob0 = m2   (=translation_2)
@@ -349,7 +386,7 @@ long tsubMOEnSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                      /* sdis=1 */
 
-/*	printf ("tsubMOEnSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: called with n=%f \n",pRec->nla); 
 
 	siQB = SIND(pRec->m);                              /* sin(QB) */
 	coQB = COSD(pRec->m);                              /* cos(QB) */
@@ -444,7 +481,7 @@ long tsubMOEnSpeed
 	pRec->ob1 = d2;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-/*	printf ("tsubMOEnSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); */
+  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); 
 	return (ifail);
 }
 

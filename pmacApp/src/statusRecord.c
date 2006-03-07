@@ -69,6 +69,9 @@
 #define GEN_SIZE_OFFSET
 #include	<statusRecord.h>
 #undef GEN_SIZE_OFFSET
+#include "tsDefs.h"
+#include "recGbl.h"
+#include "epicsExport.h"
 
 /* Create RSET - Record Support Entry Table*/
 static long init_record();
@@ -89,7 +92,7 @@ static long get_precision();
 #define get_enum_strs   NULL
 #define put_enum_str    NULL
 
-struct rset statusRSET={
+rset statusRSET={
 	RSETNUMBER,
 	report,
 	initialize,
@@ -108,7 +111,7 @@ struct rset statusRSET={
 	get_graphic_double,
 	get_control_double,
 	get_alarm_double };
-
+epicsExportAddress(rset,statusRSET);
 
 struct statusdset { /* status input dset */
 	long		number;

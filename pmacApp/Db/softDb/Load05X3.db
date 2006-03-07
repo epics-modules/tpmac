@@ -1,0 +1,31 @@
+record(calc, "$(assy)LoadSDIS") {
+  field(CALC, "(A=0)||(B=1)")
+  field(INPA, "$(assy)Motion.VAL NPP MS")
+  field(INPB, "$(assy)RunPrg.VAL NPP MS")
+}
+
+record(longout, "$(assy)LoadPROG") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(FLNK, "$(assy)LoadFLNK.PROC PP MS")
+  field(OUT, "#C$(C) S0 @&$(pcs)B")
+  field(DOL, "$(assy)ArgPROG.VAL PP MS")
+  field(OMSL, "closed_loop")
+}
+
+record(tsub, "$(assy)Load") {
+  field(SDIS, "$(assy)LoadSDIS.VAL PP MS")
+  field(FLNK, "$(assy)LoadPROG.PROC PP MS")
+  field(INAM, "tsubSeqInit")
+  field(SNAM, "tsubSeqProc")
+  field(OUTA, "$(assy)RamTA0.VAL PP MS")
+  field(OUTB, "$(assy)RamTS0.VAL PP MS")
+  field(OUTC, "$(assy)RamX0.VAL PP MS")
+  field(OUTD, "$(assy)RamX1.VAL PP MS")
+  field(OUTE, "$(assy)RamX2.VAL PP MS")
+  field(INPA, "$(assy)AccelTime.VAL PP MS")
+  field(INPB, "$(assy)AccelCurve.VAL PP MS")
+  field(INPC, "$(m1)RqsPos.VAL PP MS")
+  field(INPD, "$(m1)RqsBkl.VAL PP MS")
+  field(INPE, "0")
+}
+

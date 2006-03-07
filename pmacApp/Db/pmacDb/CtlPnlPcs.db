@@ -25,3 +25,17 @@ record(stringout, "$(pcs)CmdRN") {
   field(OUT, "$(pcs)StrCmd PP MS")
   field(VAL, "R")
 }
+
+### Added by Sergey 2005/04/14 for fast scans and homing:
+
+record(stringout, "$(pcs)Pmac") {
+  field(DESC, "Coord.System pmac")
+  field(DTYP, "Soft Channel")
+  field(VAL, "$(pmac)")
+}
+
+record(longout, "$(pcs)Pcs") {
+  field(DESC, "Coord.System Number")
+  field(DTYP, "Soft Channel")
+  field(VAL, "$(wrd)")
+}

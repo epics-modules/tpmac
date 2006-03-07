@@ -1,6 +1,6 @@
 /* @(#) tsubTBSt.c 2.0 2004/05/31 -- speed propagation */
 
-/* tsubKBSt.c - Transformation Subroutines for a table supported by 3 motors
+/* tsubTBSt.c - Transformation Subroutines for a table supported by 3 motors
  *            - can also be used for the GM/CA CAT KB mirror  */
 
 
@@ -21,7 +21,7 @@ volatile int tsubTBDebug = 0;
 /* if x1=mm, x2,x3=mrad, base=m (BioCAT), then FCTB=1; if base=mm, then FCTB=1000. */
 volatile double FCTB = 1.0;
 
-/*===========================================
+/* ===========================================
  * tsubTBSt - Table support
  */
 long tsubTBSt
@@ -32,7 +32,30 @@ long tsubTBSt
         return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubTBStSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	oc = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ *	c  = m3:ActPos
+ */
+long tsubTBStSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+	pRec->oc = pRec->c;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubTBStMtr - Table support Motors
  *	oa = x1
  *	ob = x2
@@ -84,7 +107,7 @@ long tsubTBStMtr
 
 
 
-/*===========================================
+/* ===========================================
  * tsubTBStDrv - Table support Drives
  *	oa = x1
  *	ob = x2
@@ -136,7 +159,7 @@ long tsubTBStDrv
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubTBStAxs - Table support Axes
  *	oa0 = m1
  *	oa1 = d1
@@ -188,7 +211,7 @@ long tsubTBStAxs
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubTBStSpeed - Speed propagation spreadsheet
  *	oa0 = m1
  *	ob0 = m2
@@ -232,7 +255,7 @@ long tsubTBStSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubTBStSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubTBDebug > 1) printf ("tsubTBStSpeed: called with n=%f \n",pRec->nla);
 
 	if ( pRec->a  == 0.0 || pRec->b  == 0.0 || pRec->c  == 0.0 ||
              pRec->a3 == 0.0 || pRec->b3 == 0.0 || pRec->c3 == 0.0 ||
@@ -344,7 +367,7 @@ long tsubTBStSpeed
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
 	pRec->oc2 = x3;
-/*	printf ("tsubTBStSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3); */
+  	if (tsubTBDebug > 1) printf ("tsubTBStSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3);
 	return (ifail);
 }
 

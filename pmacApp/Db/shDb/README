@@ -1,0 +1,7 @@
+These are Shutter Motor databases  -- nearly the same as X-positioner or 
+modular drives (one motor in coordinate system). The only diffrence is 
+that they output binary statusflag "shutter open/close".
+See SH_Calibrate.db and CalibSHPs.adl for more details.
+
+-- Sergey
+

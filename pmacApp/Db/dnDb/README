@@ -1,0 +1,10 @@
+These are BioCAT downstream support databases. Two downstream support motors
+in the coordinate system provide downstream height and angle as combined motion.
+The databases are similar to those of the mirror support with the difference
+that the center or rotation is not in the middle between the two motors, but
+at a remote point defined by the RotOrigin distance. See DN_Calibrate.db and
+CalibDNSt.adl for more details.
+
+-- Sergey
+
+

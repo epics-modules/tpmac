@@ -13,20 +13,14 @@
 #include	<dbCommon.h>
 #include	<recSup.h>
 
-#define TSUB_DIAGNOSTIC tsubMIDebug
-
-#if TSUB_DIAGNOSTIC
-volatile int TSUB_DIAGNOSTIC = 0;
+volatile int tsubMIDebug = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
-#else
-#define TSUB_TRACE(level,code)      ;
-#endif
+#define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubMIDebug == (level)) ) { code } }
 
 /* if x1=mm, x2=mrad, base=m (BioCAT), then FCMI=1; if base=mm, then FCMI=1000. */
 double FCMI = 1.0;
 
-/*===========================================
+/* ===========================================
  * tsubMISt - Support Initialization
  */
 long tsubMISt
@@ -37,7 +31,27 @@ long tsubMISt
  	return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubMIStSync
+ *	oa = m1:RqsPos
+ *	ob = m2:RqsPos
+ *	a  = m1:ActPos
+ *	b  = m2:ActPos
+ */
+long tsubMIStSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+	pRec->ob = pRec->b;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubMIStMtr - Support Motors
  *	oa = x1
  *	ob = x2
@@ -76,7 +90,7 @@ long tsubMIStMtr
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMIStDrv - Support Drives
  *	oa = x1
  *	ob = x2
@@ -116,7 +130,7 @@ long tsubMIStDrv
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMIStAxs - Support Axes
  *	oa0 = m1
  *	oa1 = d1
@@ -157,7 +171,7 @@ long tsubMIStAxs
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMIStSpeed - Speed propagation spreadsheet
  *	oa0 = m1
  *	ob0 = m2
@@ -192,7 +206,7 @@ long tsubMIStSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubMIStSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubMIDebug > 1) printf ("tsubMIStSpeed: called with n=%f \n",pRec->nla);
 
 	if ( pRec->a  == 0.0 || pRec->b  == 0.0 ||
              pRec->a3 == 0.0 || pRec->b3 == 0.0 ||
@@ -236,7 +250,9 @@ long tsubMIStSpeed
 /* Speed of center is the average of the speeds of individual drives */
 	      d1 = fabs( 1000.0 *  pRec->a * pRec->a3 );   /* d1=m1*scale1 */
 	      d2 = fabs( 1000.0 *  pRec->b * pRec->b3 );   /* d2=m2*scale2 */
-              prcn = fabs( pRec->a2 / ( (d1+d2)/2.0 ) );
+	      x1 = (d1+d2)/2.0;
+	      if ( x1 != 0.0 ) prcn = fabs( pRec->a2 / x1 );
+	      else             prcn = 1.0;
 	   }
 	}
 	else if (pRec->nla == 22.0) /* ------------------------- x2 speed changed */
@@ -247,7 +263,9 @@ long tsubMIStSpeed
 /* Speed of angle is the sum of the speeds of each motor divided by base */
 	      d1 = fabs( 1000.0 *  pRec->a * pRec->a3 );   /* d1=m1*scale1 */
 	      d2 = fabs( 1000.0 *  pRec->b * pRec->b3 );   /* d2=m2*scale2 */
-              prcn = fabs( pRec->b2 / ( (d1+d2)/pRec->k ) );
+	      x2 = FCMI*(d1+d2)/pRec->k;
+	      if ( x2 != 0.0 ) prcn = fabs( pRec->b2 / x2 );
+	      else             prcn = 1.0;
 	   }
 	}
 	else
@@ -272,7 +290,7 @@ long tsubMIStSpeed
 	pRec->ob1 = d2;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-/*	printf ("tsubMIStSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); */
+  	if (tsubMIDebug > 1) printf ("tsubMIStSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
 

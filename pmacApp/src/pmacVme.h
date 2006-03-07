@@ -91,8 +91,8 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 #define PMAC_MBX_IN_BUFLEN	(80)
 #define PMAC_MBX_ERR_BUFLEN	(10)
 
-#define PMAC_ASC_OUT_BUFLEN	(160)
-#define PMAC_ASC_IN_BUFLEN	(256)
+/* #define WAIT_TIMEOUT	60 */		/* timeout in ticks for semTake */
+#define WAIT_TIMEOUT	3600 		/* timeout in ticks for semTake -- changed 2005-05-09 */
 
 /*
  * TYPEDEFS
@@ -123,21 +123,6 @@ PMAC_LOCAL char pmacMbxOut (int ctlr, char * writebuf);
 PMAC_LOCAL char pmacMbxIn (int ctlr, char * readbuf, char * errmsg);
 PMAC_LOCAL char pmacMbxRead (int ctlr, char * readbuf, char * errmsg);
 PMAC_LOCAL char pmacMbxWrite (int ctlr, char * writebuf);
-
-long pmacAscLock (int ctlr);
-long pmacAscUnlock (int	ctlr);
-
-PMAC_LOCAL long pmacAscH2p (int ctlr, long off, int val);
-PMAC_LOCAL long pmacAscP2h (int ctlr, long off, int * pVal);
-PMAC_LOCAL long pmacAscOutStatus (int ctlr, int * pVal);
-PMAC_LOCAL long pmacAscOutComplete (int ctlr);
-PMAC_LOCAL long pmacAscOutCtrlChar (int ctlr, int ctrlchar);
-PMAC_LOCAL long pmacAscOutString (int ctlr, char * string);
-PMAC_LOCAL long pmacAscOutBuffer (int ctlr, char * string);
-PMAC_LOCAL long pmacAscInStatus (int ctlr, int * pVal);
-PMAC_LOCAL long pmacAscInEnable (int ctlr);
-PMAC_LOCAL long pmacAscInCount (int ctlr, int * pVal);
-PMAC_LOCAL long pmacAscInString (int ctlr, char * string);
 
 char pmacVmeWriteC (char * addr, char val);
 char pmacVmeReadC (char * addr);

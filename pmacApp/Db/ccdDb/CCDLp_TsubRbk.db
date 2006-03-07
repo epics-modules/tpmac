@@ -1,0 +1,34 @@
+record(tsub, "$(assy)$(val)TsubMtr") {
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Mtr")
+  field(OTA1, "$(d1)$(val) PP MS")
+  field(INPA, "$(m1)$(val) NPP MS")
+  field(INPD, "$(assySt)Dms NPP MS")
+  field(INPJ, "$(x1St)ActPos NPP MS")
+  field(INPK, "$(x2St)ActPos NPP MS")
+  field(INPL, "$(assy)Dmhmv NPP MS")
+  field(INPM, "$(assy)aH NPP MS")
+  field(INPN, "$(assy)mLink NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(NLA, "$(nla)")
+}
+
+record(fanout, "$(m1)$(val)FLNK") {
+  field(LNK1, "$(assy)$(val)TsubMtr.PROC PP MS")
+}
+
+record(ai, "$(d1)$(val)") {
+  field(PREC, "3")
+  field(EGU, "$(egu_d1)")
+  field(DESC, "$(desc_d1)")
+}
+
+# Added by Sergey 2005/04/23: synchronize ActPos and RqsPos:
+record(tsub, "$(assy)Sync") {
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Sync")
+  field(INPA, "$(m1)ActPos NPP MS")
+  field(OUTA, "$(m1)RqsPos PP MS")
+}
+

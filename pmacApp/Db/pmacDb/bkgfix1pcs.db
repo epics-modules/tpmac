@@ -19,12 +19,26 @@ record(status, "$(pcs)PrgExeSts") {
   field(LK22, "$(pcs)RunTmErr.PROC PP MS")
 }
 
+# record(bi, "$(pcs)InPos") {
+#   field(DESC, "In Position")
+#   field(INP, "$(pcs)PrgExeSts.BI17 NPP MS")
+#   field(ZSV, "MINOR")
+#   field(ZNAM, "Moving")
+#   field(ONAM, "Positioned")
+# }
+
 record(bi, "$(pcs)InPos") {
   field(DESC, "In Position")
-  field(INP, "$(pcs)PrgExeSts.BI17 NPP MS")
+  field(INP, "$(pcs)InPosCALC.VAL PP MS")
   field(ZSV, "MINOR")
   field(ZNAM, "Moving")
   field(ONAM, "Positioned")
+}
+
+record(calc, "$(pcs)InPosCALC") {
+  field(CALC, "(A#0)&&(B=0)")
+  field(INPA, "$(pcs)PrgExeSts.BI17 NPP MS")
+  field(INPB, "$(pcs)RunPrg.VAL NPP MS")
 }
 
 record(bi, "$(pcs)RunPrg") {
@@ -33,6 +47,7 @@ record(bi, "$(pcs)RunPrg") {
   field(OSV, "MINOR")
   field(ZNAM, "Idle")
   field(ONAM, "Running")
+  field(FLNK, "$(pcs)InPos.PROC PP MS")
 }
 
 record(bi, "$(pcs)AmpFltErr") {

@@ -1,0 +1,39 @@
+record(calc, "$(assy)LoadSDIS") {
+  field(CALC, "(A=0)||(B=1)")
+  field(INPA, "$(assy)Motion.VAL NPP MS")
+  field(INPB, "$(assy)RunPrg.VAL NPP MS")
+}
+
+record(longout, "$(assy)LoadPROG") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(FLNK, "$(assy)LoadFLNK.PROC PP MS")
+  field(OUT, "#C$(C) S0 @&$(pcs)B")
+  field(DOL, "$(assy)ArgPROG.VAL PP MS")
+  field(OMSL, "closed_loop")
+}
+
+# Special case for mono rotary where we need to move by a fraction of a pulse:
+# Instead of $(m1)RqsPos we load $(m1)RqsPosInt and $(m1)RqsPosFra
+record(tsub, "$(assy)Load") {
+  field(SDIS, "$(assy)LoadSDIS.VAL PP MS")
+  field(FLNK, "$(assy)LoadPROG.PROC PP MS")
+  field(INAM, "tsubSeqInit")
+  field(SNAM, "tsubSeqProc")
+  field(OUTA, "$(assy)RamTA0.VAL PP MS")
+  field(OUTB, "$(assy)RamTS0.VAL PP MS")
+  field(OUTC, "$(assy)RamX0.VAL PP MS")
+  field(OUTD, "$(assy)RamX1.VAL PP MS")
+  field(OUTE, "$(assy)RamX2.VAL PP MS")
+  field(OUTF, "$(assy)RamY0.VAL PP MS")
+  field(OUTG, "$(assy)RamY1.VAL PP MS")
+  field(OUTH, "$(assy)RamY2.VAL PP MS")
+  field(INPA, "$(assy)AccelTime.VAL PP MS")
+  field(INPB, "$(assy)AccelCurve.VAL PP MS")
+  field(INPC, "$(m1)RqsPosInt.VAL PP MS")
+  field(INPD, "$(m1)RqsBkl.VAL PP MS")
+  field(INPE, "$(m1)RqsPosFra.VAL PP MS")
+  field(INPF, "$(m2)RqsPos.VAL PP MS")
+  field(INPG, "$(m2)RqsBkl.VAL PP MS")
+  field(INPH, "0")
+}
+

@@ -1,0 +1,49 @@
+record(fanout, "$(assy)AutoStartFLNK") {
+  field(SDIS, "$(assy)AutoStart.VAL PP MS")
+  field(LNK1, "$(assy)Start.PROC PP MS")
+}
+
+record(fanout, "$(assy)Start") {
+  field(DISV, "0")
+  field(SDIS, "$(assy)Ready.VAL PP MS")
+  field(LNK1, "$(assy)Run.PROC PP MS")
+  field(DESC, "$(desc)")
+}
+
+record(bi, "$(assy)Ready") {
+  field(DESC, "Ready")
+  field(INP, "$(assy)ReadyCALC.VAL PP MS")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "NotReady")
+  field(ONAM, "Ready")
+}
+
+record(calc, "$(assy)ReadyCALC") {
+  field(CALC, "(A=0)&&(B#0)")
+  field(INPB, "$(assy)Motion.VAL NPP MS")
+  field(INPA, "$(assy)RunPrg.VAL NPP MS")
+}
+
+record(fanout, "$(assy)ChangedFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)Load.PROC PP MS")
+}
+
+record(fanout, "$(assy)LoadFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)AutoStartFLNK.PROC PP MS")
+}
+
+record(bo, "$(assy)AutoStart") {
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Auto")
+  field(ONAM, "Man")
+}
+
+record(fanout, "$(assy)ScaleFanD") {
+  field(LNK1, "$(assy)RqsPosTsubMtr.PROC PP MS")
+  field(LNK2, "$(assy)RqsBklTsubMtr.PROC PP MS")
+  field(LNK3, "$(assy)ActPosTsubMtr.PROC PP MS")
+}
+

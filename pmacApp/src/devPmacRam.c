@@ -1,5 +1,3 @@
-/* @(#) devPmacRam.c 1.6 97/05/06  */
-
 /* devPmacRam.c -  EPICS Device Support for PMAC-VME */
 
 /*
@@ -10,9 +8,10 @@
  *
  * Modification History:
  * ---------------------
- *
+ * .01  6-7-95        tac     initial
  * .01  2-27-96       tac     initial
  * .02  7-24-96       wfl     ifdef'ed out use of status record
+ * 2.1  2-27-04       oam     updated for epics 3.14.5
  */
 
 /*
@@ -61,11 +60,6 @@ OWNED RIGHTS.
 *****************************************************************
 */
 
-/*
- * Modification History:
- * ---------------------
- * .01  6-7-95        tac     initial
- */
 
 /*
  * DESCRIPTION:
@@ -119,7 +113,8 @@ OWNED RIGHTS.
 #endif
 
 #include	<drvPmac.h>
-
+#include "recGbl.h"
+#include "epicsExport.h"
 /*
  * DEFINES
  */
@@ -147,7 +142,6 @@ OWNED RIGHTS.
 /*
  * TYPEDEFS
  */
-
 typedef struct  /* PMAC_DSET_AI */
 {
 	long		number;
@@ -317,7 +311,7 @@ LOCAL long devPmacRamStatus_get_ioint_info();
  * GLOBALS
  */
 
-char * devPmacRamVersion = "@(#) devPmacRam.c 1.6 97/05/06";
+char * devPmacRamVersion = "@(#) devPmacRam.c 2.1 2004/02/27";
 
 #if PMAC_DIAGNOSTICS
 volatile int devPmacRamDebug = 0;
@@ -425,7 +419,18 @@ PMAC_DSET_STATUS devPmacRamStatus =
 	devPmacRamStatus_get_ioint_info,
 	devPmacRamStatus_read
 };
+epicsExportAddress(dset,devPmacRamStatus);
 #endif
+
+epicsExportAddress(dset,devPmacRamAi);
+epicsExportAddress(dset,devPmacRamAo);
+epicsExportAddress(dset,devPmacRamBi);
+epicsExportAddress(dset,devPmacRamBo);
+epicsExportAddress(dset,devPmacRamEvent);
+epicsExportAddress(dset,devPmacRamLi);
+epicsExportAddress(dset,devPmacRamLo);
+epicsExportAddress(dset,devPmacRamMbbi);
+epicsExportAddress(dset,devPmacRamMbbo);
 
 
 /*
@@ -474,9 +479,9 @@ void devPmacRamUpdated
 
 	PMAC_DEBUG
 	(	7,
-		PMAC_MESSAGE ("%s: pDpvt=%010lx\n", MyName, pDpvt);
+		PMAC_MESSAGE ("%s: pDpvt=%010lx\n", MyName, pDpvt,0,0,0,0);
 		PMAC_MESSAGE ("%s: RamIo valLong=%#010x valDouble=%lf\n",
-			MyName, pRamIo->valLong, pRamIo->valDouble);
+			MyName, pRamIo->valLong, pRamIo->valDouble,0,0,0);
 	)
 
 	if ( (pRamIo->valLong != pDpvt->dpramData.ramLong)
@@ -538,7 +543,7 @@ LOCAL long devPmacRamAi_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -595,7 +600,7 @@ LOCAL long devPmacRamBi_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -652,7 +657,7 @@ LOCAL long devPmacRamEvent_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -710,7 +715,7 @@ LOCAL long devPmacRamLi_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -768,7 +773,7 @@ LOCAL long devPmacRamMbbi_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -827,7 +832,7 @@ LOCAL long devPmacRamStatus_init
 				MyName,
 				pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
-				pRec->inp.value.vmeio.parm);
+				pRec->inp.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -886,7 +891,7 @@ LOCAL long devPmacRamAo_init
 				MyName,
 				pRec->out.value.vmeio.card,
 				pRec->out.value.vmeio.signal,
-				pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -942,7 +947,7 @@ LOCAL long devPmacRamBo_init
 				MyName,
 				pRec->out.value.vmeio.card,
 				pRec->out.value.vmeio.signal,
-				pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -998,7 +1003,7 @@ LOCAL long devPmacRamLo_init
 				MyName,
 				pRec->out.value.vmeio.card,
 				pRec->out.value.vmeio.signal,
-				pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,
@@ -1054,7 +1059,7 @@ LOCAL long devPmacRamMbbo_init
 				MyName,
 				pRec->out.value.vmeio.card,
 				pRec->out.value.vmeio.signal,
-				pRec->out.value.vmeio.parm);
+				pRec->out.value.vmeio.parm,0,0);
 		)
 
 		pDpvt = devPmacRamDpvtInit ( (struct dbCommon *) pRec,

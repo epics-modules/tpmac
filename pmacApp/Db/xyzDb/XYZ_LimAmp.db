@@ -1,0 +1,15 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(d2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(d2)PsLimSet.PROC PP MS")
+  field(LNK5, "$(d3)NgLimSet.PROC PP MS")
+  field(LNK6, "$(d3)PsLimSet.PROC PP MS")
+}
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+  field(LNK2, "$(d2)AmpEna.PROC PP MS")
+  field(LNK3, "$(d3)AmpEna.PROC PP MS")
+}
+

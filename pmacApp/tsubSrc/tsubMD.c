@@ -13,17 +13,11 @@
 #include	<dbCommon.h>
 #include	<recSup.h>
 
-#define TSUB_DIAGNOSTIC tsubMDCsDebug
-
-#if TSUB_DIAGNOSTIC
-volatile int TSUB_DIAGNOSTIC = 0;
+volatile int tsubMDDebug = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
-#else
-#define TSUB_TRACE(level,code)      ;
-#endif
+#define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubMDDebug == (level)) ) { code } }
 
-/*===========================================
+/* ===========================================
  * tsubMDCs - Assembly-X Initialization
  */
 long tsubMDCs
@@ -34,7 +28,24 @@ long tsubMDCs
 	return (0);
 }
 
-/*===========================================
+
+/* ===========================================
+ * tsubMDCsSync
+ *	oa = m1:RqsPos
+ *	a  = m1:ActPos
+ */
+long tsubMDCsSync
+(
+	struct tsubRecord *	pRec
+)
+{
+	pRec->oa = pRec->a;
+
+	return (0);
+}
+
+
+/* ===========================================
  * tsubMDCsMtr - Assembly-X Motors
  *	oa1 = d1
  *	a = m1
@@ -58,7 +69,7 @@ long tsubMDCsMtr
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMDCsDrv - Assembly-X Drives
  *	oa0 = m1
  *	a = d1
@@ -86,7 +97,7 @@ long tsubMDCsDrv
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubMDCsSpeed - Speed propagation spreadsheet
  *	oa0 = m1
  *	oa1 = d1
@@ -110,7 +121,7 @@ long tsubMDCsSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                    /* sdis=1 */
 
-/*	printf ("tsubMDCsSpeed: called with n=%f \n",pRec->nla); */
+  	if (tsubMDDebug > 1) printf ("tsubMDCsSpeed: called with n=%f \n",pRec->nla); 
 
 	if ( pRec->a  == 0.0 || pRec->a3 == 0.0 ) {
 	   printf ("tsubMDCsSpeed: exit on zero calc parameters\n");
@@ -144,7 +155,7 @@ long tsubMDCsSpeed
 	d1 = fabs( 1000.0 *  m1 * pRec->a3 );            /* d1=m1*scale1 */
 	pRec->oa0 = m1;
 	pRec->oa1 = d1;
-/*	printf ("tsubMDCsSpeed: m1=%5.2f\n",m1); */
+  	if (tsubMDDebug > 1) printf ("tsubMDCsSpeed: m1=%5.2f\n",m1);
 	return (ifail);
 }
 

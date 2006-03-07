@@ -102,6 +102,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 /* local includes */
 
 #include	<drvPmac.h>
+#include "epicsExport.h"
 
 /*
  * DEFINES
@@ -109,6 +110,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 
 #define PMAC_DIAGNOSTICS TRUE
 #define PMAC_PRIVATE FALSE
+#define vxTicksPerSecond (sysClkRateGet())	/*clock ticks per second*/
 
 #if PMAC_PRIVATE
 #define PMAC_LOCAL LOCAL
@@ -136,7 +138,6 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define	PMAC_MAX_BKG	(343) /* 16 C.S. x 18 values + 5 global = 293 */
 #define	PMAC_MAX_VAR	(128) /* max allowed */
 #define	PMAC_MAX_OPN	(480) /* */
-#define	PMAC_MAX_GAT	(24)
 
 #define PMAC_TASKNAME_LEN	15
 
@@ -147,15 +148,8 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define PMAC_MBX_OPT		(VX_FP_TASK)
 #define PMAC_MBX_STACK		(8000)
 
-#define PMAC_ASC_QUEUE_SIZE 1000
-
-#define PMAC_ASC_SCAN		"pmacAsc"
-#define PMAC_ASC_PRI		(45)
-#define PMAC_ASC_OPT		(VX_FP_TASK)
-#define PMAC_ASC_STACK		(8000)
-
 #define PMAC_MTR_SCAN		"pmacMtr"
-#define PMAC_MTR_PRI		(45)
+#define PMAC_MTR_PRI		(44)		/* OLeg 2005/11/15 (was 45) */
 #define PMAC_MTR_RATE		(vxTicksPerSecond/10)
 #define PMAC_MTR_OPT		(VX_FP_TASK)
 #define PMAC_MTR_STACK		(8000)
@@ -173,30 +167,15 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define PMAC_VAR_STACK		(8000)
 
 #define PMAC_OPN_SCAN		"pmacOpn"
-#define PMAC_OPN_PRI		(45)
+#define PMAC_OPN_PRI		(46)		/* OLeg 2005/11/15 (was 45) */
 #define PMAC_OPN_RATE		(vxTicksPerSecond*1)
 #define PMAC_OPN_OPT		(VX_FP_TASK)
 #define PMAC_OPN_STACK		(8000)
-
-#define PMAC_GAT_QUEUE_SIZE 100
-
-#define PMAC_GAT_SCAN		"pmacGat"
-#define PMAC_GAT_PRI		(45)
-#define PMAC_GAT_OPT		(VX_FP_TASK)
-#define PMAC_GAT_STACK		(8000)
-
-#define PMAC_FLD_QUEUE_SIZE 100
-
-#define PMAC_FLD_SCAN		"pmacFld"
-#define PMAC_FLD_PRI		(45)
-#define PMAC_FLD_OPT		(VX_FP_TASK)
-#define PMAC_FLD_STACK		(8000)
 
 #define PMAC_DPRAM_MTR		1
 #define PMAC_DPRAM_BKG		2
 #define	PMAC_DPRAM_VAR		3
 #define PMAC_DPRAM_OPN		4
-#define PMAC_DPRAM_GAT		5
 #define PMAC_DPRAM_NONE		(-1)
 
 #define PMAC_MEMTYP_Y		1
@@ -218,12 +197,6 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define PMAC_VARTYP_X		0x20
 #define PMAC_VARTYP_NONE	(-1)
 
-#define PMAC_GATTYP_Y		0x00
-#define PMAC_GATTYP_X		0x40
-#define PMAC_GATTYP_D		0x80
-#define PMAC_GATTYP_L		0xC0
-#define PMAC_GATTYP_NONE	(-1)
-
 /*
  * TYPEDEFS
  */
@@ -244,24 +217,15 @@ typedef struct  /* PMAC_CARD */
 	int		enabled;
 
 	int		enabledMbx;
-	int		enabledAsc;
 	int		enabledRam;
 	int		enabledMtr;
 	int		enabledBkg;
 	int		enabledVar;
 	int		enabledOpn;
-	int		enabledFld;
-	int		enabledGat;
 
 	SEM_ID		scanMbxSem;
-	SEM_ID		scanAscSem;
-	SEM_ID		scanFldSem;
-	SEM_ID		scanGatSem;
 
 	RING_ID		scanMbxQ;
-	RING_ID		scanAscQ;
-	RING_ID		scanFldQ;
-	RING_ID		scanGatQ;
 
 	volatile int	scanMtrRate;
 	volatile int	scanBkgRate;
@@ -269,28 +233,21 @@ typedef struct  /* PMAC_CARD */
 	volatile int	scanOpnRate;
 
 	int		scanMbxTaskId;
-	int		scanAscTaskId;
 	int		scanMtrTaskId;
 	int		scanBkgTaskId;
 	int		scanVarTaskId;
 	int		scanOpnTaskId;
-	int		scanFldTaskId;
-	int		scanGatTaskId;
 
 	char		scanMbxTaskName[PMAC_TASKNAME_LEN];
-	char		scanAscTaskName[PMAC_TASKNAME_LEN];
 	char		scanMtrTaskName[PMAC_TASKNAME_LEN];
 	char		scanBkgTaskName[PMAC_TASKNAME_LEN];
 	char		scanVarTaskName[PMAC_TASKNAME_LEN];
 	char		scanOpnTaskName[PMAC_TASKNAME_LEN];
-	char		scanFldTaskName[PMAC_TASKNAME_LEN];
-	char		scanGatTaskName[PMAC_TASKNAME_LEN];
 
 	int		numMtrIo;
 	int		numBkgIo;
 	int		numVarIo;
 	int		numOpnIo;
-	int		numGatIo;
 	int		numtimMT;
 	int		numtimCS;
 	int		numtimVB;
@@ -302,8 +259,6 @@ typedef struct  /* PMAC_CARD */
 	PMAC_RAM_IO	timMT[10];
 	PMAC_RAM_IO	timCS[10];
 	PMAC_RAM_IO	timVB[10];
-
-	PMAC_GAT_IO	GatIo[PMAC_MAX_GAT];
 
 } PMAC_CARD;
 
@@ -334,16 +289,6 @@ PMAC_LOCAL void		drvPmacMbxScanInit (int card);
 int			drvPmacMbxTask (int card);
 char			drvPmacMbxWriteRead (int card, char * writebuf, char * readbuf, char * errmsg);
 
-PMAC_LOCAL void		drvPmacAscScanInit (int card);
-int			drvPmacAscTask (int card);
-
-PMAC_LOCAL void		drvPmacFldScanInit (int card);
-int			drvPmacFldTask (int card);
-long			drvPmacFldLoop (int card, char * download, char * upload, char * message);
-
-PMAC_LOCAL void		drvPmacGatScanInit (int card);
-int			drvPmacGatTask (int card);
-
 /*
  * GLOBALS
  */
@@ -362,6 +307,7 @@ PMAC_DRVET drvPmac =
 	drvPmac_report,
 	drvPmac_init,
 };
+epicsExportAddress(drvet,drvPmac);
 
 /*
  * LOCALS
@@ -405,7 +351,7 @@ long pmacDrvConfig
 	PMAC_DEBUG
        	(	1,
 		PMAC_MESSAGE ("%s: drvPmacNumCards = %d  PMAC_MAX_CARDS = %d\n",
-			      MyName, drvPmacNumCards, PMAC_MAX_CARDS);
+			      MyName, drvPmacNumCards, PMAC_MAX_CARDS,0,0,0);
 	)
 
 	if ( drvPmacNumCards == 0 )
@@ -452,14 +398,11 @@ long pmacDrvConfig
 	pCard->scanOpnRate = PMAC_OPN_RATE;
 
 	pCard->enabledMbx = TRUE;
-	pCard->enabledAsc = FALSE;
 	pCard->enabledRam = TRUE;
 	pCard->enabledMtr = TRUE;
 	pCard->enabledBkg = TRUE;
 	pCard->enabledVar = TRUE;
 	pCard->enabledOpn = TRUE;
-	pCard->enabledFld = TRUE;
-	pCard->enabledGat = TRUE;
 
 	pCard->configured = TRUE;
 	drvPmacNumCards++;
@@ -500,12 +443,11 @@ PMAC_LOCAL long drvPmac_report
 
 				printf ("card = %d  ctlr = %d  present = %d  enabled = %d\n",
 					pCard->card, pCard->ctlr, pCard->present, pCard->enabled);
-				printf ("    enabledMbx = %d  enabledAsc = %d  enabledRam = %d\n",
-					pCard->enabledMbx, pCard->enabledAsc, pCard->enabledRam);
+				printf ("    enabledMbx = %d  enabledRam = %d\n",
+					pCard->enabledMbx, pCard->enabledRam);
 				printf ("    enabledMtr = %d  enabledBkg = %d  enabledVar = %d\n",
 					pCard->enabledMtr, pCard->enabledBkg, pCard->enabledVar);
-				printf ("    enabledOpn = %d  enabledFld = %d  enabledGat = %d\n",
-					pCard->enabledOpn, pCard->enabledFld, pCard->enabledGat);
+				printf ("    enabledOpn = %d\n", pCard->enabledOpn);
 				printf ("    numMtrIo = %d  numBkgIo = %d  numVarIo = %d  numOpnIo = %d\n",
 					drvPmacCard[i].numMtrIo, drvPmacCard[i].numBkgIo,
 					drvPmacCard[i].numVarIo, drvPmacCard[i].numOpnIo);
@@ -563,7 +505,7 @@ PMAC_LOCAL long drvPmacStartup (void)
 
 			PMAC_DEBUG
 			(	1,
-				PMAC_MESSAGE ("%s: Starting tasks for card %d.\n", MyName, i);
+				PMAC_MESSAGE ("%s: Starting tasks for card %d.\n", MyName, i,0,0,0,0);
 			)
 
 			if ( drvPmacCard[i].enabledMbx )
@@ -584,16 +526,6 @@ PMAC_LOCAL long drvPmacStartup (void)
 			if ( drvPmacCard[i].enabledVar )
 			{
 				drvPmacVarScanInit (i);
-			}
-
-			if ( drvPmacCard[i].enabledFld )
-			{
-				drvPmacFldScanInit (i);
-			}
-
-			if ( drvPmacCard[i].enabledGat )
-			{
-				drvPmacGatScanInit (i);
 			}
 
 		}
@@ -674,9 +606,9 @@ long drvPmacMemSpecParse
 	PMAC_DEBUG
 	(	1,
 		PMAC_MESSAGE ("%s: parse '%s' results parmCount %d\n",
-			MyName, pmacAdrSpec, parmCount);
+			MyName, pmacAdrSpec, parmCount,0,0,0);
 		PMAC_MESSAGE ("%s: memTypeStr '%c' pmacAdr %x\n",
-			MyName, memTypeStr[0], *pmacAdr);
+			MyName, memTypeStr[0], *pmacAdr,0,0,0);
 	)
 
 	if ( (parmCount != 2) )
@@ -739,7 +671,7 @@ long drvPmacMemSpecParse
 
 	PMAC_DEBUG
 	(	1,
-		PMAC_MESSAGE ("%s: memType %d\n", MyName, *memType);
+		PMAC_MESSAGE ("%s: memType %d\n", MyName, *memType,0,0,0,0);
 	)
 
 	if ( (*pmacAdr < 0) || (*pmacAdr > PMAC_MEM_SIZE) )
@@ -747,7 +679,7 @@ long drvPmacMemSpecParse
 		status = S_dev_badInit;
 		errPrintf (status, __FILE__, __LINE__,
 			"%s: Address %x out of range for '%s'.",
-			MyName, pmacAdr, pmacAdrSpec);
+			MyName, (unsigned int)pmacAdr, pmacAdrSpec);
 		return (status);
 	}
 
@@ -838,7 +770,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: Mtr -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, pMtrIo->memType, pMtrIo->hostOfs, pMtrIo->pAddress);
+				i, pMtrIo->memType, pMtrIo->hostOfs, pMtrIo->pAddress,0);
 		)
 
 		pCard->numMtrIo++;
@@ -875,7 +807,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: Bkg -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, pBkgIo->memType, pBkgIo->hostOfs, pBkgIo->pAddress);
+				i, pBkgIo->memType, pBkgIo->hostOfs, pBkgIo->pAddress,0);
 		)
 
 		pCard->numBkgIo++;
@@ -902,7 +834,7 @@ long drvPmacDpramRequest
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ( "%s: Var -- index %d memType %d\n",
-				MyName, i, pVarIo->memType);
+				MyName, i, pVarIo->memType,0,0,0);
 		)
 
 		pCard->numVarIo++;
@@ -929,7 +861,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: timCS -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, ptimCS->memType, ptimCS->hostOfs, ptimCS->pAddress);
+				i, ptimCS->memType, ptimCS->hostOfs, ptimCS->pAddress,0);
 		)
 
 		pCard->numtimCS++;
@@ -956,7 +888,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: timMT -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, ptimMT->memType, ptimMT->hostOfs, ptimMT->pAddress);
+				i, ptimMT->memType, ptimMT->hostOfs, ptimMT->pAddress,0);
 		)
 
 		pCard->numtimMT++;
@@ -983,7 +915,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: timMT -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, ptimVB->memType, ptimVB->hostOfs, ptimVB->pAddress);
+				i, ptimVB->memType, ptimVB->hostOfs, ptimVB->pAddress,0);
 		)
 
 		pCard->numtimVB++;
@@ -1020,7 +952,7 @@ long drvPmacDpramRequest
 		(	1,
 			PMAC_MESSAGE ( "%s: Opn -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
-				i, pOpnIo->memType, pOpnIo->hostOfs, pOpnIo->pAddress);
+				i, pOpnIo->memType, pOpnIo->hostOfs, pOpnIo->pAddress,0);
 		)
 
 		pCard->numOpnIo++;
@@ -1120,7 +1052,7 @@ long drvPmacVarSetup
 			PMAC_MESSAGE ( "%s: configFormat %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
 				configFormat, pVarIo->memType,
-				pVarIo->hostOfs, pVarIo->pAddress);
+				pVarIo->hostOfs, pVarIo->pAddress,0);
 		)
 
 		/* Determine Location Of Next Variable */
@@ -1170,7 +1102,7 @@ long drvPmacMtrRead
 
 		PMAC_DEBUG
 		(	5,
-			PMAC_MESSAGE ("%s: PMAC waiting status %x\n", MyName, pmacStatus);
+			PMAC_MESSAGE ("%s: PMAC waiting status %x\n", MyName, pmacStatus,0,0,0,0);
 		)
 /*	do
 	{
@@ -1237,7 +1169,7 @@ long drvPmacBkgRead
 
 	PMAC_DEBUG
 	(	5,
-		PMAC_MESSAGE ("%s: PMAC status %x\n", MyName, pmacStatus);
+		PMAC_MESSAGE ("%s: PMAC status %x\n", MyName, pmacStatus,0,0,0,0);
 	)
 
 	/* If No Data Ready Then Return Without Reading */
@@ -1304,7 +1236,7 @@ long drvPmacVarRead
 
 	PMAC_DEBUG
 	(	5,
-		PMAC_MESSAGE ("%s: PMAC status %x\n", MyName, pmacStatus);
+		PMAC_MESSAGE ("%s: PMAC status %x\n", MyName, pmacStatus,0,0,0,0);
 	)
 
 	/* If No Data Ready Then Return Without Reading */
@@ -1619,7 +1551,7 @@ void drvPmacMbxScan
 
 	PMAC_DEBUG
 	(	9,
-		PMAC_MESSAGE ("%s: rngBufPut completed.\n", MyName);
+		PMAC_MESSAGE ("%s: rngBufPut completed.\n", MyName,0,0,0,0,0);
 	)
 
 	semGive (pCard->scanMbxSem);
@@ -1661,7 +1593,7 @@ PMAC_LOCAL void drvPmacMbxScanInit
 					PMAC_MBX_PRI, PMAC_MBX_OPT, PMAC_MBX_STACK,
 					(FUNCPTR)drvPmacMbxTask,
 					pCard->card,0,0,0,0,0,0,0,0,0 );
-		taskwdInsert (pCard->scanMbxTaskId, NULL, 0L);
+		taskwdInsert ((void*)pCard->scanMbxTaskId, NULL, 0L);
 
              /* epicsPrintf( "***** %s: created queue size of: %d\n",
                              pCard->scanMbxTaskName, PMAC_MBX_QUEUE_SIZE ); */
@@ -1689,7 +1621,7 @@ int drvPmacMbxTask
 
 	FOREVER
 	{
-		if ( semTake(pCard->scanMbxSem,WAIT_FOREVER) != OK )
+		if ( semTake(pCard->scanMbxSem,WAIT_TIMEOUT) != OK )
 		{
 			errMessage(0,"drvPmacMbxTask: semTake returned error.");
 		}
@@ -1704,9 +1636,9 @@ int drvPmacMbxTask
 			{
 				PMAC_DEBUG
 				(	6,
-					PMAC_MESSAGE ("%s: rngBufGet completed.\n", MyName);
+					PMAC_MESSAGE ("%s: rngBufGet completed.\n", MyName,0,0,0,0,0);
 					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName,
-						pMbxIo->card, pMbxIo->command);
+						pMbxIo->card, pMbxIo->command,0,0,0);
 				)
 
 				pMbxIo->terminator = drvPmacMbxWriteRead (pMbxIo->card,
@@ -1715,301 +1647,22 @@ int drvPmacMbxTask
 
 				if ( pMbxIo->terminator == PMAC_TERM_BELL )
 				{
-					PMAC_MESSAGE ("%s: PMAC Error=[%s]\n", MyName, pMbxIo->errmsg);
+					PMAC_MESSAGE ("%s: PMAC Error=[%s]\n", MyName, pMbxIo->errmsg,0,0,0,0);
 					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName,
-						pMbxIo->card, pMbxIo->command);
-					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response);
+						pMbxIo->card, pMbxIo->command,0,0,0);
+					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
 				}
 
 				PMAC_DEBUG
 				(	6,
-					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response);
+					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
 				)
 
 				callbackRequest (&pMbxIo->callback);
 
 				PMAC_DEBUG
 				(	6,
-					PMAC_MESSAGE ("%s: Callback requested.\n", MyName);
-				)
-
-
-			}
-
-		}
-	}
-}
-
-/*******************************************************************************
- *
- * drvPmacFldScan - put PMAC file request on queue
- *
- */
-void drvPmacFldScan
-(
-	PMAC_MBX_IO *	pMbxIo
-)
-{
-	char *	MyName = "drvPmacFldScan";
-	PMAC_CARD *	pCard;
-
-	pCard = &drvPmacCard[pMbxIo->card];
-
-	if ( rngBufPut(pCard->scanFldQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
-	{
-		errMessage (0,"drvPmacFldScan: rngBufPut overflow.");
-	}
-
-	PMAC_DEBUG
-	(	9,
-		PMAC_MESSAGE ("%s: rngBufPut completed.\n", MyName);
-	)
-
-	semGive (pCard->scanFldSem);
-	return;
-}
-
-/*******************************************************************************
- *
- * drvPmacFldScanInit - initialize PMAC file scan task
- *
- */
-PMAC_LOCAL void drvPmacFldScanInit
-(
-	int	card
-)
-{
-	/* char * MyName = "drvPmacFldScanInit"; */
-	/* long	status; */
-
-	PMAC_CARD *	pCard = &drvPmacCard[card];
-
-	pCard->scanFldQ = rngCreate(sizeof(void *) * PMAC_FLD_QUEUE_SIZE);
-
-	if ( pCard->scanFldQ == NULL )
-	{
-		errMessage (0, "drvPmacFldScanInit: rngCreate failed");
-		exit(1);
-	}
-
-	pCard->scanFldSem = semBCreate(SEM_Q_FIFO,SEM_EMPTY);
-	if ( pCard->scanFldSem == NULL )
-	{
-		errMessage (0, "drvPmacFldScanInit: semBcreate failed.");
-	}
-	else
-	{
-		sprintf ( pCard->scanFldTaskName, "%s%d", PMAC_FLD_SCAN, pCard->card);
-		pCard->scanFldTaskId = taskSpawn ( pCard->scanFldTaskName,
-					PMAC_FLD_PRI, PMAC_FLD_OPT, PMAC_FLD_STACK,
-					(FUNCPTR)drvPmacFldTask,
-					pCard->card,0,0,0,0,0,0,0,0,0 );
-		taskwdInsert (pCard->scanFldTaskId, NULL, 0L);
-	}
-
-	return;
-}
-
-/*******************************************************************************
- *
- * drvPmacFldLoop - write command and read response from files
- *
- */
-long drvPmacFldLoop
-(
-	int	card,
-	char	*download,
-	char	*upload,
-	char	*message
-)
-{
-	char *	MyName = "drvPmacFldLoop";
-	int	status;
-	char	terminator;
-
-	int	exitNow;
-	FILE *	fpDownload;
-	FILE *	fpUpload;
-
-	char	textline[FILE_TEXT_BUFLEN];
-	char	command[PMAC_MBX_OUT_BUFLEN];
-	char	response[PMAC_MBX_IN_BUFLEN];
-	char	errmsg[PMAC_MBX_ERR_BUFLEN];
-
-	/* Open Download File */
-	fpDownload = fopen (download, "r");
-	if (fpDownload == (FILE *) NULL)
-	{
-	    sprintf (message, "FILEDOWN");
-	    return (ERROR);
-	}
-
-	/* Open Upload File */
-	fpUpload = fopen (upload, "w");
-	if (fpUpload == (FILE *) NULL)
-	{
-	    sprintf (message, "FILEUP");
-	    return (ERROR);
-	}
-
-	/* Lock Mailbox */
-	pmacMbxLock (card);
-
-	exitNow = FALSE;
-	terminator = 0;
-
-	/* Send Initial String To PMAC */
-	terminator = pmacMbxWrite (card, "CLOSE I9=3");
-	terminator = pmacMbxRead (card, response, errmsg);
-	while ( terminator == PMAC_TERM_CR )
-	{
-		terminator = pmacMbxRead (card, response, errmsg);
-	}
-
-	/* Get Command String */
-	status = (int) fgets (textline, FILE_TEXT_BUFLEN - 1, fpDownload);
-	if (status == NULL)
-	{
-		exitNow = TRUE;
-	}
-
-	/* Loop Until Exit */
-	while ( !exitNow )
-	{
-
-		sscanf (textline, "%79[^;]", command);
-		PMAC_DEBUG
-		(	7,
-			PMAC_MESSAGE ("%s: command=[%s]\n", MyName, command);
-		)
-		/* Write Command To PMAC */
-		terminator = pmacMbxWrite (card, command);
-
-		/* Get Response And Loop Until Acknowledged */
-		terminator = pmacMbxRead (card, response, errmsg);
-
-		while ( terminator == PMAC_TERM_CR )
-		{
-			PMAC_DEBUG
-			(	7,
-				PMAC_MESSAGE ("%s: response=[%s]\n", MyName, response);
-			)
-		    	fprintf (fpUpload, "%s\n", response);
-			terminator = pmacMbxRead (card, response, errmsg);
-		}
-		if ( terminator == PMAC_TERM_BELL )
-		{
-			PMAC_DEBUG
-			(	7,
-				PMAC_MESSAGE ("%s: errmsg=[%s]\n", MyName, errmsg);
-			)
-			fprintf (fpUpload, "[%s]\n", errmsg);
-			sprintf (message, "%s", errmsg);
-			exitNow = TRUE;
-		}
-
-		/* Response Has Been Acknowledged */
-
-		if ( !exitNow )
-		{
-			/* Get Next Command */
-			status = (int) fgets (textline, FILE_TEXT_BUFLEN - 1, fpDownload);
-			if (status == NULL)
-			{
-				exitNow = TRUE;
-			}
-		}
-	}
-
-	/* Send Final String To PMAC */
-	terminator = pmacMbxWrite (card, "CLOSE I9=0");
-	terminator = pmacMbxRead (card, response, errmsg);
-	while ( terminator == PMAC_TERM_CR )
-	{
-		terminator = pmacMbxRead (card, response, errmsg);
-	}
-
-	pmacMbxUnlock (card);
-
-	status = fclose (fpDownload);
-	if (status == ERROR)
-	{
-	    sprintf (message, "FILEDOWN");
-	    return (ERROR);
-	}
-	status = fclose (fpUpload);
-	if (status == ERROR)
-	{
-	    sprintf (message, "FILEUP");
-	    return (ERROR);
-	}
-
-	if ( terminator == PMAC_TERM_BELL )
-	{
-	return (ERROR);
-	}
-
-	sprintf (message, "OK");
-	return (OK);
-}
-
-/*******************************************************************************
- *
- * drvPmacFldTask - task for PMAC file input/output
- *
- */
-int drvPmacFldTask
-(
-	int	card
-)
-{
-	char *	MyName = "drvPmacFldTask";
-	long	status;
-
-	PMAC_CARD *	pCard = &drvPmacCard[card];
-
-	PMAC_MBX_IO *		pMbxIo;
-
-	FOREVER
-	{
-		if ( semTake(pCard->scanFldSem,WAIT_FOREVER) != OK )
-		{
-			errMessage(0,"drvPmacFldTask: semTake returned error.");
-		}
-
-		while ( rngNBytes(pCard->scanFldQ) >= sizeof(pMbxIo) )
-		{
-			if( rngBufGet(pCard->scanFldQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
-			{
-				errMessage (0,"drvPmacFldTask: rngBufGet returned error.");
-			}
-			else
-			{
-				PMAC_DEBUG
-				(	7,
-					PMAC_MESSAGE ("%s: rngBufGet completed.\n", MyName);
-					PMAC_MESSAGE ("%s: card=%d download=[%s]\n", MyName,
-						pMbxIo->card, pMbxIo->command);
-					PMAC_MESSAGE ("%s: upload=[%s]\n", MyName, pMbxIo->response);
-				)
-
-				status = drvPmacFldLoop (pMbxIo->card,
-							pMbxIo->command, pMbxIo->response,
-							pMbxIo->errmsg);
-
-				PMAC_DEBUG
-				(	7,
-					PMAC_MESSAGE ("%s: status=%d\n", MyName, status);
-					PMAC_MESSAGE ("%s: message=[%s]\n", MyName, pMbxIo->errmsg);
-				)
-
-				pMbxIo->terminator = (char) status;
-
-				callbackRequest (&pMbxIo->callback);
-
-				PMAC_DEBUG
-				(	7,
-					PMAC_MESSAGE ("%s: Callback requested.\n", MyName);
+					PMAC_MESSAGE ("%s: Callback requested.\n", MyName,0,0,0,0,0);
 				)
 
 
@@ -2062,7 +1715,7 @@ PMAC_LOCAL void drvPmacMtrScanInit
 				PMAC_MTR_PRI, PMAC_MTR_OPT, PMAC_MTR_STACK,
 				drvPmacMtrTask,
 				pCard->card,0,0,0,0,0,0,0,0,0 );
-	taskwdInsert (pCard->scanMtrTaskId, NULL, NULL);
+	taskwdInsert ((void*)pCard->scanMtrTaskId, NULL, NULL);
 
 	return;
 }
@@ -2110,7 +1763,7 @@ PMAC_LOCAL void drvPmacBkgScanInit
 				PMAC_BKG_PRI, PMAC_BKG_OPT, PMAC_BKG_STACK,
 				drvPmacBkgTask,
 				pCard->card,0,0,0,0,0,0,0,0,0 );
-	taskwdInsert (pCard->scanBkgTaskId, NULL, NULL);
+	taskwdInsert ((void*)pCard->scanBkgTaskId, NULL, NULL);
 
 	return;
 }
@@ -2160,379 +1813,7 @@ PMAC_LOCAL void drvPmacVarScanInit
 				PMAC_VAR_PRI, PMAC_VAR_OPT, PMAC_VAR_STACK,
 				drvPmacVarTask,
 				pCard->card,0,0,0,0,0,0,0,0,0 );
-	taskwdInsert (pCard->scanVarTaskId, NULL, NULL);
+	taskwdInsert ((void*)pCard->scanVarTaskId, NULL, NULL);
 
 	return;
 }
-
-/*******************************************************************************
- *
- * drvPmacGatAlloc - allocate storage for data gathering buffer
- *
- */
-long drvPmacGatAlloc
-(
-	int	card,
-	int	src,
-	double *pDouble,
-	int	nelm
-)
-{
-	/* char * MyName = "drvPmacGatAlloc"; */
-	/* long	status; */
-
-	PMAC_CARD *	pCard	= &drvPmacCard[card];
-
-
-	pCard->GatIo[src].pValD = pDouble;
-	pCard->GatIo[src].pValL = (long *) pCard->GatIo[src].pValD;
-	pCard->GatIo[src].numVal = nelm;
-
-	return (0);
-
-}
-
-/*******************************************************************************
- *
- * drvPmacGatRead - read data gathering buffer
- *
- */
-int drvPmacGatRead
-(
-	int	card
-)
-{
-	/* char * MyName = "drvPmacGatRead"; */
-	long	status;
-
-	PMAC_CARD *	pCard	= &drvPmacCard[card];
-	PMAC_GAT_IO *	pGatIo	= &pCard->GatIo[0];
-
-	long *		pValL;
-	double *	pValD;
-
-	int	start;
-	int	head;
-	int	size;
-	int	ptr;
-	int	ofs;
-	long	end;
-	long	tail;
-
-	int	i;
-	int	j;
-	int	k;
-	int	numVal;
-
-	start = 0;
-	status = pmacRamGet16(pmacRamAddr(card,0x07fc),&end);
-
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("START= %d  END= %d\n", start, end);
-	)
-
-	numVal = 0;
-	for (j=0; j<24; j++)
-	{
-		if (pGatIo[j].numVal > numVal)
-		{
-			numVal = pGatIo[j].numVal;
-		}
-	}
-
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("numVal = %d\n", numVal);
-	)
-
-/*	pmacGatBufferSem (card);
- */
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("Gather Buffer Semaphore take completed.\n", numVal);
-	)
-
-	status = pmacRamGet16(pmacRamAddr(card,0x07fe),&tail);
-	head = tail;
-	ptr = head;
-
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("numVal = %d\n", numVal);
-	)
-
-	k=0;
-	i=0;
-	while (i < numVal)
-	{
-		for (j=0; j<24; j++)
-		{
-
-			if ( pGatIo[j].srcEna != 0 )
-			{
-				if (head == tail)
-				{
-					taskDelay (1);
-					status = pmacRamGet16(pmacRamAddr(card,0x07fe),&tail);
-					size = ( (head <= tail) ? (tail - head) : (end - head + tail) );
-					k++;
-					ptr = head;
-				}
-
-				ofs = (4 * ptr) + 0x0800;
-				pValL = pGatIo[j].pValL;
-				pValD = pGatIo[j].pValD;
-
-				switch (pGatIo[j].srcType)
-				{
-				case PMAC_GATTYP_D:
-					status = pmacRamGetD(pmacRamAddr(card,ofs),&pValD[i]);
-					ptr+=2;
-					break;
-				case PMAC_GATTYP_L:
-					status = pmacRamGetL(pmacRamAddr(card,ofs),&pValD[i]);
-					ptr+=2;
-					break;
-				case PMAC_GATTYP_X:
-				case PMAC_GATTYP_Y:
-				default:
-					status = pmacRamGet24(pmacRamAddr(card,ofs),&pValL[i]);
-					ptr+=1;
-					break;
-				}
-
-				if ( (head < tail) && (ptr >= tail) )
-				{
-					head = tail;
-				}
-				else if ( (head > tail) && (ptr >= end) )
-				{
-					head = start;
-					ptr = start;
-				}
-
-			}
-		}
-		i++;
-	}
-
-	return (0);
-}
-
-/*******************************************************************************
- *
- * drvPmacGatRequest - add PMAC gather request
- *
- */
-long drvPmacGatRequest
-(
-	short	card,
-	short	source,
-	char	*other,
-	void	(*pFunc)(),
-	void	*pParm,
-	PMAC_GAT_IO ** ppGatIo
-)
-{
-	/* char * MyName = "drvPmacGatRequest"; */
-	/* int	i; */
-
-	*ppGatIo = &drvPmacCard[card].GatIo[source-1];
-
-	return (0);
-}
-
-/*******************************************************************************
- *
- * drvPmacGatScanInit - initialize PMAC Gather scan task
- *
- */
-PMAC_LOCAL void drvPmacGatScanInit
-(
-	int	card
-)
-{
-	/* char * MyName = "drvPmacGatScanInit"; */
-	/* long	status; */
-
-	PMAC_CARD *	pCard = &drvPmacCard[card];
-
-	pCard->scanGatQ = rngCreate(sizeof(void *) * PMAC_GAT_QUEUE_SIZE);
-
-	if ( pCard->scanGatQ == NULL )
-	{
-		errMessage (0, "drvPmacGatScanInit: rngCreate failed");
-		exit(1);
-	}
-
-	pCard->scanGatSem = semBCreate(SEM_Q_FIFO,SEM_EMPTY);
-	if ( pCard->scanGatSem == NULL )
-	{
-		errMessage (0, "drvPmacGatScanInit: semBcreate failed.");
-	}
-	else
-	{
-		sprintf ( pCard->scanGatTaskName, "%s%d", PMAC_GAT_SCAN, pCard->card);
-		pCard->scanGatTaskId = taskSpawn ( pCard->scanGatTaskName,
-					PMAC_GAT_PRI, PMAC_GAT_OPT, PMAC_GAT_STACK,
-					(FUNCPTR)drvPmacGatTask,
-					pCard->card,0,0,0,0,0,0,0,0,0 );
-		taskwdInsert (pCard->scanGatTaskId, NULL, 0L);
-	}
-
-	return;
-}
-
-/*******************************************************************************
- *
- * drvPmacGatSources - read PMAC Gather Sources
- *
- */
-long drvPmacGatSources
-(
-	int	card
-)
-{
-	char *	MyName = "drvPmacGatSources";
-	/* long	status; */
-
-	long	terminator;
-	char	command[PMAC_MBX_OUT_BUFLEN];
-	char	response[PMAC_MBX_IN_BUFLEN];
-	char	errmsg[PMAC_MBX_ERR_BUFLEN];
-
-	int	I20;
-	int	source;
-
-	PMAC_CARD *	pCard = &drvPmacCard[card];
-
-	sprintf (command, "I20");
-	terminator = drvPmacMbxWriteRead (card, command, response, errmsg);
-	sscanf (response, "%d", &I20);
-
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("%s: I20 = 0x%x\n", MyName, I20);
-	)
-
-	for ( source = 0; source < 24; source++ )
-	{
-		pCard->GatIo[source].srcEna = ((I20 >> source) && 0x1);
-
-		sprintf (command, "I%d", (source + 21));
-		terminator = drvPmacMbxWriteRead (card, command, response, errmsg);
-		sscanf (response, "%d", &pCard->GatIo[source].srcIx);
-		pCard->GatIo[source].srcType = ((0x00FF0000 & pCard->GatIo[source].srcIx) >> 16);
-
-		PMAC_DEBUG
-		(	8,
-			PMAC_MESSAGE ("%s: [%d] ena=%d source=0x%x type=0x%x\n", MyName, source,
-					pCard->GatIo[source].srcEna,
-					pCard->GatIo[source].srcIx,
-					pCard->GatIo[source].srcType);
-		)
-
-	}
-
-	return (0);
-}
-
-/*******************************************************************************
- *
- * drvPmacGatScan - put PMAC gather request on queue
- *
- */
-long drvPmacGatScan
-(
-	int		card,
-	CALLBACK *	pCallback
-)
-{
-	char *	MyName = "drvPmacGatScan";
-	PMAC_CARD *	pCard;
-
-	pCard = &drvPmacCard[card];
-
-	if ( rngBufPut(pCard->scanGatQ,(void *)&pCallback,sizeof(pCallback)) != sizeof(pCallback) )
-	{
-		errMessage (0,"drvPmacGatScan: rngBufPut overflow.");
-	}
-
-	PMAC_DEBUG
-	(	8,
-		PMAC_MESSAGE ("%s: rngBufPut completed. card=%d callback=%x\n", MyName, card, pCallback);
-	)
-
-	semGive (pCard->scanGatSem);
-
-	return (0);
-}
-
-/*******************************************************************************
- *
- * drvPmacGatTask - task for PMAC data gather
- *
- */
-int drvPmacGatTask
-(
-	int	card
-)
-{
-	char *	MyName = "drvPmacGatTask";
-	long	status;
-
-	PMAC_CARD *	pCard = &drvPmacCard[card];
-	CALLBACK *	pCallback;
-
-	FOREVER
-	{
-		if ( semTake(pCard->scanGatSem,WAIT_FOREVER) != OK )
-		{
-			errMessage(0,"drvPmacGatTask: semTake returned error.");
-		}
-
-		PMAC_DEBUG
-		(	8,
-			PMAC_MESSAGE ("%s: semTake completed. card=%d\n", MyName, card);
-		)
-
-		while ( rngNBytes(pCard->scanGatQ) >= sizeof(pCallback) )
-		{
-			PMAC_DEBUG
-			(	8,
-				PMAC_MESSAGE ("%s: rngNBytes TRUE.\n", MyName);
-			)
-
-			if( rngBufGet(pCard->scanGatQ,(void *)&pCallback,sizeof(pCallback)) != sizeof(pCallback) )
-			{
-				errMessage (0,"drvPmacGatTask: rngBufGet returned error.");
-			}
-			else
-			{
-
-				PMAC_DEBUG
-				(	8,
-					PMAC_MESSAGE ("%s: rngBufGet completed. callback=%x\n", MyName, pCallback);
-				)
-
-				status = drvPmacGatSources (card);
-
-				status = drvPmacGatRead (card);
-
-				PMAC_DEBUG
-				(	8,
-					PMAC_MESSAGE ("%s: Gather completed.\n", MyName);
-				)
-
-				callbackRequest (pCallback);
-
-				PMAC_DEBUG
-				(	8,
-					PMAC_MESSAGE ("%s: Callback requested.\n", MyName);
-				)
-			}
-		}
-	}
-}
-
