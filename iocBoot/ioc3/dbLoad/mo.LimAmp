@@ -1,7 +1,0 @@
-file MO_LimAmp.db
-{
- 	pattern { assy, x1, x2, d1, d2 }
-#
-        { 23i:MO:En:, 23i:MO:E:, 23i:MO:L:, 23i:MO:QB:, 23i:MO:T2: }
-}
-

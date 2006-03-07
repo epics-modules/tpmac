@@ -1,6 +1,0 @@
-file AsciiPmac.db
-{
-	pattern { pmac, C }
-
-        { 23i:pmac10:, 0 }
-}

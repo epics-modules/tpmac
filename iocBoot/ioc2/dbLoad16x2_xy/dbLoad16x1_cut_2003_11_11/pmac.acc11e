@@ -1,6 +1,0 @@
-file pmacApp/Db/pmacDb/Acc11E.db
-{
-	pattern { pmac, C }
-
-        { 23i:pmac20:, 0 }
-}

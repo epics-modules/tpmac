@@ -1,6 +1,0 @@
-file CtlPnlPmac.db
-{
-	pattern { pmac, C }
-
-        { 23i:pmac20:, 0 }
-}

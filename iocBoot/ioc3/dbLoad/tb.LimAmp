@@ -1,8 +1,0 @@
-file TB_LimAmp.db
-{
- 	pattern { assy, x1, x2, x3, d1, d2, d3 }
-#
-        { 23i:KB:Hz:, 23i:KB:HL:, 23i:KB:HW:, 23i:KB:HR:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3: }
-        { 23i:KB:Vz:, 23i:KB:VZ:, 23i:KB:VA:, 23i:KB:VR:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3: }
-}
-

@@ -1,7 +1,0 @@
-file CS_Calibrate.db
-{
-	pattern { assy, d1, d2 }
-#
-        { 23i:CS:Av:, 23i:CS:ZT:, 23i:CS:ZB:}
-        { 23i:CS:Ah:, 23i:CS:YO:, 23i:CS:YI:}
-}

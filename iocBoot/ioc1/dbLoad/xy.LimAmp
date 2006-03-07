@@ -1,8 +1,0 @@
-file XY_LimAmp.db
-{
- 	pattern { assy, d1, d2 }
-#
-	{ 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:   }
-	{ 23i:MO:Tn2:, 23i:MO:P2:,  23i:MO:R2:  }
-}
-

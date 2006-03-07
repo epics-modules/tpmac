@@ -1,9 +1,0 @@
-file pmacApp/Db/hsDb/HS_Calibrate.db
-{
-	pattern { assy, d1, d2 }
-#
-        { 23i:WS:Av:,  23i:WS:ZT:,   23i:WS:ZB:}
-        { 23i:WS:Ah:,  23i:WS:YO:,   23i:WS:YI:}
-        { 23i:CS:Av:,  23i:CS:ZT:,   23i:CS:ZB:}
-        { 23i:CS:Ah:,  23i:CS:YO:,   23i:CS:YI:}
-}

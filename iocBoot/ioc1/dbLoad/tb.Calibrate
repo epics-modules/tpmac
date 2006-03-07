@@ -1,7 +1,0 @@
-file TB_Calibrate.db
-{
-	pattern { assy, d1, d2, d3 }
-#
-        { 23i:KB:Hz:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3: }
-        { 23i:KB:Vz:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3: }
-}

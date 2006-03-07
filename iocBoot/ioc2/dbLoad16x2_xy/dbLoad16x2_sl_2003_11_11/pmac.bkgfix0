@@ -1,6 +1,0 @@
-file pmacApp/Db/pmacDb/bkgfix0.db
-{
-	pattern { pmac, C }
-
-        { 23i:pmac40:, 0 }
-}

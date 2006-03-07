@@ -1,8 +1,0 @@
-file MI_LimAmp.db
-{
- 	pattern { assy, x1, x2, d1, d2 }
-#
-        { 23i:KB:Hy:, 23i:KB:HY:, 23i:KB:HA:, 23i:KB:HY1:, 23i:KB:HY2: }
-        { 23i:KB:Vy:, 23i:KB:VL:, 23i:KB:VW:, 23i:KB:VY1:, 23i:KB:VY2: }
-}
-
