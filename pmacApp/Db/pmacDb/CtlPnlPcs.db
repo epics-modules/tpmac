@@ -1,0 +1,27 @@
+record(seq, "$(pcs)Abort") {
+  field(DESC, "Abort")
+  field(PRIO, "HIGH")
+  field(DO1, "1")
+  field(LNK1, "$(pcs)CmdAB.PROC PP MS")
+  field(PINI, "YES")
+}
+
+record(seq, "$(pcs)Run") {
+  field(DESC, "Run")
+  field(PRIO, "HIGH")
+  field(DO1, "1")
+  field(LNK1, "$(pcs)CmdRN.PROC PP MS")
+}
+
+record(stringout, "$(pcs)CmdAB") {
+  field(DTYP, "Soft Channel")
+  field(OUT, "$(pcs)StrCmd PP MS")
+  field(VAL, "A")
+  field(FLNK, "$(pcs)Ready.PROC PP MS")
+}
+
+record(stringout, "$(pcs)CmdRN") {
+  field(DTYP, "Soft Channel")
+  field(OUT, "$(pcs)StrCmd PP MS")
+  field(VAL, "R")
+}

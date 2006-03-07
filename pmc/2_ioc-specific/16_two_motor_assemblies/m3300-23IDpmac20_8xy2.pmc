@@ -1,0 +1,167 @@
+; M-variable Definitions
+; point to motion program parameters in the DPRAM
+; use together with q70-23IDpmac20.pmc
+
+CLOSE	; To ensure commands are on-line
+M3300..3540->*	; To clear existing definitions
+
+; &1 DPRAM Program Parameters Set
+M3300->DP:$60450       ; TA0
+M3301->DP:$60451       ; TS0
+M3302->F:$60452        ; F0
+M3303->DP:$60453       ; FRAX0
+M3304->DP:$60454       ; X0
+M3305->DP:$60455       ; X1
+M3306->DP:$60456       ; Y0
+M3307->DP:$60457       ; Y1
+
+; &2 DPRAM Program Parameters Set
+M3308->DP:$60458 	; TA0
+M3309->DP:$60459 	; TS0
+M3310->F:$6045A  	; F0
+M3311->DP:$6045B 	; FRAX0
+M3312->DP:$6045C 	; X0
+M3313->DP:$6045D 	; X1
+M3314->DP:$6045E 	; Y0
+M3315->DP:$6045F 	; Y1
+
+; &3 DPRAM Program Parameters Set
+M3316->DP:$60460 	; TA0
+M3317->DP:$60461 	; TS0
+M3318->F:$60462         ; F0
+M3319->DP:$60463        ; FRAX0
+M3320->DP:$60464        ; X0
+M3321->DP:$60465        ; X1
+M3322->DP:$60466        ; Y0
+M3323->DP:$60467        ; Y1
+
+; &4 DPRAM Program Parameters Set
+M3324->DP:$60468 	; TA0
+M3325->DP:$60469 	; TS0
+M3326->F:$6046A  	; F0
+M3327->DP:$6046B 	; FRAX0
+M3328->DP:$6046C 	; X0
+M3329->DP:$6046D 	; X1
+M3330->DP:$6046E 	; Y0
+M3331->DP:$6046F 	; Y1
+
+; &5 DPRAM Program Parameters Set
+M3332->DP:$60470 	; TA0
+M3333->DP:$60471 	; TS0
+M3334->F:$60472  	; F0
+M3335->DP:$60473 	; FRAX0
+M3336->DP:$60474 	; X0
+M3337->DP:$60475 	; X1
+M3338->DP:$60476 	; Y0
+M3339->DP:$60477 	; Y1
+
+; &6 DPRAM Program Parameters Set
+M3340->DP:$60478 	; TA0
+M3341->DP:$60479 	; TS0
+M3342->F:$6047A  	; F0
+M3343->DP:$6047B 	; FRAX0
+M3344->DP:$6047C 	; X0
+M3345->DP:$6047D 	; X1
+M3346->DP:$6047E 	; Y0
+M3347->DP:$6047F 	; Y1
+
+; &7 DPRAM Program Parameters Set
+M3348->DP:$60480 	; TA0
+M3349->DP:$60481 	; TS0
+M3350->F:$60482  	; F0
+M3351->DP:$60483 	; FRAX0
+M3352->DP:$60484        ; X0
+M3353->DP:$60485        ; X1
+M3354->DP:$60486        ; Y0
+M3355->DP:$60487        ; Y1
+
+; &8 DPRAM Program Parameters Set
+M3356->DP:$60488        ; TA0
+M3357->DP:$60489        ; TS0
+M3358->F:$6048A         ; F0
+M3359->DP:$6048B        ; FRAX0
+M3360->DP:$6048C        ; X0
+M3361->DP:$6048D        ; X1
+M3362->DP:$6048E        ; Y0
+M3363->DP:$6048F        ; Y1
+
+; &9 DPRAM Program Parameters Set
+M3364->DP:$60490        ; TA0
+M3365->DP:$60491        ; TS0
+M3366->F:$60492         ; F0
+M3367->DP:$60493        ; FRAX0
+M3368->DP:$60494        ; X0
+M3369->DP:$60495        ; X1
+M3370->DP:$60496        ; Y0
+M3371->DP:$60497        ; Y1
+
+; &10 DPRAM Program Parameters Set
+M3372->DP:$60498        ; TA0
+M3373->DP:$60499        ; TS0
+M3374->F:$6049A         ; F0
+M3375->DP:$6049B        ; FRAX0
+M3376->DP:$6049C        ; X0
+M3377->DP:$6049D        ; X1
+M3378->DP:$6049E        ; Y0
+M3379->DP:$6049F        ; Y1
+
+; &11 DPRAM Program Parameters Set
+M3380->DP:$604A0        ; TA0
+M3381->DP:$604A1        ; TS0
+M3382->F:$604A2         ; F0
+M3383->DP:$604A3        ; FRAX0
+M3384->DP:$604A4        ; X0
+M3385->DP:$604A5        ; X1
+M3386->DP:$604A6        ; Y0
+M3387->DP:$604A7        ; Y1
+
+; &12 DPRAM Program Parameters Set
+M3388->DP:$604A8        ; TA0
+M3389->DP:$604A9        ; TS0
+M3390->F:$604AA         ; F0
+M3391->DP:$604AB        ; FRAX0
+M3392->DP:$604AC        ; X0
+M3393->DP:$604AD        ; X1
+M3394->DP:$604AE        ; Y0
+M3395->DP:$604AF        ; Y1
+
+; &13 DPRAM Program Parameters Set
+M3396->DP:$604B0        ; TA0
+M3397->DP:$604B1        ; TS0
+M3398->F:$604B2         ; F0
+M3399->DP:$604B3        ; FRAX0
+M3400->DP:$604B4        ; X0
+M3401->DP:$604B5        ; X1
+M3402->DP:$604B6        ; Y0
+M3403->DP:$604B7        ; Y1
+
+; &14 DPRAM Program Parameters Set
+M3404->DP:$604B8        ; TA0
+M3405->DP:$604B9        ; TS0
+M3406->F:$604BA         ; F0
+M3407->DP:$604BB        ; FRAX0
+M3408->DP:$604BC        ; X0
+M3409->DP:$604BD        ; X1
+M3410->DP:$604BE        ; Y0
+M3411->DP:$604BF        ; Y1
+
+; &15 DPRAM Program Parameters Set
+M3412->DP:$604C0        ; TA0
+M3413->DP:$604C1        ; TS0
+M3414->F:$604C2         ; F0
+M3415->DP:$604C3        ; FRAX0
+M3416->DP:$604C4        ; X0
+M3417->DP:$604C5        ; X1
+M3418->DP:$604C6        ; Y0
+M3419->DP:$604C7        ; Y1
+
+; &16 DPRAM Program Parameters Set
+M3420->DP:$604C8        ; TA0
+M3421->DP:$604C9        ; TS0
+M3422->F:$604CA         ; F0
+M3423->DP:$604CB        ; FRAX0
+M3424->DP:$604CC        ; X0
+M3425->DP:$604CD        ; X1
+M3426->DP:$604CE        ; Y0
+M3427->DP:$604CF        ; Y1
+

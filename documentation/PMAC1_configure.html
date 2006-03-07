@@ -1,0 +1,293 @@
+<html>
+  <head><title>PMAC1-VME configuration to work with EPICS driver</title></head>
+<body>
+
+<H2><A NAME="vme">PMAC1-VME configuration to work with PMAC1 EPICS driver</A></H2>
+
+These must be set from PMAC-Executive program PE3.EXE or PEWIN32.EXE (from
+the PC), while the ethernet cable is not connected to VME or VME is not
+booted.<p>
+
+<table cellpadding=4 cellspacing=0 border=0><tr valign=top>
+<td bgcolor="#FFFFFF"><font color=red>ATTENTION:</font></td>
+<td bgcolor="#EFEFEF">
+  Generally, EPICS and PE3.EXE/PEWIN32.EXE must not talk to PMAC sumultaneously.
+</td></tr></table>
+<p>
+
+<B>1) Configure PMAC-VME communications in the PE3.EXE/PEWIN32.EXE:</B>
+
+ <table bgcolor="#EFEFEF" cellpadding=2 cellspacing=0 border=1>
+ <tr><th>Para-<br>meter<br>&nbsp;</th>
+     <th>VME-Address<br>&nbsp;<br>&nbsp;</th>
+     <th>PMAC-VME<br>base<br>address</th>
+     <th>Don't<br>care<br>bits</th>
+     <th>Inter<br>-rupt<br>level</th>
+     <th>Inter<br>-rupt<br>vector</th>
+     <th>Enable<br>DPRAM<br>&nbsp;</th>
+     <th>DPRAM<br>base<br>address</th></tr>
+<tr align=center><td>PMAC-0</td> <td>$09 A32-Extended data access</td> <td>$807FA000</td> <td>$04</td> <td>$02</td> <td>$A1</td> <td>Yes</td> <td>$700000</td></tr>
+<tr align=center><td>PMAC-1</td> <td>$09 A32-Extended data access</td> <td>$807FA200</td> <td>$04</td> <td>$02</td> <td>$A5</td> <td>Yes</td> <td>$704000</td></tr>
+<tr align=center><td>PMAC-2</td> <td>$09 A32-Extended data access</td> <td>$807FA400</td> <td>$04</td> <td>$02</td> <td>$A9</td> <td>Yes</td> <td>$708000</td></tr>
+<tr align=center><td>PMAC-3</td> <td>$09 A32-Extended data access</td> <td>$807FA600</td> <td>$04</td> <td>$02</td> <td>$AD</td> <td>Yes</td> <td>$70C000</td></tr>
+<tr align=center><td>PMAC-4</td> <td>$09 A32-Extended data access</td> <td>$807FA800</td> <td>$04</td> <td>$02</td> <td>$B1</td> <td>Yes</td> <td>$710000</td></tr>
+<tr align=center><td>PMAC-5</td> <td>$09 A32-Extended data access</td> <td>$807FAA00</td> <td>$04</td> <td>$02</td> <td>$B5</td> <td>Yes</td> <td>$714000</td></tr>
+<tr align=center><td>PMAC-6</td> <td>$09 A32-Extended data access</td> <td>$807FAC00</td> <td>$04</td> <td>$02</td> <td>$B9</td> <td>Yes</td> <td>$718000</td></tr>
+<tr align=center><td>PMAC-7</td> <td>$09 A32-Extended data access</td> <td>$807FAD00</td> <td>$04</td> <td>$02</td> <td>$BD</td> <td>Yes</td> <td>$71C000</td></tr>
+</table>
+
+<B>2) These make possible the dialog PMAC ASCII driver with PMAC mailbox:</B>
+<pre>
+   I1=0 /serial port mode = CS handshake used; no software card address required/.
+   I2=3 /control panel = disable -- not standard PMAC range!!!/.
+   I3=2 /PMAC acknowledges valid command with ASK and invalid with <BEll>.
+                                   Messages are sent as DATA <CR> ... DATA <CR> <ASK>/.
+   I4=0 /checksums disabled; serial errors are reported immediately/.
+   I6=1 /the error message format is <BELL>{error message}/.
+   I7=9 /Nr of consecutive cycles to detect "In-position" -- see PE3.exe/.
+   I9=0 /the programs are sent back in short form; decimal-address I-variable return/.
+</pre>
+
+<B>3) Save these VME addresses to take effect</B>
+<pre>
+	 Enter "Save" in PE3.EXE .
+         Power Off the VME crate.
+	 Power On the VME crate.
+</pre>
+
+<B>4) These make the PMAC Dual-Ported RAM responding to PMAC DPRAM driver:</B>
+<pre>
+   I48=1 /DPRAM servo data enable -- see PE3.EXE/
+   I49=1 /DPRAM background data enable -- see PE3.EXE/
+   I59=8 /DPRAM buffer max motor/CS number -- see PE3.EXE/
+</pre>
+
+<B>5) Save these changes to take effect</B>
+<pre>
+	 Enter "Save" in PE3.EXE .
+         Power Off the VME crate.
+	 Power On the VME crate.
+</pre>
+
+<table cellpadding=4 cellspacing=0 border=0><tr valign=top>
+<td bgcolor="#FFFFFF"><font color=red>ATTENTION:</font></td>
+<td bgcolor="#EFEFEF">
+Steps (4)-(5) can be done simultaneously with steps (2)-(3).
+</td></tr></table>
+<p>
+
+<B>6) Set I55=1</B>
+<pre>
+    Enter "I55=1" in PE3.EXE
+    PMAC Manual says: "I55 is reserved for future use". However, this
+    variable is used for Dual-Ported RAM addressing
+</pre>
+
+<B>7) Start PMAC clocks ("gather")</B><p>
+<pre>
+    Enter "gather" in PE3.EXE
+</pre>
+
+
+<B>8) Each PMAC must be loaded by individual set of PMC programs.</B>
+<pre>
+The usual order is:
+        mvarstd.pmc --------+                             ---+
+        enctblstd.pmc       |These programs are identical    | Grouped as
+        plc0.pmc            |       for all PMACs            | begin.pmc
+        plc1.pmc            |                                | on the PC
+        pcsClear.pmc -------+                             ---+
+        pcs-18IDpmac%%.pmc  ----+ These programs are changed depending
+        q70-18IDpmac%%.pmc      | on what motors and coordinate systems
+        m900-18IDpmac%%.pmc ----+ are associated with PMAC. Edit them!!!
+        b%%%.pmc  -- These are motion programs (slew, backlash, etc).
+        |______|     Only those b%%%.pmc are loaded, which are needed
+            |        in each PMAC. One copy of each program is loaded
+            |        regardless of how many assemblies may use it:
+            |                          (%=0,1,2)                   Grouped on PC as:
+            |               +-- b01%.pmc for 1 motor assembly        --+ b01.pmc
+            +---------------|   b03%.pmc for 2 motor assembly          | b03.pmc
+                            +-- b07%.pmc for 3 motor assembly          | b07.pmc
+</pre>
+
+<p>The loading can be done using PE3.EXE on a Windows computer.</p>
+
+<table cellpadding=4 cellspacing=0 border=0><tr valign=top>
+<td bgcolor="#FFFFFF"><font color=red>ATTENTION:</font></td>
+<td bgcolor="#EFEFEF"><pre>
+   When you are downloading to PMAC from PC, stop the IOC operation
+   before connecting serial cable from PC to PMAC and reboot
+   the IOC after disconnecting the cable.</pre></td>
+</tr><tr valign=top>
+</tr></table>
+
+<B>9) Save the above downloads in the PMAC memory.</B>
+<pre>
+   1. Bring the Command tool (Command.adl)
+   2. Enter "save"
+</pre>
+
+<hr>
+<center>
+<h3>
+        Here is a practical record how we set up our test motor to jog
+</h3>
+</center>
+
+<pre>
+Ix11=8388607=$7FFFFF /Motor Fatal Error Limit = maximum/ (the operational value is 32000=$7D00)
+Ix12=4194303=$3FFFFF /Motor warning Error Limit = 0.5*Ix11/  (operational value is 16000=$3E80)
+Ix69=20479=$4FFF     /amplifier output = 6.5V -- not necessary: may be
+                      up to 32767=$7FFF, which corresponds to 10V!!!/
+Ix25=$A0C0xx
+      |||__|
+      || +------------[ $00C0xx = PMAC address of flags:
+      ||                     xx = 00,04,08,0C,10,14,18,1C   for
+      ||                    mtr =  1, 2, 3, 4, 5, 6, 7, 8
+      ||
+      ||______________[ 0= enable check for position limits (operational value)
+      |               [ 2= disable check for position limits(simulation value)
+      |
+      |               [ 0= enable amplifier fault processing,
+      |               [    kill all motors on fault, and
+      |               [    low true fault input
+      |               [    (not-set values and simuation values)
+      +---------------[ A= enable amplifier fault processing,
+                      [    kill all coordinate system motors on fault, and
+                      [    high true fault input
+                      [    (operation values)
+                      [ 1= disable amplifier fault processing
+                      [    (testing mode values)
+
+-- See page 5-39 of PMAC Software Reference for more details.
+</pre>
+
+<hr>
+
+<H2><A NAME="motors">Initial setup of PMAC motors</A></H2>
+
+<PRE>
+1) Set each motor from simulation to real mode (Ix00, Ix02, Ix03, Ix04,...)
+       Ix00 Motor x Activate
+       Ix02 Motor x Command Output (DAC) Address
+       Ix03 Motor x Position-Loop Feedback Address
+       Ix04 Motor x Velocity-Loop Feedback Address
+       Ix25 Motor x Limit/Home Flag/Amp Flag Address
+       Ix30 Motor x PID Proportional Gain
+       Ix31 Motor x PID Derivative Gain
+       Ix32 Motor x PID Velocity Feedforward Gain
+       Ix33 Motor x PID Integral Gain
+       Ix35 Motor x PID Acceleration Feedforward Gain
+       Ix69 Motor x Output Command (DAC) Limit
+</PRE>
+
+<B>Operational (REAL) mode</B>
+
+<table bgcolor="#EFEFEF" cellpadding=0 cellspacing=0>
+<tr align=center><td align=left colspan=2>MOTOR</td>                  <td>   1   </td> <td>   2   </td> <td>   3   </td> <td>   4   </td> <td>   5   </td> <td>   6   </td> <td>   7   </td> <td>   8   </td> <td bgcolor=white>&nbsp;</td>                                        </tr>
+<tr align=center><td align=left>MEM (Y:):     </td> <td>Ix02     </td><td> $C003 </td> <td> $C002 </td> <td> $C00B </td> <td> $C00A </td> <td> $C013 </td> <td> $C012 </td> <td> $C01B </td> <td> $C01A </td> <td bgcolor=white><font color=red size=-2><sup>(1)</sup></font></td> </tr>
+<tr align=center><td align=left>MEM_piezo:    </td> <td>Ix02     </td><td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td> $774  </td> <td> $775  </td> <td> $776  </td> <td> $777  </td> <td bgcolor=white><font color=red size=-2><sup>(2)</sup></font></td> </tr>
+<tr align=center><td align=left>ENCODER(X:):  </td> <td>Ix03=Ix04</td><td> $720  </td> <td> $721  </td> <td> $722  </td> <td> $723  </td> <td> $724  </td> <td> $725  </td> <td> $726  </td> <td> $727  </td> <td bgcolor=white><font color=red size=-2><sup>(3)</sup></font></td> </tr>
+<tr align=center><td align=left>ENCODER_piezo:</td> <td>Ix03=Ix04</td><td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td> $725  </td> <td> $727  </td> <td> $729  </td> <td> $72B  </td> <td bgcolor=white><font color=red size=-2><sup>(4)</sup></font></td> </tr>
+<tr align=center><td align=left>LIMITS        </td> <td>Ix25     </td><td>$A0C000</td> <td>$A0C004</td> <td>$A0C008</td> <td>$A0C00C</td> <td>$A0C010</td> <td>$A0C014</td> <td>$A0C018</td> <td>$A0C01C</td> <td bgcolor=white>&nbsp;</td>                                        </tr>
+<tr align=center><td align=left>LIMITS_piezo: </td> <td>Ix25     </td><td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td> &nbsp;</td> <td>$A2C010</td> <td>$A2C014</td> <td>$A2C018</td> <td>$A2C01C</td> <td bgcolor=white><font color=red size=-2><sup>(5)</sup></font></td> </tr>
+<tr><td colspan=10>
+<B> Other variables:</B>
+<pre>
+ Ix00 = 0/1 -- motor Off/On
+ Ix15 = Ix17 = Ix19 = 0.9 -- motors acceleration/decceleration parameters; a
+                             typical value (piezo motors are always on limit)
+ Ix25 = $A0C0xx, xx=00,04,08,0C,10,14,18,1C  -- see p.5-39 of PMAC reference.
+ Ix30 = depending on motor (see below)
+ Ix31 = depending on motor (see below)
+ Ix32 = depending on motor (see below)
+ Ix33 = depending on motor (see below)
+ Ix35 = depending on motor (see below)
+ Ix69 = 32767 = $7FFF /for 10v before amplifier and 24V after it/
+</pre></td></tr>
+</table>
+<font color=red size=-2><sup>(1)</sup></font> See mvarstd.pmc (DAC output).<br>
+<font color=red size=-2><sup>(2)</sup></font> See mvarstd.pmc (simulated memory).<br>
+<font color=red size=-2><sup>(3)</sup></font> See encltblstd.pmc <p>
+
+<pre>
+
+2) Adjust DAC (digital-analog converter) range (Ix69=32767 for 10V before
+   amplifier and 24V after it).
+
+3) Set limit switches control on (Ix25=A0C0xx, xx=00,04,08,0C,10,14,18,1C).
+
+4) Possibly invert encoder, if it counts in wrong direction:
+</pre>
+<blockquote>
+<table bgcolor="#EFEFEF" cellpadding=0 cellspacing=0>
+<tr align=center><td align=left>Motor</td>                  <td> 1  </td> <td> 2  </td> <td> 3  </td> <td> 4  </td> <td> 5  </td> <td> 6  </td> <td> 7  </td> <td> 8  </td></tr>
+<tr align=center><td align=left>Variable</td>               <td>I900</td> <td>I905</td> <td>I910</td> <td>I915</td> <td>I920</td> <td>I925</td> <td>I930</td> <td>I935</td></tr>
+<tr align=center><td align=left>Clockwise (CW)</td>         <td> 3  </td> <td> 3  </td> <td> 3  </td> <td> 3  </td> <td> 3  </td> <td> 3  </td> <td> 3  </td> <td> 3  </td></tr>
+<tr align=center><td align=left>CounterClockwise (CCW)</td> <td> 7  </td> <td> 7  </td> <td> 7  </td> <td> 7  </td> <td> 7  </td> <td> 7  </td> <td> 7  </td> <td> 7  </td></tr>
+</table><br>
+   See p.5-70 of PMAC Software Reference for more info.
+</blockquote>
+<pre>
+
+5) Bring:
+    - Ixxx18ID.tcl
+    - Servo1.adl
+    - MtrCommand.adl
+    - OpnLp.adl
+
+6) Go to +- Limit Switches (in OpnLp.adl) and check that:
+    - positive limit is at expansion.
+    - negative limit is at contraction.
+   Invert motor wiring and/or encoder setup (I900,I905,I910,I915,I920,
+   I925,I930,I935) if incorrect.</pre>
+<blockquote><table><tr valign=top><td bgcolor="#FFFFFF"><font color=red>HINT:</font></td>
+   <td bgcolor="#EFEFEF">When a limit is reached, disable the limit switchers control:
+                 <center>change Ix25 from $A0....  to $A2....</center>
+   -- otherwise, the motor will not move away from the limit.</td>
+</tr></table></blockquote><pre>
+
+7) Using a ruler, measure roughly the range of motor movement and setup
+   the calibration factor.
+
+8) Save PMAC in Command.adl and save calibration parameters in Assembly
+   -> Calibration Save/Restore.
+</pre>
+<table cellpadding=4 cellspacing=0 border=0><tr valign=top>
+<td bgcolor="#FFFFFF"><font color=red>ATTENTION:</font></td>
+<td bgcolor="#EFEFEF">There are 2 kinds of SAVE operations for PMAC software:
+<pre>
+   (1) The parameters relevant to the PMAC itself are stored in the PMAC
+       ROM. These are various Ixxx variables controlling motor jog and
+       home speeds, acceleration time and gain, homing direction and
+       flags, etc. To save them bring:
+       MOTION -> PMAC -> Command Strings,  or
+       MOTION -> PMAC -> 18ID:pmacXX: -> Command String,  or
+       MOTION -> PMAC -> 18ID:pmacXX: -> Tcl/Tk Strings,
+       -- and enter the SAVE command.
+
+   (2) The parameters of assemblies are stored at the workstation you
+       use. These are the calibration parameters (offsets and factors),
+       drive ranges and stored positions, the type of PMAC program, etc
+       (generally - any EPICS database variables which are listed in
+       the backup configuration file). To save them bring:
+       MOTION -> Assemblies -> Calibration Save/Restore..., switch to
+       the SAVE mode and press the respective assembly button.
+       The calibrations are lost after each rebooting of IOC. So, at
+       the startup the IOC must be loaded with the data saved at the
+       workstation hard drive. To restore, bring:
+       MOTION -> Assemblies -> Calibration Save/Restore..., and press
+       the respective assembly button.</pre></td>
+</tr>
+</table>
+
+
+<!-- This script inserts a 'Last Modified Date Stamp' -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+        document.write('<FONT SIZE="1">Last modified ' + document.lastModified + '</FONT><BR>')
+// -->
+</SCRIPT>
+
+</body>
+</html>

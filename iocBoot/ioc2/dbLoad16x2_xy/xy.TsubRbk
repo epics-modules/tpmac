@@ -1,0 +1,30 @@
+file XY_TsubRbk.db
+{
+ 	pattern { assy, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+#
+# tsub's are c-programs implementing conversion from from physical
+# parameters of assembly (e.g. monochromator angle and position) to
+# that of motors and back. They are specific for each assembly.
+#
+# The library routines above convert between drives <-> motors.
+# The "nla" parameter is used in the routines to indicate
+# whether the transformations are absolute or incremential. Eg.,
+# absolute or position and relative or velocity.
+
+  { 23i:XZ:P1:,  23i:XZ:X1:,  "X1",  "(mm)", 23i:XZ:Y1:,  "Y1",  "(mm)", 23i:XZ:mx1:,  23i:XZ:my1:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P2:,  23i:XZ:X2:,  "X2",  "(mm)", 23i:XZ:Y2:,  "Y2",  "(mm)", 23i:XZ:mx2:,  23i:XZ:my2:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P3:,  23i:XZ:X3:,  "X3",  "(mm)", 23i:XZ:Y3:,  "Y3",  "(mm)", 23i:XZ:mx3:,  23i:XZ:my3:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P4:,  23i:XZ:X4:,  "X4",  "(mm)", 23i:XZ:Y4:,  "Y4",  "(mm)", 23i:XZ:mx4:,  23i:XZ:my4:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P5:,  23i:XZ:X5:,  "X5",  "(mm)", 23i:XZ:Y5:,  "Y5",  "(mm)", 23i:XZ:mx5:,  23i:XZ:my5:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P6:,  23i:XZ:X6:,  "X6",  "(mm)", 23i:XZ:Y6:,  "Y6",  "(mm)", 23i:XZ:mx6:,  23i:XZ:my6:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P7:,  23i:XZ:X7:,  "X7",  "(mm)", 23i:XZ:Y7:,  "Y7",  "(mm)", 23i:XZ:mx7:,  23i:XZ:my7:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P8:,  23i:XZ:X8:,  "X8",  "(mm)", 23i:XZ:Y8:,  "Y8",  "(mm)", 23i:XZ:mx8:,  23i:XZ:my8:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P9:,  23i:XZ:X9:,  "X9",  "(mm)", 23i:XZ:Y9:,  "Y9",  "(mm)", 23i:XZ:mx9:,  23i:XZ:my9:,  ActPos, 0, tsubXYPs }
+  { 23i:XZ:P10:, 23i:XZ:X10:, "X10", "(mm)", 23i:XZ:Y10:, "Y10", "(mm)", 23i:XZ:mx10:, 23i:XZ:my10:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P11:, 23i:XZ:X11:, "X11", "(mm)", 23i:XZ:Y11:, "Y11", "(mm)", 23i:XZ:mx11:, 23i:XZ:my11:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P12:, 23i:XZ:X12:, "X12", "(mm)", 23i:XZ:Y12:, "Y12", "(mm)", 23i:XZ:mx12:, 23i:XZ:my12:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P13:, 23i:XZ:X13:, "X13", "(mm)", 23i:XZ:Y13:, "Y13", "(mm)", 23i:XZ:mx13:, 23i:XZ:my13:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P14:, 23i:XZ:X14:, "X14", "(mm)", 23i:XZ:Y14:, "Y14", "(mm)", 23i:XZ:mx14:, 23i:XZ:my14:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P15:, 23i:XZ:X15:, "X15", "(mm)", 23i:XZ:Y15:, "Y15", "(mm)", 23i:XZ:mx15:, 23i:XZ:my15:, ActPos, 0, tsubXYPs }
+  { 23i:XZ:P16:, 23i:XZ:X16:, "X16", "(mm)", 23i:XZ:Y16:, "Y16", "(mm)", 23i:XZ:mx16:, 23i:XZ:my16:, ActPos, 0, tsubXYPs }
+}

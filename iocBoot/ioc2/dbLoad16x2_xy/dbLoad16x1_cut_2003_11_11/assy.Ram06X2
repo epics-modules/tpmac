@@ -1,0 +1,33 @@
+file pmacApp/Db/pmacDb/Ram06X2.db
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+# 15 for 15X3 (1 motor - generic; not all parameters used!)
+# 16 for 16X4 (1 motor)
+# 20 for 20XY4 or 20XU4 (2 motors, or 1 motor + 1 piezo)
+# 24 for 24XYZ4 or 24XYU4 (3 motors, or  2 motor + 1 piezo)
+# 28 for 24XYUV4 (2 motors + 2 piezos)
+#
+# pmac20
+        { 23i:M2:Cs1:,  0,   0 }
+        { 23i:M2:Cs2:,  0,   6 }
+        { 23i:M2:Cs3:,  0,  12 }
+        { 23i:M2:Cs4:,  0,  18 }
+ 	{ 23i:M2:Cs5:,  0,  24 }
+ 	{ 23i:M2:Cs6:,  0,  30 }
+ 	{ 23i:M2:Cs7:,  0,  36 }
+ 	{ 23i:M2:Cs8:,  0,  42 }
+ 	{ 23i:M2:Cs9:,  0,  48 }
+  	{ 23i:M2:Cs10:, 0,  54 }
+  	{ 23i:M2:Cs11:, 0,  60 }
+  	{ 23i:M2:Cs12:, 0,  66 }
+  	{ 23i:M2:Cs13:, 0,  72 }
+  	{ 23i:M2:Cs14:, 0,  78 }
+  	{ 23i:M2:Cs15:, 0,  84 }
+  	{ 23i:M2:Cs16:, 0,  90 }
+}

@@ -1,0 +1,30 @@
+# Makefile.Vx
+TOP = ../../../..
+include $(TOP)/config/CONFIG_APP
+#----------------------------------------
+#  ADD MACRO DEFINITIONS AFTER THIS LINE
+
+USR_CFLAGS += -DDEBUG
+
+# Tsub sources
+SRCS.c  += ../tsubSeq.c
+SRCS.c  += ../tsubCS.c
+SRCS.c  += ../tsubHS.c
+SRCS.c  += ../tsubMD.c
+SRCS.c  += ../tsubMI.c
+SRCS.c  += ../tsubMO.c
+SRCS.c  += ../tsubTB.c
+SRCS.c  += ../tsubXY.c
+
+LIBOBJS = $(SRCS.c:../%.c=%.o)
+LIBNAME = tsubLib
+
+PMAC_TSUB = .
+include ../tsubLIBOBJS		#defines TSUBLIBOBJS
+PROD += $(TSUBLIBOBJS)
+
+
+include $(TOP)/config/RULES.Vx
+#----------------------------------------
+#  ADD RULES AFTER THIS LINE
+

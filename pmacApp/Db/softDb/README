@@ -1,0 +1,5 @@
+These are databases common for different assemblies. They are grouped in the
+"soft" directory because they do not talk to any PMAC hardware.
+
+-- Sergey
+

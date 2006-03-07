@@ -1,0 +1,59 @@
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d2)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d2)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d3)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d3)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)Base1:23") {
+  field(DESC, "Base (1)-(23)")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0")
+  field(PREC, "6")
+  field(EGU, "(m)")
+}
+
+record(ao, "$(assy)Base23") {
+  field(DESC, "Base 2-3")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0")
+  field(PREC, "6")
+  field(EGU, "(m)")
+}
+
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "500")
+}
+

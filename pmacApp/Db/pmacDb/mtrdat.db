@@ -1,0 +1,128 @@
+#! This file is new. It was introduced by Oleg 09/2003 for PMAC2
+#! The DB set in this files is a combination of svofix1.db and
+#! bkgfix1mtr.db in PMAC1.
+#! *** Do not use with PMAC1! ***
+
+record(status, "$(mtr)SvoSts") {
+  field(DESC, "Servo Status")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$60020")
+  field(LK19, "$(mtr)AmpEna.PROC PP MS")
+  field(LK21, "$(mtr)PsLimSet.PROC PP MS")
+  field(LK22, "$(mtr)NgLimSet.PROC PP MS")
+}
+
+record(bi, "$(mtr)NgLimSet") {
+  field(DESC, "Negative End Limit")
+  field(FLNK, "$(assy)dLimFLNK.PROC PP MS")
+  field(INP, "$(mtr)SvoSts.BI22 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+}
+
+record(bi, "$(mtr)PsLimSet") {
+  field(DESC, "Positive End Limit")
+  field(FLNK, "$(assy)dLimFLNK.PROC PP MS")
+  field(INP, "$(mtr)SvoSts.BI21 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+}
+
+record(bi, "$(mtr)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(FLNK, "$(assy)dAmpEnaFLNK.PROC PP MS")
+  field(INP, "$(mtr)SvoSts.BI19 NPP MS")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+}
+
+record(status, "$(mtr)Sts2") {
+  field(DESC, "General status")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$60021")
+  field(LK00, "$(mtr)InPos.PROC PP MS")
+  field(LK02, "$(mtr)FatalFolErr.PROC PP MS")
+  field(LK03, "$(mtr)AmpFltErr.PROC PP MS")
+  field(LK10,"$(mtr)HmCplt.PROC PP MS")
+  field(LK11, "$(mtr)StpOnLim.PROC PP MS")
+}
+
+record(bi, "$(mtr)StpOnLim") {
+  field(DESC, "Stopped On Limit")
+  field(INP, "$(mtr)Sts2.BI11 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Stopped")
+}
+
+record(bi,"$(mtr)HmCplt") {
+  field(DESC,"Home Complete")
+  field(INP,"$(mtr)Sts2.BI10 NPP MS")
+  field(ZSV,"MINOR")
+  field(ZNAM,"N/A")
+  field(ONAM,"Completed")
+}
+
+record(bi, "$(mtr)AmpFltErr") {
+  field(DESC, "Amplifier Fault Error")
+  field(INP, "$(mtr)Sts2.BI03 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fault")
+}
+
+record(bi, "$(mtr)FatalFolErr") {
+  field(DESC, "Fatal Following Error")
+  field(INP, "$(mtr)Sts2.BI02 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fatal")
+}
+
+record(bi, "$(mtr)InPos") {
+  field(DESC, "In Position")
+  field(INP, "$(mtr)Sts2.BI00 NPP MS")
+  field(ZSV, "MINOR")
+  field(ZNAM, "Moving")
+  field(ONAM, "Positioned")
+}
+
+record(ai, "$(mtr)ActPos") {
+  field(DESC, "$(desc)")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(FLNK, "$(mtr)ActPosFLNK.VAL PP MS")
+  field(INP, "#C$(C) S$(S) @D:$60027")
+  field(EGU, "(cts)")
+  field(ASLO, "3.2552e-04")
+}
+
+record(ai,"$(mtr)ActVelSvo") {
+  field(DESC,"Actual Velocity/Servo")
+  field(SCAN,"I/O Intr")
+  field(PINI,"YES")
+  field(DTYP,"PMAC-VME DPRAM")
+  field(FLNK,"$(mtr)ActVel.PROC PP MS")
+  field(INP,"#C$(C) S$(S) @SX:$60024")
+  field(PREC,"3")
+  field(EGU,"(cts/servo)")
+  field(ASLO,"3.2552e-04")
+}
+
+record(calc,"$(mtr)ActVel") {
+  field(DESC,"Actual Velocity/msec")
+  field(CALC,"A*B")
+  field(INPA,"$(mtr)ActVelSvo.VAL NPP MS")
+  field(INPB,"2.258823327")
+  field(PREC,"2")
+  field(EGU,"(cts/msec)")
+}
+

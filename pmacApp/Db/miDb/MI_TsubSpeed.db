@@ -1,0 +1,113 @@
+record(tsub, "$(assy)speedTsub") {
+  field(SDIS, "$(assy)speedSDIS PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Speed")
+  field(OTA0, "$(m1)speed  PP MS")
+  field(OTB0, "$(m2)speed  PP MS")
+  field(OTA1, "$(d1)speed  PP MS")
+  field(OTB1, "$(d2)speed  PP MS")
+  field(OTA2, "$(x1)speed  PP MS")
+  field(OTB2, "$(x2)speed  PP MS")
+  field(OUTJ, "$(assy)speedSDIS NPP MS")
+  field(INPA, "$(m1)Ix22:AI NPP MS")
+  field(INPB, "$(m2)Ix22:AI NPP MS")
+  field(IPA0, "$(m1)speed NPP MS")
+  field(IPB0, "$(m2)speed NPP MS")
+  field(IPA1, "$(d1)speed NPP MS")
+  field(IPB1, "$(d2)speed NPP MS")
+  field(IPA2, "$(x1)speed NPP MS")
+  field(IPB2, "$(x2)speed NPP MS")
+  field(IPA3, "$(d1)Scale NPP MS")
+  field(IPB3, "$(d2)Scale NPP MS")
+  field(INPK, "$(assy)BaseLength NPP MS")
+}
+
+record(bo, "$(assy)speedSDIS") {
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Enable")
+  field(ONAM, "Disable")
+}
+
+#! These two records are defined in pmacDb/IxMtrMv.db
+#!
+#! record(ao, "$(m1)speed") {
+#!   field(DESC, "Program Speed (Ix16)")
+#!   field(PREC, "2")
+#!   field(EGU, "(cts/msec)")
+#!   field(FLNK, "$(m1)speedIndx.PROC PP MS")
+#! }
+#!
+#! record(ao, "$(m2)speed") {
+#!   field(DESC, "Program Speed (Ix16)")
+#!   field(PREC, "2")
+#!   field(EGU, "(cts/msec)")
+#!   field(FLNK, "$(m2)speedIndx.PROC PP MS")
+#! }
+
+record(ao, "$(d1)speed") {
+  field(PREC, "3")
+  field(EGU, "$(egu_d1)")
+  field(FLNK, "$(d1)speedIndx.PROC PP MS")
+}
+
+record(ao, "$(d2)speed") {
+  field(PREC, "3")
+  field(EGU, "$(egu_d2)")
+  field(FLNK, "$(d2)speedIndx.PROC PP MS")
+}
+
+record(ao, "$(x1)speed") {
+  field(PREC, "3")
+  field(EGU, "$(egu_x1)")
+  field(FLNK, "$(x1)speedIndx.PROC PP MS")
+}
+
+record(ao, "$(x2)speed") {
+  field(PREC, "3")
+  field(EGU, "$(egu_x2)")
+  field(FLNK, "$(x2)speedIndx.PROC PP MS")
+}
+
+record(longout, "$(m1)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "1")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+
+record(longout, "$(m2)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "2")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+
+record(longout, "$(d1)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "11")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+
+record(longout, "$(d2)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "12")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+
+record(longout, "$(x1)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "21")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+
+record(longout, "$(x2)speedIndx") {
+  field(SDIS, "$(assy)speedTsub.PACT")
+  field(VAL, "22")
+  field(OUT, "$(assy)speedTsub.NLA NPP MS")
+  field(FLNK, "$(assy)speedTsub.PROC PP MS")
+}
+

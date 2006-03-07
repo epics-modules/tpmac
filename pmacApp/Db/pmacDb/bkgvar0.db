@@ -1,0 +1,18 @@
+record(longin, "$(pmac)var:SvoTm") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(FLNK, "$(pmac)var:SvoTmDif.PROC PP MS")
+  field(INP, "#C$(C) S0 @HX:$60411")
+}
+
+record(longin, "$(pmac)var:SvoTmPrv") {
+  field(INP, "$(pmac)var:SvoTm.VAL NPP MS")
+}
+
+record(calc, "$(pmac)var:SvoTmDif") {
+  field(CALC, "B-A")
+  field(INPA, "$(pmac)var:SvoTmPrv.VAL NPP MS")
+  field(INPB, "$(pmac)var:SvoTmPrv.VAL PP MS")
+}
+

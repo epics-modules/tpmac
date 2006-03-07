@@ -1,0 +1,6 @@
+file Acc11E.db
+{
+	pattern { pmac, C }
+
+        { 23i:pmac40:, 0 }
+}

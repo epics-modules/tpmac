@@ -1,0 +1,17 @@
+file XY_Calibrate.db
+{
+	pattern { assy, d1, d2 }
+#
+	{ 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:   }
+	{ 23i:XZ:P4:,  23i:XZ:X4:,  23i:XZ:Z4:  }
+	{ 23i:MO:Tn:,  23i:MO:P2:,  23i:MO:R2:  }
+	{ 23i:XZ:P6:,  23i:XZ:X6:,  23i:XZ:Z6:  }
+	{ 23i:XZ:P7:,  23i:XZ:X7:,  23i:XZ:Z7:  }
+	{ 23i:XZ:P8:,  23i:XZ:X8:,  23i:XZ:Z8:  }
+	{ 23i:XZ:P11:, 23i:XZ:X11:, 23i:XZ:Z11: }
+	{ 23i:XZ:P12:, 23i:XZ:X12:, 23i:XZ:Z12: }
+	{ 23i:XZ:P13:, 23i:XZ:X13:, 23i:XZ:Z13: }
+	{ 23i:XZ:P14:, 23i:XZ:X14:, 23i:XZ:Z14: }
+	{ 23i:XZ:P15:, 23i:XZ:X15:, 23i:XZ:Z15: }
+	{ 23i:XZ:P16:, 23i:XZ:X16:, 23i:XZ:Z16: }
+}

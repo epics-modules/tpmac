@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% 23i:WS:Ah:  White beam slits, Horizontal Aperture
+%
+
+file $(DIR)/assy.req ASSY=23i:WS:Ah
+23i:WS:Ah:Invert
+file $(DIR)/mtr1.req MTR1=23i:WS:mo
+file $(DIR)/mtr1.req MTR1=23i:WS:mi
+file $(DIR)/drv1.req DRV1=23i:WS:YO
+file $(DIR)/drv1.req DRV1=23i:WS:YI
+file $(DIR)/axs1.req AXS1=23i:WS:YC
+file $(DIR)/axs1.req AXS1=23i:WS:YS
+

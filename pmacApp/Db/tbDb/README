@@ -1,0 +1,8 @@
+These are databases for 3-point support table. The coordinate system
+consists of 3 motors corresponding to 3 supports and their motions
+are mapped into table height, roll and pitch angles.
+See TB_Calibrate.db and CalibTBSt.adl for more details.
+
+-- Sergey
+
+

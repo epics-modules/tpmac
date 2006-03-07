@@ -1,0 +1,18 @@
+file pmacApp/Db/hsDb/HS_TsubRbk.db
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+#
+# tsub's are c-programs implementing conversion from from physical
+# parameters of assembly (e.g. monochromator angle and position) to
+# that of motors and back. They are specific for each assembly.
+#
+# The library routines above convert between drives <-> motors.
+# The "nla" parameter is used in the routines to indicate
+# whether the transformations are absolute or incremential. Eg.,
+# absolute or position and relative or velocity.
+
+  { 23i:WS:Av:, 23i:WS:ZC:, "WS Z-center", "(mm)", 23i:WS:ZS:, "WS Z-size", "(mm)", 23i:WS:ZT:, "WS Z-top     ", "(mm)", 23i:WS:ZB:, "WS Z-bottom ", "(mm)", 23i:WS:mt:,  23i:WS:mb:,  ActPos, 0, tsubHSAp }
+  { 23i:WS:Ah:, 23i:WS:YC:, "WS Y-center", "(mm)", 23i:WS:YS:, "WS Y-size", "(mm)", 23i:WS:YO:, "WS Y-outboard", "(mm)", 23i:WS:YI:, "WS Y-inboard", "(mm)", 23i:WS:mo:,  23i:WS:mi:,  ActPos, 0, tsubHSAp }
+  { 23i:CS:Av:, 23i:CS:ZC:, "CS Z-center", "(mm)", 23i:CS:ZS:, "CS Z-size", "(mm)", 23i:CS:ZT:, "CS Z-top     ", "(mm)", 23i:CS:ZB:, "CS Z-bottom ", "(mm)", 23i:CS:mz1:, 23i:CS:mz2:, ActPos, 0, tsubHSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, "CS Y-center", "(mm)", 23i:CS:YS:, "CS Y-size", "(mm)", 23i:CS:YO:, "CS Y-outboard", "(mm)", 23i:CS:YI:, "CS Y-inboard", "(mm)", 23i:CS:my1:, 23i:CS:my2:, ActPos, 0, tsubHSAp }
+}

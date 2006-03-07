@@ -1,0 +1,46 @@
+record(ao, "$(pref)RqsPosInc") {
+  field(DESC, "Increment")
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pref)RqsPosIncOut") {
+  field(DESC, "Requested Position")
+  field(OUT, "$(pref)RqsPos.VAL PP MS")
+  field(DOL, "$(pref)RqsPosIncCalc.VAL PP MS")
+  field(OMSL, "closed_loop")
+  field(EGU, "(cnts)")
+}
+
+record(ao, "$(pref)RqsPosIncBmp") {
+  field(DESC, "Requested Position")
+  field(FLNK, "$(pref)RqsPosIncOut.PROC PP MS")
+  field(EGU, "(cnts)")
+}
+
+record(calc, "$(pref)RqsPosIncCalc") {
+  field(CALC, "A+(B*C)")
+  field(INPA, "$(pref)RqsPos.VAL NPP MS")
+  field(INPB, "$(pref)RqsPosInc.VAL NPP MS")
+  field(INPC, "$(pref)RqsPosIncBmp.VAL NPP MS")
+}
+
+
+
+
+record(ao, "$(pref)MemPosSto") {
+  field(OUT, "$(pref)MemPos.VAL PP MS")
+  field(DOL, "$(pref)RqsPos.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pref)MemPos") {
+  field(PREC, "$(prec)")
+}
+
+record(ao, "$(pref)MemPosRcl") {
+  field(OUT, "$(pref)RqsPos.VAL PP MS")
+  field(DOL, "$(pref)MemPos.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(PREC, "$(prec)")
+}

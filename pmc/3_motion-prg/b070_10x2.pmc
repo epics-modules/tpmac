@@ -1,0 +1,38 @@
+; Program-70: three motors, slew
+; (for Ram10X2 -- GM/CA CAT)
+;
+;----------------------------------------;
+; $(assy)AccelTime  -> TA0   -> M(Q71)   ;
+; $(assy)AccelCurve -> TS0   -> M(Q72)   ;
+;       0           -> F0    -> M(Q73)   ; [was: $(assy)FeedRateSlw <- $(m1)SelSlw = 0]
+;       1           -> FRAX0 -> M(Q74)   ; [was: $(assy)FeedRateAxis]
+; $(m1)RqsPos       -> X0    -> M(Q75)   ;
+; $(m1)RqsBkl       -> X1    -> M(Q76)   ;
+; $(m2)RqsPos       -> Y0    -> M(Q77)   ;
+; $(m2)RqsBkl       -> Y1    -> M(Q78)   ;
+; $(m3)RqsPos       -> Z0    -> M(Q79)   ;
+; $(m3)RqsBkl       -> Z1    -> M(Q80)   ;
+;----------------------------------------;
+; Use: Q71, Q72, Q73, Q74,  Q75, Q77, Q79
+;      TA0, TS0, F0, FRAX0,  X0,  Y0,  Z0
+;
+CLOSE
+;
+OPEN PROG 70 CLEAR
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X,Y,Z)		;specify feedrate axes -- is not used here
+  Q1=M(Q74+0)
+  IF(Q1=1)FRAX(X)
+  IF(Q1=2)FRAX(Y)
+  IF(Q1=3)FRAX(X,Y)
+  IF(Q1=4)FRAX(Z)
+  IF(Q1=5)FRAX(X,Z)
+  IF(Q1=6)FRAX(Y,Z)
+  IF(Q1=7)FRAX(X,Y,Z)
+  F(M(Q73+0))		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  X(M(Q75+0))Y(M(Q77+0))Z(M(Q79+0))		;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+
+CLOSE

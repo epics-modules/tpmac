@@ -1,0 +1,13 @@
+record(longin, "$(pmac)acc11e:IN") {
+  field(DESC, "Accessory 11E:IN")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S0 @X:$10F0")
+}
+
+record(longout, "$(pmac)acc11e:OUT") {
+  field(DESC, "Accessory 11E:OUT")
+  field(DTYP, "PMAC-VME ASCII")
+  field(OUT, "#C$(C) S0 @WX:$78424,")
+}

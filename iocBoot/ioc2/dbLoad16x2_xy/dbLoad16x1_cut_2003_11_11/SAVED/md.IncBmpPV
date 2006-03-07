@@ -1,0 +1,38 @@
+file pmacApp/Db/softDb/IncBmpPV.db
+{
+	pattern { pv, prec }
+
+        { 23i:M2:m1:RqsPos, 0 }
+        { 23i:M2:m2:RqsPos, 0 }
+        { 23i:M2:m3:RqsPos, 0 }
+        { 23i:M2:m4:RqsPos, 0 }
+ 	{ 23i:M2:m5:RqsPos, 0 }
+ 	{ 23i:M2:m6:RqsPos, 0 }
+ 	{ 23i:M2:m7:RqsPos, 0 }
+ 	{ 23i:M2:m8:RqsPos, 0 }
+ 	{ 23i:M2:m9:RqsPos, 0 }
+ 	{ 23i:M2:m10:RqsPos, 0 }
+ 	{ 23i:M2:m11:RqsPos, 0 }
+ 	{ 23i:M2:m12:RqsPos, 0 }
+ 	{ 23i:M2:m13:RqsPos, 0 }
+ 	{ 23i:M2:m14:RqsPos, 0 }
+ 	{ 23i:M2:m15:RqsPos, 0 }
+ 	{ 23i:M2:m16:RqsPos, 0 }
+
+        { 23i:M2:d1:RqsPos, 3 }
+        { 23i:M2:d2:RqsPos, 3 }
+        { 23i:M2:d3:RqsPos, 3 }
+        { 23i:M2:d4:RqsPos, 3 }
+ 	{ 23i:M2:d5:RqsPos, 3 }
+ 	{ 23i:M2:d6:RqsPos, 3 }
+ 	{ 23i:M2:d7:RqsPos, 3 }
+ 	{ 23i:M2:d8:RqsPos, 3 }
+ 	{ 23i:M2:d9:RqsPos, 3 }
+  	{ 23i:M2:d10:RqsPos, 3 }
+  	{ 23i:M2:d11:RqsPos, 3 }
+  	{ 23i:M2:d12:RqsPos, 3 }
+  	{ 23i:M2:d13:RqsPos, 3 }
+  	{ 23i:M2:d14:RqsPos, 3 }
+  	{ 23i:M2:d15:RqsPos, 3 }
+  	{ 23i:M2:d16:RqsPos, 3 }
+}

@@ -1,0 +1,12 @@
+record(longin, "$(pmac)bkg:SvoTm") {
+  field(SCAN, "I/O Intr")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S0 @DP:$6019E")
+}
+
+#! record(status, "$(pmac)JTHWmpPrt") {
+#!   field(SCAN, "I/O Intr")
+#!   field(DTYP, "PMAC-VME DPRAM")
+#!   field(INP, "#C$(C) S0 @DP:$601A1")
+#! }
+

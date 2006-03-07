@@ -1,0 +1,16 @@
+file CS_TsubSpeed.db
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+#
+# tsub's are c-programs implementing conversion from from physical
+# parameters of assembly (e.g. monochromator angle and position) to
+# that of motors and back. They are specific for each assembly.
+#
+# The library routines above convert between drives <-> motors.
+# The "nla" parameter is used in the routines to indicate
+# whether the transformations are absolute or incremential. Eg.,
+# absolute or position and relative or velocity.
+
+  { 23i:CS:Av:, 23i:CS:ZC:, "(mm/s)", 23i:CS:ZS:, "(mm/s)", 23i:CS:ZT:, "(mm/s)", 23i:CS:ZB:, "(mm/s)", 23i:CS:mz1:, 23i:CS:mz2:, tsubCSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, "(mm/s)", 23i:CS:YS:, "(mm/s)", 23i:CS:YO:, "(mm/s)", 23i:CS:YI:, "(mm/s)", 23i:CS:my1:, 23i:CS:my2:, tsubCSAp }
+}

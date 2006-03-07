@@ -1,0 +1,76 @@
+; Coordinate System Definitions
+;
+; pmac10 /GMCA CAT beamline 23i/
+
+undef all	; clear all coordinate systems
+; (1) WS:Av:
+&1
+#1->X  ; WS:mt:
+#2->Y  ; WS:mb:
+
+; (2) WS:Ah:
+&2
+#3->X  ; WS:mo:
+#4->Y  ; WS:mi:
+
+; (3) MO:Ps:
+&3
+#5->X  ; MO:mz:
+#6->Y  ; MO:my:
+
+; (4) MO:En:
+&4
+#7->X  ; MO:mr:
+#8->Y  ; MO:mt2:
+
+; (5) MO:Tn1:
+&5
+#9->X  ; MO:mr1:
+
+; (6) MO:Tn2:
+&6
+#10->X ; MO:mp2:
+#11->Y ; MO:mr2:
+
+; (7) BP:Mo:
+&7
+#12->X ; BP:mmo:
+
+; (8) CS:Av:
+&8
+#17->X ; CS:mz1:
+#18->Y ; CS:mz2:
+
+; (9) CS:Ah:
+&9
+#19->X ; CS:my1:
+#20->Y ; CS:my2:
+
+; (10) KB:Hz:
+&10
+#21->X ; KB:mhz1:
+#22->Y ; KB:mhz2:
+#23->Z ; KB:mhz3:
+
+; (11) KB:Hy:
+&11
+#24->X ; KB:mhy1:
+#25->Y ; KB:mhy2:
+
+; (12) KB:Vz:
+&12
+#26->X ; KB:mvz1:
+#27->Y ; KB:mvz2:
+#28->Z ; KB:mvz3:
+
+; (13) KB:Vy:
+&13
+#29->X ; KB:mvy1:
+#30->Y ; KB:mvy2:
+
+; (14) BP:Kb:
+&14
+#31->X ; BP:mkb:
+
+
+

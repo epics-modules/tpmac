@@ -1,0 +1,6 @@
+file svofix0.db
+{
+	pattern { pmac, C }
+
+        { 23i:pmac20:, 0 }
+}

@@ -1,0 +1,71 @@
+file pmacApp/Db/softDb/IncBmpPV.db
+{
+	pattern { pv, prec }
+# "prec" is "precision": the number of digits after comma
+# (usually 3 for real numbers and zero for integers).
+	{ 23i:XZ:mx1:RqsPos,  0 }
+	{ 23i:XZ:my1:RqsPos,  0 }
+	{ 23i:XZ:mx2:RqsPos,  0 }
+	{ 23i:XZ:my2:RqsPos,  0 }
+	{ 23i:XZ:mx3:RqsPos,  0 }
+	{ 23i:XZ:my3:RqsPos,  0 }
+	{ 23i:XZ:mx4:RqsPos,  0 }
+	{ 23i:XZ:my4:RqsPos,  0 }
+	{ 23i:XZ:mx5:RqsPos,  0 }
+	{ 23i:XZ:my5:RqsPos,  0 }
+	{ 23i:XZ:mx6:RqsPos,  0 }
+	{ 23i:XZ:my6:RqsPos,  0 }
+	{ 23i:XZ:mx7:RqsPos,  0 }
+	{ 23i:XZ:my7:RqsPos,  0 }
+	{ 23i:XZ:mx8:RqsPos,  0 }
+	{ 23i:XZ:my8:RqsPos,  0 }
+	{ 23i:XZ:mx9:RqsPos,  0 }
+	{ 23i:XZ:my9:RqsPos,  0 }
+	{ 23i:XZ:mx10:RqsPos, 0 }
+	{ 23i:XZ:my10:RqsPos, 0 }
+	{ 23i:XZ:mx11:RqsPos, 0 }
+	{ 23i:XZ:my11:RqsPos, 0 }
+	{ 23i:XZ:mx12:RqsPos, 0 }
+	{ 23i:XZ:my12:RqsPos, 0 }
+	{ 23i:XZ:mx13:RqsPos, 0 }
+	{ 23i:XZ:my13:RqsPos, 0 }
+	{ 23i:XZ:mx14:RqsPos, 0 }
+	{ 23i:XZ:my14:RqsPos, 0 }
+	{ 23i:XZ:mx15:RqsPos, 0 }
+	{ 23i:XZ:my15:RqsPos, 0 }
+	{ 23i:XZ:mx16:RqsPos, 0 }
+	{ 23i:XZ:my16:RqsPos, 0 }
+
+	{ 23i:XZ:X1:RqsPos,   3 }
+	{ 23i:XZ:Y1:RqsPos,   3 }
+	{ 23i:XZ:X2:RqsPos,   3 }
+	{ 23i:XZ:Y2:RqsPos,   3 }
+	{ 23i:XZ:X3:RqsPos,   3 }
+	{ 23i:XZ:Y3:RqsPos,   3 }
+	{ 23i:XZ:X4:RqsPos,   3 }
+	{ 23i:XZ:Y4:RqsPos,   3 }
+	{ 23i:XZ:X5:RqsPos,   3 }
+	{ 23i:XZ:Y5:RqsPos,   3 }
+	{ 23i:XZ:X6:RqsPos,   3 }
+	{ 23i:XZ:Y6:RqsPos,   3 }
+	{ 23i:XZ:X7:RqsPos,   3 }
+	{ 23i:XZ:Y7:RqsPos,   3 }
+	{ 23i:XZ:X8:RqsPos,   3 }
+	{ 23i:XZ:Y8:RqsPos,   3 }
+	{ 23i:XZ:X9:RqsPos,   3 }
+	{ 23i:XZ:Y9:RqsPos,   3 }
+	{ 23i:XZ:X10:RqsPos,  3 }
+	{ 23i:XZ:Y10:RqsPos,  3 }
+	{ 23i:XZ:X11:RqsPos,  3 }
+	{ 23i:XZ:Y11:RqsPos,  3 }
+	{ 23i:XZ:X12:RqsPos,  3 }
+	{ 23i:XZ:Y12:RqsPos,  3 }
+	{ 23i:XZ:X13:RqsPos,  3 }
+	{ 23i:XZ:Y13:RqsPos,  3 }
+	{ 23i:XZ:X14:RqsPos,  3 }
+	{ 23i:XZ:Y14:RqsPos,  3 }
+	{ 23i:XZ:X15:RqsPos,  3 }
+	{ 23i:XZ:Y15:RqsPos,  3 }
+	{ 23i:XZ:X16:RqsPos,  3 }
+	{ 23i:XZ:Y16:RqsPos,  3 }
+}

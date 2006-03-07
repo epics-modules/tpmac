@@ -1,0 +1,21 @@
+file MD_TsubRbk.db
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+
+        { 23i:M2:Cs1:,  23i:M2:d1:,  "drive-1",  "(mm)",  23i:M2:m1:,  ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs2:,  23i:M2:d2:,  "drive-2",  "(mm)",  23i:M2:m2:,  ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs3:,  23i:M2:d3:,  "drive-3",  "(mm)",  23i:M2:m3:,  ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs4:,  23i:M2:d4:,  "drive-4",  "(mm)",  23i:M2:m4:,  ActPos, 0, tsubMDCs }
+ 	{ 23i:M2:Cs5:,  23i:M2:d5:,  "drive-5",  "(mm)",  23i:M2:m5:,  ActPos, 0, tsubMDCs }
+ 	{ 23i:M2:Cs6:,  23i:M2:d6:,  "drive-6",  "(mm)",  23i:M2:m6:,  ActPos, 0, tsubMDCs }
+ 	{ 23i:M2:Cs7:,  23i:M2:d7:,  "drive-7",  "(mm)",  23i:M2:m7:,  ActPos, 0, tsubMDCs }
+ 	{ 23i:M2:Cs8:,  23i:M2:d8:,  "drive-8",  "(mm)",  23i:M2:m8:,  ActPos, 0, tsubMDCs }
+ 	{ 23i:M2:Cs9:,  23i:M2:d9:,  "drive-9",  "(mm)",  23i:M2:m9:,  ActPos, 0, tsubMDCs }
+  	{ 23i:M2:Cs10:, 23i:M2:d10:, "drive-10", "(mm)",  23i:M2:m10:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs11:, 23i:M2:d11:, "drive-11", "(mm)",  23i:M2:m11:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs12:, 23i:M2:d12:, "drive-12", "(mm)",  23i:M2:m12:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs13:, 23i:M2:d13:, "drive-13", "(mm)",  23i:M2:m13:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs14:, 23i:M2:d14:, "drive-14", "(mm)",  23i:M2:m14:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs15:, 23i:M2:d15:, "drive-15", "(mm)",  23i:M2:m15:, ActPos, 0, tsubMDCs }
+        { 23i:M2:Cs16:, 23i:M2:d16:, "drive-16", "(mm)",  23i:M2:m16:, ActPos, 0, tsubMDCs }
+}

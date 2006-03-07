@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% MOTOR
+%
+
+% RO $(MTR1):ActPos
+$(MTR1):RqsPos
+$(MTR1):RqsPosInc
+$(MTR1):MemPos
+
+$(MTR1):RqsPos.HOPR
+$(MTR1):RqsPos.LOPR
+$(MTR1):RqsPos.DRVH
+$(MTR1):RqsPos.DRVL

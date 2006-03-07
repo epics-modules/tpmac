@@ -1,0 +1,18 @@
+record(calc, "$(drv)NgLimSet") {
+  field(CALC, "C<0?B:A")
+  field(INPA, "$(mtr)NgLimSet.VAL PP MS")
+  field(INPB, "$(mtr)PsLimSet.VAL PP MS")
+  field(INPC, "$(drv)Scale.VAL PP MS")
+}
+
+record(calc, "$(drv)PsLimSet") {
+  field(CALC, "C<0?B:A")
+  field(INPA, "$(mtr)PsLimSet.VAL PP MS")
+  field(INPB, "$(mtr)NgLimSet.VAL PP MS")
+  field(INPC, "$(drv)Scale.VAL PP MS")
+}
+
+record(bi, "$(drv)AmpEna") {
+  field(INP, "$(mtr)AmpEna.VAL PP MS")
+}
+

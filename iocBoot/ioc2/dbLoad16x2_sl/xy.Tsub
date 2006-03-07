@@ -1,0 +1,39 @@
+file XY_Tsub.db
+{
+ 	pattern { assy, d1, d2, m1, m2, val, nla, tsub }
+#
+# tsub's are C programs implementing conversion from from physical
+# parameters of assembly (e.g. monochromator angle and position) to
+# that of motors and back. They are specific for each assembly.
+#
+# The library routines above convert between drives <-> motors.
+# The "nla" parameter is used in the routines to indicate
+# whether the transformations are absolute or incremential. Eg.,
+# absolute or position and relative or velocity.
+
+  { 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:,   23i:MO:mz:,   23i:MO:my:,   RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P4:,  23i:XZ:X4:,  23i:XZ:Z4:,  23i:XZ:mx4:,  23i:XZ:mz4:,  RqsPos, 0, tsubXYPs }
+  { 23i:MO:Tn:,  23i:MO:P2:,  23i:MO:R2:,  23i:MO:mp2:,  23i:MO:mr2:,  RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P6:,  23i:XZ:X6:,  23i:XZ:Z6:,  23i:XZ:mx6:,  23i:XZ:mz6:,  RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P7:,  23i:XZ:X7:,  23i:XZ:Z7:,  23i:XZ:mx7:,  23i:XZ:mz7:,  RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P8:,  23i:XZ:X8:,  23i:XZ:Z8:,  23i:XZ:mx8:,  23i:XZ:mz8:,  RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P11:, 23i:XZ:X11:, 23i:XZ:Z11:, 23i:XZ:mx11:, 23i:XZ:mz11:, RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P12:, 23i:XZ:X12:, 23i:XZ:Z12:, 23i:XZ:mx12:, 23i:XZ:mz12:, RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P13:, 23i:XZ:X13:, 23i:XZ:Z13:, 23i:XZ:mx13:, 23i:XZ:mz13:, RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P14:, 23i:XZ:X14:, 23i:XZ:Z14:, 23i:XZ:mx14:, 23i:XZ:mz14:, RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P15:, 23i:XZ:X15:, 23i:XZ:Z15:, 23i:XZ:mx15:, 23i:XZ:mz15:, RqsPos, 0, tsubXYPs }
+  { 23i:XZ:P16:, 23i:XZ:X16:, 23i:XZ:Z16:, 23i:XZ:mx16:, 23i:XZ:mz16:, RqsPos, 0, tsubXYPs }
+#
+  { 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:,   23i:MO:mz:,   23i:MO:my:,   RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P4:,  23i:XZ:X4:,  23i:XZ:Z4:,  23i:XZ:mx4:,  23i:XZ:mz4:,  RqsBkl, 1, tsubXYPs }
+  { 23i:MO:Tn:,  23i:MO:P2:,  23i:MO:R2:,  23i:MO:mp2:,  23i:MO:mr2:,  RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P6:,  23i:XZ:X6:,  23i:XZ:Z6:,  23i:XZ:mx6:,  23i:XZ:mz6:,  RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P7:,  23i:XZ:X7:,  23i:XZ:Z7:,  23i:XZ:mx7:,  23i:XZ:mz7:,  RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P8:,  23i:XZ:X8:,  23i:XZ:Z8:,  23i:XZ:mx8:,  23i:XZ:mz8:,  RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P11:, 23i:XZ:X11:, 23i:XZ:Z11:, 23i:XZ:mx11:, 23i:XZ:mz11:, RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P12:, 23i:XZ:X12:, 23i:XZ:Z12:, 23i:XZ:mx12:, 23i:XZ:mz12:, RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P13:, 23i:XZ:X13:, 23i:XZ:Z13:, 23i:XZ:mx13:, 23i:XZ:mz13:, RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P14:, 23i:XZ:X14:, 23i:XZ:Z14:, 23i:XZ:mx14:, 23i:XZ:mz14:, RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P15:, 23i:XZ:X15:, 23i:XZ:Z15:, 23i:XZ:mx15:, 23i:XZ:mz15:, RqsBkl, 1, tsubXYPs }
+  { 23i:XZ:P16:, 23i:XZ:X16:, 23i:XZ:Z16:, 23i:XZ:mx16:, 23i:XZ:mz16:, RqsBkl, 1, tsubXYPs }
+}

@@ -1,0 +1,26 @@
+file bkgfix1pcs.db
+{
+	pattern { pcs, C, S }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  S =   0  32  64  96 128 160 192 224
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+
+# pmac10
+        { 23i:WS:Av:,  0,   0 }
+        { 23i:WS:Ah:,  0,  32 }
+        { 23i:MO:Ps:,  0,  64 }
+        { 23i:MO:En:,  0,  96 }
+ 	{ 23i:MO:Tn1:, 0, 128 }
+ 	{ 23i:MO:Tn2:, 0, 160 }
+ 	{ 23i:BP:Mo:,  0, 192 }
+ 	{ 23i:CS:Av:,  0, 224 }
+ 	{ 23i:CS:Ah:,  0, 256 }
+  	{ 23i:KB:Hz:,  0, 288 }
+  	{ 23i:KB:Hy:,  0, 320 }
+  	{ 23i:KB:Vz:,  0, 352 }
+  	{ 23i:KB:Vy:,  0, 384 }
+  	{ 23i:BP:Kb:,  0, 416 }
+}

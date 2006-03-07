@@ -1,0 +1,112 @@
+<html>
+  <head><title>Tuning PMAC1 motors</title></head>
+<body>
+
+<H2><A NAME="rough">Tuning PMAC1 motors -- Rough stage</A></H2>
+
+<pre>
+1) Bring:  "Servo1.adl" and "OpnLp.adl"
+
+2) Run +- directions at 80% of maximum speed and watch average velocity (in cts/s).
+
+3) Bring Motion -> PMAC -> More -> Ixxx18ID.tcl and setup this value of the
+   velocity DIVIDED by 1000 (since PMAC uses the velocity in cts/ms) in:
+     Ix16 - motor x maximum permitted motor program velocity
+     Ix22 - motor x jog speed
+   +-Ix23 - motor x homing speed.
+   (Servo1.adl shows the velocity in counts/sec, while Ix16,Ix22,Ix23
+    expect it in counts/msec; "x" is the PMAC motor number: 1,..8).
+
+   The direction of homing speed depends on where we choose the home
+   (usually - on the safer end). Homing for rotary is slow because
+   it is inert. Besides, the method of rotary homing is less secure
+   (see below).
+
+4) Setup:   Ix20 - motor x jog/home acceleration time
+            Ix21 - S-curve part of this time (which is always 1/2 of Ix20)
+
+5) Bring CtlPnlMtr.adl (Jog Closed Loop), push motor +- and watch
+   "Amplifier Fault" error in Servo1.adl.
+   Increase Ix30 (motor x proportional gain) until "Amplifier Fault
+   error/warning" disappears (use IxSvoCtl.adl or Ixxx18ID.tcl).
+
+6) Increase Ix33 (motor x integral gain) until "In Position" on
+   Servo1.adl becomes okay.</pre>
+<blockquote><table><tr valign=top><td bgcolor="#FFFFFF"><font color=red>HINT:</font></td>
+   <td bgcolor="#EFEFEF">
+      a) increasing of Ix30 does fast response and eliminates amplifier errors,<br>
+      b) increasing of Ix31 reduces overshooting,<br>
+      c) increasing of Ix33 provides better holding.</td>
+</tr></table></blockquote><p>
+
+Also, it is recommended Ix34=0 /Integration mode = "Always On"/
+<p>
+
+<hr>
+
+<H2><A NAME="fine">Tuning PMAC motors -- Fine stage</A></H2>
+
+<pre>
+
+1) Bring:
+   - scan.adl (SCAN -> "XFD StdApp Scan").
+   - scaler.adl and setup count time e.g. for 2 seconds.
+   - StripTool
+
+2) In scan.adl set, for example:
+  - Read:  18ID:MO1:mnl:ActPos
+  - Drive: 18ID:MO1:mnl:RqsPos
+  - Setup number of points, range, and step size (goto More at the top
+    and choose what must be frozen; FREEZE STEP TO INTEGER)
+  - FOR STABILITY: replace triggering 18ID:scan1.EXSC by 18ID:scaler1.CNT ---???
+  - Goto More -> Waits at the botton and and choose:
+    Positioner wait (e.g.):
+       INPA PV Name:     18ID:MO1:Tn:InPos          Yes
+       /not used/                                   No
+       /not used/                                   No
+       CALC String:      A&C
+       Output PV Name:   18ID:scan1.PROC
+                         Transition to Non-Zero
+    Detector wait:
+       INPA PV Name:     18ID:scaler1.CNT           Yes
+       /not used/                                   No
+       /not used/                                   No
+       CALC String:      A&C
+       Output PV Name:   18ID:scan1.PROC
+                         Transition to Zero
+
+3) Switch motors into automatic mode (in Move???.adl)
+
+4) In StripTool setup watching the following records (e.g.):
+  - 18ID:MO1:mnl:PrvDac   (drag from Servo1.adl)
+  - 18ID:MO1:mnl:AvgVelSvo(drag from Servo1.adl)
+  - 18ID:MO1:mnl:ActVelSvo(drag from Servo1.adl)
+  - 18ID:MO1:mnl:InPos    (drag from Servo1.adl)
+  - 18ID:scaler1.CNT      (insert manually or from scaler16.adl;
+                           not from scan_2.2.adl)
+
+4) In StripTool setup Renew Time to 0.1sec.
+
+5) Start scans, watch velocity profile in StripTool and  adjust
+   Ix30 -- Ix35 on IxSvoCtl.adl to optimize the behaviour
+   (see page 88 of PMAC Executive Manual for more details).
+   - Ix64 (dead band factor) can be 0 or -16.
+   - Ix65 (deadband size) can be increased from 64 to 128, but then    +-----------+
+           Ix28 must be changed too!!!                                 | Ix65=Ix28 |
+   - Ix33 (motor x Integral Gain): increasing this parameter may help  +-----------+
+          to faster return to the position, but may cause overtravels.
+          Then, Ix31 (Derivative Gain) must be decreased.
+   - Ix20, Ix21 (motor x Acceleration time): increasing of this parameters
+          might help, but they MUST BE THE SAME for all motors in assembly.
+</pre>
+
+
+<!-- This script inserts a 'Last Modified Date Stamp' -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+        document.write('<FONT SIZE="1">Last modified ' + document.lastModified + '</FONT><BR>')
+// -->
+</SCRIPT>
+
+</body>
+</html>

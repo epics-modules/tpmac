@@ -1,0 +1,6 @@
+file pmacApp/Db/pmacDb/svofix0.db
+{
+	pattern { pmac, C }
+
+        { 23i:pmac20:, 0 }
+}

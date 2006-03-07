@@ -1,0 +1,54 @@
+record(longout, "$(pmac)ctp:EnaMsk") {
+  field(DESC, "Control Panel Enable Mask")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60000")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd1") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60001")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd2") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60002")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd3") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60003")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd4") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60004")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd5") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60005")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd6") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60006")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd7") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60007")
+}
+
+record(longout, "$(pmac)ctp:RqsWrd8") {
+  field(DESC, "Control Panel Request Word")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S0 @HY:$60008")
+}
+

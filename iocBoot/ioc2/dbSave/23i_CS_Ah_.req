@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% 23i:CS:Ah:  Collimator (Monochromatic) slits, Horizontal Aperture
+%
+
+file $(DIR)/assy.req ASSY=23i:CS:Ah
+23i:CS:Ah:Invert
+file $(DIR)/mtr1.req MTR1=23i:CS:my1
+file $(DIR)/mtr1.req MTR1=23i:CS:my2
+file $(DIR)/drv1.req DRV1=23i:CS:YO
+file $(DIR)/drv1.req DRV1=23i:CS:YI
+file $(DIR)/axs1.req AXS1=23i:CS:YC
+file $(DIR)/axs1.req AXS1=23i:CS:YS
+

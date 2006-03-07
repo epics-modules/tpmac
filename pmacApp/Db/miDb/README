@@ -1,0 +1,7 @@
+These are mirror support databases. Two mirror support motors in the
+coordinate system provide mirror height and angle as combined motion.
+See MI_Calibrate.db and CalibMISt.adl for more details.
+
+-- Sergey
+
+

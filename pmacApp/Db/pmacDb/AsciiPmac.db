@@ -1,0 +1,187 @@
+record(stringin, "$(pmac)StrCmd") {
+  field(FLNK, "$(pmac)StrRsp.PROC PP MS")
+}
+
+record(stringout, "$(pmac)StrRsp") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)StrCmd.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd0") {
+  field(FLNK, "$(pmac)TclRsp0.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp0") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd0.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd1") {
+  field(FLNK, "$(pmac)TclRsp1.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp1") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd1.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd2") {
+  field(FLNK, "$(pmac)TclRsp2.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp2") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd2.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd3") {
+  field(FLNK, "$(pmac)TclRsp3.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp3") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd3.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd4") {
+  field(FLNK, "$(pmac)TclRsp4.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp4") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd4.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd5") {
+  field(FLNK, "$(pmac)TclRsp5.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp5") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd5.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd6") {
+  field(FLNK, "$(pmac)TclRsp6.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp6") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd6.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd7") {
+  field(FLNK, "$(pmac)TclRsp7.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp7") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd7.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd8") {
+  field(FLNK, "$(pmac)TclRsp8.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp8") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd8.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmd9") {
+  field(FLNK, "$(pmac)TclRsp9.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRsp9") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmd9.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdA") {
+  field(FLNK, "$(pmac)TclRspA.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspA") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdA.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdB") {
+  field(FLNK, "$(pmac)TclRspB.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspB") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdB.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdC") {
+  field(FLNK, "$(pmac)TclRspC.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspC") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdC.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdD") {
+  field(FLNK, "$(pmac)TclRspD.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspD") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdD.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdE") {
+  field(FLNK, "$(pmac)TclRspE.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspE") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdE.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+
+record(stringin, "$(pmac)TclCmdF") {
+  field(FLNK, "$(pmac)TclRspF.PROC PP MS")
+}
+
+record(stringout, "$(pmac)TclRspF") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(pmac)TclCmdF.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @")
+}
+

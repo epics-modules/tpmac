@@ -1,0 +1,6 @@
+These are databases common for different assemblies. They are grouped in the
+"pmac" directory because all of them talk to PMAC hardware either through
+PMAC mailbox (ASCII driver) or dual-ported RAM (DPRAM driver).
+
+-- Sergey
+

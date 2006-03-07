@@ -1,0 +1,69 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(d2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(d2)PsLimSet.PROC PP MS")
+  field(FLNK, "$(assy)xLimFLNK.PROC PP MS")
+}
+
+record(fanout, "$(assy)xLimFLNK") {
+  field(LNK1, "$(x1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(x1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(x2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(x2)PsLimSet.PROC PP MS")
+}
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+  field(LNK2, "$(d2)AmpEna.PROC PP MS")
+  field(LNK3, "$(x1)AmpEna.PROC PP MS")
+  field(LNK4, "$(x2)AmpEna.PROC PP MS")
+}
+
+record(calc,"$(x1)NgLimSet")
+{
+  field(CALC,"A+B")
+  field(INPA,"$(d1)NgLimSet.VAL PP MS")
+  field(INPB,"$(d2)NgLimSet.VAL PP MS")
+}
+
+record(calc,"$(x1)PsLimSet")
+{
+  field(CALC,"A+B")
+  field(INPA,"$(d1)PsLimSet.VAL PP MS")
+  field(INPB,"$(d2)PsLimSet.VAL PP MS")
+}
+
+record(calc,"$(x2)NgLimSet")
+{
+  field(CALC,"(B+C)*(1-E)+(A+D)*E")
+  field(INPA,"$(d1)NgLimSet.VAL PP MS")
+  field(INPB,"$(d2)NgLimSet.VAL PP MS")
+  field(INPC,"$(d1)PsLimSet.VAL PP MS")
+  field(INPD,"$(d2)PsLimSet.VAL PP MS")
+  field(INPE,"$(assy)Invert.VAL PP MS")
+}
+
+record(calc,"$(x2)PsLimSet")
+{
+  field(CALC,"(D+A)*(1-E)+(C+B)*E")
+  field(INPA,"$(d1)NgLimSet.VAL PP MS")
+  field(INPB,"$(d2)NgLimSet.VAL PP MS")
+  field(INPC,"$(d1)PsLimSet.VAL PP MS")
+  field(INPD,"$(d2)PsLimSet.VAL PP MS")
+  field(INPE,"$(assy)Invert.VAL PP MS")
+}
+
+record(calc,"$(x1)AmpEna")
+{
+  field(CALC,"((A>0)&&(B>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL PP MS")
+  field(INPB,"$(d2)AmpEna.VAL PP MS")
+}
+
+record(calc,"$(x2)AmpEna")
+{
+  field(CALC,"((A>0)&&(B>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL PP MS")
+  field(INPB,"$(d2)AmpEna.VAL PP MS")
+}

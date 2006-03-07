@@ -1,0 +1,39 @@
+file pmacApp/Db/pmacDb/mtrdat.db
+{
+	pattern { assy, mtr, desc, x, C, S }
+#		mtr =   1   2   3   4   5   6   7   8 ...
+#		  S =   0  12  24  36  48  60  72  84 ...
+#--------------------------------------
+        { 23i:WS:Av:,  23i:WS:mt:,   "mtr white slit top     ",   1, 0,   0 }
+ 	{ 23i:WS:Av:,  23i:WS:mb:,   "mtr white slit bottom  ",   2, 0,  12 }
+ 	{ 23i:WS:Ah:,  23i:WS:mo:,   "mtr white slit outboard",   3, 0,  24 }
+        { 23i:WS:Ah:,  23i:WS:mi:,   "mtr white slit inboard ",   4, 0,  36 }
+ 	{ 23i:MO:Ps:,  23i:MO:mz:,   "mtr mono trolley-Z     ",   5, 0,  48 }
+ 	{ 23i:MO:Ps:,  23i:MO:my:,   "mtr mono trolley-Y     ",   6, 0,  60 }
+ 	{ 23i:XZ:P4:,  23i:XZ:mx4:,  "mtr x4                 ",   7, 0,  72 }
+ 	{ 23i:XZ:P4:,  23i:XZ:mz4:,  "mtr z4                 ",   8, 0,  84 }
+ 	{ 23i:MO:Tn:,  23i:MO:mp2:,  "mtr mono pitch cryst-2 ",   9, 0,  96 }
+  	{ 23i:MO:Tn:,  23i:MO:mr2:,  "mtr mono roll cryst-2  ",  10, 0, 108 }
+  	{ 23i:XZ:P6:,  23i:XZ:mx6:,  "mtr x6                 ",  11, 0, 120 }
+  	{ 23i:XZ:P6:,  23i:XZ:mz6:,  "mtr z6                 ",  12, 0, 132 }
+  	{ 23i:XZ:P7:,  23i:XZ:mx7:,  "mtr x7                 ",  13, 0, 144 }
+  	{ 23i:XZ:P7:,  23i:XZ:mz7:,  "mtr z7                 ",  14, 0, 156 }
+  	{ 23i:XZ:P8:,  23i:XZ:mx8:,  "mtr x8                 ",  15, 0, 168 }
+  	{ 23i:XZ:P8:,  23i:XZ:mz8:,  "mtr z8                 ",  16, 0, 180 }
+        { 23i:CS:Av:,  23i:CS:mz1:,  "mtr MB slit top slide  ",  17, 0, 192 }
+ 	{ 23i:CS:Av:,  23i:CS:mz2:,  "mtr MB slit btm slide  ",  18, 0, 204 }
+ 	{ 23i:CS:Ah:,  23i:CS:my1:,  "mtr MB slit outb. slide",  19, 0, 216 }
+        { 23i:CS:Ah:,  23i:CS:my2:,  "mtr MB slit inb. slide ",  20, 0, 228 }
+ 	{ 23i:XZ:P11:, 23i:XZ:mx11:, "mtr x11                ",  21, 0, 240 }
+ 	{ 23i:XZ:P11:, 23i:XZ:mz11:, "mtr z11                ",  22, 0, 252 }
+ 	{ 23i:XZ:P12:, 23i:XZ:mx12:, "mtr x12                ",  23, 0, 264 }
+ 	{ 23i:XZ:P12:, 23i:XZ:mz12:, "mtr z12                ",  24, 0, 276 }
+        { 23i:XZ:P13:, 23i:XZ:mx13:, "mtr x13                ",  25, 0, 288 }
+ 	{ 23i:XZ:P13:, 23i:XZ:mz13:, "mtr z13                ",  26, 0, 300 }
+ 	{ 23i:XZ:P14:, 23i:XZ:mx14:, "mtr x14                ",  27, 0, 312 }
+        { 23i:XZ:P14:, 23i:XZ:mz14:, "mtr z14                ",  28, 0, 324 }
+ 	{ 23i:XZ:P15:, 23i:XZ:mx15:, "mtr x15                ",  29, 0, 336 }
+ 	{ 23i:XZ:P15:, 23i:XZ:mz15:, "mtr z15                ",  30, 0, 348 }
+ 	{ 23i:XZ:P16:, 23i:XZ:mx16:, "mtr x16                ",  31, 0, 360 }
+ 	{ 23i:XZ:P16:, 23i:XZ:mz16:, "mtr z16                ",  32, 0, 372 }
+}

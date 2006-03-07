@@ -1,0 +1,8 @@
+These a "piggyback" slits databases (one blade mounted on the other).
+The assembly consists of two motors driving individual blades and
+their motions are transformed into slit size and center position.
+See CS_Calibrate.db and CalibCSAp.adl for more details.
+
+-- Sergey
+
+

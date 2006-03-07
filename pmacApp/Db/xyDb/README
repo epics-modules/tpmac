@@ -1,0 +1,16 @@
+These are XY-positioner databases. The coordinate system consists of two
+independent motors with common start and stop. See XY_Calibrate.db and
+CalibXYPs.adl for more details.
+
+The only reason to combine two independent motors into one assembly is to
+have a common control and to reduce the number of coordinate systems. The
+matter is that the Turbo PMAC2 Ultralight can drive up to 32 motors, but not
+more than 16 coordinate systems. Therefore, one cannot assign all motors
+independently. For motors not included into coordinate systems the only
+possible motion operation would be jogging, i.e. no motion program (e.g.
+backlash) could be executed.
+
+
+-- Sergey
+
+

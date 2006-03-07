@@ -1,0 +1,12 @@
+file Load10XYZ2.db
+{
+	pattern { assy, m1, m2, m3, C, pcs }
+#				       pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+        { 23i:KB:Hz:, 23i:KB:mhz1:, 23i:KB:mhz2:, 23i:KB:mhz3:, 0, 10 }
+        { 23i:KB:Vz:, 23i:KB:mvz1:, 23i:KB:mvz2:, 23i:KB:mvz3:, 0, 12 }
+#
+}

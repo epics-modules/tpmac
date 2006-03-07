@@ -1,0 +1,87 @@
+; Coordinate System Definitions
+;
+; pmac40 /XY-positioners/
+
+undef all	; clear all coordinate systems
+; (1) XY:P1:
+&1
+#1->X  ; XY:mx1:
+#2->Y  ; XY:my1:
+
+; (2) XY:P2:
+&2
+#3->X  ; XY:mx2:
+#4->Y  ; XY:my2:
+
+; (3) XY:P3:
+&3
+#5->X  ; XY:mx3:
+#6->Y  ; XY:my3:
+
+; (4) XY:P4:
+&4
+#7->X  ; XY:mx4:
+#8->Y  ; XY:my4:
+
+; (5) XY:P5:
+&5
+#9->X  ; XY:mx5:
+#10->Y ; XY:my5:
+
+; (6) XY:P6:
+&6
+#11->X  ; XY:mx6:
+#12->Y  ; XY:my6:
+
+; (7) XY:P7:
+&7
+#13->X  ; XY:mx7:
+#14->Y  ; XY:my7:
+
+; (8) XY:P8:
+&8
+#15->X  ; XY:mx8:
+#16->Y  ; XY:my8:
+
+; (9) XY:P9:
+&9
+#17->X  ; XY:mx9:
+#18->Y  ; XY:my9:
+
+; (10) XY:P10:
+&10
+#19->X  ; XY:mx10:
+#20->Y  ; XY:my10:
+
+; (11) XY:P11:
+&11
+#21->X  ; XY:mx11:
+#22->Y  ; XY:my11:
+
+; (12) XY:P12:
+&12
+#23->X  ; XY:mx12:
+#24->Y  ; XY:my12:
+
+; (13) XY:P13:
+&13
+#25->X  ; XY:mx13:
+#26->Y  ; XY:my13:
+
+; (14) XY:P14:
+&14
+#27->X  ; XY:mx14:
+#28->Y  ; XY:my14:
+
+; (15) XY:P15:
+&15
+#29->X  ; XY:mx15:
+#30->Y  ; XY:my15:
+
+; (16) XY:P16:
+&16
+#31->X  ; XY:mx16:
+#32->Y  ; XY:my16:
+
+
+

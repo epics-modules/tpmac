@@ -1,0 +1,22 @@
+file AssyGeneric.db
+{
+	pattern { assy, desc }
+
+# pmac20
+        { 23i:WS:Av:,  "White Beam Slits Vertical" }
+        { 23i:WS:Ah:,  "White Beam Slits Horizontal" }
+        { 23i:MO:Ps:,  "DCM Positioner" }
+        { 23i:XZ:P4:,  "XZ Assembly 4" }
+ 	{ 23i:MO:Tn:,  "DCM Crystal-2 Tuning" }
+ 	{ 23i:XZ:P6:,  "XZ Assembly 6" }
+ 	{ 23i:XZ:P7:,  "XZ Assembly 7" }
+  	{ 23i:XZ:P8:,  "XZ Assembly 8" }
+ 	{ 23i:CS:Av:,  "Coll.Slits Vertical" }
+  	{ 23i:CS:Ah:,  "Coll.Slit Horizontal" }
+  	{ 23i:XZ:P11:, "XZ Assembly 11" }
+  	{ 23i:XZ:P12:, "XZ Assembly 12" }
+  	{ 23i:XZ:P13:, "XZ Assembly 13" }
+  	{ 23i:XZ:P14:, "XZ Assembly 14" }
+  	{ 23i:XZ:P15:, "XZ Assembly 15" }
+  	{ 23i:XZ:P16:, "XZ Assembly 16" }
+}

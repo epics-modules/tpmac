@@ -1,0 +1,90 @@
+; Program-72: three motors, backlash (backlash from one side only)
+; PMAC-2 version
+; (for Ram10X2 -- GM/CA CAT)
+;
+;----------------------------------------;
+; $(assy)AccelTime  -> TA0   -> M(Q71)   ;
+; $(assy)AccelCurve -> TS0   -> M(Q72)   ;
+;       0           -> F0    -> M(Q73)   ; [was: $(assy)FeedRateSlw <- $(m1)SelSlw = 0]
+;       1           -> FRAX0 -> M(Q74)   ; [was: $(assy)FeedRateAxis]
+; $(m1)RqsPos       -> X0    -> M(Q75)   ;
+; $(m1)RqsBkl       -> X1    -> M(Q76)   ;
+; $(m2)RqsPos       -> Y0    -> M(Q77)   ;
+; $(m2)RqsBkl       -> Y1    -> M(Q78)   ;
+; $(m3)RqsPos       -> Z0    -> M(Q79)   ;
+; $(m3)RqsBkl       -> Z1    -> M(Q80)   ;
+;----------------------------------------;
+;         v---PMAC1----v------------V
+; Use: Q70*100+5047, Q70*100+5048, Q70*100+5049, Q71, Q72, Q73, Q74,  Q75, Q76, Q77, Q78, Q79, Q80
+;      ${m1}DesPos   ${m2}DesPos   ${m3}DesPos   TA0, TS0, F0, FRAX0,  X0,  X1,  Y0,  Y1,  Z0,  Z1
+; Q70    is the coordinate system number.
+; DesPos is nearly the same as ActPos - this is the position
+;        around which PMAC is currently trying to hold the motor.
+;
+CLOSE
+;
+OPEN PROG 72 CLEAR
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X,Y,Z)		;specify feedrate axes -- is not used here
+  Q9=M(Q74+0)
+  IF(Q9=1)FRAX(X)
+  IF(Q9=2)FRAX(Y)
+  IF(Q9=3)FRAX(X,Y)
+  IF(Q9=4)FRAX(Z)
+  IF(Q9=5)FRAX(X,Z)
+  IF(Q9=6)FRAX(Y,Z)
+  IF(Q9=7)FRAX(X,Y,Z)
+  F(M(Q73+0))		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q76+0)					;${m1}RqsBkl
+  Q2=M(Q75+0)-M(Q70*100+5047)			;${m1}RqsPos-${m1}DesPos
+  Q3=M(Q78+0)					;${m2}RqsBkl
+  Q4=M(Q77+0)-M(Q70*100+5048)			;${m2}RqsPos-${m2}DesPos
+  Q5=M(Q80+0)					;${m3}RqsBkl
+  Q6=M(Q79+0)-M(Q70*100+5049)			;${m3}RqsPos-${m3}DesPos
+  IF( Q1>0 AND Q2<0 OR Q1<0 AND Q2>0)
+    IF( Q3>0 AND Q4<0 OR Q3<0 AND Q4>0)
+      IF( Q5>0 AND Q6<0 OR Q5<0 AND Q6>0)
+        X(M(Q75+0)-M(Q76+0))Y(M(Q77+0)-M(Q78+0))Z(M(Q79+0)-M(Q80+0))	;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        X(M(Q75+0))Y(M(Q77+0))Z(M(Q79+0))				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+      ELSE
+        X(M(Q75+0)-M(Q76+0))Y(M(Q77+0)-M(Q78+0))Z(M(Q79+0))		;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
+        DWELL0
+        X(M(Q75+0))Y(M(Q77+0))						;goto ${m1}RqsPos & ${m2}RqsPos
+      ENDIF
+    ELSE
+      IF( Q5>0 AND Q6<0 OR Q5<0 AND Q6>0)
+        X(M(Q75+0)-M(Q76+0))Y(M(Q77+0))Z(M(Q79+0)-M(Q80+0))		;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        X(M(Q75+0))Z(M(Q79+0))						;goto ${m1}RqsPos & ${m3}RqsPos
+      ELSE
+        X(M(Q75+0)-M(Q76+0))Y(M(Q77+0))Z(M(Q79+0))			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos
+        DWELL0
+        X(M(Q75+0))							;goto ${m1}RqsPos
+      ENDIF
+    ENDIF
+  ELSE
+    IF( Q3>0 AND Q4<0 OR Q3<0 AND Q4>0)
+      IF( Q5>0 AND Q6<0 OR Q5<0 AND Q6>0)
+        X(M(Q75+0))Y(M(Q77+0)-M(Q78+0))Z(M(Q79+0)-M(Q80+0))		;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        Y(M(Q77+0))Z(M(Q79+0))						;goto ${m2}RqsPos & ${m3}RqsPos
+      ELSE
+        X(M(Q75+0))Y(M(Q77+0)-M(Q78+0))Z(M(Q79+0))			;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
+        DWELL0
+        Y(M(Q77+0))							;goto ${m2}RqsPos
+      ENDIF
+    ELSE
+      IF( Q5>0 AND Q6<0 OR Q5<0 AND Q6>0)
+        X(M(Q75+0))Y(M(Q77+0))Z(M(Q79+0)-M(Q80+0))			;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        Z(M(Q79+0))							;goto ${m3}RqsPos
+      ELSE
+        X(M(Q75+0))Y(M(Q77+0))Z(M(Q79+0))				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+      ENDIF
+    ENDIF
+  ENDIF
+CLOSE

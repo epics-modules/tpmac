@@ -1,0 +1,8 @@
+file MD_Calibrate.db
+{
+        pattern { assy, d1 }
+
+        { 23i:MO:Tn1:,  23i:MO:R1:  }
+        { 23i:BP:Mo:,   23i:BP:MOZ: }
+        { 23i:BP:Kb:,   23i:BP:KBZ: }
+}

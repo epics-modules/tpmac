@@ -1,0 +1,8 @@
+file CS_LimAmp.db
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2 }
+#
+        { 23i:CS:Av:, 23i:CS:ZC:, 23i:CS:ZS:, 23i:CS:ZT:, 23i:CS:ZB:, 23i:CS:mz1:, 23i:CS:mz2: }
+        { 23i:CS:Ah:, 23i:CS:YC:, 23i:CS:YS:, 23i:CS:YO:, 23i:CS:YI:, 23i:CS:my1:, 23i:CS:my2: }
+}
+

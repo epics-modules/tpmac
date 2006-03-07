@@ -1,0 +1,6 @@
+file pmacApp/Db/pmacDb/AsciiPmac.db
+{
+	pattern { pmac, C }
+
+        { 23i:pmac40:, 0 }
+}

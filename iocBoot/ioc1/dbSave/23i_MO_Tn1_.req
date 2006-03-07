@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% 23i:MO:Tn1:  Monochromator Crystal-1 tuning
+%
+
+file $(DIR)/assy.req ASSY=23i:MO:Tn1
+file $(DIR)/mtr1.req MTR1=23i:MO:mr1
+file $(DIR)/drv1.req DRV1=23i:MO:R1
+

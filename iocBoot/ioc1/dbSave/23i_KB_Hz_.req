@@ -1,0 +1,19 @@
+%
+% BURT Request File
+%
+% 23i:KB:Hz:  Horizontal KB mirror Z-positioning
+%
+
+file $(DIR)/assy.req ASSY=23i:KB:Hz
+23i:KB:Hz:Base1:23
+23i:KB:Hz:Base23
+file $(DIR)/mtr1.req MTR1=23i:KB:mhz1
+file $(DIR)/mtr1.req MTR1=23i:KB:mhz2
+file $(DIR)/mtr1.req MTR1=23i:KB:mhz3
+file $(DIR)/drv1.req DRV1=23i:KB:HZ1
+file $(DIR)/drv1.req DRV1=23i:KB:HZ2
+file $(DIR)/drv1.req DRV1=23i:KB:HZ3
+file $(DIR)/axs1.req AXS1=23i:KB:HL
+file $(DIR)/axs1.req AXS1=23i:KB:HW
+file $(DIR)/axs1.req AXS1=23i:KB:HR
+

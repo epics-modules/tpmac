@@ -1,0 +1,8 @@
+record(ai, "$(pmac)mbx:SvoTm") {
+  field(SCAN, "1 second")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S0 @M100")
+  field(EGUF, "4.0e+09")
+  field(EGU, "SCLK")
+  field(HOPR, "4.0e+09")
+}

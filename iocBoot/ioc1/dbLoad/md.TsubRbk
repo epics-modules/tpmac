@@ -1,0 +1,8 @@
+file MD_TsubRbk.db
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+
+        { 23i:MO:Tn1:, 23i:MO:R1:,  "Crystal-1 Roll", "(mrad)", 23i:MO:mr1:, ActPos, 0, tsubMDCs }
+        { 23i:BP:Mo:,  23i:BP:MOZ:, "DCM BMP Z",      "(mm)",   23i:BP:mmo:, ActPos, 0, tsubMDCs }
+        { 23i:BP:Kb:,  23i:BP:KBZ:, "KBM BPM Z",      "(mm)",   23i:BP:mkb:, ActPos, 0, tsubMDCs }
+}

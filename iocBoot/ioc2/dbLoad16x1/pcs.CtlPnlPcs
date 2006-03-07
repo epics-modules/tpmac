@@ -1,0 +1,27 @@
+file CtlPnlPcs.db
+{
+	pattern { pcs, pmac, wrd }
+#				pcs =   1   2   3   4   5   6   7   8
+#				wrd =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+
+# pmac20
+        { 23i:M2:Cs1:,  23i:pmac20:,   1  }
+        { 23i:M2:Cs2:,  23i:pmac20:,   2  }
+        { 23i:M2:Cs3:,  23i:pmac20:,   3  }
+        { 23i:M2:Cs4:,  23i:pmac20:,   4  }
+ 	{ 23i:M2:Cs5:,  23i:pmac20:,   5  }
+ 	{ 23i:M2:Cs6:,  23i:pmac20:,   6  }
+ 	{ 23i:M2:Cs7:,  23i:pmac20:,   7  }
+ 	{ 23i:M2:Cs8:,  23i:pmac20:,   8  }
+ 	{ 23i:M2:Cs9:,  23i:pmac20:,   9  }
+  	{ 23i:M2:Cs10:, 23i:pmac20:,  10  }
+  	{ 23i:M2:Cs11:, 23i:pmac20:,  11  }
+  	{ 23i:M2:Cs12:, 23i:pmac20:,  12  }
+  	{ 23i:M2:Cs13:, 23i:pmac20:,  13  }
+  	{ 23i:M2:Cs14:, 23i:pmac20:,  14  }
+  	{ 23i:M2:Cs15:, 23i:pmac20:,  15  }
+  	{ 23i:M2:Cs16:, 23i:pmac20:,  16  }
+}

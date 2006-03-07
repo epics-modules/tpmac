@@ -1,0 +1,40 @@
+file CtlPnlMtr.db
+{
+	pattern { mtr, pmac, wrd}
+#				mtr =   1   2   3   4   5   6   7   8
+#				wrd =   1   2   3   4   5   6   7   8
+# pmac20
+        { 23i:WS:mt:,   23i:pmac40:,  1 }
+        { 23i:WS:mb:,   23i:pmac40:,  2 }
+        { 23i:WS:mo:,   23i:pmac40:,  3 }
+        { 23i:WS:mi:,   23i:pmac40:,  4 }
+ 	{ 23i:MO:mz:,   23i:pmac40:,  5 }
+ 	{ 23i:MO:my:,   23i:pmac40:,  6 }
+ 	{ 23i:XZ:mx4:,  23i:pmac40:,  7 }
+ 	{ 23i:XZ:mz4:,  23i:pmac40:,  8 }
+ 	{ 23i:MO:mp2:,  23i:pmac40:,  9 }
+  	{ 23i:MO:mr2:,  23i:pmac40:, 10 }
+  	{ 23i:XZ:mx6:,  23i:pmac40:, 11 }
+  	{ 23i:XZ:mz6:,  23i:pmac40:, 12 }
+  	{ 23i:XZ:mx7:,  23i:pmac40:, 13 }
+  	{ 23i:XZ:mz7:,  23i:pmac40:, 14 }
+  	{ 23i:XZ:mx8:,  23i:pmac40:, 15 }
+  	{ 23i:XZ:mz8:,  23i:pmac40:, 16 }
+        { 23i:CS:mz1:,  23i:pmac40:, 17 }
+        { 23i:CS:mz2:,  23i:pmac40:, 18 }
+        { 23i:CS:my1:,  23i:pmac40:, 19 }
+        { 23i:CS:my2:,  23i:pmac40:, 20 }
+        { 23i:XZ:mx11:, 23i:pmac40:, 21 }
+        { 23i:XZ:mz11:, 23i:pmac40:, 22 }
+        { 23i:XZ:mx12:, 23i:pmac40:, 23 }
+        { 23i:XZ:mz12:, 23i:pmac40:, 24 }
+        { 23i:XZ:mx13:, 23i:pmac40:, 25 }
+        { 23i:XZ:mz13:, 23i:pmac40:, 26 }
+        { 23i:XZ:mx14:, 23i:pmac40:, 27 }
+        { 23i:XZ:mz14:, 23i:pmac40:, 28 }
+        { 23i:XZ:mx15:, 23i:pmac40:, 29 }
+        { 23i:XZ:mz15:, 23i:pmac40:, 30 }
+        { 23i:XZ:mx16:, 23i:pmac40:, 31 }
+        { 23i:XZ:mz16:, 23i:pmac40:, 32 }
+}
+

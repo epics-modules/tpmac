@@ -1,0 +1,35 @@
+file OpnLp.db
+{
+	pattern { mtr, C, M }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  M = 1 2 3 4 5 6 7 8
+
+# pmac10
+        { 23i:WS:mt:,   0,  1 }
+        { 23i:WS:mb:,   0,  2 }
+        { 23i:WS:mo:,   0,  3 }
+        { 23i:WS:mi:,   0,  4 }
+ 	{ 23i:MO:mz:,   0,  5 }
+ 	{ 23i:MO:my:,   0,  6 }
+ 	{ 23i:MO:mr:,   0,  7 }
+ 	{ 23i:MO:mt2:,  0,  8 }
+ 	{ 23i:MO:mr1:,  0,  9 }
+  	{ 23i:MO:mp2:,  0, 10 }
+  	{ 23i:MO:mr2:,  0, 11 }
+  	{ 23i:BP:mmo:,  0, 12 }
+  	{ 23i:CS:mz1:,  0, 17 }
+  	{ 23i:CS:mz2:,  0, 18 }
+  	{ 23i:CS:my1:,  0, 19 }
+  	{ 23i:CS:my2:,  0, 20 }
+        { 23i:KB:mhz1:, 0, 21 }
+        { 23i:KB:mhz2:, 0, 22 }
+        { 23i:KB:mhz3:, 0, 23 }
+        { 23i:KB:mhy1:, 0, 24 }
+        { 23i:KB:mhy2:, 0, 25 }
+        { 23i:KB:mvz1:, 0, 26 }
+        { 23i:KB:mvz2:, 0, 27 }
+        { 23i:KB:mvz3:, 0, 28 }
+        { 23i:KB:mvy1:, 0, 29 }
+        { 23i:KB:mvy2:, 0, 30 }
+        { 23i:BP:mkb:,  0, 31 }
+}

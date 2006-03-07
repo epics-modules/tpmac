@@ -1,0 +1,13 @@
+fileLoad06X2.db
+{
+	pattern { assy, m1, C, pcs }
+#                              pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+        { 23i:MO:Tn1:, 23i:MO:mr1:,  0,  5 }
+        { 23i:BP:Mo:,  23i:BP:mmo:,  0,  7 }
+        { 23i:BP:Kb:,  23i:BP:mkb:,  0, 14 }
+#
+}

@@ -1,0 +1,61 @@
+record(status, "$(pcs)Sts1") {
+  field(DESC, "Status Word 1")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$601AC")
+  field(LK00, "$(pcs)RunPrg.PROC PP MS")
+}
+
+record(status, "$(pcs)PrgExeSts") {
+  field(DESC, "Program Execution Status")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$601BF")
+  field(LK17, "$(pcs)InPos.PROC PP MS")
+  field(LK19, "$(pcs)FatalFolErr.PROC PP MS")
+  field(LK20, "$(pcs)AmpFltErr.PROC PP MS")
+  field(LK22, "$(pcs)RunTmErr.PROC PP MS")
+}
+
+record(bi, "$(pcs)InPos") {
+  field(DESC, "In Position")
+  field(INP, "$(pcs)PrgExeSts.BI17 NPP MS")
+  field(ZSV, "MINOR")
+  field(ZNAM, "Moving")
+  field(ONAM, "Positioned")
+}
+
+record(bi, "$(pcs)RunPrg") {
+  field(DESC, "Running Program")
+  field(INP, "$(pcs)Sts1.BI00 NPP MS")
+  field(OSV, "MINOR")
+  field(ZNAM, "Idle")
+  field(ONAM, "Running")
+}
+
+record(bi, "$(pcs)AmpFltErr") {
+  field(DESC, "Amplifier Fault Error")
+  field(INP, "$(pcs)PrgExeSts.BI20 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fault")
+}
+
+record(bi, "$(pcs)RunTmErr") {
+  field(DESC, "Run-Time Error")
+  field(INP, "$(pcs)PrgExeSts.BI22 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Error")
+}
+
+record(bi, "$(pcs)FatalFolErr") {
+  field(DESC, "Fatal Following Error")
+  field(INP, "$(pcs)PrgExeSts.BI19 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fatal")
+}
+

@@ -1,0 +1,15 @@
+record(mbbo, "$(assy)Motion") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(ZRST, "None")
+  field(ONST, "Slew")
+  field(TWST, "Backlash")
+  field(THST, "Position")
+}
+
+record(sel, "$(assy)ArgPROG") {
+  field(NVL, "$(assy)Motion.VAL NPP MS")
+  field(INPB, "$(prg0)")
+  field(INPC, "$(prg1)")
+  field(INPD, "$(prg2)")
+}
+

@@ -1,0 +1,11 @@
+record(stringin, "$(mtr)StrCmd") {
+  field(FLNK, "$(mtr)StrRsp.PROC PP MS")
+}
+
+record(stringout, "$(mtr)StrRsp") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(DOL, "$(mtr)StrCmd.VAL NPP MS")
+  field(OMSL, "closed_loop")
+  field(OUT, "#C$(C) S1 @#$(x)")
+}
+

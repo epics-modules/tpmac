@@ -1,0 +1,24 @@
+file Ram08XY2.db
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+#  6 for  6X2   (1 motor)
+#  8 for  8XY4  (2 motors)
+# 10 for 10XYZ4 (3 motors)
+#
+# pmac10
+        { 23i:WS:Av:,  0,   0 }
+        { 23i:WS:Ah:,  0,   8 }
+        { 23i:MO:Ps:,  0,  16 }
+        { 23i:MO:En:,  0,  24 }
+ 	{ 23i:MO:Tn2:, 0,  38 }
+ 	{ 23i:CS:Av:,  0,  52 }
+  	{ 23i:CS:Ah:,  0,  60 }
+  	{ 23i:KB:Hy:,  0,  78 }
+  	{ 23i:KB:Vy:,  0,  96 }
+}

@@ -1,0 +1,27 @@
+file AsciiPcs.db
+{
+	pattern { pcs, C, x }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  x =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac20
+        { 23i:M2:Cs1:,  0,  1 }
+        { 23i:M2:Cs2:,  0,  2 }
+        { 23i:M2:Cs3:,  0,  3 }
+        { 23i:M2:Cs4:,  0,  4 }
+ 	{ 23i:M2:Cs5:,  0,  5 }
+ 	{ 23i:M2:Cs6:,  0,  6 }
+ 	{ 23i:M2:Cs7:,  0,  7 }
+ 	{ 23i:M2:Cs8:,  0,  8 }
+ 	{ 23i:M2:Cs9:,  0,  9 }
+  	{ 23i:M2:Cs10:, 0, 10 }
+  	{ 23i:M2:Cs11:, 0, 11 }
+  	{ 23i:M2:Cs12:, 0, 12 }
+  	{ 23i:M2:Cs13:, 0, 13 }
+  	{ 23i:M2:Cs14:, 0, 14 }
+  	{ 23i:M2:Cs15:, 0, 15 }
+  	{ 23i:M2:Cs16:, 0, 16 }
+}

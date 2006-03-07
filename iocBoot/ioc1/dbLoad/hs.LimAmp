@@ -1,0 +1,8 @@
+file HS_LimAmp.db
+{
+ 	pattern { assy, x1, x2, d1, d2 }
+#
+        { 23i:WS:Av:, 23i:WS:ZC:, 23i:WS:ZS:, 23i:WS:ZT:, 23i:WS:ZB: }
+        { 23i:WS:Ah:, 23i:WS:YC:, 23i:WS:YS:, 23i:WS:YO:, 23i:WS:YI: }
+}
+

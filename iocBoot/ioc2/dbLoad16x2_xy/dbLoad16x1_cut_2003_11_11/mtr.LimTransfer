@@ -1,0 +1,29 @@
+file pmacApp/Db/softDb/LimTransfer.db
+{
+	pattern { drv, mtr }
+#--------------------------------------
+#  Developed 98/10 by Stepanov for "LimSet" and "AmpEna" controls
+# See also:
+# mtr.bkgfix1mtr -> pmacDb/bkgfix1mtr.db (propagation of "AmpEna" from motor)
+# mtr.svofix1    -> pmacDb/svofix1.db    (propagation of "NgLimSet" & "PsLimSet" from motor)
+# xx.LimAmp      -> xxDb/XX_LimAmp.db    (triggering all NgLimSet/PsLimSet and AmpEna in the assembly #--------------------------------------
+#--------------------------------------
+
+# Drives <- Motors
+        { 23i:M2:d1:,  23i:M2:m1:  }
+        { 23i:M2:d2:,  23i:M2:m2:  }
+        { 23i:M2:d3:,  23i:M2:m3:  }
+        { 23i:M2:d4:,  23i:M2:m4:  }
+ 	{ 23i:M2:d5:,  23i:M2:m5:  }
+ 	{ 23i:M2:d6:,  23i:M2:m6:  }
+ 	{ 23i:M2:d7:,  23i:M2:m7:  }
+ 	{ 23i:M2:d8:,  23i:M2:m8:  }
+ 	{ 23i:M2:d9:,  23i:M2:m9:  }
+  	{ 23i:M2:d10:, 23i:M2:m10: }
+  	{ 23i:M2:d11:, 23i:M2:m11: }
+  	{ 23i:M2:d12:, 23i:M2:m12: }
+  	{ 23i:M2:d13:, 23i:M2:m13: }
+  	{ 23i:M2:d14:, 23i:M2:m14: }
+  	{ 23i:M2:d15:, 23i:M2:m15: }
+  	{ 23i:M2:d16:, 23i:M2:m16: }
+}

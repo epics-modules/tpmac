@@ -1,0 +1,74 @@
+record(ao, "$(mtr)speed") {
+  field(DESC, "Program Speed (Ix16)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(FLNK, "$(mtr)speedIndx.PROC PP MS")
+  field(OUT, "#C$(C) S0 @I$(x)16=")
+  field(PREC, "2")
+  field(EGU, "(cts/msec)")
+}
+
+#! This is now replaced by "$(mtr)speed":
+#!
+#! record(ao, "$(mtr)Ix16:AO") {
+#!   field(DESC, "Program Speed (Ix16)")
+#!   field(DTYP, "PMAC-VME ASCII")
+#!   field(FLNK, "$(mtr)Ix16:AI.PROC PP MS")
+#!   field(OUT, "#C$(C) S0 @I$(x)16=")
+#!   field(PREC, "2")
+#!   field(EGU, "(cts/msec)")
+#! }
+
+record(ai, "$(mtr)Ix16:AI") {
+  field(DESC, "Program Speed (Ix16)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S0 @I$(x)16")
+  field(PREC, "2")
+  field(EGU, "(cts/msec)")
+  field(SCAN, "1 second")
+}
+
+record(longout, "$(mtr)Ix20:LO") {
+  field(DESC, "Jog/Home Accel Time (Ix20)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(FLNK, "$(mtr)Ix20:LI.PROC PP MS")
+  field(OUT, "#C$(C) S0 @I$(x)20=")
+  field(EGU, "(msec)")
+  field(HOPR, "8388607")
+}
+
+record(longin, "$(mtr)Ix20:LI") {
+  field(DESC, "Jog/Home Accel Time (Ix20)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S0 @I$(x)20")
+  field(EGU, "(msec)")
+  field(HOPR, "8388607")
+  field(SCAN, "1 second")
+}
+
+record(longout, "$(mtr)Ix21:LO") {
+  field(DESC, "Jog/Home S-Curve Time (Ix21)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(FLNK, "$(mtr)Ix21:LI.PROC PP MS")
+  field(OUT, "#C$(C) S0 @I$(x)21=")
+  field(EGU, "(msec)")
+  field(HOPR, "8388607")
+}
+
+record(longin, "$(mtr)Ix21:LI") {
+  field(DESC, "Jog/Home S-Curve Time (Ix21)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S0 @I$(x)21")
+  field(EGU, "(msec)")
+  field(HOPR, "8388607")
+  field(SCAN, "1 second")
+}
+
+record(ai, "$(mtr)Ix22:AI") {
+  field(DESC, "Jog Speed (Ix22)")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S0 @I$(x)22")
+  field(PREC, "2")
+  field(EGU, "(cts/msec)")
+  field(SCAN, "1 second")
+}
+

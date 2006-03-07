@@ -1,0 +1,20 @@
+record(longin, "$(pmac)svo:SvoTm") {
+  field(DESC, "Servo Timer")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(FLNK, "$(pmac)svo:SvoTmDif.PROC PP MS")
+  field(INP, "#C$(C) S0 @DP:$06001B")
+  field(EGU, "servo")
+}
+
+record(calc, "$(pmac)svo:SvoTmDif") {
+  field(CALC, "B-A")
+  field(INPA, "$(pmac)svo:SvoTmPrv.VAL NPP MS")
+  field(INPB, "$(pmac)svo:SvoTmPrv.VAL PP MS")
+}
+
+record(longin, "$(pmac)svo:SvoTmPrv") {
+  field(INP, "$(pmac)svo:SvoTm.VAL NPP MS")
+}
+

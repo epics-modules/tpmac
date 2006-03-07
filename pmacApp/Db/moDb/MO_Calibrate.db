@@ -1,0 +1,155 @@
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "4.592777743e-06")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d2)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "6.666031e-04")
+  field(PREC, "6")
+}
+
+record(ao, "$(d2)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)BeamOffset") {
+  field(DESC, "Beam Offset")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "-35")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)EvLambda") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "12.398541")
+  field(PREC, "7")
+}
+
+record(sel, "$(assy)ESinTheta") {
+  field(DESC, "ESinTheta")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "6")
+  field(NVL, "$(assy)Chkl.VAL NPP MS")
+  field(INPA, "$(assy)set1.VAL NPP MS")
+  field(INPB, "$(assy)set2.VAL NPP MS")
+  field(INPC, "$(assy)set3.VAL NPP MS")
+  field(INPD, "$(assy)set4.VAL NPP MS")
+  field(INPE, "$(assy)set5.VAL NPP MS")
+  field(INPF, "$(assy)set6.VAL NPP MS")
+  field(INPG, "$(assy)set7.VAL NPP MS")
+  field(INPH, "$(assy)set8.VAL NPP MS")
+  field(INPI, "$(assy)set9.VAL NPP MS")
+}
+
+record(mbbi, "$(assy)Chkl") {
+  field(PINI,"YES")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(ZRVL, "0x6f")
+  field(ONVL, "0xdc")
+  field(TWVL, "0x149")
+  field(THVL, "0x1b6")
+  field(FRVL, "0x223")
+  field(FVVL, "0x290")
+  field(SXVL, "0x2fd")
+  field(SVVL, "0x36a")
+  field(EIVL, "0x3d7")
+  field(ZRST, "set1")
+  field(ONST, "set2")
+  field(TWST, "set3")
+  field(THST, "set4")
+  field(FRST, "set5")
+  field(FVST, "set6")
+  field(SXST, "set7")
+  field(SVST, "set8")
+  field(EIST, "set9")
+}
+
+record(ao, "$(assy)set1") {
+  field(DESC, "Si 111")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "1.977041")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set2") {
+  field(DESC, "Si 400")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "4.565782")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set3") {
+  field(DESC, "Si 220")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "3.228495")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set4") {
+  field(DESC, "Si 440")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "6.457007")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set5") {
+  field(DESC, "Si 333")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "5.93097")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set6") {
+  field(DESC, "Si 444")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "7.908162")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set7") {
+  field(DESC, "Si 311")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "3.785679")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set8") {
+  field(DESC, "Si 331")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "4.97556")
+  field(PREC, "6")
+}
+
+record(ao, "$(assy)set9") {
+  field(DESC, "Si 511")
+  field(FLNK, "$(assy)ESinTheta.PROC PP MS")
+  field(DOL, "5.93097")
+  field(PREC, "6")
+}
+
+record(bo,"$(assy)TrolleyFlag") {
+  field(PINI,"YES")
+  field(FLNK,"$(assy)ScaleFanD.PROC PP MS")
+  field(DOL,"1")
+  field(ZNAM,"No")
+  field(ONAM,"Yes")
+}
+
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "2000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+

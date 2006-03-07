@@ -1,0 +1,14 @@
+record(ao, "$(mtr)OpnLpOut") {
+  field(DESC, "Open Loop Output")
+  field(DTYP, "PMAC-VME ASCII")
+  field(OUT, "#C$(C) S0 @#$(M)O")
+  field(PREC, "1")
+  field(EGUF, "100")
+  field(EGUL, "-100")
+  field(DRVH, "100")
+  field(DRVL, "-100")
+  field(HOPR, "100")
+  field(LOPR, "-100")
+  field(ASLO, "1")
+}
+

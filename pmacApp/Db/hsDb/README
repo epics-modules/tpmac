@@ -1,0 +1,7 @@
+These are Huber-type slits databases (two independent blades).
+The assembly consists of two motors driving individual blades and
+their motions are transformed into slit size and center position.
+See HS_Calibrate.db and CalibHSAp.adl for more details.
+
+-- Sergey
+
