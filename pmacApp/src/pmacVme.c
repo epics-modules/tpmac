@@ -875,28 +875,21 @@ PMAC_LOCAL char pmacAscIn
 	int	ctlr,
 	char	*readbuf,
 	char	*errmsg,
- 	int *numChar
+ 	int     *numChar
 )
 {
-    /* char *	MyName = "pmacAscIn"; */
     int		i;
     int	   	status;
     PMAC_CTLR	*pPmacCtlr;
     int  	length;
     int 	errorFirst,errorSecond,errorThird;
-    /*int 	iter;*/
     
-    PMAC_DPRAM * dpramAsciiInControl;
-    PMAC_DPRAM * dpramAsciiIn;
-    
-
+    PMAC_DPRAM  *dpramAsciiInControl;
+    PMAC_DPRAM  *dpramAsciiIn;
     
     dpramAsciiInControl=pmacRamAddr(ctlr,0x0F40);
-
     
     dpramAsciiIn=pmacRamAddr(ctlr,0x0F44);
-    /*gjansaprintf("value in control bit 0x0f40 = %d\n",*dpramAsciiInControl);
-    printf("value in control bit 0x0f40 +1 = %d\n",*(dpramAsciiInControl+1));*/
 
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
@@ -906,23 +899,7 @@ PMAC_LOCAL char pmacAscIn
     errorThird=0;
 
     errmsg[0] = NULL;
-    
-  /*  printf("gjansa: pmacAscIn reading PMAC's DPRAM\n");*/
-    
 
-
-/*    for(iter=0; iter < 10; iter++){ /*this can be used if no interrupts */
-/*    	if(*dpramAsciiInControl == 0x0)
-		taskDelay(1);
-	else
-		break;	
-    }
-    
-    if(iter >= 10){
-    	printf("In break\n");
-	return (-1);
-    }		*/
-    
     if(*(dpramAsciiInControl+1)>>7){
     	errorFirst = *dpramAsciiInControl & 0xF;	
     	errorSecond = (*dpramAsciiInControl>>4) & 0xF;
@@ -946,7 +923,6 @@ PMAC_LOCAL char pmacAscIn
     	for(i=0;i<length-1;i++)
 	{
 	    readbuf[i]=*dpramAsciiIn;
-	/* gjansa   printf("Reading: %c from mem addr %p\n",readbuf[i],dpramAsciiIn);*/
 	    dpramAsciiIn++;
 	}
 	readbuf[i] = 0;
@@ -955,12 +931,9 @@ PMAC_LOCAL char pmacAscIn
     *numChar=length;
     *dpramAsciiInControl=0x0;
     *(dpramAsciiInControl+1)=0x0;
-
     
     return (status);
 }
-
-
 
 
 /*******************************************************************************
@@ -975,13 +948,10 @@ PMAC_LOCAL char pmacAscRead
 	char	*errmsg
 )
 {
-    /* char *	MyName = "pmacAscRead"; */
     int		i;
     int     	status;
     int 	numChar;
     PMAC_CTLR	*pPmacCtlr;
-    
-/*  gjansa  printf("gjansa:pmacAscRead\n");*/
     
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
@@ -999,9 +969,12 @@ PMAC_LOCAL char pmacAscRead
 	i += numChar;
     }
 
-    if (status < 0 ) return PMAC_TERM_BELL;
-    else if (status = 1 ) return PMAC_TERM_ACK;
-    else return PMAC_TERM_CR;
+    if (status < 0 ) 
+      return PMAC_TERM_BELL;
+    else if (status == 1 ) 
+      return PMAC_TERM_ACK;
+    else 
+      return PMAC_TERM_CR;
 }
 
 
