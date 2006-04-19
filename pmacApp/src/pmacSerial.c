@@ -195,7 +195,7 @@ int pmacSerial
 	/* Open User-Specified or Default Serial Device */
 	if (ttyDevice != (char *) NULL)
 	{
-		fdPmac = open (ttyDevice, O_RDWR, NULL);
+		fdPmac = open (ttyDevice, O_RDWR, (int)NULL);
 		if (fdPmac == ERROR)
 		{
 			printErr ("%s: Unable to open device %s\n",
@@ -205,7 +205,7 @@ int pmacSerial
 	}
 	else
 	{
-		fdPmac = open (ttyDefault, O_RDWR, NULL);
+		fdPmac = open (ttyDefault, O_RDWR, (int)NULL);
 		if (fdPmac == ERROR)
 		{
 			printErr ("%s: Unable to open default device %s\n",
@@ -260,7 +260,7 @@ int pmacSerial
 
 	/* Get Command String */
 	status = (int) fgets (commandBuffer, PMAC_MAX_COMMAND, fpInput);
-	if (status == NULL)
+	if (status == (int)NULL)
 	{
 		exitNow = TRUE;
 	}
@@ -366,7 +366,7 @@ int pmacSerial
 
 		/* Get Next Command */
 		status = (int) fgets (commandBuffer, PMAC_MAX_COMMAND, fpInput);
-		if (status == NULL)
+		if (status == (int)NULL)
 		{
 			exitNow = TRUE;
 		}
