@@ -874,25 +874,17 @@ PMAC_LOCAL char pmacAscIn
  	int *numChar
 )
 {
-    const char *	MyName = "pmacAscIn";
     int		i;
     int	   	status;
     PMAC_CTLR	*pPmacCtlr;
     int  	length;
     int 	errorFirst,errorSecond,errorThird;
-    /*int 	iter;*/
     
     PMAC_DPRAM * dpramAsciiInControl;
     PMAC_DPRAM * dpramAsciiIn;
     
-
-    
     dpramAsciiInControl=pmacRamAddr(ctlr,0x0F40);
-
-    
     dpramAsciiIn=pmacRamAddr(ctlr,0x0F44);
-    /*gjansaprintf("value in control bit 0x0f40 = %d\n",*dpramAsciiInControl);
-    printf("value in control bit 0x0f40 +1 = %d\n",*(dpramAsciiInControl+1));*/
 
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
@@ -902,22 +894,6 @@ PMAC_LOCAL char pmacAscIn
     errorThird=0;
 
     errmsg[0] = NULL;
-    
-  /*  printf("gjansa: pmacAscIn reading PMAC's DPRAM\n");*/
-    
-
-
-/*    for(iter=0; iter < 10; iter++){ */ /*this can be used if no interrupts */
-/*    	if(*dpramAsciiInControl == 0x0)
-		taskDelay(1);
-	else
-		break;	
-    }
-    
-    if(iter >= 10){
-    	printf("In break\n");
-	return (-1);
-    }		*/
     
     if(*(dpramAsciiInControl+1)>>7){
     	errorFirst = *dpramAsciiInControl & 0xF;	
@@ -946,31 +922,13 @@ PMAC_LOCAL char pmacAscIn
 	}
 	readbuf[i] = 0;
     }
-/*
-    	pmacAscInCount(ctlr,&length);
     
-    
-    	for(i=0;i<length-1;i++)
-	{
-	    readbuf[i]=*dpramAsciiIn;
-            PMAC_DEBUG
-            (	5,
-        	printf ("%s: Reading %c from mem addr %p\n", MyName, readbuf[i],dpramAsciiIn );
-            )
-
-	    dpramAsciiIn++;
-	}
-	readbuf[i] = 0;
-*/    
     *numChar=length;
     *dpramAsciiInControl=0x0;
     *(dpramAsciiInControl+1)=0x0;
-
     
     return (status);
 }
-
-
 
 
 /*******************************************************************************
