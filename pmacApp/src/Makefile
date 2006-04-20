@@ -16,6 +16,8 @@ DBDINC += tsubRecord
 
 # install <name>.dbd into <top>/dbd
 DBD += add_pmac.dbd
+DBD += pmacInclude.dbd
+DBD += statusDevice.dbd
 
 # The following are compiled and added to the Support library
 OBJLIB_SRCS += devPmacMbx.c
