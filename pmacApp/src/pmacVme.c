@@ -309,7 +309,10 @@ long pmacVmeConfig
 	{
 		printf ("%s: Failure probing for base address.\n",
 			MyName);
-		return (status);
+		/* Continue because the above test fails on an mvme5500. (npr78@diamond.ac.uk) */
+		printf ("%s: ... but continuing regardless.\n",
+			MyName);
+		/* return (status); */
 	}
 
 	pPmacCtlr->presentBase = TRUE;
@@ -528,6 +531,7 @@ PMAC_LOCAL long pmacVmeInit (void)
 			if ( pPmacCtlr->presentBase & pPmacCtlr->enabledBase )
 			{
 				semStatus=semGive (pPmacCtlr->ioMbxLockSem);
+				semStatus=semGive (pPmacCtlr->ioAscLockSem);
 				printf ("pmacVmeInit: semStatus=%d, card=%d \n",semStatus, i);	
 				pPmacCtlr->activeBase = TRUE;
 			}
@@ -833,14 +837,6 @@ PMAC_LOCAL void pmacAscInISR
 	PMAC_CTLR	*pPmacCtlr
 )
 {
-	char *	MyName = "pmacAscInISR";
-
-
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ AscIn for ctlr %d\n", MyName, pPmacCtlr->ctlr);
-	)
-	
 	semGive (pPmacCtlr->ioAscReadmeSem);
 	
 	return;
@@ -875,21 +871,28 @@ PMAC_LOCAL char pmacAscIn
 	int	ctlr,
 	char	*readbuf,
 	char	*errmsg,
- 	int     *numChar
+ 	int *numChar
 )
 {
+    const char *	MyName = "pmacAscIn";
     int		i;
     int	   	status;
     PMAC_CTLR	*pPmacCtlr;
     int  	length;
     int 	errorFirst,errorSecond,errorThird;
+    /*int 	iter;*/
     
-    PMAC_DPRAM  *dpramAsciiInControl;
-    PMAC_DPRAM  *dpramAsciiIn;
+    PMAC_DPRAM * dpramAsciiInControl;
+    PMAC_DPRAM * dpramAsciiIn;
+    
+
     
     dpramAsciiInControl=pmacRamAddr(ctlr,0x0F40);
+
     
     dpramAsciiIn=pmacRamAddr(ctlr,0x0F44);
+    /*gjansaprintf("value in control bit 0x0f40 = %d\n",*dpramAsciiInControl);
+    printf("value in control bit 0x0f40 +1 = %d\n",*(dpramAsciiInControl+1));*/
 
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
@@ -899,7 +902,23 @@ PMAC_LOCAL char pmacAscIn
     errorThird=0;
 
     errmsg[0] = NULL;
+    
+  /*  printf("gjansa: pmacAscIn reading PMAC's DPRAM\n");*/
+    
 
+
+/*    for(iter=0; iter < 10; iter++){ */ /*this can be used if no interrupts */
+/*    	if(*dpramAsciiInControl == 0x0)
+		taskDelay(1);
+	else
+		break;	
+    }
+    
+    if(iter >= 10){
+    	printf("In break\n");
+	return (-1);
+    }		*/
+    
     if(*(dpramAsciiInControl+1)>>7){
     	errorFirst = *dpramAsciiInControl & 0xF;	
     	errorSecond = (*dpramAsciiInControl>>4) & 0xF;
@@ -910,15 +929,15 @@ PMAC_LOCAL char pmacAscIn
 	*numChar=length;
 	*dpramAsciiInControl=0x0;
 	*(dpramAsciiInControl+1)=0x0;
-	return -2;
+	return PMAC_TERM_BELL;
     }
     
-    if(*dpramAsciiInControl!=0x0D){/*only ack*/
-	    status=1;
-    }
-    else{
+    status = *dpramAsciiInControl;
+    length = 0;
+
+    if (status == 0x0D)
+    {
     	pmacAscInCount(ctlr,&length);
-    
     
     	for(i=0;i<length-1;i++)
 	{
@@ -927,13 +946,31 @@ PMAC_LOCAL char pmacAscIn
 	}
 	readbuf[i] = 0;
     }
+/*
+    	pmacAscInCount(ctlr,&length);
     
+    
+    	for(i=0;i<length-1;i++)
+	{
+	    readbuf[i]=*dpramAsciiIn;
+            PMAC_DEBUG
+            (	5,
+        	printf ("%s: Reading %c from mem addr %p\n", MyName, readbuf[i],dpramAsciiIn );
+            )
+
+	    dpramAsciiIn++;
+	}
+	readbuf[i] = 0;
+*/    
     *numChar=length;
     *dpramAsciiInControl=0x0;
     *(dpramAsciiInControl+1)=0x0;
+
     
     return (status);
 }
+
+
 
 
 /*******************************************************************************
@@ -948,33 +985,27 @@ PMAC_LOCAL char pmacAscRead
 	char	*errmsg
 )
 {
-    int		i;
-    int     	status;
+    /* char *	MyName = "pmacAscRead"; */
+    int		i=0;
+    int     	terminator= PMAC_TERM_CR;
     int 	numChar;
     PMAC_CTLR	*pPmacCtlr;
     
+/*  gjansa  printf("gjansa:pmacAscRead\n");*/
+    
     pPmacCtlr = &pmacVmeCtlr[ctlr];
     
-    i = 0;
-    status= 0;
-
-    while ( status == 0)
+    while ( terminator == PMAC_TERM_CR)
     {
 	if(semTake( pPmacCtlr->ioAscReadmeSem, 120)){
 		printf("semTake failed\n");
-		status= -1;
-		return (status);
+		return (PMAC_TERM_BELL);
 	}	
-	status = pmacAscIn (ctlr, &readbuf[i], errmsg,&numChar);
+	terminator = pmacAscIn (ctlr, &readbuf[i], errmsg,&numChar);
 	i += numChar;
     }
 
-    if (status < 0 ) 
-      return PMAC_TERM_BELL;
-    else if (status == 1 ) 
-      return PMAC_TERM_ACK;
-    else 
-      return PMAC_TERM_CR;
+    return (terminator);
 }
 
 
@@ -990,7 +1021,7 @@ PMAC_LOCAL char pmacAscWrite
 	char	*writebuf
 )
 {
-    /* char *	MyName = "pmacAscWrite"; */
+    const char * MyName = "pmacAscWrite";
     int		i;
     int		length;
     char	termination;
@@ -1009,8 +1040,10 @@ PMAC_LOCAL char pmacAscWrite
     
     dpramAsciiOut=pmacRamAddr(ctlr,0x0EA0);
     dpramAsciiOutControl=pmacRamAddr(ctlr,0x0E9C);
-    /*gjansaprintf("value in control bit 0x0E9E = %d\n",(int)*dpramAsciiOutControl);*/
-    
+    PMAC_DEBUG
+    (	5,
+    	printf ("%s: Value in control bit 0x0E9E = %d\n", MyName, (int)*dpramAsciiOutControl );
+    )
     
     for(itera = 0; itera < 10; itera++){
     	if(*dpramAsciiOutControl == 0x0)
@@ -1026,7 +1059,11 @@ PMAC_LOCAL char pmacAscWrite
 
     for (i = 0; (i < length) && (i < PMAC_BASE_ASC_REGS_OUT); i++)
     {
-/*	printf("writing %c to mem addr %p\n",writebuf[i],dpramAsciiOut);*/
+        PMAC_DEBUG
+        (	5,
+        	printf ("%s: Writing %c to mem addr %p\n", MyName, writebuf[i],dpramAsciiOut );
+        )
+    
 	 *dpramAsciiOut=writebuf[i];
 	 dpramAsciiOut++;
     }
@@ -1137,14 +1174,14 @@ PMAC_DPRAM * pmacRamAddr
 	PMAC_DPRAM *	pDpram = (PMAC_DPRAM *) (pCtlr->pDpramBase + offset);
 	
 	PMAC_DEBUG
-	(	2,
+	(	20,
 		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
 			      ctlr, pCtlr->pDpramBase, offset, pDpram,0,0);
 	)
 /* This is a workaround to restore PMAC clock synchronization in case of 2 PMACS -- Sergey, Oleg 2006.01.30 */
 /* (At the end of IOC startup script set pmacVmeDebug=1 for about 2s and 6s after booting IOC) */
 	PMAC_DEBUG
-	(	1,
+	(	20,
 		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d\n",ctlr,0,0,0,0,0);
 		/* PMAC_MESSAGE ("\n",0,0,0,0,0,0); */
 		/* printf ("pmacRamAddr:  Controller #%d\n",ctlr); */

@@ -1516,6 +1516,7 @@ char drvPmacMbxWriteRead (
 
     char buffer[PMAC_MBX_IN_BUFLEN];
 
+#ifdef PMAC_MBX
     pmacMbxLock (card);
 
     terminator = pmacMbxWrite (card, writebuf);
@@ -1525,6 +1526,17 @@ char drvPmacMbxWriteRead (
     }
 
     pmacMbxUnlock (card);
+#else
+    pmacAscLock (card);
+
+    terminator = pmacAscWrite (card, writebuf);
+    terminator = pmacAscRead (card, readbuf, errmsg);
+    while ( terminator == PMAC_TERM_CR ) {
+	 terminator = pmacAscRead (card, buffer, errmsg);
+    }
+
+    pmacAscUnlock (card);
+#endif
 
     return (terminator);
 }

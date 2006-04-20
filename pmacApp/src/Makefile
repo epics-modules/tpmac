@@ -26,6 +26,10 @@ OBJLIB_SRCS += pmacSerial.c
 OBJLIB_SRCS += statusRecord.c
 OBJLIB_SRCS += tsubRecord.c
 
+LIBRARY_vxWorks += pmacIoc
+
+pmacIoc_SRCS += $(OBJLIB_SRCS)
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
