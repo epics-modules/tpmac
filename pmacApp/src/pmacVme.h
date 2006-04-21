@@ -124,11 +124,6 @@ PMAC_LOCAL char pmacMbxIn (int ctlr, char * readbuf, char * errmsg);
 PMAC_LOCAL char pmacMbxRead (int ctlr, char * readbuf, char * errmsg);
 PMAC_LOCAL char pmacMbxWrite (int ctlr, char * writebuf);
 
-long pmacAscLock (int ctlr);
-long pmacAscUnlock (int	ctlr);
-PMAC_LOCAL char pmacAscRead (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL char pmacAscWrite (int ctlr, char * writebuf);
-
 char pmacVmeWriteC (char * addr, char val);
 char pmacVmeReadC (char * addr);
 
