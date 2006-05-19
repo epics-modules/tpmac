@@ -104,6 +104,9 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<drvPmac.h>
 #include "epicsExport.h"
 
+/* ajf: Open/Close/Read/Write driver, forward declaration */
+int pmacDrv( void );
+
 /*
  * DEFINES
  */
@@ -477,6 +480,8 @@ PMAC_LOCAL long drvPmac_init (void)
 	drvPmacConfigLock = 1;
 
 	status = pmacVmeInit ();
+
+        status = pmacDrv();
 
 	return (status);
 }
@@ -1621,7 +1626,8 @@ int drvPmacMbxTask
 
 	FOREVER
 	{
-		if ( semTake(pCard->scanMbxSem,WAIT_TIMEOUT) != OK )
+/*ajf change WAIT_TIMEOUT to WAIT_FOREVER */
+		if ( semTake(pCard->scanMbxSem,WAIT_FOREVER) != OK )
 		{
 			errMessage(0,"drvPmacMbxTask: semTake returned error.");
 		}

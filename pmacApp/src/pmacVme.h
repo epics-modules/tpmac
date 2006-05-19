@@ -116,6 +116,12 @@ long pmacVmeConfig
 
 PMAC_LOCAL long pmacVmeInit (void);
 
+/* ajf ASC functions */
+PMAC_LOCAL int  pmacAscIn (int ctlr, char * readbuf, char * errmsg, int * numChar);
+PMAC_LOCAL int  pmacAscRead (int ctlr, char * readbuf, char * errmsg);
+PMAC_LOCAL int  pmacAscWrite (int ctlr, char * writebuf);
+PMAC_LOCAL long pmacAscInCount (int ctlr, int * pVal);
+
 long pmacMbxLock (int ctlr);
 long pmacMbxUnlock (int	ctlr);
 
