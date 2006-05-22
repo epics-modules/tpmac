@@ -187,9 +187,9 @@ typedef struct  /* PMAC_CTLR */
 /* ajf: Open/Close/Read/Write/Ioctl forward declarations */
 int pmacOpen(  PMAC_CTLR * );
 int pmacClose( PMAC_CTLR * );
-int pmacRead(  PMAC_CTLR *, char *, int );
-int pmacWrite( PMAC_CTLR *, char *, int );
-int pmacIoctl( PMAC_CTLR *, int,    int );
+int pmacRead(  PMAC_CTLR *, char *, int   );
+int pmacWrite( PMAC_CTLR *, char *, int   );
+int pmacIoctl( PMAC_CTLR *, int,    int * );
 
 PMAC_LOCAL void pmacAscInISR (PMAC_CTLR * pPmacCtlr);
 
@@ -1421,14 +1421,14 @@ int pmacWrite( PMAC_CTLR *pPmacCtlr, char *buffer, int nBytes )
 }
 
 
-int pmacIoctl( PMAC_CTLR *pPmacCtlr, int request, int arg )
+int pmacIoctl( PMAC_CTLR *pPmacCtlr, int request, int *arg )
 {
   int ret = 0;
 
   switch( request )
   {
     case FIONREAD:
-      printf("FIONREAD: Get num chars available to read\n");
+      pmacAscInCount( 0, arg );
       break;
 
     case FIORFLUSH:
