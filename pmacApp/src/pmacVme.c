@@ -1118,7 +1118,7 @@ PMAC_LOCAL int pmacAscIn( int ctlr, char *readbuf, char	*errmsg, int *numChar )
   }
   else
   {
-    if( *dpramAsciiInControl != 0x0D )  /*only ack*/
+    if( *dpramAsciiInControl != PMAC_TERM_CR )  /*only ack*/
       status = 1;
     else
     {
