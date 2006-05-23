@@ -91,19 +91,14 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include 	<devLib.h>
 #include 	<errMdef.h>
 
-/* Local Includes */
+#include <pmacVme.h>
 
-#include	<pmacVme.h>
+/* ajf: globals */
 
-/* ajf: Open/Close/Read/Write includes and globals */
-#include <ioLib.h>
-#include <iosLib.h>
-
-LOCAL int pmacDrvNum   = 0;      /* Driver number assigned to this driver */
-LOCAL int pmacOpenFlag = FALSE;  /* Is the driver open?                   */
+LOCAL int pmacDrvNumAsc = 0;  /* DPRAM ASCII driver number   */
+LOCAL int pmacDrvNumMbx = 0;  /* Mailbox ASCII driver number */
 
 #define PMAC_BASE_ASC_REGS_OUT  (160)
-
 
 /*
  * DEFINES
@@ -132,74 +127,10 @@ LOCAL int pmacOpenFlag = FALSE;  /* Is the driver open?                   */
 #define PMAC_MEM_SIZE_BASE	(0x200)		/* Size of base registers */
 #define PMAC_MEM_SIZE_DPRAM	(0x4000)	/* Size of DPRAM */
 
-#define PMAC_BASE_MBX_REGS	(16)
 #define PMAC_BASE_MBX_REGS_OUT	(15)
 #define PMAC_BASE_MBX_REGS_IN	(16)
 
-#define PMAC_STRLEN_FWVER	(31)
-
 #define BYTESWAP(x) (MSB(x) | (LSB(x) << 8))
-
-/*
- * TYPEDEFS
- */
-
-typedef volatile char	PMAC_DPRAM_BASE;
-
-typedef struct  /* PMAC_MBX_BASE */
-{
-	struct pmacBaseMbxStruct
-	{
-		struct { unsigned char unused; unsigned char data; } MB[PMAC_BASE_MBX_REGS];
-		
-	} mailbox;
-} PMAC_MBX_BASE;
-
-typedef struct  /* PMAC_CTLR */
-{
-        DEV_HDR         devHdr;      /* ajf: I/O device header */
-	int		ctlr;
-	int		configured;
-	int		present;
-	int		enabled;
-	int		active;
-	int		presentBase;
-	int		enabledBase;
-	int		activeBase;
-	int		presentDpram;
-	int		enabledDpram;
-	int		activeDpram;
-	int		enabledGather;
-	int		activeGather;
-	PMAC_MBX_BASE *		pBase;
-	PMAC_DPRAM_BASE *	pDpramBase;
-	unsigned	irqVector;
-	unsigned	irqLevel;
-	unsigned long	vmebusBase;
-	unsigned long	vmebusDpram;
-	SEM_ID		ioMbxLockSem;
-	SEM_ID		ioMbxReceiptSem;
-	SEM_ID		ioMbxReadmeSem;
-        SEM_ID          ioAscReadmeSem;   /* ajf */
-	char		firmwareVersion[PMAC_STRLEN_FWVER];
-} PMAC_CTLR;
-
-/* ajf: Open/Close/Read/Write/Ioctl forward declarations */
-int pmacOpen(  PMAC_CTLR * );
-int pmacClose( PMAC_CTLR * );
-int pmacRead(  PMAC_CTLR *, char *, int   );
-int pmacWrite( PMAC_CTLR *, char *, int   );
-int pmacIoctl( PMAC_CTLR *, int,    int * );
-
-PMAC_LOCAL void pmacAscInISR (PMAC_CTLR * pPmacCtlr);
-
-
-/*
- * FORWARD DECLARATIONS
- */
-
-PMAC_LOCAL void pmacMbxReceiptISR (PMAC_CTLR * pPmacCtlr);
-PMAC_LOCAL void pmacMbxReadmeISR (PMAC_CTLR * pPmacCtlr);
 
 /*
  * GLOBALS
@@ -218,6 +149,8 @@ volatile int	pmacVmeDebug = 0;		/* must be > 0 to see messages */
 LOCAL int		pmacVmeConfigLock = 0;
 PMAC_LOCAL int		pmacVmeNumCtlrs = 0;
 PMAC_LOCAL PMAC_CTLR	pmacVmeCtlr[PMAC_MAX_CTLRS];
+PMAC_LOCAL PMAC_ASC_DEV	pmacAscDev[PMAC_MAX_CTLRS];
+PMAC_LOCAL PMAC_MBX_DEV	pmacMbxDev[PMAC_MAX_CTLRS];
 
 /*******************************************************************************
  *
@@ -1145,290 +1078,309 @@ PMAC_LOCAL long pmacRamGetL
 }
 
 
-/* ajf: Required ASC routines */
+/* ajf: Required DPRAM ASCII routines for Open/Close/Read/Write driver */
 
-/*******************************************************************************
- *
- * pmacAscIn - get characters from PMAC mailbox
- *
- */
-PMAC_LOCAL int pmacAscIn
-(
-	int	ctlr,
-	char	*readbuf,
-	char	*errmsg,
-	int *numChar
-)
+/* pmacAscIn - get characters from PMAC DPRAM ASCII */
+
+PMAC_LOCAL int pmacAscIn( int ctlr, char *readbuf, char	*errmsg, int *numChar )
 {
-    int		i;
-    int	   	status;
-    PMAC_CTLR	*pPmacCtlr;
-    int  	length;
-    int 	errorFirst,errorSecond,errorThird;
+  int        i;
+  int        status;
+  int        length;
+  int        errorFirst;
+  int        errorSecond;
+  int        errorThird;
+  PMAC_CTLR  *pPmacCtlr;
+  PMAC_DPRAM *dpramAsciiInControl;
+  PMAC_DPRAM *dpramAsciiIn;
     
-    PMAC_DPRAM * dpramAsciiInControl;
-    PMAC_DPRAM * dpramAsciiIn;
+  dpramAsciiInControl = pmacRamAddr(ctlr,0x0F40);
+  dpramAsciiIn        = pmacRamAddr(ctlr,0x0F44);
+  pPmacCtlr           = &pmacVmeCtlr[ctlr];
+  status              = 0; 
+  errorFirst          = 0;
+  errorSecond         = 0;
+  errorThird          = 0;
+  errmsg[0]           = NULL;
     
-    dpramAsciiInControl=pmacRamAddr(ctlr,0x0F40);
-    
-    dpramAsciiIn=pmacRamAddr(ctlr,0x0F44);
-
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    status = 0; 
-    errorFirst=0;
-    errorSecond=0;
-    errorThird=0;
-
-    errmsg[0] = NULL;
-    
-    if(*(dpramAsciiInControl+1)>>7){
-    	errorFirst = *dpramAsciiInControl & 0xF;	
-    	errorSecond = (*dpramAsciiInControl>>4) & 0xF;
-	errorThird = *(dpramAsciiInControl+1) & 0xF;
+  if( *(dpramAsciiInControl+1)>>7 )  /* An error occurred */
+  {
+    errorFirst  = *dpramAsciiInControl      & 0xF;	
+    errorSecond = (*dpramAsciiInControl>>4) & 0xF;
+    errorThird  = *(dpramAsciiInControl+1)  & 0xF;
 	
-	sprintf(errmsg,"%d%d%d",errorThird,errorSecond ,errorFirst);
+    sprintf(errmsg, "%d%d%d", errorThird, errorSecond, errorFirst);
 	
-	*numChar=length;
-	*dpramAsciiInControl=0x0;
-	*(dpramAsciiInControl+1)=0x0;
-	return -2;
-    }
-    
-    if(*dpramAsciiInControl!=0x0D){/*only ack*/
-	    status=1;
-    }
-    else{
-    	pmacAscInCount(ctlr,&length);
-    
-    
-    	for(i=0;i<length-1;i++)
-	{
-	    readbuf[i]=*dpramAsciiIn;
-	    dpramAsciiIn++;
-	}
-	readbuf[i] = 0;
-    }
-    
-    *numChar=length;
-    *dpramAsciiInControl=0x0;
-    *(dpramAsciiInControl+1)=0x0;
-
-    
-    return (status);
-}
-
-
-
-
-/*******************************************************************************
- *
- * pmacAscRead - read response from PMAC DPRAM ASCII
- *
- */
-PMAC_LOCAL int pmacAscRead
-(
-	int	ctlr,
-	char	*readbuf,
-	char	*errmsg
-)
-{
-    int		i;
-    int     	status;
-    int 	numChar;
-    PMAC_CTLR	*pPmacCtlr;
-
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    i = 0;
-    status= 0;
-
-    while ( status == 0)
+    *numChar                 = length;
+    *dpramAsciiInControl     = 0x0;
+    *(dpramAsciiInControl+1) = 0x0;
+    status                   = -2;
+  }
+  else
+  {
+    if( *dpramAsciiInControl != 0x0D )  /*only ack*/
+      status = 1;
+    else
     {
-	if(semTake( pPmacCtlr->ioAscReadmeSem, 120)){
-		printf("semTake failed\n");
-		status= -1;
-		return (status);
-	}	
-	status = pmacAscIn (ctlr, &readbuf[i], errmsg,&numChar);
-	i += numChar;
+      pmacAscInCount(ctlr,&length);
+
+      for( i=0; i<length-1; i++ )
+      {
+        readbuf[i]=*dpramAsciiIn;
+        dpramAsciiIn++;
+      }
+      readbuf[i] = 0;
     }
-
-    /* printf("pmacAscRead: Reading %s  from DPRAM\n", readbuf); */
-
-    return (status);
+    
+    *numChar                 = length;
+    *dpramAsciiInControl     = 0x0;
+    *(dpramAsciiInControl+1) = 0x0;
+  }
+  return( status );
 }
 
 
+/* pmacAscRead - read response from PMAC DPRAM ASCII */
 
-/*******************************************************************************
- *
- * pmacAscWrite - write command to PMAC DPRAM ASCII
- *
- */
-PMAC_LOCAL int pmacAscWrite
-(
-	int	ctlr,
-	char	*writebuf
-)
+PMAC_LOCAL int pmacAscRead( int	ctlr, char *readbuf, char *errmsg )
 {
-    int		i;
-    int		length;
-    int 	itera;
-    PMAC_CTLR	*pPmacCtlr;
-    PMAC_DPRAM  *dpramAsciiOut; 
-    PMAC_DPRAM  *dpramAsciiOutControl;
+  int       i;
+  int       status;
+  int       numChar;
+  PMAC_CTLR *pPmacCtlr;
 
-    printf("\npmacAscWrite: writing %s to DPRAM\n", writebuf);
+  i         = 0;
+  status    = 0;
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
 
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    length = strlen (writebuf);
-    
-    dpramAsciiOut=pmacRamAddr(ctlr,0x0EA0);
-    dpramAsciiOutControl=pmacRamAddr(ctlr,0x0E9C);
-    
-    for(itera = 0; itera < 10; itera++){
-    	if(*dpramAsciiOutControl == 0x0)
-		break;
-	else
-		taskDelay(1);
-    
-    }
-    if(itera >= 10){
-    	printf("Out break\n");
-    	return (-1);
-    }	
-
-    for (i = 0; (i < length) && (i < PMAC_BASE_ASC_REGS_OUT); i++)
+  while( status == 0 )
+  {
+    if( semTake( pPmacCtlr->ioAscReadmeSem, 120 ) )
     {
-/*	printf("writing %c to mem addr %p\n",writebuf[i],dpramAsciiOut);*/
-	 *dpramAsciiOut=writebuf[i];
-	 dpramAsciiOut++;
+      printf( "pmacAscRead: semTake failed\n" );
+      status = -1;
+      break;
     }
+    status  = pmacAscIn(ctlr, &readbuf[i], errmsg, &numChar);
+    i      += numChar;
+  }
 
-   /*End of command*/	
-   *dpramAsciiOut=0;
-	
-   /*Set bit 1 for PMAC to read the command*/	
-   *dpramAsciiOutControl=1;
+  /* printf("pmacAscRead: Reading %s  from ASCII DPRAM\n", readbuf); */
+
+  return( status );
+}
+
+
+ /* pmacAscWrite - write command to PMAC DPRAM ASCII */
+
+PMAC_LOCAL int pmacAscWrite( int ctlr, char *writebuf )
+{
+  int        i;
+  int        length;
+  PMAC_CTLR  *pPmacCtlr;
+  PMAC_DPRAM *dpramAsciiOut; 
+  PMAC_DPRAM *dpramAsciiOutControl;
+
+  /* printf("\npmacAscWrite: writing %s to DPRAM\n", writebuf); */
+
+  pPmacCtlr            = &pmacVmeCtlr[ctlr];
+  dpramAsciiOut        = pmacRamAddr(ctlr,0x0EA0);
+  dpramAsciiOutControl = pmacRamAddr(ctlr,0x0E9C);
+  length               = strlen( writebuf );
+  i                    = 0;
     
-    return (0);
-}   
+  while( *dpramAsciiOutControl != 0x0 )
+  {
+    taskDelay(1);
+    i++;
+    if( i > 10 )
+      printf( "pmacAscWrite: Stuck in while loop\n" );
+  }
 
+  for( i=0; (i < length) && (i < PMAC_BASE_ASC_REGS_OUT); i++ )
+  {
+    *dpramAsciiOut = writebuf[i];
+    dpramAsciiOut++;
+  }
 
-/*******************************************************************************
- *
- * pmacAscInISR - ASCII Host-Input Buffer Ready Interrupt Service Routine
- *
- */
-PMAC_LOCAL void pmacAscInISR
-(
-	PMAC_CTLR	*pPmacCtlr
-)
-{
-	char *	MyName = "pmacAscInISR";
-
-
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ AscIn for ctlr %d\n", MyName, pPmacCtlr->ctlr);
-	)
+  /* End of command */	
+  *dpramAsciiOut = 0;
 	
-	semGive (pPmacCtlr->ioAscReadmeSem);
-	
-	return;
+  /* Set output control bit to 1 for PMAC to read the command */
+  *dpramAsciiOutControl = 1;
+
+  return(0);
 }
 
 
-/*******************************************************************************
- *
- * pmacAscInCount - Determine Number Of ASCII Characters In Host-Input Buffer
- *
- */
-PMAC_LOCAL long pmacAscInCount
-(
-	int	ctlr,
-	int *	pVal
-)
+/* pmacAscInISR - Interrupt Service Routine which is called when
+                  PMAC issues interrupt to say the DPRAM ASCII buffer
+                  can be read */
+
+PMAC_LOCAL void pmacAscInISR( PMAC_CTLR	*pPmacCtlr )
 {
-	PMAC_DPRAM * pRam;
-	
-	pRam = (PMAC_DPRAM *) ((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF42);
-	*pVal = (int) *pRam;
-	return (0);
+  semGive( pPmacCtlr->ioAscReadmeSem );
+  return;
 }
 
 
-/* ajf: Start of Open/Close/Read/Write routines */
+/* pmacAscInCount - Determine the number of characters in DPRAM ASCII buffer */
+
+PMAC_LOCAL long pmacAscInCount( int ctlr, int *pVal )
+{
+  PMAC_DPRAM *pRam;
+
+  pRam  = (PMAC_DPRAM *)((long) pmacVmeCtlr[ctlr].pDpramBase + 0xF42);
+  *pVal = (int) *pRam;
+
+  return(0);
+}
+
+
+/* This routine installs the DPRAM ASCII driver and the Mailbox ASCII driver.
+   It adds a DRPAM ASCII device and a Mailbox ASCII device for every PMAC
+   card that has been configured.
+   This routine is called from "drvPmac_init" in "drvPmac.c"
+   which in turn is called from EPICS "iocInit()" */
 
 STATUS pmacDrv(void)
 {
   STATUS ret;
+  int    installedAsc;
+  int    installedMbx;
+  int    i;
+  char   devNameAsc[32];
+  char   devNameMbx[32];
+
+  ret          = OK;
+  installedAsc = FALSE;
+  installedMbx = FALSE;
+
+  /* For the DPRAM ASCII driver */
 
   /* check if driver already installed */
 
-  if(pmacDrvNum > 0)        
-    return(OK);
+  if(pmacDrvNumAsc > 0)        
+  {
+    installedAsc = TRUE;
+    ret          = OK;
+  }
 
-  pmacDrvNum = iosDrvInstall( 0, 0, pmacOpen, pmacClose, pmacRead, pmacWrite, pmacIoctl );
-  ret        = iosDevAdd( &pmacVmeCtlr->devHdr, "/dev/pmac/0", pmacDrvNum);
+  if( !installedAsc )
+  {
+    for( i=0; i<PMAC_MAX_CTLRS; i++ )
+      pmacAscDev[i].openFlag = FALSE;
 
+    /* printf("pmacDrv: Installing ASC: pmacVmeNumCtlrs = %d\n", pmacVmeNumCtlrs); */
+
+    pmacDrvNumAsc = iosDrvInstall( 0, 0, pmacOpenAsc,  pmacCloseAsc, pmacReadAsc,
+                                         pmacWriteAsc, pmacIoctlAsc );
+    /* Add a DPRAM ASCII device for every configured card */
+    for( i=0; i<pmacVmeNumCtlrs; i++ )
+    {
+      sprintf( devNameAsc, "/dev/pmac/%d/asc", i );
+      pmacAscDev[i].ctlr = i;
+      ret                = iosDevAdd( &pmacAscDev[i].devHdr, devNameAsc, pmacDrvNumAsc);
+      if( ret == ERROR )
+      {
+        printf("Error adding: \"%s\" device\n", devNameAsc);
+        break;
+      }
+    }
+  }
+
+  /* For the Mailbox ASCII driver */
+
+  /* check if driver already installed */
+
+  if(pmacDrvNumMbx > 0)        
+  {
+    installedMbx = TRUE;
+    ret          = OK;
+  }
+
+  if( !installedMbx )
+  {
+    for( i=0; i<PMAC_MAX_CTLRS; i++ )
+      pmacMbxDev[i].openFlag = FALSE;
+
+    /* printf("pmacDrv: Installing MBX: pmacVmeNumCtlrs = %d\n", pmacVmeNumCtlrs); */
+
+    pmacDrvNumMbx = iosDrvInstall( 0, 0, pmacOpenMbx,  pmacCloseMbx, pmacReadMbx,
+                                         pmacWriteMbx, pmacIoctlMbx );
+    /* Add a Mailbox ASCII device for every configured card */
+    for( i=0; i<pmacVmeNumCtlrs; i++ )
+    {
+      sprintf( devNameMbx, "/dev/pmac/%d/mbx", i );
+      pmacMbxDev[i].ctlr = i;
+      ret                = iosDevAdd( &pmacMbxDev[i].devHdr, devNameMbx, pmacDrvNumMbx);
+      if( ret == ERROR )
+      {
+        printf("Error adding: \"%s\" device\n", devNameMbx);
+        break;
+      }
+    }
+  }
   return( ret );
 }
 
 
-int pmacOpen( PMAC_CTLR *pPmacCtlr )
+int pmacOpenAsc( PMAC_ASC_DEV *pPmacAscDev )
 {
   int ret;
 
-  if( pmacOpenFlag )
+  /* printf("pmacOpenAsc: name = %s, number = %d\n", 
+          pPmacAscDev->devHdr.name,  pPmacAscDev->ctlr); */
+
+  if( pPmacAscDev->openFlag )
     ret = ERROR;
   else
   {
-    pmacOpenFlag = TRUE;
-    ret          = (int)pPmacCtlr;
+    pPmacAscDev->openFlag = TRUE;
+    ret                   = (int)pPmacAscDev;
   }
 
   return( ret );
 }
 
 
-int pmacClose( PMAC_CTLR *pPmacCtlr )
+int pmacCloseAsc( PMAC_ASC_DEV *pPmacAscDev )
 {
-  if( pmacOpenFlag )
-    pmacOpenFlag = FALSE;
+  /* printf("pmacCloseAsc called\n"); */
+
+  if( pPmacAscDev->openFlag )
+    pPmacAscDev->openFlag = FALSE;
 
   return( OK );
 }
 
 
-int pmacRead( PMAC_CTLR *pPmacCtlr, char *buffer, int nBytes )
+int pmacReadAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
 {
   char errmsg[32];
 
-  pmacAscRead( 0, buffer, errmsg );
-  printf("Inside pmacRead: Read:  %s\n", buffer);
+  pmacAscRead( pPmacAscDev->ctlr, buffer, errmsg );
 
   return(0);
 }
 
 
-int pmacWrite( PMAC_CTLR *pPmacCtlr, char *buffer, int nBytes )
+int pmacWriteAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
 {
-  pmacAscWrite( 0, buffer );
+  pmacAscWrite( pPmacAscDev->ctlr, buffer );
 
   return(0);
 }
 
 
-int pmacIoctl( PMAC_CTLR *pPmacCtlr, int request, int *arg )
+int pmacIoctlAsc( PMAC_ASC_DEV *pPmacAscDev, int request, int *arg )
 {
   int ret = 0;
 
   switch( request )
   {
     case FIONREAD:
-      pmacAscInCount( 0, arg );
+      pmacAscInCount( pPmacAscDev->ctlr, arg );
       break;
 
     case FIORFLUSH:
@@ -1459,4 +1411,131 @@ int pmacIoctl( PMAC_CTLR *pPmacCtlr, int request, int *arg )
       break;
   }
   return( ret );
+}
+
+
+int pmacOpenMbx( PMAC_MBX_DEV *pPmacMbxDev )
+{
+  int ret;
+
+  /* printf("pmacOpenMbx: name = %s, number = %d\n", 
+          pPmacMbxDev->devHdr.name,  pPmacMbxDev->ctlr); */
+
+  if( pPmacMbxDev->openFlag )
+    ret = ERROR;
+  else
+  {
+    pPmacMbxDev->openFlag = TRUE;
+    ret                   = (int)pPmacMbxDev;
+  }
+
+  return( ret );
+}
+
+
+int pmacCloseMbx( PMAC_MBX_DEV *pPmacMbxDev )
+{
+  /*  printf("pmacCloseMbx called\n"); */
+
+  if( pPmacMbxDev->openFlag )
+    pPmacMbxDev->openFlag = FALSE;
+
+  return( OK );
+}
+
+
+int pmacReadMbx( PMAC_MBX_DEV *pPmacMbxDev, char *buffer, int nBytes )
+{
+  return(0);
+}
+
+
+int pmacWriteMbx( PMAC_MBX_DEV *pPmacMbxDev, char *buffer, int nBytes )
+{
+  return(0);
+}
+
+int pmacIoctlMbx( PMAC_MBX_DEV *pPmacMbxDev, int request, int *arg )
+{
+  return(0);
+}
+
+
+long pmacVmeConfigSim
+(
+	int		ctlrNumber,
+	unsigned long	addrBase,
+	unsigned long	addrDpram,
+	unsigned int	irqVector,
+	unsigned int	irqLevel
+)
+{
+	char *		MyName = "pmacVmeConfig";
+	int		i;
+	PMAC_CTLR *	pPmacCtlr;
+	
+	if (pmacVmeConfigLock != 0)
+	{
+		printf ( "%s: Cannot change configuration after initialization -- request ignored.\n",
+			MyName);
+		return (ERROR);
+	}
+  
+	if ( pmacVmeNumCtlrs == 0 )
+	{
+		for (i=0; i < PMAC_MAX_CTLRS; i++ )
+		{
+			pmacVmeCtlr[i].configured = FALSE;
+		}
+	}
+	
+	if ( (ctlrNumber < 0) | (ctlrNumber >= PMAC_MAX_CTLRS) )
+	{
+		printf ("%s: Controller number %d invalid -- must be 0 to %d.\n",
+			MyName, ctlrNumber, PMAC_MAX_CTLRS - 1);
+		return(ERROR);
+	}
+  
+	if (pmacVmeCtlr[ctlrNumber].configured)
+	{
+		printf ("%s: Controller %d already configured -- request ignored.\n",
+			MyName, ctlrNumber);
+		return(ERROR);
+	}
+	
+	PMAC_DEBUG
+	(	1,
+		printf ("%s: Initializing controller %d.\n", MyName, ctlrNumber);
+	)
+
+	pPmacCtlr = &pmacVmeCtlr[ctlrNumber];
+	pPmacCtlr->ctlr = ctlrNumber;
+	pPmacCtlr->vmebusBase = addrBase;
+	pPmacCtlr->irqVector = irqVector;
+	pPmacCtlr->irqLevel = irqLevel;
+	
+	pPmacCtlr->enabled = FALSE;
+	pPmacCtlr->present = FALSE;
+	pPmacCtlr->active = FALSE;
+	pPmacCtlr->enabledBase = TRUE;
+	pPmacCtlr->presentBase = TRUE;
+	pPmacCtlr->activeBase = FALSE;
+	pPmacCtlr->enabledDpram = TRUE;
+	pPmacCtlr->presentDpram = TRUE;
+	pPmacCtlr->activeDpram = FALSE;
+	pPmacCtlr->enabledGather = TRUE;
+	pPmacCtlr->activeGather = FALSE;
+
+	pPmacCtlr->vmebusDpram = addrDpram;
+	if ( addrDpram == 0 )
+	{
+		pPmacCtlr->enabledDpram = FALSE;
+	}
+			
+	pPmacCtlr->present = pPmacCtlr->presentBase | pPmacCtlr->presentDpram;
+	pPmacCtlr->enabled = pPmacCtlr->enabledBase | pPmacCtlr->enabledDpram;
+	pPmacCtlr->configured = TRUE;
+	pmacVmeNumCtlrs++;
+	
+	return(0);
 }

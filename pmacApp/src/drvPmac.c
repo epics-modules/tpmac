@@ -99,13 +99,9 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<taskwd.h>
 #include	<callback.h>
 
-/* local includes */
-
-#include	<drvPmac.h>
+#include <drvPmac.h>
+#include <pmacVme.h>
 #include "epicsExport.h"
-
-/* ajf: Open/Close/Read/Write driver, forward declaration */
-int pmacDrv( void );
 
 /*
  * DEFINES

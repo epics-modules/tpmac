@@ -67,6 +67,9 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 #ifndef __INCpmacVmeH
 #define __INCpmacVmeH
 
+#include <ioLib.h>
+#include <iosLib.h>
+
 /*
  * DEFINES
  */
@@ -92,13 +95,67 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 #define PMAC_MBX_ERR_BUFLEN	(10)
 
 /* #define WAIT_TIMEOUT	60 */		/* timeout in ticks for semTake */
-#define WAIT_TIMEOUT	3600 		/* timeout in ticks for semTake -- changed 2005-05-09 */
+#define WAIT_TIMEOUT	   3600		/* timeout in ticks for semTake -- changed 2005-05-09 */
+#define PMAC_BASE_MBX_REGS (16)
+#define PMAC_STRLEN_FWVER  (31)
 
 /*
  * TYPEDEFS
  */
 
 typedef volatile char	PMAC_DPRAM;
+typedef volatile char	PMAC_DPRAM_BASE;
+
+typedef struct  /* PMAC_MBX_BASE */
+{
+	struct pmacBaseMbxStruct
+	{
+		struct { unsigned char unused; unsigned char data; } MB[PMAC_BASE_MBX_REGS];
+		
+	} mailbox;
+} PMAC_MBX_BASE;
+
+typedef struct  /* PMAC_ASC_DEV */
+{
+  DEV_HDR devHdr; /* ajf: Asc I/O device header */
+  int     ctlr;
+  int     openFlag;
+} PMAC_ASC_DEV;
+
+typedef struct  /* PMAC_MBX_DEV */
+{
+  DEV_HDR devHdr; /* ajf: Mbx I/O device header */
+  int     ctlr;
+  int     openFlag;
+} PMAC_MBX_DEV;
+
+typedef struct  /* PMAC_CTLR */
+{
+	int		ctlr;
+	int		configured;
+	int		present;
+	int		enabled;
+	int		active;
+	int		presentBase;
+	int		enabledBase;
+	int		activeBase;
+	int		presentDpram;
+	int		enabledDpram;
+	int		activeDpram;
+	int		enabledGather;
+	int		activeGather;
+	PMAC_MBX_BASE   *pBase;
+	PMAC_DPRAM_BASE *pDpramBase;
+	unsigned	irqVector;
+	unsigned	irqLevel;
+	unsigned long	vmebusBase;
+	unsigned long	vmebusDpram;
+	SEM_ID		ioMbxLockSem;
+	SEM_ID		ioMbxReceiptSem;
+	SEM_ID		ioMbxReadmeSem;
+        SEM_ID          ioAscReadmeSem;   /* ajf */
+	char		firmwareVersion[PMAC_STRLEN_FWVER];
+} PMAC_CTLR;
 
 
 /*
@@ -116,19 +173,35 @@ long pmacVmeConfig
 
 PMAC_LOCAL long pmacVmeInit (void);
 
+PMAC_LOCAL int  pmacDrv( void );
+
 /* ajf ASC functions */
-PMAC_LOCAL int  pmacAscIn (int ctlr, char * readbuf, char * errmsg, int * numChar);
-PMAC_LOCAL int  pmacAscRead (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL int  pmacAscWrite (int ctlr, char * writebuf);
-PMAC_LOCAL long pmacAscInCount (int ctlr, int * pVal);
+PMAC_LOCAL int  pmacOpenAsc( PMAC_ASC_DEV * );
+PMAC_LOCAL int  pmacCloseAsc( PMAC_ASC_DEV * );
+PMAC_LOCAL int  pmacReadAsc( PMAC_ASC_DEV *, char *, int );
+PMAC_LOCAL int  pmacWriteAsc( PMAC_ASC_DEV *, char *, int );
+PMAC_LOCAL int  pmacIoctlAsc( PMAC_ASC_DEV *, int,    int * );
+PMAC_LOCAL int  pmacAscIn( int, char *, char *, int * );
+PMAC_LOCAL int  pmacAscRead( int, char *, char * );
+PMAC_LOCAL int  pmacAscWrite( int, char * );
+PMAC_LOCAL long pmacAscInCount( int, int * );
+PMAC_LOCAL void pmacAscInISR( PMAC_CTLR * );
+
+/* ajf MBX functions */
+PMAC_LOCAL int  pmacOpenMbx( PMAC_MBX_DEV * );
+PMAC_LOCAL int  pmacCloseMbx( PMAC_MBX_DEV * );
+PMAC_LOCAL int  pmacReadMbx( PMAC_MBX_DEV *, char *, int );
+PMAC_LOCAL int  pmacWriteMbx( PMAC_MBX_DEV *, char *, int );
+PMAC_LOCAL int  pmacIoctlMbx( PMAC_MBX_DEV *, int,    int * );
+PMAC_LOCAL char pmacMbxIn (int ctlr, char * readbuf, char * errmsg);
+PMAC_LOCAL char pmacMbxOut (int ctlr, char * writebuf);
+PMAC_LOCAL char pmacMbxRead (int ctlr, char * readbuf, char * errmsg);
+PMAC_LOCAL char pmacMbxWrite (int ctlr, char * writebuf);
+PMAC_LOCAL void pmacMbxReceiptISR (PMAC_CTLR * pPmacCtlr);
+PMAC_LOCAL void pmacMbxReadmeISR (PMAC_CTLR * pPmacCtlr);
 
 long pmacMbxLock (int ctlr);
 long pmacMbxUnlock (int	ctlr);
-
-PMAC_LOCAL char pmacMbxOut (int ctlr, char * writebuf);
-PMAC_LOCAL char pmacMbxIn (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL char pmacMbxRead (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL char pmacMbxWrite (int ctlr, char * writebuf);
 
 char pmacVmeWriteC (char * addr, char val);
 char pmacVmeReadC (char * addr);
