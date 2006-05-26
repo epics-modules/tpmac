@@ -60,6 +60,9 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
  * .01  6-7-95        tac     initial
  * .02  7-3-97        wfl     added include of stdioLib.h
  * .03  7-15-03       oam     rewrited fot Turbo PMAC2 Ultralite
+ * .04  26th May 2006 ajf     Addition of Open/Close/Read/Write/Ioctl interface.
+ *                            Changed WAIT_TIMEOUT to WAIT_FOREVER in
+ *                            semTake of Mailbox semaphore.
  */
 
 /*
@@ -101,6 +104,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 
 #include <drvPmac.h>
 #include <pmacVme.h>
+#include <pmacCommon.h>
 #include "epicsExport.h"
 
 /*
@@ -477,6 +481,7 @@ PMAC_LOCAL long drvPmac_init (void)
 
 	status = pmacVmeInit ();
 
+        /* ajf: Addition of the Open/Close/Read/Write/Ioctl interface */
         status = pmacDrv();
 
 	return (status);
@@ -1622,7 +1627,10 @@ int drvPmacMbxTask
 
 	FOREVER
 	{
-/*ajf change WAIT_TIMEOUT to WAIT_FOREVER */
+                /*ajf: Change WAIT_TIMEOUT to WAIT_FOREVER           */
+                /*     to avoid repeated messages when we do not     */
+                /*     have a database record connected to the ASCII */
+                /*     mailboxes                                     */
 		if ( semTake(pCard->scanMbxSem,WAIT_FOREVER) != OK )
 		{
 			errMessage(0,"drvPmacMbxTask: semTake returned error.");

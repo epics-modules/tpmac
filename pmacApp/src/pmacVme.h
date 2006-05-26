@@ -67,9 +67,6 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 #ifndef __INCpmacVmeH
 #define __INCpmacVmeH
 
-#include <ioLib.h>
-#include <iosLib.h>
-
 /*
  * DEFINES
  */
@@ -115,20 +112,6 @@ typedef struct  /* PMAC_MBX_BASE */
 	} mailbox;
 } PMAC_MBX_BASE;
 
-typedef struct  /* PMAC_ASC_DEV */
-{
-  DEV_HDR devHdr; /* ajf: Asc I/O device header */
-  int     ctlr;
-  int     openFlag;
-} PMAC_ASC_DEV;
-
-typedef struct  /* PMAC_MBX_DEV */
-{
-  DEV_HDR devHdr; /* ajf: Mbx I/O device header */
-  int     ctlr;
-  int     openFlag;
-} PMAC_MBX_DEV;
-
 typedef struct  /* PMAC_CTLR */
 {
 	int		ctlr;
@@ -162,41 +145,10 @@ typedef struct  /* PMAC_CTLR */
  * FORWARD DECLARATIONS
  */
 
-long pmacVmeConfig
-(
-	int		ctlrNumber,
-	unsigned long	addrBase,
-	unsigned long	addrDpram,
-	unsigned int	irqVector,
-	unsigned int	irqLevel
-);
-
+           long pmacVmeConfig( int, unsigned long, unsigned long, unsigned int, unsigned int );
 PMAC_LOCAL long pmacVmeInit (void);
-
-PMAC_LOCAL int  pmacDrv( void );
-
-/* ajf ASC functions */
-PMAC_LOCAL int  pmacOpenAsc( PMAC_ASC_DEV * );
-PMAC_LOCAL int  pmacCloseAsc( PMAC_ASC_DEV * );
-PMAC_LOCAL int  pmacReadAsc( PMAC_ASC_DEV *, char *, int );
-PMAC_LOCAL int  pmacWriteAsc( PMAC_ASC_DEV *, char *, int );
-PMAC_LOCAL int  pmacIoctlAsc( PMAC_ASC_DEV *, int,    int * );
-PMAC_LOCAL int  pmacAscIn( int, char *, char *, int * );
-PMAC_LOCAL int  pmacAscRead( int, char *, char * );
-PMAC_LOCAL int  pmacAscWrite( int, char * );
-PMAC_LOCAL long pmacAscInCount( int, int * );
-PMAC_LOCAL void pmacAscInISR( PMAC_CTLR * );
-
-/* ajf MBX functions */
-PMAC_LOCAL int  pmacOpenMbx( PMAC_MBX_DEV * );
-PMAC_LOCAL int  pmacCloseMbx( PMAC_MBX_DEV * );
-PMAC_LOCAL int  pmacReadMbx( PMAC_MBX_DEV *, char *, int );
-PMAC_LOCAL int  pmacWriteMbx( PMAC_MBX_DEV *, char *, int );
-PMAC_LOCAL int  pmacIoctlMbx( PMAC_MBX_DEV *, int,    int * );
-PMAC_LOCAL char pmacMbxIn (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL char pmacMbxOut (int ctlr, char * writebuf);
-PMAC_LOCAL char pmacMbxRead (int ctlr, char * readbuf, char * errmsg);
-PMAC_LOCAL char pmacMbxWrite (int ctlr, char * writebuf);
+PMAC_LOCAL char pmacMbxWrite(int, char *);
+PMAC_LOCAL char pmacMbxRead(int, char *, char *);
 PMAC_LOCAL void pmacMbxReceiptISR (PMAC_CTLR * pPmacCtlr);
 PMAC_LOCAL void pmacMbxReadmeISR (PMAC_CTLR * pPmacCtlr);
 
