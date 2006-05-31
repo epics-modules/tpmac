@@ -1,0 +1,53 @@
+#!$(INSTALL)/bin/$(ARCH)/pmacAsynMotor
+
+cd "$(INSTALL)"
+
+# Load binaries on architectures that need to do so.
+# VXWORKS_ONLY, LINUX_ONLY and RTEMS_ONLY are macros that resolve
+# to a comment symbol on architectures that are not the current
+# build architecture, so they can be used liberally to do architecture
+# specific things. Alternatively, you can include an architecture
+# specific file.
+$(VXWORKS_ONLY)ld < bin/$(ARCH)/pmacAsynMotor.munch
+
+## This drvTS initializer is needed if the IOC has a hardware event system
+#TSinit
+
+## Register all support components
+$(VXWORKS_ONLY)dbLoadDatabase("dbd/pmacAsynMotorVx.dbd")
+$(VXWORKS_ONLY)pmacAsynMotorVx_registerRecordDeviceDriver(pdbbase)
+
+$(LINUX_ONLY)dbLoadDatabase("dbd/pmacAsynMotorExample.dbd")
+$(LINUX_ONLY)pmacAsynMotorExample_registerRecordDeviceDriver(pdbbase)
+
+###########################################################
+# Configure asyn device
+#
+pmacVmeDebug = 0
+drvPmacDebug = 0
+$(VXWORKS_ONLY)pmacVmeConfig (0, 0x7FA000, 0x700000, 0xc1, 2)
+$(VXWORKS_ONLY)pmacDrv()
+$(VXWORKS_ONLY)drvAsynSerialPortConfigure( "TEST", "/dev/pmac/0/asc", 0, 0, 0 )
+
+$(LINUX_ONLY)drvAsynIPPortConfigure("TEST","ts0002.cs.diamond.ac.uk:7003",0,0,0)
+asynSetTraceMask("TEST",-1,0xF)
+asynSetTraceIOMask("TEST",-1,0x1)
+asynSetTraceMask("TEST",-1,0x1)
+asynSetTraceIOMask("TEST",-1,0x0)
+
+pmacAsynMotorCreate("TEST", 0, 0, 6 );
+
+# Setup the motor Asyn layer (portname, low-level driver drvet name, card, number of axes on card)
+drvAsynMotorConfigure("pmac1", "pmacAsynMotor", 0, 6)
+
+###########################################################
+# Configure stream device
+#
+#epicsEnvSet("STREAM_PROTOCOL_PATH", "$(INSTALL)/data")
+
+###########################################################
+
+## Load record instances
+dbLoadRecords("db/pmacAsynMotor.db","DEVICE=npr78")
+
+iocInit()
