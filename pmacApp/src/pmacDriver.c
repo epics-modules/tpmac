@@ -27,7 +27,7 @@
 #include <pmacCommon.h>
 #include <pmacDriver.h>
 
-#define NO_CONTROL_CHARS       1
+#define NO_CONTROL_CHARS       0
 #define PMAC_BASE_ASC_REGS_OUT (160)
 
 int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
@@ -105,7 +105,7 @@ STATUS pmacDrv(void)
 
   /* check if driver already installed */
 
-  if(pmacDrvNumMbx > 0)        
+  if(pmacDrvNumMbx > 0)
   {
     installedMbx = TRUE;
     ret          = OK;
@@ -169,81 +169,82 @@ int pmacCloseAsc( PMAC_ASC_DEV *pPmacAscDev )
 
 int pmacReadAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
 {
-  int       i;
   int       numRead;
-  int       totalRead;
   int       ctlr;
   PMAC_CTLR *pPmacCtlr;
 
-  i         = 0;
   ctlr      = pPmacAscDev->ctlr;
   pPmacCtlr = &pmacVmeCtlr[ctlr];
-  totalRead = 0;
 
-  while( totalRead < nBytes )
+  numRead    = epicsRingBytesGet(replyQ[ctlr], buffer, nBytes);
+
+  if( numRead == 0 )  /* The buffer was empty */
   {
-    numRead    = epicsRingBytesGet(replyQ[ctlr], &buffer[totalRead], nBytes-totalRead);
-    totalRead += numRead;
-    if( totalRead == nBytes )
-      break;
-    if( numRead == 0 )  /* The buffer is empty */
-    {
-      printf("semTake called\n");
+      /* printf("semTake called\n"); */
       semTake(pPmacCtlr->ioAscReadmeSem, WAIT_FOREVER);
       if( pPmacAscDev->cancelFlag )
       {
         pPmacAscDev->cancelFlag = FALSE;
-        break;
       }
-    }
+      else
+      {
+        numRead    = epicsRingBytesGet(replyQ[ctlr], buffer, nBytes);
+      }
   }
 
-  /* printf("pmacReadAsc: Read %d chars: %s\n", totalRead, buffer); */
+  /* printf("pmacReadAsc: Read %d chars: %s\n", numRead, buffer); */
 
-  return( totalRead );
+  return( numRead );
 }
 
 
 int pmacWriteAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
 {
   int        i;
-  int        length;
   int        ctlr;
   int        numWritten;
-  PMAC_DPRAM *dpramAsciiOut; 
+  static int totalWritten=0;
+  PMAC_DPRAM *dpramAsciiOut;
   PMAC_DPRAM *dpramAsciiOutControl;
 
-  /* printf("pmacWriteAsc: writing %s to DPRAM\n", writebuf); */
+ /* printf("pmacWriteAsc: writing %s to DPRAM, length %d\n", buffer, nBytes); */
 
   ctlr                 = pPmacAscDev->ctlr;
   dpramAsciiOut        = pmacRamAddr(ctlr,0x0EA0);
   dpramAsciiOutControl = pmacRamAddr(ctlr,0x0E9C);
-  length               = strlen( buffer );
   i                    = 0;
   numWritten           = 0;
 
-  if( nBytes < length ) length = nBytes;
-    
-  while( *dpramAsciiOutControl != 0x0 )
-  {
-    taskDelay(1);
-    i++;
-    if( i > 10 )
-      printf( "pmacWriteAsc: Stuck in while loop\n" );
-  }
 
-  for( i=0; (i < length) && (i < PMAC_BASE_ASC_REGS_OUT); i++ )
+  for( i=0; (i < nBytes) && (i < PMAC_BASE_ASC_REGS_OUT); i++ )
   {
-    *dpramAsciiOut = buffer[i];
-    dpramAsciiOut++;
-    numWritten++;
-  }
+      if ( buffer[i] == '\r' )
+      {
+          /* Send command to PMAC */
+          dpramAsciiOut[totalWritten] = 0;
+          *dpramAsciiOutControl = 1;
+          totalWritten = 0;
+      }
+      else
+      {
+          if ( totalWritten == 0 )
+          {
+              /* Line termination just sent - ensure PMAC is ready */
+              int count = 0;
+              while( *dpramAsciiOutControl != 0x0 )
+              {
+                  taskDelay(1);
+                  count++;
+                  if( count > 10 )
+                  printf( "pmacWriteAsc: Stuck in while loop\n" );
+              }
+          }
 
-  /* End of command */	
-  *dpramAsciiOut = 0;
-	
-  /* Set output control bit to 1 for PMAC to read the command */
-  *dpramAsciiOutControl = 1;
+          dpramAsciiOut[totalWritten] = buffer[i];
+          totalWritten++;
+      }
+      numWritten++;
+  }
 
   return(numWritten);
 }
@@ -333,7 +334,7 @@ void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
 /*  logMsg("pmacAscInISR: Putting %d chars in the ring buffer\n", length+1, 0,0,0,0,0); */
   pushOK = epicsRingBytesPut( replyQ[ctlr], &space, 1);
 #else
-/*  logMsg("pmacAscInISR: Putting %d chars plus 0x%x control char in the ring buffer\n",
+/*  logMsg("pmacAscInISR: Putting %d chars plus 0x%x control char in the ring buffer\n", 
           length, *dpramAsciiInControl, 0,0,0,0); */
   pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiInControl, 1);
 #endif
