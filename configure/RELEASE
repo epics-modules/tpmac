@@ -6,9 +6,10 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 #Sergey:
 EPICS_BASE=/home/epics/R3.14.8.2/base
+WORK=/home/diamond/R3.14.8.2/work/support
 
-ASYN=/home/npr78/diamond/support/asyn
-MOTOR=/home/npr78/diamond/support/asyn-rewrite
+ASYN=$(WORK)/asyn
+MOTOR=$(WORK)/motor
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq

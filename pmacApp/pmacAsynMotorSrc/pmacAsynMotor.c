@@ -26,11 +26,9 @@ motorAxisDrvSET_t pmacAsynMotor =
     motorAxisReport,            /**< Standard EPICS driver report function (optional) */
     motorAxisInit,              /**< Standard EPICS dirver initialisation function (optional) */
     motorAxisSetLog,            /**< Defines an external logging function (optional) */
-    motorAxisSetLogParam,       /**< Defines an external logging function user parameter (optional) */
     motorAxisOpen,              /**< Driver open function */
     motorAxisClose,             /**< Driver close function */
     motorAxisSetCallback,       /**< Provides a callback function the driver can call when the status updates */
-    motorAxisPrimitive,         /**< Passes a controller dependedent string */
     motorAxisSetDouble,         /**< Pointer to function to set a double value */
     motorAxisSetInteger,        /**< Pointer to function to set an integer value */
     motorAxisGetDouble,         /**< Pointer to function to get a double value */
@@ -95,7 +93,6 @@ typedef struct drvPmac
     int nAxes;
     AXIS_HDL axis;
     epicsThreadId motorThread;
-    motorAxisLogFunc print;
     epicsTimeStamp now;
 } drvPmac_t;
 
@@ -105,6 +102,7 @@ typedef struct motorAxisHandle
     int axis;
     asynUser * pasynUser;
     PARAMS params;
+    motorAxisLogFunc print;
     void * logParam;
     epicsMutexId axisMutex;
 } motorAxis;
@@ -113,10 +111,10 @@ static PMACDRV_ID pFirstDrv = NULL;
 
 static int drvPmacLogMsg( void * param, const motorAxisLogMask_t logMask, const char *pFormat, ...);
 static motorAxisLogFunc drvPrint = drvPmacLogMsg;
+static motorAxisLogFunc drvPrintParam = NULL;
 
-#define PRINT   drvPrint
-#define FLOW    motorAxisTraceFlow
-#define ERROR   motorAxisTraceError
+#define TRACE_FLOW    motorAxisTraceFlow
+#define TRACE_ERROR   motorAxisTraceError
 
 #define MAX(a,b) ((a)>(b)? (a): (b))
 #define MIN(a,b) ((a)<(b)? (a): (b))
@@ -150,20 +148,33 @@ static int motorAxisInit( void )
     return MOTOR_AXIS_OK;
 }
 
-static int motorAxisSetLog( motorAxisLogFunc logFunc )
+static int motorAxisSetLog( AXIS_HDL pAxis, motorAxisLogFunc logFunc, void * param )
 {
-    if (logFunc == NULL) drvPrint=drvPmacLogMsg;
-    else drvPrint = logFunc;
-
-    return MOTOR_AXIS_OK;
-}
-
-static int motorAxisSetLogParam( AXIS_HDL pAxis, void * param )
-{
-    if (pAxis == NULL) return MOTOR_AXIS_ERROR;
+    if (pAxis == NULL) 
+    {
+        if (logFunc == NULL)
+        {
+            drvPrint=drvPmacLogMsg;
+            drvPrintParam = NULL;
+        }
+        else
+        {
+            drvPrint=logFunc;
+            drvPrintParam = param;
+        }
+    }
     else
     {
-        pAxis->logParam = param;
+        if (logFunc == NULL)
+        {
+            pAxis->print=drvPmacLogMsg;
+            pAxis->logParam = NULL;
+        }
+        else
+        {
+            pAxis->print=logFunc;
+            pAxis->logParam = param;
+        }
     }
     return MOTOR_AXIS_OK;
 }
@@ -213,11 +224,6 @@ static int motorAxisSetCallback( AXIS_HDL pAxis, motorAxisCallbackFunc callback,
     }
 }
 
-static int motorAxisPrimitive( AXIS_HDL pAxis, int length, char * string )
-{
-    return MOTOR_AXIS_OK;
-}
-
 static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff_size, char * response )
 {
     asynStatus status;
@@ -259,44 +265,44 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
         case motorAxisPosition:
         {
             sprintf( command, "%d=%f", pAxis->axis, value );
-            PRINT( pAxis->logParam, FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisEncoderRatio:
         {
-            PRINT( pAxis->logParam, FLOW, "Cannot set PMAC card %d, axis %d encoder ratio (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d encoder ratio (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisLowLimit:
         {
             sprintf( command, "I%d14=%f", pAxis->axis, value );
-            PRINT( pAxis->logParam, FLOW, "Setting PMAC card %d, axis %d low limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d low limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisHighLimit:
         {
             sprintf( command, "I%d13=%f", pAxis->axis, value );
-           PRINT( pAxis->logParam, FLOW, "Setting PMAC card %d, axis %d high limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+           pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d high limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisPGain:
         {
-            PRINT( pAxis->logParam, FLOW, "Cannot set PMAC card %d, axis %d pgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d pgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisIGain:
         {
-            PRINT( pAxis->logParam, FLOW, "Cannot set PMAC card %d, axis %d igain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d igain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisDGain:
         {
-            PRINT( pAxis->logParam, FLOW, "Cannot set PMAC card %d, axis %d dgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d dgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
         case motorAxisClosedLoop:
         {
-            PRINT( pAxis->logParam, FLOW, "Cannot set PMAC card %d, axis %d closed loop (%s)\n", pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
+            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d closed loop (%s)\n", pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
             break;
         }
         default:
@@ -522,7 +528,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
 
     if ( pDrv == NULL)
     {
-        PRINT( NULL, FLOW,
+        drvPrint( drvPrintParam, TRACE_FLOW,
                "Creating PMAC motor driver on port %s, address %d: card: %d, naxes: %d\n",
                port, addr, card, nAxes );
 
@@ -608,7 +614,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
         }
         else
         {
-            asynPrint(pDrv->pasynUser, ASYN_TRACE_ERROR,
+            drvPrint( drvPrintParam, TRACE_ERROR,
                       "drvPmacCreate: unable to create driver for port %s: insufficient memory\n",
                       port );
             status = MOTOR_AXIS_ERROR;
@@ -618,7 +624,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
     }
     else
     {
-        PRINT( pDrv->axis[0].logParam, ERROR, "Motor for card %d already exists\n", card );
+        drvPrint( drvPrintParam, TRACE_ERROR, "Motor for card %d already exists\n", card );
         status = MOTOR_AXIS_ERROR;
     }
 
@@ -630,7 +636,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                                                (EPICSTHREADFUNC) drvPmacTask, (void *) pDrv );
         if (pDrv->motorThread == NULL)
         {
-            PRINT( NULL, ERROR, "Cannot start motor polling thread\n" );
+            asynPrint(pDrv->pasynUser, ASYN_TRACE_ERROR, "Cannot start motor polling thread\n" );
             return MOTOR_AXIS_ERROR;
         }
     }
