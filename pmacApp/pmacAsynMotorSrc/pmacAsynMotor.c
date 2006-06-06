@@ -22,7 +22,7 @@
 
 motorAxisDrvSET_t pmacAsynMotor =
   {
-    20,
+    16,
     motorAxisReport,            /**< Standard EPICS driver report function (optional) */
     motorAxisInit,              /**< Standard EPICS dirver initialisation function (optional) */
     motorAxisSetLog,            /**< Defines an external logging function (optional) */
@@ -36,6 +36,8 @@ motorAxisDrvSET_t pmacAsynMotor =
     motorAxisHome,              /**< Pointer to function to execute a more to reference or home */
     motorAxisMove,              /**< Pointer to function to execute a position move */
     motorAxisVelocityMove,      /**< Pointer to function to execute a velocity mode move */
+    motorAxisProfileMove,       /**< Pointer to function to initiate a profiled move */
+    motorAxisTriggerProfile,    /**< Pointer to function to trigger a profiled move */
     motorAxisStop               /**< Pointer to function to stop motion */
   };
 

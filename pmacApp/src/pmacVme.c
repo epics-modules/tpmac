@@ -336,7 +336,7 @@ long pmacVmeConfig
 	)
 
 	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector - 1,
-				pmacMbxReceiptISR, (void *) pPmacCtlr);
+				(void *)pmacMbxReceiptISR, (void *) pPmacCtlr);
 	if (!RTN_SUCCESS(status))
 	{
 		printf ("%s: Failure to connect interrupt.\n",
@@ -351,7 +351,7 @@ long pmacVmeConfig
 	)
 
 	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector,
-				pmacMbxReadmeISR, (void *) pPmacCtlr);
+				(void *)pmacMbxReadmeISR, (void *) pPmacCtlr);
 	if (!RTN_SUCCESS(status))
 	{
 		printf ("%s: Failure to connect interrupt.\n",
@@ -367,7 +367,7 @@ long pmacVmeConfig
 
 /* ajf: Add the DPRAM ASCII ISR */
         status = devConnectInterrupt (intVME, pPmacCtlr->irqVector + 1,
-                                      pmacAscInISR, (void *) pPmacCtlr);
+                                      (void *)pmacAscInISR, (void *) pPmacCtlr);
         if (!RTN_SUCCESS(status))
         {
           printf ("%s: Failure to connect interrupt.\n", MyName);
