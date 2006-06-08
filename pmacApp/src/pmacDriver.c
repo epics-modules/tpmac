@@ -276,19 +276,19 @@ int pmacIoctlAsc( PMAC_ASC_DEV *pPmacAscDev, int request, int *arg )
       break;
 
     case SIO_HW_OPTS_GET:
-      printf("SIO_HW_OPTS_GET: Get hardware options - not implemented\n");
+      /* printf("SIO_HW_OPTS_GET: Get hardware options - not implemented\n"); */
       break;
 
     case SIO_BAUD_GET:
-      printf("SIO_BAUD_GET: Get the baud rate - not implemented\n");
+      /* printf("SIO_BAUD_GET: Get the baud rate - not implemented\n"); */
       break;
 
     case SIO_BAUD_SET:
-      printf("SIO_BAUD_SET: Set the baud rate - not implemented\n");
+      /* printf("SIO_BAUD_SET: Set the baud rate - not implemented\n"); */
       break;
 
     case FIOBAUDRATE:
-      printf("FIOBAUDRATE: Set serial baud rate - not implemented\n");
+      /* printf("FIOBAUDRATE: Set serial baud rate - not implemented\n"); */
       break;
 
     default:
