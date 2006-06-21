@@ -27,7 +27,6 @@
 #include <pmacCommon.h>
 #include <pmacDriver.h>
 
-#define NO_CONTROL_CHARS       0
 #define PMAC_BASE_ASC_REGS_OUT (160)
 
 int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
@@ -314,32 +313,31 @@ void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
   int        length;
   PMAC_DPRAM *dpramAsciiInControl;
   PMAC_DPRAM *dpramAsciiIn;
-#if NO_CONTROL_CHARS
-  char       space = 'c';
-#endif
+  epicsUInt16 control;
 
   ctlr                = pPmacCtlr->ctlr;
   dpramAsciiInControl = pmacRamAddr(ctlr, 0x0F40);
   dpramAsciiIn        = pmacRamAddr(ctlr, 0x0F44);
   length              = *pmacRamAddr(ctlr, 0x0F42) - 1;
+  control             = *(dpramAsciiInControl) & ((*(dpramAsciiInControl+1))<<8);
 
-  for( i=0; i<length; i++ )
+  if (control == 0)
   {
-    pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiIn, 1);
-    if( !pushOK )
-      logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
-    dpramAsciiIn++;
+      /* Copy the bytes over from the DPRAM ascii buffer */
+      pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiIn, length);
+      if( pushOK ) pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiInControl, 1);
   }
-#if NO_CONTROL_CHARS
-/*  logMsg("pmacAscInISR: Putting %d chars in the ring buffer\n", length+1, 0,0,0,0,0); */
-  pushOK = epicsRingBytesPut( replyQ[ctlr], &space, 1);
-#else
-/*  logMsg("pmacAscInISR: Putting %d chars plus 0x%x control char in the ring buffer\n", 
-          length, *dpramAsciiInControl, 0,0,0,0); */
-  pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiInControl, 1);
-#endif
-  if( !pushOK )
-    logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+  else
+  {
+      /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
+      char response[9]="ERR000\0x7\0x6";
+      response[3] = ((control >> 8 ) & 0xF ) + '0';
+      response[4] = ((control >> 4 ) & 0xF ) + '0';
+      response[5] = ((control >> 0 ) & 0xF ) + '0';
+      pushOK = epicsRingBytesPut( replyQ[ctlr], response, 8);
+  }
+
+  if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
 
   *dpramAsciiInControl     = 0x0;
   *(dpramAsciiInControl+1) = 0x0;
