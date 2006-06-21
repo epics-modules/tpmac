@@ -19,6 +19,7 @@
 #include <taskLib.h>
 
 /* EPICS headers */
+#include <epicsTypes.h>
 #include <epicsRingBytes.h>
 #include <cantProceed.h>
 
@@ -307,13 +308,13 @@ int pmacIoctlAsc( PMAC_ASC_DEV *pPmacAscDev, int request, int *arg )
 
 void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
 {
-  int        i;
-  int        ctlr;
-  int        pushOK;
-  int        length;
-  PMAC_DPRAM *dpramAsciiInControl;
-  PMAC_DPRAM *dpramAsciiIn;
+  int         ctlr;
+  int         pushOK;
+  int         length;
+  PMAC_DPRAM  *dpramAsciiInControl;
+  PMAC_DPRAM  *dpramAsciiIn;
   epicsUInt16 control;
+  char        response[16] = "ERR000\0x7\0x6";
 
   ctlr                = pPmacCtlr->ctlr;
   dpramAsciiInControl = pmacRamAddr(ctlr, 0x0F40);
@@ -330,11 +331,10 @@ void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
   else
   {
       /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
-      char response[9]="ERR000\0x7\0x6";
       response[3] = ((control >> 8 ) & 0xF ) + '0';
       response[4] = ((control >> 4 ) & 0xF ) + '0';
       response[5] = ((control >> 0 ) & 0xF ) + '0';
-      pushOK = epicsRingBytesPut( replyQ[ctlr], response, 8);
+      pushOK      = epicsRingBytesPut( replyQ[ctlr], response, 8);
   }
 
   if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
