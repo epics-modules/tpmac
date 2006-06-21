@@ -95,7 +95,6 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include 	<errMdef.h>
 
 #include <pmacVme.h>
-#include <pmacCommon.h>
 
 /*
  * DEFINES
@@ -287,20 +286,11 @@ long pmacVmeConfig
 		if (status != OK)
 		{
 			printf ("%s: Failure probing for DPRAM address: 0x%x\n",
-				MyName, (int) *pPmacCtlr->pDpramBase);
+				MyName, (int) pPmacCtlr->pDpramBase);
 			return (status);
 		}
 		pPmacCtlr->presentDpram = TRUE;
 	}
-
-/* ajf: Add the DPRAM ASCII semaphore */
-        pPmacCtlr->ioAscReadmeSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-        if ( pPmacCtlr->ioAscReadmeSem == NULL)
-        {
-          status = S_dev_internal;
-          printf ("%s: Failure creating ioAscReadmeSem binary semaphore.\n", MyName);
-          return (status);
-        }
 	
 	pPmacCtlr->ioMbxReceiptSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
 	if ( pPmacCtlr->ioMbxReceiptSem == NULL)
@@ -358,21 +348,6 @@ long pmacVmeConfig
 			MyName);
 		return (status);
 	}
-
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Connecting to interrupt vector %d\n",
-				MyName, pPmacCtlr->irqVector + 1);
-	)
-
-/* ajf: Add the DPRAM ASCII ISR */
-        status = devConnectInterrupt (intVME, pPmacCtlr->irqVector + 1,
-                                      (void *)pmacAscInISR, (void *) pPmacCtlr);
-        if (!RTN_SUCCESS(status))
-        {
-          printf ("%s: Failure to connect interrupt.\n", MyName);
-          return (status);
-        }
 
 	PMAC_DEBUG
 	(	1,

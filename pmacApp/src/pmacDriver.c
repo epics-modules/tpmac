@@ -19,13 +19,14 @@
 #include <taskLib.h>
 
 /* EPICS headers */
-#include <epicsTypes.h>
 #include <epicsRingBytes.h>
+#include <epicsTypes.h>
+#include <epicsEvent.h>
 #include <cantProceed.h>
+#include <devLib.h>
 
 /* PMAC headers */
 #include <pmacVme.h>
-#include <pmacCommon.h>
 #include <pmacDriver.h>
 
 #define PMAC_BASE_ASC_REGS_OUT (160)
@@ -34,12 +35,34 @@ int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
 int    pmacDrvNumMbx  = 0;     /* Mailbox ASCII driver number */
 int    replyQueueSize = 2048;  /* Size of ring buffer         */
 
-PMAC_ASC_DEV     pmacAscDev[PMAC_MAX_CTLRS];
-PMAC_MBX_DEV     pmacMbxDev[PMAC_MAX_CTLRS];
-epicsRingBytesId replyQ[PMAC_MAX_CTLRS];
+typedef struct
+{
+    DEV_HDR devHdr;
+    int     ctlr;
+    int     openFlag;
+    int     cancelFlag;
+    epicsRingBytesId replyQ;
+    epicsEventId ioReadmeId;
+} PMAC_DEV;
+
+/* Function prototypes */
+
+static int  pmacOpen( PMAC_DEV *pPmacDev, char * remainder, int mode );
+static int  pmacClose( PMAC_DEV * );
+static int  pmacRead( PMAC_DEV *, char *, int );
+static int  pmacWriteAsc( PMAC_DEV *, char *, int );
+static int  pmacIoctl( PMAC_DEV *, int, int * );
+static int  pmacOpenMbx( PMAC_DEV * );
+static int  pmacCloseMbx( PMAC_DEV * );
+static int  pmacReadMbx( PMAC_DEV *, char *, int );
+static int  pmacWriteMbx( PMAC_DEV *, char *, int );
+static int  pmacIoctlMbx( PMAC_DEV *, int, int * );
+static void pmacAscInISR( PMAC_DEV *pPmacAscDev );
+
+PMAC_DEV     pmacAscDev[PMAC_MAX_CTLRS];
+PMAC_DEV     pmacMbxDev[PMAC_MAX_CTLRS];
 
 IMPORT int       pmacVmeConfigLock;
-IMPORT int       pmacVmeNumCtlrs;
 IMPORT PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
 
 
@@ -57,6 +80,7 @@ STATUS pmacDrv(void)
   int    i;
   char   devNameAsc[32];
   char   devNameMbx[32];
+  long   status;
 
   ret          = OK;
   installedAsc = FALSE;
@@ -66,7 +90,7 @@ STATUS pmacDrv(void)
 
   /* check if driver already installed */
 
-  if(pmacDrvNumAsc > 0)        
+  if (pmacDrvNumAsc > 0)
   {
     installedAsc = TRUE;
     ret          = OK;
@@ -82,22 +106,33 @@ STATUS pmacDrv(void)
 
     /* printf("pmacDrv: Installing ASC: pmacVmeNumCtlrs = %d\n", pmacVmeNumCtlrs); */
 
-    pmacDrvNumAsc = iosDrvInstall( 0, 0, pmacOpenAsc,  pmacCloseAsc, pmacReadAsc,
-                                         pmacWriteAsc, pmacIoctlAsc );
+    pmacDrvNumAsc = iosDrvInstall( 0, 0, pmacOpen,  pmacClose, pmacRead,
+                                         pmacWriteAsc, pmacIoctl );
+
     /* Add a DPRAM ASCII device for every configured card */
-    for( i=0; i<pmacVmeNumCtlrs; i++ )
+    for( i=0; i < PMAC_MAX_CTLRS; i++ )
     {
-      sprintf( devNameAsc, "/dev/pmac/%d/asc", i );
-      pmacAscDev[i].ctlr = i;
-      ret                = iosDevAdd( &pmacAscDev[i].devHdr, devNameAsc, pmacDrvNumAsc);
-      if( ret == ERROR )
-      {
-        printf("Error adding: \"%s\" device\n", devNameAsc);
-        break;
-      }
-      replyQ[i] = epicsRingBytesCreate(replyQueueSize);
-      if( !replyQ[i] )
-        cantProceed("pmacDrv: Failed to create ring buffer");
+        pmacAscDev[i].ctlr =  pmacVmeCtlr[i].ctlr;
+        pmacAscDev[i].openFlag   = 0;
+        pmacAscDev[i].cancelFlag = 0;
+
+	if ( pmacVmeCtlr[i].configured )
+        {
+            sprintf( devNameAsc, "/dev/pmac/%d/asc", pmacVmeCtlr[i].ctlr );           
+            ret = iosDevAdd( &pmacAscDev[i].devHdr, devNameAsc, pmacDrvNumAsc);
+            if( ret == ERROR ) cantProceed("pmacDrv: Error adding: /dev/pmac/n/asc device" );
+
+            pmacAscDev[i].replyQ = epicsRingBytesCreate(replyQueueSize);
+            if( !pmacAscDev[i].replyQ )
+                cantProceed("pmacDrv: Failed to create ring buffer");
+
+            pmacAscDev[i].ioReadmeId = epicsEventMustCreate( epicsEventEmpty ); 
+
+            status = devConnectInterrupt (intVME, pmacVmeCtlr[i].irqVector + 1,
+                                          (void *)pmacAscInISR, (void *) &(pmacAscDev[i]));
+            if (!RTN_SUCCESS(status))
+                cantProceed("pmacDrv: Failed to connect to DPRAM ASCII interrupt");
+        }
     }
   }
 
@@ -120,85 +155,87 @@ STATUS pmacDrv(void)
 
     pmacDrvNumMbx = iosDrvInstall( 0, 0, pmacOpenMbx,  pmacCloseMbx, pmacReadMbx,
                                          pmacWriteMbx, pmacIoctlMbx );
-    /* Add a Mailbox ASCII device for every configured card */
-    for( i=0; i<pmacVmeNumCtlrs; i++ )
+
+    /* Add a DPRAM ASCII device for every configured card */
+    for( i=0; i < PMAC_MAX_CTLRS; i++ )
     {
-      sprintf( devNameMbx, "/dev/pmac/%d/mbx", i );
-      pmacMbxDev[i].ctlr = i;
-      ret                = iosDevAdd( &pmacMbxDev[i].devHdr, devNameMbx, pmacDrvNumMbx);
-      if( ret == ERROR )
-      {
-        printf("Error adding: \"%s\" device\n", devNameMbx);
-        break;
-      }
+        pmacMbxDev[i].ctlr =  pmacVmeCtlr[i].ctlr;
+        pmacMbxDev[i].openFlag   = 0;
+        pmacMbxDev[i].cancelFlag = 0;
+
+	if ( pmacVmeCtlr[i].configured )
+        {
+            sprintf( devNameMbx, "/dev/pmac/%d/mbx", pmacVmeCtlr[i].ctlr );           
+            ret = iosDevAdd( &pmacMbxDev[i].devHdr, devNameMbx, pmacDrvNumMbx);
+            if( ret == ERROR ) cantProceed("pmacDrv: Error adding: /dev/pmac/n/asc device" );
+
+            pmacMbxDev[i].replyQ = epicsRingBytesCreate(replyQueueSize);
+            if( !pmacMbxDev[i].replyQ )
+                cantProceed("pmacDrv: Failed to create ring buffer");
+
+            pmacMbxDev[i].ioReadmeId = epicsEventMustCreate( epicsEventEmpty ); 
+
+/*
+             status = devConnectInterrupt (intVME, pmacVmeCtlr[i].irqVector + 1,
+                                           (void *)pmacMbxInISR, (void *) &(pmacMbxDev[i]));
+
+            if (!RTN_SUCCESS(status))
+                cantProceed("pmacDrv: Failed to connect to Mailbox interrupt");
+*/
+        }
     }
   }
   return( ret );
 }
 
 
-int pmacOpenAsc( PMAC_ASC_DEV *pPmacAscDev )
+static int pmacOpen( PMAC_DEV *pPmacDev, char * remainder, int mode )
 {
-  int ret;
+    if (remainder[0] != 0 || pPmacDev->openFlag )
+        return ERROR;
+    else
+        pPmacDev->openFlag = TRUE;
 
-  /* printf("pmacOpenAsc: name = %s, number = %d\n", 
-          pPmacAscDev->devHdr.name,  pPmacAscDev->ctlr); */
-
-  if( pPmacAscDev->openFlag )
-    ret = ERROR;
-  else
-  {
-    pPmacAscDev->openFlag = TRUE;
-    ret                   = (int)pPmacAscDev;
-  }
-
-  return( ret );
+    return( (int) pPmacDev );
 }
 
 
-int pmacCloseAsc( PMAC_ASC_DEV *pPmacAscDev )
+static int pmacClose( PMAC_DEV *pPmacDev )
 {
   /* printf("pmacCloseAsc called\n"); */
 
-  if( pPmacAscDev->openFlag )
-    pPmacAscDev->openFlag = FALSE;
+  if( pPmacDev->openFlag )
+      pPmacDev->openFlag = FALSE;
 
   return( OK );
 }
 
 
-int pmacReadAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
+static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 {
   int       numRead;
-  int       ctlr;
-  PMAC_CTLR *pPmacCtlr;
 
-  ctlr      = pPmacAscDev->ctlr;
-  pPmacCtlr = &pmacVmeCtlr[ctlr];
-
-  numRead    = epicsRingBytesGet(replyQ[ctlr], buffer, nBytes);
+  numRead    = epicsRingBytesGet(pPmacDev->replyQ, buffer, nBytes);
 
   if( numRead == 0 )  /* The buffer was empty */
   {
       /* printf("semTake called\n"); */
-      semTake(pPmacCtlr->ioAscReadmeSem, WAIT_FOREVER);
-      if( pPmacAscDev->cancelFlag )
+      epicsEventWait( pPmacDev->ioReadmeId );
+      if( pPmacDev->cancelFlag )
       {
-        pPmacAscDev->cancelFlag = FALSE;
+        pPmacDev->cancelFlag = FALSE;
       }
       else
       {
-        numRead    = epicsRingBytesGet(replyQ[ctlr], buffer, nBytes);
+        numRead    = epicsRingBytesGet(pPmacDev->replyQ, buffer, nBytes);
       }
   }
-
-  /* printf("pmacReadAsc: Read %d chars: %s\n", numRead, buffer); */
 
   return( numRead );
 }
 
 
-int pmacWriteAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
+static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
 {
   int        i;
   int        ctlr;
@@ -250,29 +287,23 @@ int pmacWriteAsc( PMAC_ASC_DEV *pPmacAscDev, char *buffer, int nBytes )
 }
 
 
-int pmacIoctlAsc( PMAC_ASC_DEV *pPmacAscDev, int request, int *arg )
+static int pmacIoctl( PMAC_DEV *pPmacDev, int request, int *arg )
 {
-  int       ret;
-  int       ctlr;
-  PMAC_CTLR *pPmacCtlr;
-
-  ret       = 0;
-  ctlr      = pPmacAscDev->ctlr;
-  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  int       ret=0;
 
   switch( request )
   {
     case FIONREAD:
-      *arg = epicsRingBytesUsedBytes( replyQ[ctlr] );
+      *arg = epicsRingBytesUsedBytes( pPmacDev->replyQ );
       break;
 
     case FIORFLUSH:
-      epicsRingBytesFlush( replyQ[ctlr] );
+      epicsRingBytesFlush( pPmacDev->replyQ );
       break;
 
     case FIOCANCEL:
-      pPmacAscDev->cancelFlag = TRUE;
-      semGive( pPmacCtlr->ioAscReadmeSem );
+      pPmacDev->cancelFlag = TRUE;
+      epicsEventSignal( pPmacDev->ioReadmeId );
       break;
 
     case SIO_HW_OPTS_GET:
@@ -306,17 +337,16 @@ int pmacIoctlAsc( PMAC_ASC_DEV *pPmacAscDev, int request, int *arg )
                   Note: Errors returned by PMAC are not being handled here
                   and they probably should be. */
 
-void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
+static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
 {
-  int         ctlr;
-  int         pushOK;
-  int         length;
-  PMAC_DPRAM  *dpramAsciiInControl;
-  PMAC_DPRAM  *dpramAsciiIn;
+  int        ctlr;
+  int        pushOK;
+  int        length;
+  PMAC_DPRAM *dpramAsciiInControl;
+  PMAC_DPRAM *dpramAsciiIn;
   epicsUInt16 control;
-  char        response[16] = "ERR000\0x7\0x6";
 
-  ctlr                = pPmacCtlr->ctlr;
+  ctlr                = pPmacAscDev->ctlr;
   dpramAsciiInControl = pmacRamAddr(ctlr, 0x0F40);
   dpramAsciiIn        = pmacRamAddr(ctlr, 0x0F44);
   length              = *pmacRamAddr(ctlr, 0x0F42) - 1;
@@ -325,30 +355,31 @@ void pmacAscInISR( PMAC_CTLR *pPmacCtlr )
   if (control == 0)
   {
       /* Copy the bytes over from the DPRAM ascii buffer */
-      pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiIn, length);
-      if( pushOK ) pushOK = epicsRingBytesPut( replyQ[ctlr], (char *)dpramAsciiInControl, 1);
+      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiIn, length);
+      if( pushOK ) pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiInControl, 1);
   }
   else
   {
       /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
+      char response[]={'E','R','R','0','0','0',PMAC_TERM_BELL,PMAC_TERM_ACK};
       response[3] = ((control >> 8 ) & 0xF ) + '0';
       response[4] = ((control >> 4 ) & 0xF ) + '0';
       response[5] = ((control >> 0 ) & 0xF ) + '0';
-      pushOK      = epicsRingBytesPut( replyQ[ctlr], response, 8);
+      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response));
   }
 
   if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
 
   *dpramAsciiInControl     = 0x0;
   *(dpramAsciiInControl+1) = 0x0;
-  semGive( pPmacCtlr->ioAscReadmeSem );
+  epicsEventSignal( pPmacAscDev->ioReadmeId );
   return;
 }
 
 
 /* Mailbox ASCII Open/Close/Read/Write/Ioctl routines */
 
-int pmacOpenMbx( PMAC_MBX_DEV *pPmacMbxDev )
+static int pmacOpenMbx( PMAC_DEV *pPmacMbxDev )
 {
   int ret;
 
@@ -366,7 +397,7 @@ int pmacOpenMbx( PMAC_MBX_DEV *pPmacMbxDev )
   return( ret );
 }
 
-int pmacCloseMbx( PMAC_MBX_DEV *pPmacMbxDev )
+static int pmacCloseMbx( PMAC_DEV *pPmacMbxDev )
 {
   /*  printf("pmacCloseMbx called\n"); */
 
@@ -376,17 +407,17 @@ int pmacCloseMbx( PMAC_MBX_DEV *pPmacMbxDev )
   return( OK );
 }
 
-int pmacReadMbx( PMAC_MBX_DEV *pPmacMbxDev, char *buffer, int nBytes )
+static int pmacReadMbx( PMAC_DEV *pPmacMbxDev, char *buffer, int nBytes )
 {
   return(0);
 }
 
-int pmacWriteMbx( PMAC_MBX_DEV *pPmacMbxDev, char *buffer, int nBytes )
+static int pmacWriteMbx( PMAC_DEV *pPmacMbxDev, char *buffer, int nBytes )
 {
   return(0);
 }
 
-int pmacIoctlMbx( PMAC_MBX_DEV *pPmacMbxDev, int request, int *arg )
+static int pmacIoctlMbx( PMAC_DEV *pPmacMbxDev, int request, int *arg )
 {
   return(0);
 }
@@ -398,7 +429,6 @@ int pmacIoctlMbx( PMAC_MBX_DEV *pPmacMbxDev, int request, int *arg )
 long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long addrDpram,
                        unsigned int irqVector, unsigned int irqLevel )
 {
-  int       i;
   PMAC_CTLR *pPmacCtlr;
 	
   if( pmacVmeConfigLock != 0 )
@@ -406,13 +436,7 @@ long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long add
     printf( "pmacVmeConfigSim: Cannot change configuration after initialization\n" );
     return(ERROR);
   }
-  
-  if( pmacVmeNumCtlrs == 0 )
-  {
-    for( i=0; i < PMAC_MAX_CTLRS; i++ )
-      pmacVmeCtlr[i].configured = FALSE;
-  }
-	
+  	
   if( (ctlrNumber < 0) | (ctlrNumber >= PMAC_MAX_CTLRS) )
   {
     printf( "pmacVmeConfigSim: Controller number %d invalid -- must be 0 to %d.\n",
@@ -450,7 +474,6 @@ long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long add
   pPmacCtlr->present    = pPmacCtlr->presentBase | pPmacCtlr->presentDpram;
   pPmacCtlr->enabled    = pPmacCtlr->enabledBase | pPmacCtlr->enabledDpram;
   pPmacCtlr->configured = TRUE;
-  pmacVmeNumCtlrs++;
 	
   return(0);
 }

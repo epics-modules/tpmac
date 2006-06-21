@@ -136,7 +136,6 @@ typedef struct  /* PMAC_CTLR */
 	SEM_ID		ioMbxLockSem;
 	SEM_ID		ioMbxReceiptSem;
 	SEM_ID		ioMbxReadmeSem;
-        SEM_ID          ioAscReadmeSem;   /* ajf */
 	char		firmwareVersion[PMAC_STRLEN_FWVER];
 } PMAC_CTLR;
 

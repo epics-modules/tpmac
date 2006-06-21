@@ -104,7 +104,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 
 #include <drvPmac.h>
 #include <pmacVme.h>
-#include <pmacCommon.h>
+#include <pmacDriver.h>
 #include "epicsExport.h"
 
 /*
