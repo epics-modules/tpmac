@@ -219,7 +219,6 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 
   if( numRead == 0 )  /* The buffer was empty */
   {
-      /* printf("semTake called\n"); */
       epicsEventWait( pPmacDev->ioReadmeId );
       if( pPmacDev->cancelFlag )
       {
@@ -243,8 +242,6 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   static int totalWritten=0;
   PMAC_DPRAM *dpramAsciiOut;
   PMAC_DPRAM *dpramAsciiOutControl;
-
- /* printf("pmacWriteAsc: writing %s to DPRAM, length %d\n", buffer, nBytes); */
 
   ctlr                 = pPmacAscDev->ctlr;
   dpramAsciiOut        = pmacRamAddr(ctlr,0x0EA0);
@@ -339,6 +336,7 @@ static int pmacIoctl( PMAC_DEV *pPmacDev, int request, int *arg )
 
 static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
 {
+  int        i;
   int        ctlr;
   int        pushOK;
   int        length;
@@ -354,21 +352,28 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
 
   if (control == 0)
   {
-      /* Copy the bytes over from the DPRAM ascii buffer */
-      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiIn, length);
-      if( pushOK ) pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiInControl, 1);
+    for( i=0; i<length; i++ )
+    {
+      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiIn, 1);
+      if( !pushOK )
+        logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+      dpramAsciiIn++;
+    }
+    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiInControl, 1);
+    if( !pushOK )
+      logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
   else
   {
-      /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
-      char response[]={'E','R','R','0','0','0',PMAC_TERM_BELL,PMAC_TERM_ACK};
-      response[3] = ((control >> 8 ) & 0xF ) + '0';
-      response[4] = ((control >> 4 ) & 0xF ) + '0';
-      response[5] = ((control >> 0 ) & 0xF ) + '0';
-      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response));
+    /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
+    char response[]={'E','R','R','0','0','0',PMAC_TERM_BELL,PMAC_TERM_ACK};
+    response[3] = ((control >> 8 ) & 0xF ) + '0';
+    response[4] = ((control >> 4 ) & 0xF ) + '0';
+    response[5] = ((control >> 0 ) & 0xF ) + '0';
+    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response));
+    if( !pushOK )
+      logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
-
-  if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
 
   *dpramAsciiInControl     = 0x0;
   *(dpramAsciiInControl+1) = 0x0;
