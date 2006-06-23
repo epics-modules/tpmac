@@ -482,6 +482,7 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
 
 static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 {
+    char command[128];
     char response[128];
     int cmdStatus;
     double position, error, velocity;
@@ -489,7 +490,8 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     epicsUInt32 status[2];
 
     /* Read all the status for this axis in one go */
-    cmdStatus = motorAxisWriteRead( pAxis, "#%d ? P F V", sizeof(response), response, 1 );
+    sprintf( command, "#%d ? P F V", pAxis->axis );
+    cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
     nvals = sscanf( response, "%6x%6x %lf %lf %lf", &status[0], &status[1], &position, &error, &velocity );
 
     if ( cmdStatus || nvals != 5)
