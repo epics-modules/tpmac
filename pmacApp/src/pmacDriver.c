@@ -29,6 +29,21 @@
 #include <pmacVme.h>
 #include <pmacDriver.h>
 
+#ifdef vxWorks
+#include <cacheLib.h>
+
+/** Makes writing to a register on the VME board a bit simpler - or at least
+ * 	makes the code a bit more readable. */
+#define getReg(location)          (cacheInvalidate( DATA_CACHE, (char *) &(location), sizeof(location)), location )
+#define setReg(location, value)   (location) = (value); cacheFlush( DATA_CACHE, (char *) &(location), sizeof(value))
+#else
+
+/** Makes writing to a register on the VME board a bit simpler - or at least
+ * 	makes the code a bit more readable. */
+#define getReg(location)          (location)
+#define setReg(location, value)   (location) = (value)
+#endif
+
 #define PMAC_BASE_ASC_REGS_OUT (160)
 
 int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
@@ -255,8 +270,8 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
       if ( buffer[i] == '\r' )
       {
           /* Send command to PMAC */
-          dpramAsciiOut[totalWritten] = 0;
-          *dpramAsciiOutControl = 1;
+          setReg( dpramAsciiOut[totalWritten], (char) 0 );
+          setReg( *dpramAsciiOutControl, (char) 1 );
           totalWritten = 0;
       }
       else
@@ -265,7 +280,7 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
           {
               /* Line termination just sent - ensure PMAC is ready */
               int count = 0;
-              while( *dpramAsciiOutControl != 0x0 )
+              while( getReg( *dpramAsciiOutControl ) != 0x0 )
               {
                   taskDelay(1);
                   count++;
@@ -274,7 +289,7 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
               }
           }
 
-          dpramAsciiOut[totalWritten] = buffer[i];
+          setReg( dpramAsciiOut[totalWritten], buffer[i] );
           totalWritten++;
       }
       numWritten++;
@@ -343,23 +358,26 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
   PMAC_DPRAM *dpramAsciiInControl;
   PMAC_DPRAM *dpramAsciiIn;
   epicsUInt16 control;
+  char       terminator;
 
   ctlr                = pPmacAscDev->ctlr;
   dpramAsciiInControl = pmacRamAddr(ctlr, 0x0F40);
   dpramAsciiIn        = pmacRamAddr(ctlr, 0x0F44);
-  length              = *pmacRamAddr(ctlr, 0x0F42) - 1;
-  control             = *(dpramAsciiInControl) & ((*(dpramAsciiInControl+1))<<8);
+  length              = getReg( *pmacRamAddr(ctlr, 0x0F42) ) - 1;
+  terminator          = getReg( *(dpramAsciiInControl) );
+  control             = getReg( *(dpramAsciiInControl+1));
 
   if (control == 0)
   {
     for( i=0; i<length; i++ )
     {
-      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiIn, 1);
-      if( !pushOK )
-        logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
-      dpramAsciiIn++;
+        char c = getReg((char) *dpramAsciiIn);
+        pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &c, 1);
+        if( !pushOK )
+            logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+        dpramAsciiIn++;
     }
-    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, (char *)dpramAsciiInControl, 1);
+    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &terminator, 1);
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
@@ -375,8 +393,7 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
 
-  *dpramAsciiInControl     = 0x0;
-  *(dpramAsciiInControl+1) = 0x0;
+  setReg( *((epicsUInt16 *) dpramAsciiInControl), (epicsUInt16) 0 );
   epicsEventSignal( pPmacAscDev->ioReadmeId );
   return;
 }
