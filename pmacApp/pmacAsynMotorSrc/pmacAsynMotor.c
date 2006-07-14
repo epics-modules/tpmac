@@ -349,6 +349,7 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             break;
         }
 
+
         if ( command[0] != 0 && status == MOTOR_AXIS_OK)
         {
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
@@ -387,7 +388,14 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
 
         sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis, (relative?"MR ":"J="), position );
-        status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+
+        if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
+        {
+            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->callCallback( pAxis->params );
+            epicsMutexUnlock( pAxis->axisMutex );
+        }
     }
     return status;
 }
@@ -407,7 +415,13 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
         if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
         sprintf( command, "%s%s#%d HOME", vel_buff, acc_buff,  pAxis->axis );
 
-        status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+        if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
+        {
+            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->callCallback( pAxis->params );
+            epicsMutexUnlock( pAxis->axisMutex );
+        }
     }
     return status;
 }
@@ -429,7 +443,13 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
 
         sprintf( command, "%s%s#%d %s", vel_buff, acc_buff, pAxis->axis, (velocity < 0 ? "J-": "J+") );
 
-        status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+        if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
+        {
+            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->callCallback( pAxis->params );
+            epicsMutexUnlock( pAxis->axisMutex );
+        }
     }
     return status;
 }
@@ -489,29 +509,31 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     int nvals;
     epicsUInt32 status[2];
 
-    /* Read all the status for this axis in one go */
-    sprintf( command, "#%d ? P F V", pAxis->axis );
-    cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-    nvals = sscanf( response, "%6x%6x %lf %lf %lf", &status[0], &status[1], &position, &error, &velocity );
-
-    if ( cmdStatus || nvals != 5)
-    {
-        asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                  "drvPmacAxisGetStatus: not all status values returned\n" );
-        return;
-    }
-
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
-        motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
-        motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
+        /* Read all the status for this axis in one go */
+        sprintf( command, "#%d ? P F V", pAxis->axis );
+        cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
+        nvals = sscanf( response, "%6x%6x %lf %lf %lf", &status[0], &status[1], &position, &error, &velocity );
 
-        motorParam->setInteger( pAxis->params, motorAxisDirection,     (velocity >= 0) );
-        motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) != 0) );
-        motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
-        motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0) );
-        motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
-        motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
+        if ( cmdStatus || nvals != 5)
+        {
+            asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                      "drvPmacAxisGetStatus: not all status values returned\n" );
+        }
+        else
+        {
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
+
+            motorParam->setInteger( pAxis->params, motorAxisDirection,     (velocity >= 0) );
+            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) != 0) );
+            motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
+            motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0) );
+            motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
+            motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
+            motorParam->callCallback( pAxis->params );           
+        }
         epicsMutexUnlock( pAxis->axisMutex );
     }
 }
@@ -525,24 +547,27 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     int nvals;
 
     /* Read all the status for this axis in one go */
-    sprintf( command, "I%d13 I%d14 I%d30 I%d31 I%d33", pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis );
-    cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-    nvals = sscanf( response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain, &igain );
-
-    if ( cmdStatus || nvals != 5)
-    {
-        asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                  "drvPmacGetAxisInitialStatus: not all status values returned\n" );
-        return;
-    }
-
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
-        motorParam->setDouble(  pAxis->params, motorAxisLowLimit,  low_limit );
-        motorParam->setDouble(  pAxis->params, motorAxisHighLimit, high_limit );
-        motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
-        motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
-        motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
+        sprintf( command, "I%d13 I%d14 I%d30 I%d31 I%d33", pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis );
+        cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
+        nvals = sscanf( response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain, &igain );
+
+        if ( cmdStatus || nvals != 5)
+        {
+            asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                      "drvPmacGetAxisInitialStatus: not all status values returned\n" );
+        }
+        else
+        {
+            motorParam->setDouble(  pAxis->params, motorAxisLowLimit,  low_limit );
+            motorParam->setDouble(  pAxis->params, motorAxisHighLimit, high_limit );
+            motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
+            motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
+            motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
+            motorParam->callCallback( pAxis->params );
+        }
+
         epicsMutexUnlock( pAxis->axisMutex );
     }
 }
@@ -552,6 +577,8 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 {
     while ( 1 )
     {
+      for (pDrv = pFirstDrv; pDrv != NULL; pDrv = pDrv->pNext)
+      {
         int i;
 
 	for ( i = 0; i < pDrv->nAxes; i++ )
@@ -559,9 +586,8 @@ static void drvPmacTask( PMACDRV_ID pDrv )
             AXIS_HDL pAxis = &(pDrv->axis[i]);
 
             drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
-            motorParam->callCallback( pAxis->params );
         }
-
+      }
         epicsThreadSleep( DELTA );
     }
 }
@@ -660,10 +686,17 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
 
     if (status == MOTOR_AXIS_OK)
     {
-        pDrv->motorThread = epicsThreadCreate( "drvPmacThread", 
-                                               epicsThreadPriorityLow,
-                                               epicsThreadGetStackSize(epicsThreadStackMedium),
-                                               (EPICSTHREADFUNC) drvPmacTask, (void *) pDrv );
+        static epicsThreadId motorThread = NULL;
+
+        if (motorThread == NULL)
+        {
+            motorThread = epicsThreadCreate( "drvPmacThread", 
+                                             epicsThreadPriorityLow,
+                                             epicsThreadGetStackSize(epicsThreadStackMedium),
+                                             (EPICSTHREADFUNC) drvPmacTask, (void *) pDrv );
+        }
+        pDrv->motorThread = motorThread;
+
         if (pDrv->motorThread == NULL)
         {
             asynPrint(pDrv->pasynUser, ASYN_TRACE_ERROR, "Cannot start motor polling thread\n" );
