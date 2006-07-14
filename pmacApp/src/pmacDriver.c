@@ -29,7 +29,7 @@
 #include <pmacVme.h>
 #include <pmacDriver.h>
 
-#ifdef vxWorks
+#if 0 /* vxWorks */
 #include <cacheLib.h>
 
 /** Makes writing to a register on the VME board a bit simpler - or at least
@@ -371,7 +371,7 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
   {
     for( i=0; i<length; i++ )
     {
-        char c = getReg((char) *dpramAsciiIn);
+        char c = getReg(*dpramAsciiIn);
         pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &c, 1);
         if( !pushOK )
             logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
@@ -385,15 +385,20 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
   {
     /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
     char response[]={'E','R','R','0','0','0',PMAC_TERM_BELL,PMAC_TERM_ACK};
-    response[3] = ((control >> 8 ) & 0xF ) + '0';
-    response[4] = ((control >> 4 ) & 0xF ) + '0';
-    response[5] = ((control >> 0 ) & 0xF ) + '0';
+
+    /* Convert the BCD encoded error number to its ASCII equivalent */
+    response[3] += ((control ) & 0xF );
+    response[4] += ((terminator >> 4 ) & 0xF );
+    response[5] += ((terminator ) & 0xF );
+
+    /* Push the data the onto the ring buffer */
     pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response));
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
 
-  setReg( *((epicsUInt16 *) dpramAsciiInControl), (epicsUInt16) 0 );
+  setReg( *((volatile epicsUInt16 *) dpramAsciiInControl), (epicsUInt16) 0 );
+  control = getReg( *((volatile epicsUInt16 *) dpramAsciiInControl));
   epicsEventSignal( pPmacAscDev->ioReadmeId );
   return;
 }
