@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes );
+int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes, int flags );
 
 #ifdef __cplusplus
 }

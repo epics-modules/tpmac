@@ -8,18 +8,20 @@ static const iocshArg pmacAsynMotorCreateArg0 = { "port",          iocshArgStrin
 static const iocshArg pmacAsynMotorCreateArg1 = { "address",       iocshArgInt};
 static const iocshArg pmacAsynMotorCreateArg2 = { "card",          iocshArgInt};
 static const iocshArg pmacAsynMotorCreateArg3 = { "Number of Axes",iocshArgInt};
+static const iocshArg pmacAsynMotorCreateArg4 = { "flags",         iocshArgInt};
 
 static const iocshArg *const pmacAsynMotorCreateArgs[] = {
   &pmacAsynMotorCreateArg0,
   &pmacAsynMotorCreateArg1,
   &pmacAsynMotorCreateArg2,
   &pmacAsynMotorCreateArg3,
+  &pmacAsynMotorCreateArg4
 };
-static const iocshFuncDef pmacAsynMotorCreateDef ={"pmacAsynMotorCreate",4,pmacAsynMotorCreateArgs};
+static const iocshFuncDef pmacAsynMotorCreateDef ={"pmacAsynMotorCreate",5,pmacAsynMotorCreateArgs};
 
 static void pmacAsynMotorCreateCallFunc(const iocshArgBuf *args)
 {
-    pmacAsynMotorCreate( args[0].sval, args[1].ival, args[2].ival, args[3].ival );
+    pmacAsynMotorCreate( args[0].sval, args[1].ival, args[2].ival, args[3].ival, args[4].ival );
 }
 
 void pmacAsynMotorRegister(void)
