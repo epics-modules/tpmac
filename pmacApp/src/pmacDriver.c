@@ -81,6 +81,17 @@ IMPORT int       pmacVmeConfigLock;
 IMPORT PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
 
 
+/* TRANSACTION_LOCK introduces a binary semaphore that is taken by the DPRAM
+   write routine and given by the read ISR when it sees the end of transaction.
+   terminator (ACK). This ensures that there is only one transaction going to
+   one PMAC at a time. This makes communication more reliable if there is more
+   than one PMAC in the VME chassis */
+
+#define TRANSACTION_LOCK
+#ifdef TRANSACTION_LOCK
+static epicsEventId transactionLock = NULL;
+#endif
+
 /* This routine installs the DPRAM ASCII driver and the Mailbox ASCII driver.
    It adds a DRPAM ASCII device and a Mailbox ASCII device for every PMAC
    card that has been configured.
@@ -119,6 +130,9 @@ STATUS pmacDrv(void)
       pmacAscDev[i].cancelFlag = FALSE;
     }
 
+#ifdef TRANSACTION_LOCK
+    if (transactionLock == NULL) transactionLock = epicsEventMustCreate (epicsEventFull);
+#endif
     /* printf("pmacDrv: Installing ASC: pmacVmeNumCtlrs = %d\n", pmacVmeNumCtlrs); */
 
     pmacDrvNumAsc = iosDrvInstall( 0, 0, pmacOpen,  pmacClose, pmacRead,
@@ -265,6 +279,10 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   numWritten           = 0;
 
 
+#ifdef TRANSACTION_LOCK
+  epicsEventWaitWithTimeout( transactionLock, 0.05 );
+#endif
+
   for( i=0; (i < nBytes) && (i < PMAC_BASE_ASC_REGS_OUT); i++ )
   {
       if ( buffer[i] == '\r' )
@@ -400,6 +418,11 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
   setReg( *((volatile epicsUInt16 *) dpramAsciiInControl), (epicsUInt16) 0 );
   control = getReg( *((volatile epicsUInt16 *) dpramAsciiInControl));
   epicsEventSignal( pPmacAscDev->ioReadmeId );
+
+#ifdef TRANSACTION_LOCK
+  if ( terminator == PMAC_TERM_ACK ) epicsEventSignal( transactionLock );
+#endif
+
   return;
 }
 

@@ -242,7 +242,7 @@ long pmacVmeConfig
 	}
 	
 	/*Oleg: selecting lines A19-A14 for the DPRAM */
-	pPmacCtlr->pBase->mailbox.MB[144].data = 0x3F & (pPmacCtlr->vmebusBase>>14);
+	/* pPmacCtlr->pBase->mailbox.MB[144].data = 0x3F & (pPmacCtlr->vmebusBase>>14); */
 		
 #if 0
   ajf: This line causes an MVME-5500 to hang.

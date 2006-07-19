@@ -91,7 +91,6 @@ typedef struct drvPmac
     asynUser * pasynUser;
     int card;
     int nAxes;
-    int flags;
     AXIS_HDL axis;
     epicsThreadId motorThread;
     epicsTimeStamp now;
@@ -264,19 +263,13 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
     const double timeout=6.0;
     size_t nwrite, nread;
     int eomReason;
-    static epicsMutexId mutex = NULL;
     asynUser * pasynUser = (logGlobal? pAxis->pDrv->pasynUser: pAxis->pasynUser);
-    int lock = (pAxis->pDrv->flags & 0x1);
 
-    if (lock && (mutex == NULL)) mutex = epicsMutexMustCreate( );
-
-    if (lock) epicsMutexMustLock( mutex );
     status = pasynOctetSyncIO->writeRead( pasynUser,
                                           command, strlen(command),
                                           response, reply_buff_size,
                                           timeout,
                                           &nwrite, &nread, &eomReason );
-    if (lock) epicsMutexUnlock( mutex );
 
     if (status)
     {
@@ -597,7 +590,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
     }
 }
 
-int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes, int flags )
+int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
 {
     int i;
     int status = MOTOR_AXIS_OK;
@@ -629,7 +622,6 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes, int flags )
             {
                 pDrv->nAxes = nAxes;
                 pDrv->card = card;
-                pDrv->flags = flags;
                 status = motorAxisAsynConnect( port, addr, &(pDrv->pasynUser), "\006", "\r" );
 
                 for (i=0; i<nAxes && status == MOTOR_AXIS_OK; i++ )
