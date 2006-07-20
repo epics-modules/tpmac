@@ -70,11 +70,10 @@ static int  pmacClose(          PMAC_DEV *              );
 static int  pmacRead(           PMAC_DEV *, char *, int );
 static int  pmacIoctl(          PMAC_DEV *, int, int *  );
 static int  pmacWriteAsc(       PMAC_DEV *, char *, int );
-static void pmacAscInISR(       PMAC_DEV *              );
 static int  pmacWriteMbx(       PMAC_DEV *, char *, int );
+static void pmacAscReadMeISR(   PMAC_DEV *              );
 static void pmacMbxReadMeISR(   PMAC_DEV *              );
 static void pmacMbxReceivedISR( PMAC_DEV *              );
-static char pmacMbxOut(         int, char *             );
 
 PMAC_DEV pmacAscDev[PMAC_MAX_CTLRS];
 PMAC_DEV pmacMbxDev[PMAC_MAX_CTLRS];
@@ -156,7 +155,7 @@ STATUS pmacDrv(void)
         pmacAscDev[i].ioReceivedId = 0;
 
         status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector + 1,
-                                      (void *)pmacAscInISR, (void *) &(pmacAscDev[i]) );
+                                      (void *)pmacAscReadMeISR, (void *) &(pmacAscDev[i]) );
         if(!RTN_SUCCESS(status))
           cantProceed("pmacDrv: Failed to connect to DPRAM ASCII readme interrupt");
       }
@@ -322,6 +321,8 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   i                    = 0;
   numWritten           = 0;
 
+  printf("pmacWriteAsc: nBytes = %d\n", nBytes);
+
 #ifdef TRANSACTION_LOCK
   epicsEventWaitWithTimeout( transactionLock, 0.05 );
 #endif
@@ -358,13 +359,13 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
 }
 
 
-/* pmacAscInISR - Interrupt Service Routine which is called when
-                  PMAC issues an interrupt to tell us the DPRAM ASCII buffer
-                  can be read.
-                  Note: There is 1 interrupt per line of the response and
-                  1 interrupt for the ACK at the end. */
+/* pmacAscReadMeISR - Interrupt Service Routine which is called when
+                      PMAC issues an interrupt to tell us the DPRAM ASCII buffer
+                      can be read.
+                      Note: There is 1 interrupt per line of the response and
+                      1 interrupt for the ACK at the end. */
 
-static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
+static void pmacAscReadMeISR( PMAC_DEV *pPmacAscDev )
 {
   int         i;
   int         ctlr;
@@ -424,6 +425,59 @@ static void pmacAscInISR( PMAC_DEV *pPmacAscDev )
 }
 
 
+static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
+{
+  int       i;
+  int       j;
+  static int k = 0;
+  int       numWritten;
+  int       ctlr;
+  char      firstChar;
+  PMAC_CTLR *pPmacCtlr;
+
+  j          = 0;
+  numWritten = 0;
+  ctlr       = pPmacDev->ctlr;
+  pPmacCtlr  = &pmacVmeCtlr[ctlr];
+
+#if 0
+  if( k == 0 )
+    printf("pmacWriteMbx: nBytes = %d\n", nBytes);
+  k++;
+  k %= 10000;
+#endif
+
+  while( numWritten < nBytes )
+  {
+    firstChar = buffer[j];
+    for( i = 1; i < PMAC_BASE_MBX_REGS_OUT; i++ )
+    {
+      printf("pmacWriteMbx: 0x%x (%d)\n", buffer[j+i], i);
+      pPmacCtlr->pBase->mailbox.MB[i+1].data = buffer[j+i];
+      numWritten++;
+      if( buffer[j+i] == PMAC_TERM_CR )
+        break;
+    }
+
+    printf("pmacWriteMbx: 0x%x (0)\n", firstChar);
+    pPmacCtlr->pBase->mailbox.MB[0].data = firstChar;
+    numWritten++;
+
+    epicsEventWait( pPmacDev->ioReceivedId );
+    j += PMAC_BASE_MBX_REGS_OUT;
+  }
+
+  /* Writing to mailbox register number 1, causes PMAC to respond */
+  /* with an interrupt when it has data for us to read            */
+
+  pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+  return( numWritten );
+}
+
+
+/* We get this interrupt when PMAC has filled the Mailbox registers */
+/* and we can then read the data                                    */
+
 static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
 {
   int       i;
@@ -434,7 +488,7 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
   char	    c;
   PMAC_CTLR *pPmacCtlr;
 
-  logMsg("Inside pmacMbxReadMeISR...\n", 0, 0, 0, 0, 0, 0);
+  /* logMsg("Inside pmacMbxReadMeISR...\n", 0, 0, 0, 0, 0, 0); */
 
   ctlr      = pPmacDev->ctlr;
   pPmacCtlr = &pmacVmeCtlr[ctlr];
@@ -446,21 +500,23 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+/*
     else
     {
       if( (c != PMAC_TERM_CR) || (c != PMAC_TERM_ACK) || (c != PMAC_TERM_BELL) )
         logMsg("pmacReadMeISR: Adding \"%c\" to the ring buffer\n", c, 0, 0, 0, 0, 0);
     }
+*/
 
     if( c == PMAC_TERM_CR )
     {
-      logMsg("pmacReadMeISR: Adding CR to the ring buffer\n", 0, 0, 0, 0, 0, 0);
+      /* logMsg("pmacReadMeISR: Adding CR to the ring buffer\n", 0, 0, 0, 0, 0, 0); */
       sendMore = 1;
       break;
     }
     else if( c == PMAC_TERM_ACK )
     {
-      logMsg("pmacReadMeISR: Adding ACK to the ring buffer\n", 0, 0, 0, 0, 0, 0);
+      /* logMsg("pmacReadMeISR: Adding ACK to the ring buffer\n", 0, 0, 0, 0, 0, 0); */
       sendMore = 0;
       break;
     }
@@ -486,71 +542,12 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
 }
 
 
-static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
-{
-  int       i;
-  int       numWritten;
-  int       ctlr;
-  int       length;
-  PMAC_CTLR *pPmacCtlr;
-
-  i          = 0;
-  numWritten = 0;
-  ctlr       = pPmacDev->ctlr;
-  pPmacCtlr  = &pmacVmeCtlr[ctlr];
-
-  length = strlen( buffer );
-  if( nBytes > length )
-    nBytes = length;
-
-  while( numWritten < nBytes )
-  {
-    numWritten += pmacMbxOut( ctlr, &buffer[i] );
-    epicsEventWait( pPmacDev->ioReceivedId );
-    i += PMAC_BASE_MBX_REGS_OUT;
-  }
-
-  /* Writing to mailbox register number 1, causes PMAC to respond */
-  /* with an interrupt when it has data for us to read            */
-
-  pPmacCtlr->pBase->mailbox.MB[1].data = 0;
-  return( numWritten );
-}
-
-
-static char pmacMbxOut( int ctlr, char *writebuf )
-{
-  int       i;
-  int       numWritten;
-  char      firstChar;
-  PMAC_CTLR *pPmacCtlr;
-
-  numWritten = 0;
-  firstChar  = writebuf[0];
-  pPmacCtlr  = &pmacVmeCtlr[ctlr];
-
-  for( i = 1; i < PMAC_BASE_MBX_REGS_OUT; i++ )
-  {
-    printf("pmacMbxOut: 0x%x (%d)\n", writebuf[i], i);
-    pPmacCtlr->pBase->mailbox.MB[i+1].data = writebuf[i];
-    numWritten++;
-    if( writebuf[i] == PMAC_TERM_CR )
-    {
-      printf("Breaking out of write loop on CR\n");
-      break;
-    }
-  }
-
-  pPmacCtlr->pBase->mailbox.MB[0].data = firstChar;
-  numWritten++;
-
-  return( numWritten );
-}
-
+/* We get this interrupt when PMAC has successfully received the data */
+/* we have placed in the Mailbox registers                            */
 
 static void pmacMbxReceivedISR( PMAC_DEV *pPmacDev )
 {
-  logMsg("Inside pmacMbxReceivedISR...\n", 0, 0, 0, 0, 0, 0);
+  /* logMsg("Inside pmacMbxReceivedISR...\n", 0, 0, 0, 0, 0, 0); */
 
   epicsEventSignal( pPmacDev->ioReceivedId );
   return;
