@@ -429,7 +429,6 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 {
   int       i;
   int       j;
-  static int k = 0;
   int       numWritten;
   int       ctlr;
   char      firstChar;
@@ -439,13 +438,6 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
   numWritten = 0;
   ctlr       = pPmacDev->ctlr;
   pPmacCtlr  = &pmacVmeCtlr[ctlr];
-
-#if 0
-  if( k == 0 )
-    printf("pmacWriteMbx: nBytes = %d\n", nBytes);
-  k++;
-  k %= 10000;
-#endif
 
   while( numWritten < nBytes )
   {
