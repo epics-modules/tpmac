@@ -44,8 +44,9 @@
 #define setReg(location, value)   (location) = (value)
 #endif
 
-#define PMAC_BASE_MBX_REGS_IN  16
-#define PMAC_BASE_MBX_REGS_OUT 15
+#define PMAC_DRIVER_DEBUG        0
+#define PMAC_BASE_MBX_REGS_IN   16
+#define PMAC_BASE_MBX_REGS_OUT  15
 #define PMAC_BASE_ASC_REGS_OUT 160
 
 int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
@@ -253,7 +254,6 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 
   if( numRead == 0 )  /* The buffer was empty */
   {
-    printf("pmacRead: The buffer is empty, wating for ioReadmeId\n");
     epicsEventWait( pPmacDev->ioReadmeId );
     if( pPmacDev->cancelFlag )
       pPmacDev->cancelFlag = FALSE;
@@ -320,8 +320,6 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   dpramAsciiOutControl = pmacRamAddr(ctlr,0x0E9C);
   i                    = 0;
   numWritten           = 0;
-
-  printf("pmacWriteAsc: nBytes = %d\n", nBytes);
 
 #ifdef TRANSACTION_LOCK
   epicsEventWaitWithTimeout( transactionLock, 0.05 );
@@ -444,14 +442,16 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
     firstChar = buffer[j];
     for( i = 1; i < PMAC_BASE_MBX_REGS_OUT; i++ )
     {
-      printf("pmacWriteMbx: 0x%x (%d)\n", buffer[j+i], i);
+      if( PMAC_DRIVER_DEBUG )
+        printf("pmacWriteMbx: 0x%x (%d)\n", buffer[j+i], i);
       pPmacCtlr->pBase->mailbox.MB[i+1].data = buffer[j+i];
       numWritten++;
       if( buffer[j+i] == PMAC_TERM_CR )
         break;
     }
 
-    printf("pmacWriteMbx: 0x%x (0)\n", firstChar);
+    if( PMAC_DRIVER_DEBUG )
+      printf("pmacWriteMbx: 0x%x (0)\n", firstChar);
     pPmacCtlr->pBase->mailbox.MB[0].data = firstChar;
     numWritten++;
 
@@ -492,29 +492,19 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
-/*
-    else
-    {
-      if( (c != PMAC_TERM_CR) || (c != PMAC_TERM_ACK) || (c != PMAC_TERM_BELL) )
-        logMsg("pmacReadMeISR: Adding \"%c\" to the ring buffer\n", c, 0, 0, 0, 0, 0);
-    }
-*/
 
     if( c == PMAC_TERM_CR )
     {
-      /* logMsg("pmacReadMeISR: Adding CR to the ring buffer\n", 0, 0, 0, 0, 0, 0); */
       sendMore = 1;
       break;
     }
     else if( c == PMAC_TERM_ACK )
     {
-      /* logMsg("pmacReadMeISR: Adding ACK to the ring buffer\n", 0, 0, 0, 0, 0, 0); */
       sendMore = 0;
       break;
     }
     else if( c == PMAC_TERM_BELL )
     {
-      logMsg("pmacReadMeISR: Adding BELL to the ring buffer\n", 0, 0, 0, 0, 0, 0);
       sendMore = 0;
       for( j = 0; j < PMAC_BASE_MBX_REGS_IN; j++ )
       {
