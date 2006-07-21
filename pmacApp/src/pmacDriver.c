@@ -88,7 +88,7 @@ IMPORT PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
    one PMAC at a time. This makes communication more reliable if there is more
    than one PMAC in the VME chassis */
 
-#define TRANSACTION_LOCK
+/* #define TRANSACTION_LOCK */
 #ifdef TRANSACTION_LOCK
 static epicsEventId transactionLock = NULL;
 #endif
@@ -254,11 +254,34 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 
   if( numRead == 0 )  /* The buffer was empty */
   {
-    epicsEventWait( pPmacDev->ioReadmeId );
-    if( pPmacDev->cancelFlag )
-      pPmacDev->cancelFlag = FALSE;
-    else
-      numRead = epicsRingBytesGet(pPmacDev->replyQ, buffer, nBytes);
+      epicsEventWaitStatus status;
+
+      /* Check the control register to see if data is available, but PMAC has forgot to interrupt us */
+      /* if ( (getReg( *((volatile epicsUInt16 *)pmacRamAddr( pPmacDev->ctlr, 0x0F40)))) != 0 ) */
+/*       { */
+             /* If so, call the ISR manually */
+/*           logMsg( "Data available, so manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 ); */
+/*           pmacAscReadMeISR( pPmacDev ); */
+/*       } */
+
+      /* Check to see if the semaphore was given */
+      status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.05 );
+
+      if (status == epicsEventWaitTimeout)
+      {
+          logMsg( "Manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 );
+          pmacAscReadMeISR( pPmacDev );
+          epicsEventWait( pPmacDev->ioReadmeId );
+      }
+
+      if( pPmacDev->cancelFlag )
+      {
+        pPmacDev->cancelFlag = FALSE;
+      }
+      else
+      {
+        numRead    = epicsRingBytesGet(pPmacDev->replyQ, buffer, nBytes);
+      }
   }
 
   return( numRead );
@@ -381,19 +404,22 @@ static void pmacAscReadMeISR( PMAC_DEV *pPmacAscDev )
   terminator          = getReg( *(dpramAsciiInControl) );
   control             = getReg( *(dpramAsciiInControl+1) );
 
-  if( control == 0 )
+  if (control == 0 && terminator == 0)
+  {
+      logMsg( "No response from PMAC in pmacAscInISR\n", 0,0,0,0,0,0 );
+      return;
+  }
+  else if (control == 0 )
   {
     for( i=0; i<length; i++ )
     {
-      char c = getReg(*dpramAsciiIn);
-      pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &c, 1);
-      if( !pushOK )
-        logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
-      dpramAsciiIn++;
+        char c = getReg(*dpramAsciiIn);
+        pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &c, 1);
+        if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0,0,0,0,0,0);
+        dpramAsciiIn++;
     }
     pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &terminator, 1);
-    if( !pushOK )
-      logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+    if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0,0,0,0,0,0);
   }
   else
   {
