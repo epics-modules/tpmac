@@ -62,6 +62,7 @@ typedef struct
     epicsRingBytesId replyQ;
     epicsEventId     ioReadmeId;
     epicsEventId     ioReceivedId;
+    void             (*readMeISR)( void * );
 } PMAC_DEV;
 
 /* Function prototypes */
@@ -154,6 +155,7 @@ STATUS pmacDrv(void)
 
         pmacAscDev[i].ioReadmeId   = epicsEventMustCreate( epicsEventEmpty ); 
         pmacAscDev[i].ioReceivedId = 0;
+        pmacAscDev[i].readMeISR    = (void *)pmacAscReadMeISR;
 
         status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector + 1,
                                       (void *)pmacAscReadMeISR, (void *) &(pmacAscDev[i]) );
@@ -200,6 +202,7 @@ STATUS pmacDrv(void)
 
         pmacMbxDev[i].ioReadmeId   = epicsEventMustCreate( epicsEventEmpty ); 
         pmacMbxDev[i].ioReceivedId = epicsEventMustCreate( epicsEventEmpty );
+        pmacMbxDev[i].readMeISR    = (void *)pmacMbxReadMeISR;
 
         status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector,
                                       (void *)pmacMbxReadMeISR, (void *) &(pmacMbxDev[i]) );
@@ -256,21 +259,13 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
   {
       epicsEventWaitStatus status;
 
-      /* Check the control register to see if data is available, but PMAC has forgot to interrupt us */
-      /* if ( (getReg( *((volatile epicsUInt16 *)pmacRamAddr( pPmacDev->ctlr, 0x0F40)))) != 0 ) */
-/*       { */
-             /* If so, call the ISR manually */
-/*           logMsg( "Data available, so manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 ); */
-/*           pmacAscReadMeISR( pPmacDev ); */
-/*       } */
-
       /* Check to see if the semaphore was given */
       status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.05 );
 
       if (status == epicsEventWaitTimeout)
       {
           logMsg( "Manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 );
-          pmacAscReadMeISR( pPmacDev );
+          pPmacDev->readMeISR( pPmacDev );
           epicsEventWait( pPmacDev->ioReadmeId );
       }
 
@@ -499,7 +494,6 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
 {
   int       i;
-  int       j;
   int       ctlr;
   int       pushOK;
   int       sendMore;
@@ -519,32 +513,11 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
 
-    if( c == PMAC_TERM_CR )
-    {
-      sendMore = 1;
+    if( (c == PMAC_TERM_CR) || (c == PMAC_TERM_ACK) || (c == PMAC_TERM_BELL) )
       break;
-    }
-    else if( c == PMAC_TERM_ACK )
-    {
-      sendMore = 0;
-      break;
-    }
-    else if( c == PMAC_TERM_BELL )
-    {
-      sendMore = 0;
-      for( j = 0; j < PMAC_BASE_MBX_REGS_IN; j++ )
-      {
-        c = pPmacCtlr->pBase->mailbox.MB[j].data;
-        logMsg("%c  \n", c, 0, 0, 0, 0, 0);
-      }
-      break;
-    }
   }
-
-  if( sendMore )
-    pPmacCtlr->pBase->mailbox.MB[1].data = 0;
-  else
-    epicsEventSignal( pPmacDev->ioReadmeId );
+  pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+  epicsEventSignal( pPmacDev->ioReadmeId );
 
   return;
 }
