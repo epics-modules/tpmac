@@ -89,7 +89,13 @@ typedef struct  /* PMAC_RAM_IO */
 } PMAC_RAM_IO;
 
 /* ---- Sergey ----- */
-long pmacDrvConfig (int	cardNumber, int	scanMtrRate, int scanBkgRate, int scanVarRate, int disableMbx);
+long pmacDrvConfig (int	cardNumber, int	scanMtrRate, int scanBkgRate, int scanVarRate,
+#ifdef PMAC_ASYN
+	char *		asynMbxPort
+#else
+	int		disableMbx
+#endif
+);
 PMAC_LOCAL long drvPmac_report (int level);
 PMAC_LOCAL long drvPmac_init (void);
 PMAC_LOCAL long drvPmacStartup (void);

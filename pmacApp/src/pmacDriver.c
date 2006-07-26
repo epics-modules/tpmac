@@ -589,3 +589,75 @@ long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long add
 	
   return(0);
 }
+
+
+#define PMAC_ASYN
+#ifdef PMAC_ASYN
+#include "asynDriver.h"
+#include "drvAsynSerialPort.h"
+#include <epicsExport.h>
+#include <iocsh.h>
+
+int pmacAsynConfig( char * mbx_prefix, char * asc_prefix )
+{
+    int i;
+    char devName[32];
+    char asynName[32];
+    static int installedAsynAsc = 0;
+    static int installedAsynMbx = 0;
+
+    pmacDrv();
+
+    if( !installedAsynMbx && mbx_prefix )
+    {
+        /* Add a DPRAM ASCII device for every configured card */
+        for( i=0; i < PMAC_MAX_CTLRS; i++ )
+        {
+            if( pmacVmeCtlr[i].configured )
+            {
+                sprintf( devName,  "/dev/pmac/%d/mbx", pmacVmeCtlr[i].ctlr );
+                sprintf( asynName, "%s%d", mbx_prefix, pmacVmeCtlr[i].ctlr );
+                drvAsynSerialPortConfigure( asynName, devName, 0, 0, 0 );
+            }
+        }
+        installedAsynMbx = 1;
+    }
+
+    if( !installedAsynAsc && asc_prefix )
+    {
+        /* Add a DPRAM ASCII device for every configured card */
+        for( i=0; i < PMAC_MAX_CTLRS; i++ )
+        {
+            if( pmacVmeCtlr[i].configured )
+            {
+                sprintf( devName,  "/dev/pmac/%d/asc", pmacVmeCtlr[i].ctlr );
+                sprintf( asynName, "%s%d", asc_prefix, pmacVmeCtlr[i].ctlr );
+                drvAsynSerialPortConfigure( asynName, devName, 0, 0, 0 );
+            }
+        }
+        installedAsynAsc = 1;
+    }
+
+    return 0;
+}
+
+static const iocshArg pmacAsynConfigArg0 = {"PMAC Mailbox Asyn port prefix",     iocshArgString};
+static const iocshArg pmacAsynConfigArg1 = {"PMAC DPRAM ASCII Asyn port prefix", iocshArgString};
+static const iocshArg * const pmacAsynConfigArgs[2] = {&pmacAsynConfigArg0, &pmacAsynConfigArg1};
+ 
+static const iocshFuncDef pmacAsynConfigDef = {"pmacAsynConfig", 2, pmacAsynConfigArgs};
+
+static void pmacAsynConfigCallFunc(const iocshArgBuf *args)
+{
+    pmacAsynConfig(args[0].sval, args[1].sval);
+}
+
+
+static void pmacAsynConfigRegister(void)
+{
+    iocshRegister(&pmacAsynConfigDef,  pmacAsynConfigCallFunc);
+}
+
+epicsExportRegistrar(pmacAsynConfigRegister);
+
+#endif

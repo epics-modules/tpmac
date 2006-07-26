@@ -102,10 +102,17 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<taskwd.h>
 #include	<callback.h>
 
-#include <drvPmac.h>
-#include <pmacVme.h>
-#include <pmacDriver.h>
+#define PMAC_ASYN
+#ifdef PMAC_ASYN
+#include "asynDriver.h"
+#include "asynOctetSyncIO.h"
+#endif
+
+/* local includes */
+
+#include	<drvPmac.h>
 #include "epicsExport.h"
+
 
 /*
  * DEFINES
@@ -263,6 +270,9 @@ typedef struct  /* PMAC_CARD */
 	PMAC_RAM_IO	timCS[10];
 	PMAC_RAM_IO	timVB[10];
 
+#ifdef PMAC_ASYN
+        asynUser *      pasynUser;
+#endif
 } PMAC_CARD;
 
 /*
@@ -336,7 +346,11 @@ long pmacDrvConfig
 	int		scanMtrRate,
 	int		scanBkgRate,
 	int		scanVarRate,
+#ifdef PMAC_ASYN
+	char *		asynMbxPort
+#else
 	int		disableMbx
+#endif
 )
 {
 	char *		MyName = "pmacDrvConfig";
@@ -416,6 +430,41 @@ long pmacDrvConfig
 	
 	/* clear max C.S. number for C.S. data reporting buffer */
 	pmacRamPut16 ( pmacRamAddr(cardNumber,0x674), 0 );
+
+#ifdef PMAC_ASYN
+        /* Setup connection to MBX port */
+        pCard->enabledMbx = FALSE;
+        if ( asynMbxPort != NULL )
+        {
+            asynStatus status;
+            const char ack = PMAC_TERM_ACK;
+ 
+            status = pasynOctetSyncIO->connect( asynMbxPort, 0, &(pCard->pasynUser), NULL);
+            if (status) {
+                printf( "pmacDrvConfig: unable to connect to asynPort %s\n", asynMbxPort );
+                return ERROR;
+            }
+
+            status = pasynOctetSyncIO->setInputEos( pCard->pasynUser, &ack, 1 );
+            if (status) {
+                printf( "pmacDrvConfig: unable to set input EOS on %s: %s\n", 
+                        asynMbxPort, pCard->pasynUser->errorMessage);
+                pasynOctetSyncIO->disconnect(pCard->pasynUser);
+                return ERROR;
+            }
+
+            status = pasynOctetSyncIO->setOutputEos( pCard->pasynUser, "\r", 1 );
+            if (status) {
+                printf( "pmacDrvConfig: unable to set output EOS on %s: %s\n", 
+                        asynMbxPort, pCard->pasynUser->errorMessage);
+                pasynOctetSyncIO->disconnect(pCard->pasynUser);
+                return ERROR;
+            }
+
+            pCard->enabledMbx = TRUE;
+        }
+#endif
+
 	return(0);
 }
 
@@ -482,7 +531,7 @@ PMAC_LOCAL long drvPmac_init (void)
 	status = pmacVmeInit ();
 
         /* ajf: Addition of the Open/Close/Read/Write/Ioctl interface */
-        status = pmacDrv();
+/*         status = pmacDrv(); */
 
 	return (status);
 }
@@ -1520,6 +1569,34 @@ char drvPmacMbxWriteRead (
     /* char * MyName = "drvPmacMbxWriteRead"; */
     char	terminator;
 
+#ifdef PMAC_ASYN
+    asynStatus status;
+    const double timeout=1.0;
+    size_t nwrite, nread;
+    int eomReason;
+    asynUser * pasynUser = drvPmacCard[card].pasynUser;
+    char * pEnd;
+
+    status = pasynOctetSyncIO->writeRead( pasynUser,
+                                          writebuf, strlen(writebuf),
+                                          readbuf, PMAC_MBX_IN_BUFLEN,
+                                          timeout,
+                                          &nwrite, &nread, &eomReason );
+
+    pEnd = &readbuf[strlen(readbuf)-1];
+    if ( *pEnd != PMAC_TERM_CR || status )
+    {
+        if (status) asynPrint( pasynUser,
+                               ASYN_TRACE_ERROR,
+                               "Read/write error to PMAC card %d, command %s. Status=%d, Error=%s\n",
+                               card, writebuf, status, pasynUser->errorMessage);
+        strcpy( errmsg, readbuf );
+        *readbuf = 0;
+        terminator = PMAC_TERM_BELL;
+    }
+    else terminator = PMAC_TERM_ACK;
+        
+#else
     char buffer[PMAC_MBX_IN_BUFLEN];
 
     pmacMbxLock (card);
@@ -1531,6 +1608,7 @@ char drvPmacMbxWriteRead (
     }
 
     pmacMbxUnlock (card);
+#endif
 
     return (terminator);
 }
