@@ -1,0 +1,116 @@
+              RELEASE NOTES for asyn version of tpmac module.
+
+                               Nick Rees
+                             26 July 2006
+
+1. Backwards incompatible changes since the last release.
+
+This release chould be completely backwards compatible with the old
+release with the exception of the VxWorks startup scripts. These need an
+extra line to create asyn ports that are used for ASCII communication
+and a change to pmacDrvConfig to say which asyn port the ASCII
+communications should use.
+
+For example, previously you may have configured the pmac with the lines:
+
+pmacVmeConfig (0, 0x7FA000, 0x700000, 0xa1, 6)
+pmacDrvConfig (0, 0, 0, 0, 0)
+
+Now, to get the same effect, you must use the lines:
+
+pmacVmeConfig (0, 0x7FA000, 0x700000, 0xa1, 6)
+pmacAsynConfig( "PMAC_MBX_PORT_", 0 )
+pmacDrvConfig (0, 0, 0, 0, "PMAC_MBX_PORT_0" )
+
+The parameters for pmacAsynConfig are two character strings which are
+the prefix of asyn ports to be set up for each configured PMAC card's
+mailbox and DPRAM ascii buffer respectively. If the string is not NULL,
+the routine will create an Asyn port and append the card number to the
+string prefix. In the above example, since we configured only one card,
+and gave it number 0, pmacAsynConfig will create a single asyn port
+PMAC_MBX_PORT_0. It will not create any asyn ports for the DPRAM ASCII
+buffer since the second parameter is NULL.
+
+The final parameter for pmacDrvConfig has also changed. Formerly, it was
+a disableMbx flag. Now, it is the asyn port to be used for ASCII
+communication. It can be an Mailbox, DPRAM ASCII, serial port or IP port
+(However, asyn support for the PMAC IP interface isn't implemented yet).
+
+
+2. New features.
+
+Since the ASCII communications at the lowest level use an asynOctet
+port, then you can use other asynOctet upper level software. Examples of
+this are:
+
+a. asynRecord
+
+You can connect any asyn record on your IOC to any available asynOctet
+port connected to your PMAC and use this as a simple command line interface.
+
+b. Motor Record
+
+The directory pmacAsynMotorSrc contains a PMAC motor record driver in
+the new asynMotor framework. To configure motor support for all motors
+on a card, add the following lines to the configuration lines given
+above:
+
+pmacAsynMotorCreate("PMAC_MAX_PORT_0", 0, 0, 32 );
+drvAsynMotorConfigure("pmac0", "pmacAsynMotor", 0, 33)
+
+The first of these configures the pmacAsynMotor driver and the second
+configures the generic drvAsynMotor layer. Note that this requires >
+release 5.9 of motor support and >= release 4.6 of asyn support.
+
+The parameters for the first routine are:
+ - port (char *) Asyn port for PMAC ASCII communicatons.
+ - address (int) Asyn port address. Always 0.
+ - card (int)    Card number to use. Is not necessarily the same card #
+                 used in the other initialisation routines, but probably
+                 should be.
+ - naxes (int)   Number of axes to configure. 1 based.
+
+The parameters for the second routine are:
+ - port (char *)   drvAsynMotor asyn port to be created.
+ - drvSup (char *) Driver support entry table name for driver. For PMAC
+                   this is pmacAsynMotor.
+ - card (int)      Card number specified in pmacAsynMotorCreate for this
+                   axis.
+ - nAxes (int)     #axes to configure (zero based). Note that since PMAC
+                   axes are 1 based and drvAsynMotor axes are 0 based
+                   this will generate a non-fatal warning.
+
+To connect motor records to this driver, use:
+
+DTYP asynMotor and an
+OUT  @asyn($(PORT),$(AXIS))
+
+Where PORT is the asyn port and AXIS the motor axis #.
+
+c. Streams.
+
+You should be able to use streamDevice 2.0 and above to communicate
+other ascii commands to the underlying asynOctet port. However, at time
+this has been shown to exhibit a deadlock which we haven't traced down
+yet. However, this is much more flexible than the old tpmac ascii
+communication method and so we aim to fix it.
+
+
+3. Known problems/still to do
+
+a. Track down the cause of the dealock with streamDevice.
+b. Add support for driving coordinate systems through asynMotor. This
+   will probably be done as a separate asynMotor support library.
+c. Add asyn IP support for Ethernet PMAC's. (I hope CosyLab might do
+   this as an interpose interface for drvAsynIPPort. I cannot test
+   since I don't have any Ethernet PMACs).
+d. Add windows support. This should be a asyn port using the PMAC
+   windows drivers.
+e. Add Linux PCI support. There is a Linux open/close/read/write
+   driver that should fit in fairly simply. It might need an interpose
+   interface to handle terminators.
+
+Note for those implementing the asynOctet drivers they must emulate the
+syntax of the PMAC serial port. Basically the means that on write "\r"
+is used as a record terminator, and on read ACK is used for a success
+terminator and BEL for an error terminator.
