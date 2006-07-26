@@ -21,4 +21,5 @@ device(stringout,VME_IO,devPmacMbxSo,	"PMAC-VME ASCII")
 #
 # Local driver support:
 driver(drvPmac)
-
+registrar(pmacAsynConfigRegister)
+registrar(asynUploadFileRegister)
