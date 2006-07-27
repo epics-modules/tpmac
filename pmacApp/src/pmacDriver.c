@@ -260,12 +260,16 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
       epicsEventWaitStatus status;
 
       /* Check to see if the semaphore was given */
-      status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.05 );
+      status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.1 );
 
       if (status == epicsEventWaitTimeout)
       {
+          int irqLevel = pmacVmeCtlr[pPmacDev->ctlr].irqLevel;
+
           logMsg( "Manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 );
+          devDisableInterruptLevel (intVME, irqLevel);
           pPmacDev->readMeISR( pPmacDev );
+          devEnableInterruptLevel (intVME, irqLevel);
           epicsEventWait( pPmacDev->ioReadmeId );
       }
 
@@ -516,6 +520,14 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     if( (c == PMAC_TERM_CR) || (c == PMAC_TERM_ACK) || (c == PMAC_TERM_BELL) )
       break;
   }
+
+  /* Add an ACK to the BELL to make termination consistent with the DPRAM driver */
+  if (c == PMAC_TERM_BELL)
+  {
+      c = PMAC_TERM_ACK;
+      pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);      
+  }
+
   pPmacCtlr->pBase->mailbox.MB[1].data = 0;
   epicsEventSignal( pPmacDev->ioReadmeId );
 

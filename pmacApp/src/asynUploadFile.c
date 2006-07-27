@@ -73,6 +73,13 @@ int asynUploadFile( char * filename, char * asynPort, char * out_term, char * in
             pasynOctetSyncIO->disconnect( pasynUser );
             return ERROR;
         }
+
+        if ( nread != 0 )
+        {
+            readbuf[nread]=0;
+            printf( "Received non-null response writing line %d to asyn port %s: \nCommand: %s\nResponse: %s\n",
+                    linenum, asynPort, writebuf, readbuf );
+        }
     }
 
     fclose( fd );
