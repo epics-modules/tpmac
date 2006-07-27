@@ -95,18 +95,39 @@ this has been shown to exhibit a deadlock which we haven't traced down
 yet. However, this is much more flexible than the old tpmac ascii
 communication method and so we aim to fix it.
 
+d. asynUploadFile
+
+This is a generic routine to upload a file to an asyn port. For example:
+
+asynUploadFile( "data/pmacTest.pmc", "PMAC_MBX_PORT_0", "\r", "\06" )
+
+The parameters are:
+
+ - filename (char *) File to upload.
+ - asynPort (char *) asynOctet port to upload the file to.
+ - out_term (char *) Output terminator to use at the end of every line
+ - inp_term (char *) Input terminator to search for in response to every line.
+
+All responses are ignored, the terminators just being scanned for as a handshake. If the writeread routine returns an error the routine exits printing the line number and 
+
 
 3. Known problems/still to do
 
 a. Track down the cause of the dealock with streamDevice.
 b. Add support for driving coordinate systems through asynMotor. This
    will probably be done as a separate asynMotor support library.
-c. Add asyn IP support for Ethernet PMAC's. (I hope CosyLab might do
+c. Resolve the terminators for error notification. Currently,
+     - The DPRAM and MBX ASCII drivers return an error as ERRnnn<BELL><ACK>
+     - The serial line returns an error as <BELL>ERRnnn<CR>
+   We need to adopt a standard. I prefer the first since then all
+   transactions are terminated with an <ACK>, but then the serial line
+   driver needs an interpose interface to move the BELL around.
+d. Add asyn IP support for Ethernet PMAC's. (I hope CosyLab might do
    this as an interpose interface for drvAsynIPPort. I cannot test
    since I don't have any Ethernet PMACs).
-d. Add windows support. This should be a asyn port using the PMAC
+e. Add windows support. This should be a asyn port using the PMAC
    windows drivers.
-e. Add Linux PCI support. There is a Linux open/close/read/write
+f. Add Linux PCI support. There is a Linux open/close/read/write
    driver that should fit in fairly simply. It might need an interpose
    interface to handle terminators.
 
