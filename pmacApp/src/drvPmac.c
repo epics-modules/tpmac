@@ -1568,6 +1568,7 @@ char drvPmacMbxWriteRead (
 ) {
     /* char * MyName = "drvPmacMbxWriteRead"; */
     char	terminator;
+    char	tmpbuf[2048], *pt;
 
 #ifdef PMAC_ASYN
     asynStatus status;
@@ -1584,6 +1585,23 @@ char drvPmacMbxWriteRead (
                                           &nwrite, &nread, &eomReason );
 
     pEnd = &readbuf[strlen(readbuf)-1];
+ 
+/*    strcpy(tmpbuf,readbuf);
+    do {
+       pt = strchr(tmpbuf,(char)0xD);
+       if (pt) *pt = 'C';
+    } while (pt);
+    do {
+       pt = strchr(tmpbuf,(char)0x6);
+       if (pt) *pt = 'A';
+    } while (pt);
+    do {
+       pt = strchr(tmpbuf,(char)0x7);
+       if (pt) *pt = 'B';
+    } while (pt);
+    printf ("endchar=%d:  string=<%s>\n",(int)*pEnd,tmpbuf); */
+    
+    /* printf ("endchar=%d\n<%s>\n",(int)*pEnd,readbuf); */
     if ( *pEnd != PMAC_TERM_CR || status )
     {
         if (status) asynPrint( pasynUser,
@@ -1595,6 +1613,12 @@ char drvPmacMbxWriteRead (
         terminator = PMAC_TERM_BELL;
     }
     else terminator = PMAC_TERM_ACK;
+    
+    if (*pEnd == PMAC_TERM_CR || *pEnd == PMAC_TERM_ACK || *pEnd == PMAC_TERM_BELL)
+    {
+	/* terminator = *pEnd; */
+	*pEnd = NULL;
+    }
         
 #else
     char buffer[PMAC_MBX_IN_BUFLEN];

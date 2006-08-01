@@ -7,20 +7,17 @@
  *
 */
 
-/* vxWorks headers */
-#include <vxWorks.h>
+/* ANSI C headers */
 #include <stdio.h>
-#include <string.h>
-#include <ioLib.h>
-#include <iosLib.h>
-#include <logLib.h>
-#include <semLib.h>
-#include <sioLib.h>
-#include <taskLib.h>
+
+/* vxWorks headers */
+#include <iosLib.h>    /* For DEV_HDR, iosDrvCreate and iosDevAdd */
+#include <logLib.h>    /* For logMsg */
 
 /* EPICS headers */
 #include <epicsRingBytes.h>
 #include <epicsTypes.h>
+#include <epicsThread.h>
 #include <epicsEvent.h>
 #include <cantProceed.h>
 #include <devLib.h>
@@ -29,20 +26,9 @@
 #include <pmacVme.h>
 #include <pmacDriver.h>
 
-#if 0 /* vxWorks */
-#include <cacheLib.h>
-
-/** Makes writing to a register on the VME board a bit simpler - or at least
- * 	makes the code a bit more readable. */
-#define getReg(location)          (cacheInvalidate( DATA_CACHE, (char *) &(location), sizeof(location)), location )
-#define setReg(location, value)   (location) = (value); cacheFlush( DATA_CACHE, (char *) &(location), sizeof(value))
-#else
-
-/** Makes writing to a register on the VME board a bit simpler - or at least
- * 	makes the code a bit more readable. */
+/** Makes writing to a register on the VME board a bit more explicit */
 #define getReg(location)          (location)
 #define setReg(location, value)   (location) = (value)
-#endif
 
 #define PMAC_DRIVER_DEBUG        0
 #define PMAC_BASE_MBX_REGS_IN   16
@@ -89,7 +75,7 @@ IMPORT PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
    one PMAC at a time. This makes communication more reliable if there is more
    than one PMAC in the VME chassis */
 
-/* #define TRANSACTION_LOCK */
+#define TRANSACTION_LOCK
 #ifdef TRANSACTION_LOCK
 static epicsEventId transactionLock = NULL;
 #endif
@@ -248,6 +234,8 @@ static int pmacClose( PMAC_DEV *pPmacDev )
   return( OK );
 }
 
+int pmacNoInterruptCount=0;
+int pmacDriverDebug=0;
 
 static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 {
@@ -266,7 +254,12 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
       {
           int irqLevel = pmacVmeCtlr[pPmacDev->ctlr].irqLevel;
 
-          logMsg( "Manually calling ISR for PMAC card %d\n", pPmacDev->ctlr, 0,0,0,0,0 );
+	  pmacNoInterruptCount++;
+
+	  if (pmacDriverDebug)
+	    logMsg( "Manually calling ISR for PMAC card %d, vector %d\n",
+		    pPmacDev->ctlr, pmacVmeCtlr[pPmacDev->ctlr].irqVector,0,0,0,0 );
+
           devDisableInterruptLevel (intVME, irqLevel);
           pPmacDev->readMeISR( pPmacDev );
           devEnableInterruptLevel (intVME, irqLevel);
@@ -304,18 +297,6 @@ static int pmacIoctl( PMAC_DEV *pPmacDev, int request, int *arg )
     case FIOCANCEL:
       pPmacDev->cancelFlag = TRUE;
       epicsEventSignal( pPmacDev->ioReadmeId );
-      break;
-
-    case SIO_HW_OPTS_GET:
-      break;
-
-    case SIO_BAUD_GET:
-      break;
-
-    case SIO_BAUD_SET:
-      break;
-
-    case FIOBAUDRATE:
       break;
 
     default:
@@ -362,9 +343,11 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
       {
         /* Line termination just sent - ensure PMAC is ready */
         int count = 0;
+        const double delay = epicsThreadSleepQuantum();
+
         while( getReg( *dpramAsciiOutControl ) != 0x0 )
         {
-          taskDelay(1);
+          epicsThreadSleep(delay);
           count++;
           if( count > 10 )
             printf( "pmacWriteAsc: Stuck in while loop\n" );
