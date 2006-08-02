@@ -64,6 +64,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 #define __INCdrvPmacH
 
 #include <pmacVme.h>
+#include <pmacError.h>
 
 typedef struct  /* PMAC_MBX_IO */
 {

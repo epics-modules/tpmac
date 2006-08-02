@@ -25,6 +25,7 @@ OBJLIB_SRCS += devPmacRam.c
 OBJLIB_SRCS += drvPmac.c
 OBJLIB_SRCS += pmacVme.c
 OBJLIB_SRCS += pmacSerial.c
+OBJLIB_SRCS += pmacError.c
 OBJLIB_SRCS += pmacDriver.c
 OBJLIB_SRCS += asynUploadFile.c
 OBJLIB_SRCS += statusRecord.c

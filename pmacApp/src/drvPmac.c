@@ -1568,7 +1568,6 @@ char drvPmacMbxWriteRead (
 ) {
     /* char * MyName = "drvPmacMbxWriteRead"; */
     char	terminator;
-    char	tmpbuf[2048], *pt;
 
 #ifdef PMAC_ASYN
     asynStatus status;
@@ -1585,29 +1584,20 @@ char drvPmacMbxWriteRead (
                                           &nwrite, &nread, &eomReason );
 
     pEnd = &readbuf[strlen(readbuf)-1];
- 
-/*    strcpy(tmpbuf,readbuf);
-    do {
-       pt = strchr(tmpbuf,(char)0xD);
-       if (pt) *pt = 'C';
-    } while (pt);
-    do {
-       pt = strchr(tmpbuf,(char)0x6);
-       if (pt) *pt = 'A';
-    } while (pt);
-    do {
-       pt = strchr(tmpbuf,(char)0x7);
-       if (pt) *pt = 'B';
-    } while (pt);
-    printf ("endchar=%d:  string=<%s>\n",(int)*pEnd,tmpbuf); */
     
-    /* printf ("endchar=%d\n<%s>\n",(int)*pEnd,readbuf); */
     if ( *pEnd != PMAC_TERM_CR || status )
     {
-        if (status) asynPrint( pasynUser,
-                               ASYN_TRACE_ERROR,
-                               "Read/write error to PMAC card %d, command %s. Status=%d, Error=%s\n",
-                               card, writebuf, status, pasynUser->errorMessage);
+        if (status) asynPrintIO( pasynUser,
+                                 ASYN_TRACE_ERROR,
+                                 readbuf, nread,
+                                 "Asyn read/write error to PMAC card %d, command=%s. Status=%d, Error=%s, Response:\n",
+                                 card, writebuf, status, pasynUser->errorMessage);
+        else asynPrintIO( pasynUser,
+                          ASYN_TRACE_ERROR,
+                          readbuf, nread,
+                          "PMAC error on card %d, command=%s, Error=%s, Response:\n",
+                          card, writebuf, pmacError( readbuf ) );
+
         strcpy( errmsg, readbuf );
         *readbuf = 0;
         terminator = PMAC_TERM_BELL;

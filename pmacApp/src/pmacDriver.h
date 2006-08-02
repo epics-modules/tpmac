@@ -7,4 +7,9 @@
  *
 */
 
+#ifndef __INCpmacDriverH
+#define __INCpmacDriverH
+
 STATUS pmacDrv();
+
+#endif
