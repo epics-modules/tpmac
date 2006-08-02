@@ -1585,7 +1585,7 @@ char drvPmacMbxWriteRead (
 
     pEnd = &readbuf[strlen(readbuf)-1];
     
-    if ( *pEnd != PMAC_TERM_CR || status )
+    if ( status || *pEnd != PMAC_TERM_CR || readbuf[0] == PMAC_TERM_BELL )
     {
         if (status) asynPrintIO( pasynUser,
                                  ASYN_TRACE_ERROR,
@@ -1598,7 +1598,7 @@ char drvPmacMbxWriteRead (
                           "PMAC error on card %d, command=%s, Error=%s, Response:\n",
                           card, writebuf, pmacError( readbuf ) );
 
-        strcpy( errmsg, readbuf );
+        strncpy( errmsg, readbuf, nread-1 );
         *readbuf = 0;
         terminator = PMAC_TERM_BELL;
     }

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 
 static const char * pmacErrors[] = {
@@ -24,22 +25,23 @@ static const char * pmacErrors[] = {
     /* ERR019 */ "Illegal position-change command while moves stored in CCBUFFER \n\t(should pass through section of Program requiring storage of moves in CCBUFFER, or abort)"
 };
 
-static const char * badErrString = "Not a valid PMAC error";
+static const char * badErrString = "Not a valid PMAC error string";
 static const char * badErrNum = "Not a valid PMAC error number";
 
 const char * pmacError( const char * errStr )
 {
     const char * result;
 
-    if (strncmp(errStr, "ERR", 3 ) == 0)
-    {
-        char * endp;
-        const char * startp = &errStr[3];
-        long int errnum;
+    /* Strip any leading BELL */
+    if (*errStr == '\a') errStr++;
 
-        errnum = strtol( startp, &endp, 10 );
-        if ( endp == startp ) result = badErrString;
-        else if ( errnum <=0 || errnum > sizeof( pmacErrors ) ) result = badErrNum;
+    /* Check for correct format */
+    if (strncmp(errStr, "ERR", 3 ) == 0 &&
+	isdigit((int) errStr[3]) && isdigit((int) errStr[4]) && isdigit((int) errStr[5]) )
+    {
+        int errnum = (errStr[3]-'0')*100 + (errStr[4]-'0')*10 + errStr[5]-'0';
+
+        if ( errnum <=0 || errnum > sizeof( pmacErrors ) ) result = badErrNum;
         else result = pmacErrors[errnum];
     }
     else result = badErrString;

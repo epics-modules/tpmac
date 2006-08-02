@@ -406,12 +406,12 @@ static void pmacAscReadMeISR( PMAC_DEV *pPmacAscDev )
   else
   {
     /* Build a "ERRnnn" string from the BCD error code in dpramAsciiInControl */
-    char response[]={'E','R','R','0','0','0',PMAC_TERM_BELL,PMAC_TERM_ACK};
+    char response[]={PMAC_TERM_BELL,'E','R','R','0','0','0',PMAC_TERM_CR,PMAC_TERM_ACK};
 
     /* Convert the BCD encoded error number to its ASCII equivalent */
-    response[3] += ((control )         & 0xF );
-    response[4] += ((terminator >> 4 ) & 0xF );
-    response[5] += ((terminator )      & 0xF );
+    response[4] += ((control )         & 0xF );
+    response[5] += ((terminator >> 4 ) & 0xF );
+    response[6] += ((terminator )      & 0xF );
 
     /* Push the data the onto the ring buffer */
     pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response) );
@@ -486,6 +486,7 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
   int       sendMore;
   char	    c;
   PMAC_CTLR *pPmacCtlr;
+  int        terminator=0;
 
   /* logMsg("Inside pmacMbxReadMeISR...\n", 0, 0, 0, 0, 0, 0); */
 
@@ -493,22 +494,30 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
   pPmacCtlr = &pmacVmeCtlr[ctlr];
   sendMore  = 1;
 
-  for( i = 0; i < PMAC_BASE_MBX_REGS_IN; i++ )
+  for( i = 0; i < PMAC_BASE_MBX_REGS_IN && !terminator; i++ )
   {
     c      = pPmacCtlr->pBase->mailbox.MB[i].data;
+
     pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
 
-    if( (c == PMAC_TERM_CR) || (c == PMAC_TERM_ACK) || (c == PMAC_TERM_BELL) )
-      break;
-  }
+    terminator = ( (c == PMAC_TERM_CR) || (c == PMAC_TERM_ACK) || (c == PMAC_TERM_BELL) );
+    if (terminator)
+    {
+        static int hadBell = 0;
+        int bell = (c == PMAC_TERM_BELL);
 
-  /* Add an ACK to the BELL to make termination consistent with the DPRAM driver */
-  if (c == PMAC_TERM_BELL)
-  {
-      c = PMAC_TERM_ACK;
-      pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);      
+        /* Add an ACK to the first terminator after a BELL to make parsing easier */
+        if (hadBell) 
+        {
+            c = PMAC_TERM_ACK;
+            pushOK = epicsRingBytesPut( pPmacDev->replyQ, &c, 1);
+            if( !pushOK )
+                logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
+        }
+        hadBell = bell;
+    }
   }
 
   pPmacCtlr->pBase->mailbox.MB[1].data = 0;
