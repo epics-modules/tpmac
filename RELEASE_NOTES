@@ -117,11 +117,11 @@ a. Track down the cause of the dealock with streamDevice.
 b. Add support for driving coordinate systems through asynMotor. This
    will probably be done as a separate asynMotor support library.
 c. Resolve the terminators for error notification. Currently,
-     - The DPRAM and MBX ASCII drivers return an error as ERRnnn<BELL><ACK>
+     - The DPRAM and MBX ASCII drivers return an error as <BELL>ERRnnn<CR><ACK>
      - The serial line returns an error as <BELL>ERRnnn<CR>
    We need to adopt a standard. I prefer the first since then all
    transactions are terminated with an <ACK>, but then the serial line
-   driver needs an interpose interface to move the BELL around.
+   driver needs an interpose interface to add the trailing <ACK>.
 d. Add asyn IP support for Ethernet PMAC's. (I hope CosyLab might do
    this as an interpose interface for drvAsynIPPort. I cannot test
    since I don't have any Ethernet PMACs).
@@ -134,4 +134,4 @@ f. Add Linux PCI support. There is a Linux open/close/read/write
 Note for those implementing the asynOctet drivers they must emulate the
 syntax of the PMAC serial port. Basically the means that on write "\r"
 is used as a record terminator, and on read ACK is used for a success
-terminator and BEL for an error terminator.
+terminator and <BELL>ERRnnn<CR><ACK> for an error response.
