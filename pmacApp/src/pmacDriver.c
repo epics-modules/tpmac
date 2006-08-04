@@ -199,7 +199,10 @@ STATUS pmacDrv(void)
         status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector - 1,
                                       (void *)pmacMbxReceivedISR, (void *) &(pmacMbxDev[i]) );
 
-        if( !RTN_SUCCESS(status) )
+        /* Pre-enable responses to commands */
+        pmacVmeCtlr[i].pBase->mailbox.MB[1].data = 0;
+
+       if( !RTN_SUCCESS(status) )
           cantProceed("pmacDrv: Failed to connect to Mailbox ASCII received interrupt");
       }
     }
@@ -256,13 +259,15 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
 
 	  pmacNoInterruptCount++;
 
-	  if (pmacDriverDebug)
-	    logMsg( "Manually calling ISR for PMAC card %d, vector %d\n",
-		    pPmacDev->ctlr, pmacVmeCtlr[pPmacDev->ctlr].irqVector,0,0,0,0 );
+          if ( pPmacDev->readMeISR ) {
+              if (pmacDriverDebug)
+                  logMsg( "Manually calling ISR for PMAC card %d, vector %d\n",
+                          pPmacDev->ctlr, pmacVmeCtlr[pPmacDev->ctlr].irqVector,0,0,0,0 );
 
-          devDisableInterruptLevel (intVME, irqLevel);
-          pPmacDev->readMeISR( pPmacDev );
-          devEnableInterruptLevel (intVME, irqLevel);
+              devDisableInterruptLevel (intVME, irqLevel);
+              pPmacDev->readMeISR( pPmacDev );
+              devEnableInterruptLevel (intVME, irqLevel);
+          }
           epicsEventWait( pPmacDev->ioReadmeId );
       }
 
@@ -467,10 +472,6 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
     j += PMAC_BASE_MBX_REGS_OUT;
   }
 
-  /* Writing to mailbox register number 1, causes PMAC to respond */
-  /* with an interrupt when it has data for us to read            */
-
-  pPmacCtlr->pBase->mailbox.MB[1].data = 0;
   return( numWritten );
 }
 
@@ -520,6 +521,7 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     }
   }
 
+  /* Writing to mailbox register number 1, which pre-enables responses to the next command */
   pPmacCtlr->pBase->mailbox.MB[1].data = 0;
   epicsEventSignal( pPmacDev->ioReadmeId );
 
