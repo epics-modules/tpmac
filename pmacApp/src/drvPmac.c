@@ -1583,8 +1583,14 @@ char drvPmacMbxWriteRead (
                                           timeout,
                                           &nwrite, &nread, &eomReason );
 
-    pEnd = &readbuf[strlen(readbuf)-1];
-    
+    /* To simplify later processing, pretend a NULL response has a <CR> termination */
+    if (nread == 0)
+    {
+        readbuf[0] = PMAC_TERM_CR;
+        nread = 1;
+    }
+    pEnd = &readbuf[nread-1];
+
     if ( status || *pEnd != PMAC_TERM_CR || readbuf[0] == PMAC_TERM_BELL )
     {
         if (status) asynPrintIO( pasynUser,
@@ -1603,11 +1609,11 @@ char drvPmacMbxWriteRead (
         terminator = PMAC_TERM_BELL;
     }
     else terminator = PMAC_TERM_ACK;
-    
-    if (*pEnd == PMAC_TERM_CR || *pEnd == PMAC_TERM_ACK || *pEnd == PMAC_TERM_BELL)
+
+    /* Remove the trailing terminator */
+    if ( *pEnd == PMAC_TERM_CR  || *pEnd == PMAC_TERM_ACK || *pEnd == PMAC_TERM_BELL )
     {
-	/* terminator = *pEnd; */
-	*pEnd = NULL;
+	*pEnd = 0;
     }
         
 #else
