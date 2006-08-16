@@ -10,7 +10,7 @@ SUPPORT=/home/diamond/R3.14.8.2/prod/support
 WORK=/home/diamond/R3.14.8.2/work/support
 
 ASYN=$(SUPPORT)/asyn/4-6
-MOTOR=$(SUPPORT)/motor/6-0dls1
+MOTOR=$(SUPPORT)/motor/6-0dls2
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
