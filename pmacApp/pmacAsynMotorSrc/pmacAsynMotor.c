@@ -265,11 +265,15 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
     int eomReason;
     asynUser * pasynUser = (logGlobal? pAxis->pDrv->pasynUser: pAxis->pasynUser);
 
-    status = pasynOctetSyncIO->writeRead( pasynUser,
-                                          command, strlen(command),
-                                          response, reply_buff_size,
-                                          timeout,
-                                          &nwrite, &nread, &eomReason );
+    status = pasynManager->lockPort(pasynUser);
+    if ( !status ) status = pasynOctetSyncIO->setInputEos(pasynUser, "\006", 1 );
+    if ( !status ) status = pasynOctetSyncIO->setOutputEos(pasynUser, "\r", 1 );
+    if ( !status ) status = pasynOctetSyncIO->writeRead( pasynUser,
+                                                         command, strlen(command),
+                                                         response, reply_buff_size,
+                                                         timeout,
+                                                         &nwrite, &nread, &eomReason );
+    pasynManager->unlockPort(pasynUser);
 
     if (status)
     {

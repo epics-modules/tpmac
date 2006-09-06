@@ -1577,11 +1577,15 @@ char drvPmacMbxWriteRead (
     asynUser * pasynUser = drvPmacCard[card].pasynUser;
     char * pEnd;
 
+    status = pasynManager->lockPort(pasynUser);
+    if ( !status ) status = pasynOctetSyncIO->setInputEos(pasynUser, "\006", 1 );
+    if ( !status ) status = pasynOctetSyncIO->setOutputEos(pasynUser, "\r", 1 );
     status = pasynOctetSyncIO->writeRead( pasynUser,
                                           writebuf, strlen(writebuf),
                                           readbuf, PMAC_MBX_IN_BUFLEN,
                                           timeout,
                                           &nwrite, &nread, &eomReason );
+    pasynManager->unlockPort(pasynUser);
 
     /* To simplify later processing, pretend a NULL response has a <CR> termination */
     if (nread == 0)

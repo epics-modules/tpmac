@@ -30,6 +30,8 @@
 #define getReg(location)          (location)
 #define setReg(location, value)   (location) = (value)
 
+#define PMAC_MBX_KLUDGE
+
 #define PMAC_DRIVER_DEBUG        0
 #define PMAC_BASE_MBX_REGS_IN   16
 #define PMAC_BASE_MBX_REGS_OUT  15
@@ -200,7 +202,9 @@ STATUS pmacDrv(void)
                                       (void *)pmacMbxReceivedISR, (void *) &(pmacMbxDev[i]) );
 
         /* Pre-enable responses to commands */
+#ifndef PMAC_MBX_KLUDGE
         pmacVmeCtlr[i].pBase->mailbox.MB[1].data = 0;
+#endif
 
        if( !RTN_SUCCESS(status) )
           cantProceed("pmacDrv: Failed to connect to Mailbox ASCII received interrupt");
@@ -249,6 +253,11 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
   if( numRead == 0 )  /* The buffer was empty */
   {
       epicsEventWaitStatus status;
+
+#ifdef PMAC_MBX_KLUDGE
+      if (pPmacDev->ioReceivedId) 
+          pmacVmeCtlr[pPmacDev->ctlr].pBase->mailbox.MB[1].data = 0;
+#endif
 
       /* Check to see if the semaphore was given */
       status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.1 );
@@ -522,7 +531,9 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
   }
 
   /* Writing to mailbox register number 1, which pre-enables responses to the next command */
+#ifndef PMAC_MBX_KLUDGE
   pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+#endif
   epicsEventSignal( pPmacDev->ioReadmeId );
 
   return;

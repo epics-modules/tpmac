@@ -100,6 +100,8 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
  * DEFINES
  */
 
+#define PMAC_ASYN
+
 #define PMAC_DIAGNOSTICS TRUE
 #define PMAC_PRIVATE FALSE
 
@@ -292,6 +294,7 @@ long pmacVmeConfig
 		pPmacCtlr->presentDpram = TRUE;
 	}
 	
+#ifndef PMAC_ASYN
 	pPmacCtlr->ioMbxReceiptSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
 	if ( pPmacCtlr->ioMbxReceiptSem == NULL)
 	{
@@ -348,6 +351,7 @@ long pmacVmeConfig
 			MyName);
 		return (status);
 	}
+#endif
 
 	PMAC_DEBUG
 	(	1,
@@ -407,7 +411,10 @@ PMAC_LOCAL long pmacVmeInit (void)
 	/* char *	MyName = "pmacVmeInit"; */
 	int		i;
 	PMAC_CTLR	*pPmacCtlr;
+
+#ifndef PMAC_ASYN
 	STATUS		semStatus;
+#endif
 	
 	pmacVmeConfigLock = 1;
 
@@ -424,8 +431,10 @@ PMAC_LOCAL long pmacVmeInit (void)
 		{
 			if ( pPmacCtlr->presentBase & pPmacCtlr->enabledBase )
 			{
+#ifndef PMAC_ASYN
 				semStatus=semGive (pPmacCtlr->ioMbxLockSem);
 				printf ("pmacVmeInit: semStatus=%d, card=%d \n",semStatus, i);	
+#endif
 				pPmacCtlr->activeBase = TRUE;
 			}
 			
@@ -445,6 +454,8 @@ PMAC_LOCAL long pmacVmeInit (void)
 
 	return (0);
 }
+
+#ifndef PMAC_ASYN
 
 /*******************************************************************************
  *
@@ -747,6 +758,7 @@ char pmacVmeReadC
 {
 	return (*addr);
 }
+#endif
 
 /*******************************************************************************
  *
