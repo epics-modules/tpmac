@@ -1150,20 +1150,18 @@ long drvPmacMtrRead
 	PMAC_RAM_IO *	pMtrIo;
 	PMAC_RAM_IO *	ptimMT;
 
+
+
+	/* Check PMAC Busy Bit */
+	status = pmacRamGet16 ( pmacRamAddr(card,0x06E), &pmacStatus );
+
+	
+	if((pmacStatus & 0x00008000) == 0){/*PMAC writing to DPRAM*/
+		return (0);
+	}
+	
 	/* Set Host Busy Bit */
 	status = pmacRamPut16 ( pmacRamAddr(card,0x6A), 0x8000 );
-		/* Check PMAC Busy Bit */
-		status = pmacRamGet16 ( pmacRamAddr(card,0x6E), &pmacStatus );
-
-		PMAC_DEBUG
-		(	5,
-			PMAC_MESSAGE ("%s: PMAC waiting status %x\n", MyName, pmacStatus,0,0,0,0);
-		)
-/*	do
-	{
-
-	}
-	while ( (pmacStatus & 0x00008000) != 0);*/
 
 	/* Read PMAC Motor Fixed Data Buffer */
  	for (i=0; i < pCard->numMtrIo; i++)
@@ -1178,7 +1176,8 @@ long drvPmacMtrRead
 		status = drvPmacRamGetData (ptimMT);
 	}
 
-	/* Clear Host Busy Bit */
+	/* Clear Host and PMAC Busy Bit */
+	status = pmacRamPut16 ( pmacRamAddr(card,0x06E),  pmacStatus & (~0x8000));
 	status = pmacRamPut16 ( pmacRamAddr(card,0x06A), 0);
 
 	/* Notify Requester Of New Data */
