@@ -1142,7 +1142,6 @@ long drvPmacMtrRead
 	int	card
 )
 {
-	char *	MyName = "drvPmacMtrRead";
 	int	i;
 	long	status;
 	long	pmacStatus;

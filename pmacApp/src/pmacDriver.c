@@ -200,7 +200,7 @@ STATUS pmacDrv(void)
                                       (void *)pmacMbxReceivedISR, (void *) &(pmacMbxDev[i]) );
 
         /* Pre-enable responses to commands */
-        pmacVmeCtlr[i].pBase->mailbox.MB[1].data = 0;
+        /* pmacVmeCtlr[i].pBase->mailbox.MB[1].data = 0; */
 
        if( !RTN_SUCCESS(status) )
           cantProceed("pmacDrv: Failed to connect to Mailbox ASCII received interrupt");
@@ -251,7 +251,7 @@ static int pmacRead( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
       epicsEventWaitStatus status;
 
       /* Check to see if the semaphore was given */
-      status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.1 );
+      status = epicsEventWaitWithTimeout( pPmacDev->ioReadmeId, 0.2 );
 
       if (status == epicsEventWaitTimeout)
       {
@@ -330,7 +330,7 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   numWritten           = 0;
 
 #ifdef TRANSACTION_LOCK
-  epicsEventWaitWithTimeout( transactionLock, 0.05 );
+  epicsEventWaitWithTimeout( transactionLock, 0.3 );
 #endif
 
   for( i=0; (i < nBytes) && (i < PMAC_BASE_ASC_REGS_OUT); i++ )
@@ -442,7 +442,7 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
   int       j;
   int       numWritten;
   int       ctlr;
-  char      firstChar;
+  char      firstChar, c;
   PMAC_CTLR *pPmacCtlr;
 
   j          = 0;
@@ -467,6 +467,10 @@ static int pmacWriteMbx( PMAC_DEV *pPmacDev, char *buffer, int nBytes )
       printf("pmacWriteMbx: 0x%x (0)\n", firstChar);
     pPmacCtlr->pBase->mailbox.MB[0].data = firstChar;
     numWritten++;
+
+    /* Now, enable the response, and read the data back to ensure it is written */
+    pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+    c = pPmacCtlr->pBase->mailbox.MB[1].data;
 
     epicsEventWait( pPmacDev->ioReceivedId );
     j += PMAC_BASE_MBX_REGS_OUT;
@@ -521,8 +525,16 @@ static void pmacMbxReadMeISR( PMAC_DEV *pPmacDev )
     }
   }
 
-  /* Writing to mailbox register number 1, which pre-enables responses to the next command */
-  pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+  /* Write to mailbox register number 1 if there is more data in the response
+     to this command. According to the manual we should be able to do this
+     after receiving any response to pre-enable the next response, but in
+     reality, this doesn't always work */
+
+  if (c != PMAC_TERM_ACK) 
+  {
+      pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+      c = pPmacCtlr->pBase->mailbox.MB[1].data;
+  }
   epicsEventSignal( pPmacDev->ioReadmeId );
 
   return;

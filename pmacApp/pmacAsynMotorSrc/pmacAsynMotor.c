@@ -114,6 +114,7 @@ static motorAxisLogFunc drvPrint = drvPmacLogMsg;
 static motorAxisLogFunc drvPrintParam = NULL;
 
 #define TRACE_FLOW    motorAxisTraceFlow
+#define TRACE_DRIVER  motorAxisTraceIODriver
 #define TRACE_ERROR   motorAxisTraceError
 
 #define MAX(a,b) ((a)>(b)? (a): (b))
@@ -265,11 +266,17 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
     int eomReason;
     asynUser * pasynUser = (logGlobal? pAxis->pDrv->pasynUser: pAxis->pasynUser);
 
+    if ( !logGlobal )
+        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Sending to PMAC %d command : %s\n",pAxis->pDrv->card, command );
+   
     status = pasynOctetSyncIO->writeRead( pasynUser,
                                           command, strlen(command),
                                           response, reply_buff_size,
                                           timeout,
                                           &nwrite, &nread, &eomReason );
+
+    if ( !logGlobal && nread != 0 )
+        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Recvd from PMAC %d response: %s\n",pAxis->pDrv->card, command );
 
     if (status)
     {
@@ -638,7 +645,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].pasynUser = pDrv->pasynUser;
 
                         sprintf( command, "I%d00=1", pDrv->axis[i].axis );
-                        motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 0 );
+                        motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );
                         asynPrint( pDrv->pasynUser, ASYN_TRACE_FLOW, "Created motor for card %d, signal %d OK\n", card, i );
                     }
                     else
