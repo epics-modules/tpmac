@@ -1175,8 +1175,7 @@ long drvPmacMtrRead
 		status = drvPmacRamGetData (ptimMT);
 	}
 
-	/* Clear Host and PMAC Busy Bit */
-	status = pmacRamPut16 ( pmacRamAddr(card,0x06E),  pmacStatus & (~0x8000));
+	/* Clear Host Busy Bit */
 	status = pmacRamPut16 ( pmacRamAddr(card,0x06A), 0);
 
 	/* Notify Requester Of New Data */
