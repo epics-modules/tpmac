@@ -96,6 +96,8 @@ typedef struct drvPmac
     epicsTimeStamp now;
 } drvPmac_t;
 
+#define REMOVE_LIMITS_ON_HOME
+
 typedef struct motorAxisHandle
 {
     PMACDRV_ID pDrv;
@@ -105,6 +107,10 @@ typedef struct motorAxisHandle
     motorAxisLogFunc print;
     void * logParam;
     epicsMutexId axisMutex;
+    double enc_offset;
+#ifdef REMOVE_LIMITS_ON_HOME
+    int limitsDisabled;
+#endif
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -276,7 +282,7 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
                                           &nwrite, &nread, &eomReason );
 
     if ( !logGlobal && nread != 0 )
-        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Recvd from PMAC %d response: %s\n",pAxis->pDrv->card, command );
+        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Recvd from PMAC %d response: %s\n",pAxis->pDrv->card, response );
 
     if (status)
     {
@@ -307,7 +313,14 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
         {
         case motorAxisPosition:
         {
-            sprintf( command, "%d=%f", pAxis->axis, value );
+            if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
+            {
+                double position;
+                motorParam->getDouble( pAxis->params, motorAxisPosition, &position );
+                pAxis->enc_offset += value - position;
+                motorParam->setDouble( pAxis->params, motorAxisPosition, value );
+                epicsMutexUnlock( pAxis->axisMutex );
+            }
             pAxis->print( pAxis->logParam, TRACE_FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
             break;
         }
@@ -394,10 +407,25 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         if (max_velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (max_velocity / 1000.0));
         if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
 
-        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis, (relative?"MR ":"J="), position );
+        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
+                 (relative?"MR ":"J="),
+                 (relative?position:position - pAxis->enc_offset) );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
+
+#ifdef REMOVE_LIMITS_ON_HOME
+            if ( pAxis->limitsDisabled )
+            {
+                char buffer[32];
+
+                /* Re-enable limits */
+                sprintf( buffer, " i%d24=i%d24&$FDFFFF", pAxis->axis, pAxis->axis );
+                strcat( command, buffer );
+                pAxis->limitsDisabled = 0;
+            }
+#endif
+
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
             motorParam->callCallback( pAxis->params );
@@ -416,7 +444,7 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
         char acc_buff[32]="\0";
         char vel_buff[32]="\0";
         char command[128];
-        char response[32];
+        char response[128];
 
         if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / 1000.0));
         if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
@@ -424,6 +452,45 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
+                
+#ifdef REMOVE_LIMITS_ON_HOME
+            /* If homing onto an end-limit and home velocity is in the right direction, clear limits protection */
+            int macro_station = ((pAxis->axis-1)/2)*4 + (pAxis->axis-1)%2;
+            int home_type, home_flag, nvals;
+            double home_velocity;
+            char buffer[128];
+
+            /* Read home flags and home direction from PMAC */ 
+            sprintf( buffer, "ms%d,i912 ms%d,i913 i%d23", macro_station, macro_station, pAxis->axis );
+            status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
+            nvals = sscanf( response, "$%x $%x %lf", &home_type, &home_flag, &home_velocity );
+            if (max_velocity != 0) home_velocity = (forwards?1:-1)*(fabs(max_velocity) / 1000.0);
+
+            if ( status || nvals != 3)
+            {
+                pAxis->print( pAxis->logParam, TRACE_ERROR,
+                          "drvPmac motorAxisHome: can not read home flags\n" );
+            }
+            else if ( ( home_type <= 15 )    && 
+                      ( home_type % 4 >= 2 ) &&
+                      (( home_velocity > 0 && home_flag == 1 ) || 
+                       ( home_velocity < 0 && home_flag == 2 )    )   )
+            {
+                sprintf( buffer, " i%d24=i%d24|$20000", pAxis->axis, pAxis->axis );
+                strcat( command, buffer );
+                pAxis->limitsDisabled = 1;
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Disabling limits whilst homing PMAC card %d, axis %d, type:%d, flag:$%x, vel:%f\n",
+                              pAxis->pDrv->card, pAxis->axis, home_type, home_flag, home_velocity );
+            }
+            else
+            {
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Cannot disable limits to home PMAC card %d, axis %d, type:%x, flag:$%d, vel:%f\n",
+                              pAxis->pDrv->card, pAxis->axis, home_type, home_flag, home_velocity );
+            }
+#endif
+
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
             motorParam->callCallback( pAxis->params );
@@ -452,6 +519,18 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
+#ifdef REMOVE_LIMITS_ON_HOME
+            if ( pAxis->limitsDisabled )
+            {
+                char buffer[32];
+
+                /* Re-enable limits */
+                sprintf( buffer, " i%d24=i%d24&$FDFFFF", pAxis->axis, pAxis->axis );
+                strcat( command, buffer );
+                pAxis->limitsDisabled = 0;
+            }
+#endif
+
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
             motorParam->callCallback( pAxis->params );
@@ -530,7 +609,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
         }
         else
         {
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error+pAxis->enc_offset) );
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
 
             motorParam->setInteger( pAxis->params, motorAxisDirection,     (velocity >= 0) );
@@ -541,6 +620,17 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
             motorParam->callCallback( pAxis->params );           
         }
+
+#ifdef REMOVE_LIMITS_ON_HOME
+        if ( pAxis->limitsDisabled && (status[1] & PMAC_STATUS2_HOME_COMPLETE) )
+        {
+            /* Re-enable limits */
+            sprintf( command, "i%d24=i%d24&$FDFFFF", pAxis->axis, pAxis->axis );
+            cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            pAxis->limitsDisabled = (cmdStatus != 0);
+        }
+#endif
+
         epicsMutexUnlock( pAxis->axisMutex );
     }
 }
