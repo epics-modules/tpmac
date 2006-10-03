@@ -456,23 +456,24 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
 #ifdef REMOVE_LIMITS_ON_HOME
             /* If homing onto an end-limit and home velocity is in the right direction, clear limits protection */
             int macro_station = ((pAxis->axis-1)/2)*4 + (pAxis->axis-1)%2;
-            int home_type, home_flag, nvals;
+            int home_type, home_flag, flag_mode, nvals;
             double home_velocity;
             char buffer[128];
 
             /* Read home flags and home direction from PMAC */ 
-            sprintf( buffer, "ms%d,i912 ms%d,i913 i%d23", macro_station, macro_station, pAxis->axis );
+            sprintf( buffer, "ms%d,i912 ms%d,i913 i%d24 i%d23", macro_station, macro_station, pAxis->axis, pAxis->axis );
             status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
-            nvals = sscanf( response, "$%x $%x %lf", &home_type, &home_flag, &home_velocity );
+            nvals = sscanf( response, "$%x $%x $%x %lf", &home_type, &home_flag, &flag_mode, &home_velocity );
             if (max_velocity != 0) home_velocity = (forwards?1:-1)*(fabs(max_velocity) / 1000.0);
 
-            if ( status || nvals != 3)
+            if ( status || nvals != 4)
             {
                 pAxis->print( pAxis->logParam, TRACE_ERROR,
                           "drvPmac motorAxisHome: can not read home flags\n" );
             }
-            else if ( ( home_type <= 15 )    && 
-                      ( home_type % 4 >= 2 ) &&
+            else if ( ( home_type <= 15 )      && 
+                      ( home_type % 4 >= 2 )   &&
+                      !( flag_mode & 0x20000 ) &&
                       (( home_velocity > 0 && home_flag == 1 ) || 
                        ( home_velocity < 0 && home_flag == 2 )    )   )
             {
