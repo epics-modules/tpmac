@@ -130,7 +130,9 @@ static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
 {
     printf( "Found driver for drvPmac card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis );
 
-    if (level > 0)
+    if (level > 0) printf( "Encoder offset = %f\n", pAxis->enc_offset );
+
+    if (level > 1)
     {
         motorParam->dump( pAxis->params );
     }
@@ -320,8 +322,11 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                 pAxis->enc_offset += value - position;
                 motorParam->setDouble( pAxis->params, motorAxisPosition, value );
                 epicsMutexUnlock( pAxis->axisMutex );
+                printf( "Set PMAC card %d, axis %d to position %f, offset %f, old position %f\n",
+	                pAxis->pDrv->card, pAxis->axis, value, pAxis->enc_offset, position );
             }
             pAxis->print( pAxis->logParam, TRACE_FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
+
             break;
         }
         case motorAxisEncoderRatio:
@@ -408,7 +413,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
 
         sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
-                 (relative?"MR ":"J="),
+                 (relative?"J^":"J="),
                  (relative?position:position - pAxis->enc_offset) );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
@@ -464,12 +469,14 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
             sprintf( buffer, "ms%d,i912 ms%d,i913 i%d24 i%d23 i%d26", macro_station, macro_station, pAxis->axis, pAxis->axis, pAxis->axis );
             status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
             nvals = sscanf( response, "$%x $%x $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+	    if (nvals !=5)
+	      nvals = sscanf( response, "%d %d %d %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
             if (max_velocity != 0) home_velocity = (forwards?1:-1)*(fabs(max_velocity) / 1000.0);
 
             if ( status || nvals != 5)
             {
                 pAxis->print( pAxis->logParam, TRACE_ERROR,
-                          "drvPmac motorAxisHome: can not read home flags\n" );
+			      "drvPmac motorAxisHome: can not read home flags. Status: %d, nvals %d\n", status, nvals );
             }
             else if ( ( home_type <= 15 )      && 
                       ( home_type % 4 >= 2 )   &&
