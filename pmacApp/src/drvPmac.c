@@ -503,6 +503,7 @@ PMAC_LOCAL long drvPmac_report
 				printf ("    numMtrIo = %d  numBkgIo = %d  numVarIo = %d  numOpnIo = %d\n",
 					drvPmacCard[i].numMtrIo, drvPmacCard[i].numBkgIo,
 					drvPmacCard[i].numVarIo, drvPmacCard[i].numOpnIo);
+				pmacVmeReport( i, level );
  			}
 
 		}

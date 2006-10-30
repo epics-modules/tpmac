@@ -146,6 +146,17 @@ volatile int	pmacVmeDebug = 0;		/* must be > 0 to see messages */
 PMAC_LOCAL int          pmacVmeNumCtlrs = 0;
 PMAC_LOCAL PMAC_CTLR    pmacVmeCtlr[PMAC_MAX_CTLRS];
 
+void pmacVmeReport( int card, int level )
+{
+    PMAC_CTLR	*pCtlr = &pmacVmeCtlr[card];
+
+    printf ("    vmebusBase = 0x%lX  hostBase = %p  vmebusDpram = 0x%lX  hostDpram = %p\n",
+	    pCtlr->vmebusBase, pCtlr->pBase,
+	    pCtlr->vmebusDpram, pCtlr->pDpramBase);
+    printf ("    irqVector = 0x%X  irqLevel = %d\n",
+	    pCtlr->irqVector, pCtlr->irqLevel);
+}
+
 /*******************************************************************************
  *
  * pmacVmeConfig - Configure PMAC-VME Controller Addresses and Interrupts

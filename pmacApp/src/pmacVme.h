@@ -144,6 +144,8 @@ typedef struct  /* PMAC_CTLR */
  * FORWARD DECLARATIONS
  */
 
+
+void pmacVmeReport( int, int );
            long pmacVmeConfig( int, unsigned long, unsigned long, unsigned int, unsigned int );
 PMAC_LOCAL long pmacVmeInit (void);
 PMAC_LOCAL char pmacMbxWrite(int, char *);
