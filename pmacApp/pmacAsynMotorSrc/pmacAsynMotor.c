@@ -107,7 +107,6 @@ typedef struct motorAxisHandle
     motorAxisLogFunc print;
     void * logParam;
     epicsMutexId axisMutex;
-    double enc_offset;
 #ifdef REMOVE_LIMITS_ON_HOME
     int limitsDisabled;
 #endif
@@ -130,7 +129,7 @@ static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
 {
     printf( "Found driver for drvPmac card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis );
 
-    if (level > 0) printf( "Encoder offset = %f\n", pAxis->enc_offset );
+    if (level > 0) printf( "drvPmac->axisMutex = %p\n", pAxis->axisMutex );
 
     if (level > 1)
     {
@@ -308,23 +307,20 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
     if (pAxis == NULL) return MOTOR_AXIS_ERROR;
     else
     {
-        char command[32]="\0";
-        char response[32];
+        char command[64]="\0";
+        char response[64];
 
         switch (function)
         {
         case motorAxisPosition:
         {
-            if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
-            {
-                double position;
-                motorParam->getDouble( pAxis->params, motorAxisPosition, &position );
-                pAxis->enc_offset += value - position;
-                motorParam->setDouble( pAxis->params, motorAxisPosition, value );
-                epicsMutexUnlock( pAxis->axisMutex );
-                printf( "Set PMAC card %d, axis %d to position %f, offset %f, old position %f\n",
-	                pAxis->pDrv->card, pAxis->axis, value, pAxis->enc_offset, position );
-            }
+            int position = (int) floor(value*32 + 0.5);
+
+            sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08 J/",
+                     pAxis->axis,
+                     pAxis->axis, position, pAxis->axis, 
+                     pAxis->axis, position, pAxis->axis );
+
             pAxis->print( pAxis->logParam, TRACE_FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
 
             break;
@@ -374,13 +370,20 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             break;
         }
 
-
-        if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+        if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
-            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
-        }
+            if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+            {
+                status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            }
 
-        if (status == MOTOR_AXIS_OK ) status = motorParam->setDouble( pAxis->params, function, value );
+            if (status == MOTOR_AXIS_OK )
+            {
+                motorParam->setDouble( pAxis->params, function, value );
+                motorParam->callCallback( pAxis->params );
+            }
+            epicsMutexUnlock( pAxis->axisMutex );
+        }
     }
   return status;
 }
@@ -410,11 +413,16 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         char response[32];
 
         if (max_velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (max_velocity / 1000.0));
-        if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
+        if (acceleration != 0)
+        {
+            if (max_velocity != 0)
+            {
+                sprintf(acc_buff, "I%d20=%f ", pAxis->axis, (fabs(max_velocity/acceleration) * 1000.0));
+            }
+        }
 
         sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
-                 (relative?"J^":"J="),
-                 (relative?position:position - pAxis->enc_offset) );
+                 (relative?"J^":"J="), position );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
@@ -452,7 +460,13 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
         char response[128];
 
         if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / 1000.0));
-        if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
+        if (acceleration != 0)
+        {
+            if (max_velocity != 0)
+            {
+                sprintf(acc_buff, "I%d20=%f ", pAxis->axis, (fabs(max_velocity/acceleration) * 1000.0));
+            }
+        }
         sprintf( command, "%s%s#%d HOME", vel_buff, acc_buff,  pAxis->axis );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
@@ -521,7 +535,13 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
         char response[32];
 
         if (velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (fabs(velocity) / 1000.0));
-        if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
+        if (acceleration != 0)
+        {
+            if (velocity != 0)
+            {
+                sprintf(acc_buff, "I%d20=%f ", pAxis->axis, (fabs(velocity/acceleration) * 1000.0));
+            }
+        }
 
         sprintf( command, "%s%s#%d %s", vel_buff, acc_buff, pAxis->axis, (velocity < 0 ? "J-": "J+") );
 
@@ -568,7 +588,8 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
         char command[128];
         char response[32];
 
-        if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0));
+        /* We now don't touch I19 and leave it as a safety limit */
+        /* if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0)); */
 
         sprintf( command, "%s#%d J/",  acc_buff, pAxis->axis );
 
@@ -618,7 +639,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
         }
         else
         {
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error+pAxis->enc_offset) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
 
             motorParam->setInteger( pAxis->params, motorAxisDirection,     (velocity >= 0) );
@@ -790,6 +811,17 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
 
     if (status == MOTOR_AXIS_OK)
     {
+        int i;
+
+        /* Do an initial poll of all status */
+	for ( i = 0; i < pDrv->nAxes; i++ )
+	{
+            AXIS_HDL pAxis = &(pDrv->axis[i]);
+
+            drvPmacGetAxisInitialStatus( pAxis, pDrv->pasynUser );
+            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+        }
+
         pDrv->motorThread = epicsThreadCreate( "drvPmacThread",
                                                epicsThreadPriorityLow,
                                                epicsThreadGetStackSize(epicsThreadStackMedium),
