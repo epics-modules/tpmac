@@ -1,0 +1,12 @@
+%
+% BURT Request File
+%
+% $(P)SH:Ps:  Shutter Position
+%
+
+$(P)SH:mp:ClosePos
+$(P)SH:mp:OpenPos
+file assy.req ASSY=$(P)SH:Ps
+file mtr1.req MTR1=$(P)SH:mp
+file drv1.req DRV1=$(P)SH:P
+

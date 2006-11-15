@@ -1,0 +1,49 @@
+file "$(TPMAC)/softDb/Load05X3.db"
+{
+	pattern { assy, m1, C, pcs }
+#                              pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+        { 23d:MO:Tn1:, 23d:MO:mr1:,  0,  5 }
+        { 23d:BP:Mo:,  23d:BP:mmo:,  0,  7 }
+        { 23d:BP:Kb:,  23d:BP:mkb:,  0, 14 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/softDb/Load08XY3.db"
+{
+	pattern { assy, m1, m2, C, pcs }
+#				   pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+        { 23d:WS:Av:,  23d:WS:mt:,   23d:WS:mb:,   0,  1 }
+        { 23d:WS:Ah:,  23d:WS:mo:,   23d:WS:mi:,   0,  2 }
+        { 23d:MO:Ps:,  23d:MO:mz:,   23d:MO:my:,   0,  3 }
+#       { 23d:MO:En:,  23d:MO:mr:,   23d:MO:mt2:,  0,  4 }
+        { 23d:MO:Tn2:, 23d:MO:mp2:,  23d:MO:mr2:,  0,  6 }
+        { 23d:CS:Av:,  23d:CS:mz1:,  23d:CS:mz2:,  0,  8 }
+        { 23d:CS:Ah:,  23d:CS:my1:,  23d:CS:my2:,  0,  9 }
+        { 23d:KB:Hy:,  23d:KB:mhy1:, 23d:KB:mhy2:, 0, 11 }
+        { 23d:KB:Vy:,  23d:KB:mvy1:, 23d:KB:mvy2:, 0, 13 }
+}
+# Special case for Mono Energy (pass fractional part of RqsPos):
+file "$(TPMAC)/softDb/Load08XY3_mono.db"
+{
+	pattern { assy, m1, m2, C, pcs }
+        { 23d:MO:En:,  23d:MO:mr:,   23d:MO:mt2:,  0,  4 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/softDb/Load11XYZ3.db"
+{
+	pattern { assy, m1, m2, m3, C, pcs }
+#				       pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+        { 23d:KB:Hz:, 23d:KB:mhz1:, 23d:KB:mhz2:, 23d:KB:mhz3:, 0, 10 }
+        { 23d:KB:Vz:, 23d:KB:mvz1:, 23d:KB:mvz2:, 23d:KB:mvz3:, 0, 12 }
+}

@@ -1,0 +1,24 @@
+file "$(TPMAC)/softDb/AssyGeneric.db"
+{
+	pattern { assy, desc, assembly_no, assembly_type, shift }
+# ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments 
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+# pmac10
+        { 23d:WS:Av:,  "White Beam Slits Vertical",    1, "HSAp - Huber Slits Assembly type",     0}
+        { 23d:WS:Ah:,  "White Beam Slits Horizontal",  2, "HSAp - Huber Slits Assembly type",     8}
+        { 23d:MO:Ps:,  "DCM Positioner",               3, "XYPs - XY Positioner Assembly type",  16}
+        { 23d:MO:En:,  "DCM Energy",                   4, "MOEn - Mono Energy Assembly type",    24}
+ 	{ 23d:MO:Tn1:, "DCM Crystal-1 Tuning",         5, "XPs  - Modular Drive Assembly type",  32}
+ 	{ 23d:MO:Tn2:, "DCM Crystal-2 Tuning",         6, "XYPs - XY Positioner Assembly type",  37}
+ 	{ 23d:BP:Mo:,  "Mono BPM",                     7, "XPs  - Modular Drive Assembly type",  45}
+ 	{ 23d:CS:Av:,  "Coll.Slits Vertical",          8, "HSAp - Huber Slits Assembly type",    50}
+  	{ 23d:CS:Ah:,  "Coll.Slits Horizontal",        9, "HSAp - Huber Slits Assembly type",    58}
+  	{ 23d:KB:Hz:,  "H-mirror Z-adjustment",       10, "TBSt - Table Support Assembly type",  66}
+  	{ 23d:KB:Hy:,  "H-mirror Y-adjustment",       11, "MISt - Mirror Suppot Assembly type",  77}
+  	{ 23d:KB:Vz:,  "V-mirror Z-adjustment",       12, "TBSt - Table Support Assembly type",  85}
+  	{ 23d:KB:Vy:,  "V-mirror Y-adjustment",       13, "MISt - Mirror Suppot Assembly type",  96}
+ 	{ 23d:BP:Kb:,  "Mirror BPM",                  14, "XPs  - Modular Drive Assembly type", 104}
+}

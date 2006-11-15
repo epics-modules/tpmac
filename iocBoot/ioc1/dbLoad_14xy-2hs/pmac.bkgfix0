@@ -1,0 +1,6 @@
+file "$(TPMAC)/pmacDb/bkgfix0.db"
+{
+	pattern { pmac, C }
+
+        { 23d:pmac21:, 1 }
+}

@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% $(P)BP:Mo:  BPM @ monochromator position
+%
+
+file assy.req ASSY=$(P)BP:Mo
+file mtr1.req MTR1=$(P)BP:mmo
+file drv1.req DRV1=$(P)BP:MOZ
+

@@ -1,0 +1,16 @@
+%
+% BURT Request File
+%
+% $(P)GO:Kp:  Goniometer Kappa
+%
+
+file assy.req ASSY=$(P)GO:Kp
+
+file mtr1.req MTR1=$(P)GO:mkp
+file mtr1.req MTR1=$(P)GO:mph
+file mtr1.req MTR1=$(P)GO:mcz
+
+file drv1.req DRV1=$(P)GO:KP
+file drv1.req DRV1=$(P)GO:PH
+file drv1.req DRV1=$(P)GO:CZ
+

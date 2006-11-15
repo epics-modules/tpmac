@@ -1,0 +1,29 @@
+file "$(TPMAC)/softDb/AssyGeneric.db"
+{
+	pattern { assy, desc, assembly_no, assembly_type, shift }
+# ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac21:
+        { 23d:COL:St:, "Collimnator Support Assembly", 1, "XYPs - XY Positioner Assembly type",   0 }
+        { 23d:XY:P2:,  "XY Positioner 2 Assembly",     2, "XYPs - XY Positioner Assembly type",   8 }
+        { 23d:XY:P3:,  "XY Positioner 3 Assembly",     3, "XYPs - XY Positioner Assembly type",  16 }
+        { 23d:XY:P4:,  "XY Positioner 4 Assembly",     4, "XYPs - XY Positioner Assembly type",  24 }
+ 	{ 23d:XY:P5:,  "XY Positioner 5 Assembly",     5, "XYPs - XY Positioner Assembly type",  32 }
+ 	{ 23d:XY:P6:,  "XY Positioner 6 Assembly",     6, "XYPs - XY Positioner Assembly type",  40 }
+ 	{ 23d:XY:P7:,  "XY Positioner 7 Assembly",     7, "XYPs - XY Positioner Assembly type",  48 }
+ 	{ 23d:XY:P8:,  "XY Positioner 8 Assembly",     8, "XYPs - XY Positioner Assembly type",  56 }
+ 	{ 23d:XY:P9:,  "XY Positioner 9 Assembly",     9, "XYPs - XY Positioner Assembly type",  64 }
+####### { 23d:XY:P10:, "XY Positioner 10 Assembly",   10, "XYPs - XY Positioner Assembly type",  72 }
+####### { 23d:XY:P11:, "XY Positioner 11 Assembly",   11, "XYPs - XY Positioner Assembly type",  80 }
+  	{ 23d:HS:Av:,  "Huber Slits Vert.Assembly",   10, "HSAp - Huber Slits Assembly type",    72 }
+  	{ 23d:HS:Ah:,  "Huber Slits Horz.Assembly",   11, "HSAp - Huber Slits Assembly type",    80 }
+  	{ 23d:XY:P12:, "XY Positioner 12 Assembly",   12, "XYPs - XY Positioner Assembly type",  88 }
+  	{ 23d:XY:P13:, "XY Positioner 13 Assembly",   13, "XYPs - XY Positioner Assembly type",  96 }
+  	{ 23d:XY:P14:, "XY Positioner 14 Assembly",   14, "XYPs - XY Positioner Assembly type", 104 }
+  	{ 23d:XY:P15:, "XY Positioner 15 Assembly",   15, "XYPs - XY Positioner Assembly type", 112 }
+  	{ 23d:XY:P16:, "XY Positioner 16 Assembly",   16, "XYPs - XY Positioner Assembly type", 120 }
+}

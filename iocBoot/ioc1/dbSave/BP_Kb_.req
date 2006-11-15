@@ -1,0 +1,9 @@
+%
+% BURT Request File
+%
+% $(P)BP:Kb:  BPM @ KB mirrors position
+%
+file assy.req ASSY=$(P)BP:Kb
+file mtr1.req MTR1=$(P)BP:mkb
+file drv1.req DRV1=$(P)BP:KBZ
+

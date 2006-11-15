@@ -1,0 +1,41 @@
+file "$(TPMAC)/pmacDb/AsciiPmac.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/bkgfix0.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/bkgvar0.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/CtlPnlPmac.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/mbxvar0.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/svofix0.db"
+{
+	pattern { pmac, C }
+# pmac10:
+        { 23d:pmac10:, 0 }
+}

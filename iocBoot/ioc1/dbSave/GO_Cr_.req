@@ -1,0 +1,14 @@
+%
+% BURT Request File
+%
+% $(P)GO:Cr:  Goniometer - Crystal XY stage
+%
+
+file assy.req ASSY=$(P)GO:Cr
+
+file mtr1.req MTR1=$(P)GO:mcx
+file mtr1.req MTR1=$(P)GO:mcy
+
+file drv1.req DRV1=$(P)GO:CX
+file drv1.req DRV1=$(P)GO:CY
+

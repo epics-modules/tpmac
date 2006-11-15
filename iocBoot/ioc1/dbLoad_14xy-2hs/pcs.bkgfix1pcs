@@ -1,0 +1,27 @@
+file "$(TPMAC)/pmacDb/bkgfix1pcs.db"
+{
+	pattern { pcs, C, S }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  S =   0  32  64  96 128 160 192 224
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac21:
+        { 23d:COL:St:,  1,   0 }
+        { 23d:XY:P2:,   1,  32 }
+        { 23d:XY:P3:,   1,  64 }
+        { 23d:XY:P4:,   1,  96 }
+ 	{ 23d:XY:P5:,   1, 128 }
+ 	{ 23d:XY:P6:,   1, 160 }
+ 	{ 23d:XY:P7:,   1, 192 }
+ 	{ 23d:XY:P8:,   1, 224 }
+ 	{ 23d:XY:P9:,   1, 256 }
+        { 23d:HS:Av:,   1, 288 }
+        { 23d:HS:Ah:,   1, 320 }
+  	{ 23d:XY:P12:,  1, 352 }
+  	{ 23d:XY:P13:,  1, 384 }
+  	{ 23d:XY:P14:,  1, 416 }
+  	{ 23d:XY:P15:,  1, 448 }
+  	{ 23d:XY:P16:,  1, 480 }
+}

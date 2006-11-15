@@ -1,0 +1,22 @@
+file "$(TPMAC)/pmacDb/bkgfix1pcs.db"
+{
+	pattern { pcs, C, S }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  S =   0  32  64  96 128 160 192 224
+#                              (pcs == _p_mac _c_oordinate _s_ystem)
+# pmac10:
+        { 23d:WS:Av:,  0,   0 }
+        { 23d:WS:Ah:,  0,  32 }
+        { 23d:MO:Ps:,  0,  64 }
+        { 23d:MO:En:,  0,  96 }
+ 	{ 23d:MO:Tn1:, 0, 128 }
+ 	{ 23d:MO:Tn2:, 0, 160 }
+ 	{ 23d:BP:Mo:,  0, 192 }
+ 	{ 23d:CS:Av:,  0, 224 }
+ 	{ 23d:CS:Ah:,  0, 256 }
+  	{ 23d:KB:Hz:,  0, 288 }
+  	{ 23d:KB:Hy:,  0, 320 }
+  	{ 23d:KB:Vz:,  0, 352 }
+  	{ 23d:KB:Vy:,  0, 384 }
+  	{ 23d:BP:Kb:,  0, 416 }
+}

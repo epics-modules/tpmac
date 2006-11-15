@@ -1,0 +1,47 @@
+file "$(TPMAC)/softDb/LimTransfer.db"
+{
+	pattern { drv, mtr }
+#--------------------------------------
+#  Developed 98/10 by Stepanov for "LimSet" and "AmpEna" controls
+# See also:
+# mtr.bkgfix1mtr -> pmacDb/bkgfix1mtr.db (propagation of "AmpEna" from motor)
+# mtr.svofix1    -> pmacDb/svofix1.db    (propagation of "NgLimSet" & "PsLimSet" from motor)
+# xx.LimAmp      -> xxDb/XX_LimAmp.db    (triggering all NgLimSet/PsLimSet and AmpEna in the assembly)
+#--------------------------------------
+
+# Drives <- Motors
+#
+# pmac21:
+        { 23d:COL:H:,  23d:COL:mh:  }
+ 	{ 23d:COL:V:,  23d:COL:mv:  }
+ 	{ 23d:XY:X2:,  23d:XY:mx2:  }
+        { 23d:XY:Y2:,  23d:XY:my2:  }
+ 	{ 23d:XY:X3:,  23d:XY:mx3:  }
+ 	{ 23d:XY:Y3:,  23d:XY:my3:  }
+ 	{ 23d:XY:X4:,  23d:XY:mx4:  }
+ 	{ 23d:XY:Y4:,  23d:XY:my4:  }
+ 	{ 23d:XY:X5:,  23d:XY:mx5:  }
+  	{ 23d:XY:Y5:,  23d:XY:my5:  }
+  	{ 23d:XY:X6:,  23d:XY:mx6:  }
+  	{ 23d:XY:Y6:,  23d:XY:my6:  }
+  	{ 23d:XY:X7:,  23d:XY:mx7:  }
+  	{ 23d:XY:Y7:,  23d:XY:my7:  }
+  	{ 23d:XY:X8:,  23d:XY:mx8:  }
+  	{ 23d:XY:Y8:,  23d:XY:my8:  }
+        { 23d:XY:X9:,  23d:XY:mx9:  }
+ 	{ 23d:XY:Y9:,  23d:XY:my9:  }
+        { 23d:HS:ZT:,  23d:HS:mt:   }
+        { 23d:HS:ZB:,  23d:HS:mb:   }
+        { 23d:HS:YO:,  23d:HS:mo:   }
+        { 23d:HS:YI:,  23d:HS:mi:   }
+ 	{ 23d:XY:X12:, 23d:XY:mx12: }
+ 	{ 23d:XY:Y12:, 23d:XY:my12: }
+        { 23d:XY:X13:, 23d:XY:mx13: }
+ 	{ 23d:XY:Y13:, 23d:XY:my13: }
+ 	{ 23d:XY:X14:, 23d:XY:mx14: }
+        { 23d:XY:Y14:, 23d:XY:my14: }
+ 	{ 23d:XY:X15:, 23d:XY:mx15: }
+ 	{ 23d:XY:Y15:, 23d:XY:my15: }
+ 	{ 23d:XY:X16:, 23d:XY:mx16: }
+ 	{ 23d:XY:Y16:, 23d:XY:my16: }
+}

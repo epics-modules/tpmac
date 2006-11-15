@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)WS:Ah:  White beam slits, Horizontal Aperture
+%
+
+file assy.req ASSY=$(P)WS:Ah
+$(P)WS:Ah:Invert
+file mtr1.req MTR1=$(P)WS:mo
+file mtr1.req MTR1=$(P)WS:mi
+file drv1.req DRV1=$(P)WS:YO
+file drv1.req DRV1=$(P)WS:YI
+file axs1.req AXS1=$(P)WS:YC
+file axs1.req AXS1=$(P)WS:YS
+
