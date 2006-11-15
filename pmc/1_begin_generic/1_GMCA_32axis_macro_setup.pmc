@@ -1,0 +1,441 @@
+close
+endg
+del gat
+
+I6800=6527	//MACRO IC MaxPhase/PWM Frequency Control
+I6801=0	//MACRO IC Phase Clock Frequency Control
+I6802=3	//MACRO IC Servo Clock Frequency Control
+I10=3713991	//Servo Interrupt Time
+;**********************************************************
+;   SET MACRO GATES FOR 32 MOTORS & 2 I/O NODES
+;   RING CONTROLLER IS MASTER 0
+;   RING MASTER IS MASTER 1
+;**********************************************************
+i6840=$30	//MACRO IC Ring Configuration/Status
+i6841=$0fB33F	//MACRO IC Node Activate Control
+i6890=$90	//MACRO IC Ring Configuration/Status
+i6891=$1fB333	//MACRO IC Node Activate Control
+i6940=$90	//MACRO IC Ring Configuration/Status
+i6941=$2fB333	//MACRO IC Node Activate Control
+i6990=$90	//MACRO IC Ring Configuration/Status
+i6991=$3fB333	//MACRO IC Node Activate Control
+
+;**********************************************************
+;   ENABLE MACRO AXIS CONTROL/STATUS FLAG TRANSFR
+;   SET TIMEOUT FOR MACRO I/O TO 32 SERVO CYCLES
+;**********************************************************
+i70=$3333	//MACRO IC 0 Node Auxiliary Register Enable
+i71=$3333	//MACRO IC 0 Node Protocol Type Control
+i72=$3333	//MACRO IC 1 Node Auxiliary Register Enable
+i73=$3333	//MACRO IC 1 Node Protocol Type Control
+i74=$3333	//MACRO IC 2 Node Auxiliary Register Enable
+i75=$3333	//MACRO IC 2 Node Protocol Type Control
+i76=$3333	//MACRO IC 3 Node Auxiliary Register Enable
+i77=$3333	//MACRO IC 3 Node Protocol Type Control
+i78=$20	//MACRO Type 1 Master/Slave Communications Timeout
+
+;******************************************************************
+;  DPRAM Setup for the VME bus
+;******************************************************************
+
+;i90=$09		// 32-bit addressing
+i90=$39		// 24-bit addressing
+i91=4			// permits both “non-privileged” and “supervisory” data access by the VME host
+i92=$00			// VME Base Address Bits A31-A24
+i93=$7f		// A23 through A16 of the VME bus base address of the mailbox
+i94=$a0		// A15 through A08 of the VME bus base address of the mailbox
+i95=2			// interrupt level
+i96=$a1		// interrupt vector
+i97=$70		// bits A23 through A20 of the VME bus base address
+i98=$e0		// VME DPRAM Enable
+;i99=$80		// 32-bit VME bus address width with DPRAM
+i99=$90		// 24-bit VME bus address width with DPRAM
+
+i47=20			// update period for motor data
+i48=1				// enable copying motor data
+i49=1				// enable copying C.S. data
+i50=40			// update period for C.S. data
+i55=1				// enable variable read buffer
+M100->X:$000000,0,24,S  // servo clock M-variable
+
+M3570->X:$78420,0,24		// Input word, 24 bit, node2
+M3600->X:$0010F0,0,24		// Input mirror word
+
+i5=3		// allow plc execution
+
+;Copy input register to the memory for readout via DPRAM
+OPEN PLC2 CLEAR
+M3600=M3570
+CLOSE // use command "ENA PLC 1" to activate this setting
+
+
+;******************************************************************
+;   SETUP MACRO STATION 16 MOTOR/SERVO CHANNELS TO DAC OUTPUT MODE
+;******************************************************************
+
+; setup nodes 2&3 for digital IO
+MS0,I975=$C  	        // enable nodes 2 & 3
+MS0,I71=$10C0A0208800   // set 2 x 24-bit transfers
+MS0,MI19=1		// set update period
+
+; setup nodes 0 to 15
+MS0,I996=$0FB33F  // Must MSSAVE & MS$$$ before activated
+MS 0,I900=6527			//PWM 1-4 Frequency Control
+MS 0,I906=6527			//PWM 5-8 Frequency Control
+MS 0,I992=6527			//MaxPhase and PWM 9-10 Frequency Control
+MS 0,I997=0					//Phase Clock Frequency Control
+; setup nodes 16 to 31
+MS0,I1996=$1FB333  	// Must MSSAVE & MS$$$ before activated
+MS 16,I900=6527			//PWM 1-4 Frequency Control
+MS 16,I906=6527			//PWM 5-8 Frequency Control
+MS 16,I992=6527			//MaxPhase and PWM 9-10 Frequency Control
+MS 16,I997=0				//Phase Clock Frequency Control
+; setup nodes 32 to 47
+MS32,I996=$2FB333  	// Must MSSAVE & MS$$$ before activated
+MS 32,I900=6527			//PWM 1-4 Frequency Control
+MS 32,I906=6527			//PWM 5-8 Frequency Control
+MS 32,I992=6527			//MaxPhase and PWM 9-10 Frequency Control
+MS 32,I997=0				//Phase Clock Frequency Control
+; setup nodes 48 to 63
+MS32,I1996=$3FB333  // Must MSSAVE & MS$$$ before activated
+MS 48,I900=6527			//PWM 1-4 Frequency Control
+MS 48,I906=6527			//PWM 5-8 Frequency Control
+MS 48,I992=6527			//MaxPhase and PWM 9-10 Frequency Control
+MS 48,I997=0				//Phase Clock Frequency Control
+
+; encoder settings
+MS00,MI910=3		// x4 quadrature decode CW
+MS01,MI910=3
+MS04,MI910=3
+MS05,MI910=3
+MS08,MI910=3
+MS09,MI910=3
+MS12,MI910=3
+MS13,MI910=3
+
+MS16,MI910=3		// x4 quadrature decode CW
+MS17,MI910=3
+MS20,MI910=3
+MS21,MI910=3
+MS24,MI910=3
+MS25,MI910=3
+MS28,MI910=3
+MS29,MI910=3
+
+MS32,MI910=3		// x4 quadrature decode CW
+MS33,MI910=3
+MS36,MI910=3
+MS37,MI910=3
+MS40,MI910=3
+MS41,MI910=3
+MS44,MI910=3
+MS45,MI910=3
+
+MS48,MI910=8	// internal feedback, use until encoder is connected
+MS49,MI910=8
+MS52,MI910=8
+MS53,MI910=8
+MS56,MI910=8
+MS57,MI910=8
+MS60,MI910=8
+MS61,MI910=8
+
+; output settings
+MS00,MI916=1		// Outputs A & B are DAC; Output C is PWM
+MS01,MI916=1
+MS04,MI916=1
+MS05,MI916=1
+MS08,MI916=1
+MS09,MI916=1
+MS12,MI916=1
+MS13,MI916=1
+
+MS16,MI916=1		// Outputs A & B are DAC; Output C is PWM
+MS17,MI916=1
+MS20,MI916=1
+MS21,MI916=1
+MS24,MI916=1
+MS25,MI916=1
+MS28,MI916=1
+MS29,MI916=1
+
+MS32,MI916=1		// Outputs A & B are DAC; Output C is PWM
+MS33,MI916=1
+MS36,MI916=1
+MS37,MI916=1
+MS40,MI916=1
+MS41,MI916=1
+MS44,MI916=1
+MS45,MI916=1
+
+MS48,MI916=3		// Outputs A & B are DAC; Output C is PFM
+MS49,MI916=3
+MS52,MI916=3
+MS53,MI916=3
+MS56,MI916=3
+MS57,MI916=3
+MS60,MI916=3
+MS61,MI916=3
+
+; activate 32 motors
+I101,32,100=0		//No Turbo PMAC commutation, command output to Y-register
+I100,32,100=1		//Motor xx Activation Control
+
+; ultralite motor settings.
+I102=$78420			//Motor xx Command Output Address
+I202=$78424
+I302=$78428
+I402=$7842C
+I502=$78430
+I602=$78434
+I702=$78438
+I802=$7843C
+
+I902=$79420
+I1002=$79424
+I1102=$79428
+I1202=$7942C
+I1302=$79430
+I1402=$79434
+I1502=$79438
+I1602=$7943C
+
+I1702=$7A420
+I1802=$7A424
+I1902=$7A428
+I2002=$7A42C
+I2102=$7A430
+I2202=$7A434
+I2302=$7A438
+I2402=$7A43C
+
+I2502=$7B420+2		//Point to stepper output
+I2602=$7B424+2
+I2702=$7B428+2
+I2802=$7B42C+2
+I2902=$7B430+2
+I3002=$7B434+2
+I3102=$7B438+2
+I3202=$7B43C+2
+
+I0103=$3502		//Motor xx Position-Loop Feedback Address
+I0203=$3504
+I0303=$3506
+I0403=$3508
+I0503=$350A
+I0603=$350C
+I0703=$350E
+I0803=$3510
+
+I0903=$3512
+I1003=$3514
+I1103=$3516
+I1203=$3518
+I1303=$351A
+I1403=$351C
+I1503=$351E
+I1603=$3520
+
+I1703=$3522
+I1803=$3524
+I1903=$3526
+I2003=$3528
+I2103=$352A
+I2203=$352C
+I2303=$352E
+I2403=$3530
+
+I2503=$3532
+I2603=$3534
+I2703=$3536
+I2803=$3538
+I2903=$353A
+I3003=$353C
+I3103=$353E
+I3203=$3540
+
+I0108,32,100=96		//Motor xx Position Scale Factor
+I0109,32,100=96		//Motor xx Velocity-Loop Scale Factor
+
+; disable limits (temporary)
+i124,32,100=$60001  ; $40001+$20000
+
+I0125=$3440		//Motor xx Flag Address
+I0225=$3441
+I0325=$3444
+I0425=$3445
+I0525=$3448
+I0625=$3449
+I0725=$344C
+I0825=$344D
+
+I0925=$3450
+I1025=$3451
+I1125=$3454
+I1225=$3455
+I1325=$3458
+I1425=$3459
+I1525=$345C
+I1625=$345D
+
+I1725=$3460
+I1825=$3461
+I1925=$3464
+I2025=$3465
+I2125=$3468
+I2225=$3469
+I2325=$346C
+I2425=$346D
+
+I2525=$3470
+I2625=$3471
+I2725=$3474
+I2825=$3475
+I2925=$3478
+I3025=$3479
+I3125=$347C
+I3225=$347D
+
+; set maximum velocity
+i0116,24,100=7.5
+i2516,08,100=20.0
+
+; tuning for servo motors
+i130,24,100=3540500
+i131,24,100=4051
+i132,24,100=4800
+i133,24,100=0
+i134,24,100=1
+i135,24,100=40000
+i169,32,100=32767
+i111,32,100=32000
+
+; tuning for simulated encoder feedback
+i2530,8,100=800
+i2531,8,100=200
+i2532,8,100=13373
+i2533,8,100=0
+i2534,8,100=1
+i2535,8,100=20000
+i2536,8,100=0
+i2537,8,100=0
+i2538,8,100=0
+i2539,8,100=0
+
+; deadband
+i2564,8,100=-16 ; no gain
+i2565,8,100=12  ; 0.75 cts
+i2570,8,100=0   ; helps for stepper motors
+
+; hardware clocks for stepper output
+;ms0,i903=$08d2     ; 1st 24e2s
+;ms0,i907=$08d2     ; 2nd 24e2s
+;ms16,i903=$08d2     ; 3rd 24e2s
+;ms16,i907=$08d2     ; 4th 24e2s
+;ms32,i903=$08d2     ; 5th 24e2s
+;ms32,i907=$08d2     ; 6th 24e2s
+ms48,i903=$08d2     ; 7th 24e2s
+ms48,i907=$08d2     ; 8th 24e2s
+
+; PFM pulse width
+;ms0,i904=$0f     ; 1st 24e2s
+;ms0,i908=$0f     ; 2nd 24e2s
+
+;ms16,i904=$0f     ; 3rd 24e2s
+;ms16,i908=$0f     ; 4th 24e2s
+
+;ms32,i904=$0f     ; 5st 24e2s
+;ms32,i908=$0f     ; 6nd 24e2s
+
+ms48,i904=$0f     ; 7rd 24e2s
+ms48,i908=$0f     ; 8th 24e2s
+
+; output invert control
+MS00,MI917=0
+MS01,MI917=0
+MS04,MI917=0
+MS05,MI917=0
+MS08,MI917=0
+MS09,MI917=0
+MS12,MI917=0
+MS13,MI917=0
+
+MS16,MI917=0
+MS17,MI917=0
+MS20,MI917=0
+MS21,MI917=0
+MS24,MI917=0
+MS25,MI917=0
+MS28,MI917=0
+MS29,MI917=0
+
+MS32,MI917=0
+MS33,MI917=0
+MS36,MI917=0
+MS37,MI917=0
+MS40,MI917=0
+MS41,MI917=0
+MS44,MI917=0
+MS45,MI917=0
+
+MS48,MI917=3		// Invert Outputs A & B; Invert Output C, 0V is active level in the GFK's step motor drive
+MS49,MI917=3
+MS52,MI917=3
+MS53,MI917=3
+MS56,MI917=3
+MS57,MI917=3
+MS60,MI917=3
+MS61,MI917=3
+
+; Output n PFM Direction Signal Invert Control
+MS00,MI918=0
+MS01,MI918=0
+MS04,MI918=0
+MS05,MI918=0
+MS08,MI918=0
+MS09,MI918=0
+MS12,MI918=0
+MS13,MI918=0
+
+MS16,MI918=0
+MS17,MI918=0
+MS20,MI918=0
+MS21,MI918=0
+MS24,MI918=0
+MS25,MI918=0
+MS28,MI918=0
+MS29,MI918=0
+
+MS32,MI918=0
+MS33,MI918=0
+MS36,MI918=0
+MS37,MI918=0
+MS40,MI918=0
+MS41,MI918=0
+MS44,MI918=0
+MS45,MI918=0
+
+MS48,MI918=0
+MS49,MI918=0
+MS52,MI918=0
+MS53,MI918=0
+MS56,MI918=0
+MS57,MI918=0
+MS60,MI918=0
+MS61,MI918=0
+
+MS  0,I18=$0		//Amplifier Fault Polarity
+MS 16,I18=$0		//Amplifier Fault Polarity
+MS 32,I18=$0		//Amplifier Fault Polarity
+MS 48,I18=$0		//Amplifier Fault Polarity
+
+MS  0,I17=$0 		//Amplifier Fault Disable Control
+MS 16,I17=$0 		//Amplifier Fault Disable Control
+MS 32,I17=$0 		//Amplifier Fault Disable Control
+MS 48,I17=$0 		//Amplifier Fault Disable Control
+
+
+
+
+
+

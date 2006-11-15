@@ -1,0 +1,31 @@
+;=======================================================================
+; Program-11: one motor, backlash (backlash from both sides)
+; (for Ram6X2 -- GM/CA CAT)
+;
+;----------------------------------------;
+; $(assy)AccelTime  -> TA0   -> M(Q71)   ;
+; $(assy)AccelCurve -> TS0   -> M(Q72)   ;
+; $(m1)RqsPos       -> X0    -> M(Q73)   ;
+; $(m1)RqsBkl       -> X1    -> M(Q74)   ;
+; $(m1)RqsPosFra    -> X2    -> M(Q75)   ; == 0 unless encoder provides fractions of a count
+;----------------------------------------;
+; Use: Q71, Q72, Q73, Q74, Q75
+;      TA0, TS0, X0,  X1,  X2 
+;
+CLOSE
+;
+OPEN PROG 11 CLEAR
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axis
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;RqsPos
+  Q4=M(Q74+0)		;RqsBkl
+  X(Q1-Q4)		;goto RqsPos-RqsBkl
+  X(Q1)			;goto RqsPos
+  DWELL0
+; DELAY 100
+CLOSE
+

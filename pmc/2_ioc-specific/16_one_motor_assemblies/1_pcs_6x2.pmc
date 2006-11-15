@@ -1,0 +1,71 @@
+; Coordinate System Definitions
+;
+; pmac40 /modular or generic motors/
+
+undef all	; clear all coordinate systems
+; (1) MD:Cs1:
+&1
+#1->X  ; MD:m1:
+
+; (2) MD:Cs2:
+&2
+#2->X  ; MD:m2:
+
+; (3) MD:Cs3:
+&3
+#3->X  ; MD:m3:
+
+; (4) MD:Cs4:
+&4
+#4->X  ; MD:m4:
+
+; (5) MD:Cs5:
+&5
+#5->X  ; MD:m5:
+
+; (6) MD:Cs6:
+&6
+#6->X  ; MD:m6:
+
+; (7) MD:Cs7:
+&7
+#7->X  ; MD:m7:
+
+; (8) MD:Cs8:
+&8
+#8->X  ; MD:m8:
+
+; (9) MD:Cs9:
+&9
+#9->X  ; MD:m9:
+
+; (10) MD:Cs10:
+&10
+#10->X  ; MD:m10:
+
+; (11) MD:Cs11:
+&11
+#11->X  ; MD:m11:
+
+; (12) MD:Cs12:
+&12
+#12->X  ; MD:m12:
+
+; (13) MD:Cs13:
+&13
+#13->X  ; MD:m13:
+
+; (14) MD:Cs14:
+&14
+#14->X  ; MD:m14:
+
+; (15) MD:Cs15:
+&15
+#15->X  ; MD:m15:
+
+; (16) MD:Cs16:
+&16
+#16->X  ; MD:m16:
+
+
+

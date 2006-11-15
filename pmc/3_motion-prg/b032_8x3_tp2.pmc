@@ -1,0 +1,62 @@
+;=======================================================================
+; Program-32: two motors, backlash (backlash from one side only)
+; PMAC-2 version
+; (for Ram8X2 -- GM/CA CAT)
+;
+;----------------------------------------;
+; $(assy)AccelTime  -> TA0   -> M(Q71)   ;
+; $(assy)AccelCurve -> TS0   -> M(Q72)   ;
+; $(m1)RqsPos       -> X0    -> M(Q73)   ;
+; $(m1)RqsBkl       -> X1    -> M(Q74)   ;
+; $(m1)RqsPosFra    -> X2    -> M(Q75)   ; == 0 unless encoder provides fractions of a count
+; $(m2)RqsPos       -> Y0    -> M(Q76)   ;
+; $(m2)RqsBkl       -> Y1    -> M(Q77)   ;
+; $(m2)RqsPosFra    -> Y2    -> M(Q78)   ; == 0 unless encoder provides fractions of a count
+;----------------------------------------;
+;                 v----PMAC2-----v
+; Use: Q70*100+5047,  Q70*100+5048, Q71, Q72, Q73, Q74, Q75, Q76, Q77, Q78
+;      ${m1}DesPos    ${m2}DesPos,  TA0, TS0,  X0,  X1,  X2,  Y0,  Y1,  Y2
+; Q70    is the coordinate system number.
+; DesPos is nearly the same as ActPos - this is the position
+;        around which PMAC is currently trying to hold the motor.
+;
+CLOSE
+;
+OPEN PROG 32 CLEAR
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
+;;FRAX(Y)		;specify feedrate axes
+;;FRAX(X,Y)		;specify feedrate axes
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)				;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)				;${m2}RqsPos
+  Q4=M(Q74+0)                                   ;${m1}RqsBkl
+  Q5=M(Q77+0)					;${m2}RqsBkl
+  Q7=Q1-M(Q70*100+5047)				;${m1}RqsPos-${m1}DesPos
+  Q8=Q2-M(Q70*100+5048)				;${m2}RqsPos-${m2}DesPos
+  IF(Q4>0 AND Q7<0  OR  Q4<0 AND Q7>0) 
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      X(Q1-Q4)Y(Q2-Q5)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl
+      DWELL0
+      X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
+    ELSE
+      X(Q1-Q4)Y(Q2)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos
+      DWELL0
+      X(Q1)					;goto ${m1}RqsPos
+    ENDIF
+  ELSE
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      X(Q1)Y(Q2-Q5)				;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl
+      DWELL0
+      Y(Q2)					;goto ${m2}RqsPos
+    ELSE
+      X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
+    ENDIF
+  ENDIF
+  DWELL0
+; DELAY 100
+CLOSE
+

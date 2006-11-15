@@ -1,0 +1,119 @@
+; M-variable Definitions
+; point to motion program parameters in the DPRAM
+; use together with pcs-23IDpmac20_6x2.pmc and q70-23IDpmac20_6x2.pmc
+
+CLOSE	; To ensure commands are on-line
+M3300..3540->*	; To clear existing definitions
+; use together with pcs-23IDpmac20_6x2.pmc and m3300-23IDpmac20_6x2.pmc
+
+; &1 DPRAM Program Parameters Set      MD:Cs1: 
+M3300->DP:$60450        ; TA0
+M3301->DP:$60451        ; TS0
+M3302->DP:$60452  	; X0
+M3303->F:$60453   	; X1
+M3304->F:$60454   	; X2
+
+; &2 DPRAM Program Parameters Set      MD:Cs2: 
+M3305->DP:$60455        ; TA0
+M3306->DP:$60456        ; TS0
+M3307->DP:$60457  	; X0
+M3308->F:$60458   	; X1
+M3309->F:$60459   	; X2
+
+; &3 DPRAM Program Parameters Set      MD:Cs3: 
+M3310->DP:$6045a        ; TA0
+M3311->DP:$6045b        ; TS0
+M3312->DP:$6045c  	; X0
+M3313->F:$6045d   	; X1
+M3314->F:$6045e   	; X2
+
+; &4 DPRAM Program Parameters Set      MD:Cs4: 
+M3315->DP:$6045f        ; TA0
+M3316->DP:$60460        ; TS0
+M3317->DP:$60461  	; X0
+M3318->F:$60462   	; X1
+M3319->F:$60463   	; X2
+
+; &5 DPRAM Program Parameters Set      MD:Cs5: 
+M3320->DP:$60464        ; TA0
+M3321->DP:$60465        ; TS0
+M3322->DP:$60466  	; X0
+M3323->F:$60467   	; X1
+M3324->F:$60468   	; X2
+
+; &6 DPRAM Program Parameters Set      MD:Cs6: 
+M3325->DP:$60469        ; TA0
+M3326->DP:$6046a        ; TS0
+M3327->DP:$6046b  	; X0
+M3328->F:$6046c   	; X1
+M3329->F:$6046d   	; X2
+
+; &7 DPRAM Program Parameters Set      MD:Cs7: 
+M3330->DP:$6046e        ; TA0
+M3331->DP:$6046f        ; TS0
+M3332->DP:$60470  	; X0
+M3333->F:$60471   	; X1
+M3334->F:$60472   	; X2
+
+; &8 DPRAM Program Parameters Set      MD:Cs8: 
+M3335->DP:$60473        ; TA0
+M3336->DP:$60474        ; TS0
+M3337->DP:$60475  	; X0
+M3338->F:$60476   	; X1
+M3339->F:$60477   	; X2
+
+; &9 DPRAM Program Parameters Set      MD:Cs9: 
+M3340->DP:$60478        ; TA0
+M3341->DP:$60479        ; TS0
+M3342->DP:$6047a  	; X0
+M3343->F:$6047b   	; X1
+M3344->F:$6047c   	; X2
+
+; &10 DPRAM Program Parameters Set      MD:Cs10: 
+M3345->DP:$6047d        ; TA0
+M3346->DP:$6047e        ; TS0
+M3347->DP:$6047f  	; X0
+M3348->F:$60480   	; X1
+M3349->F:$60481   	; X2
+
+; &11 DPRAM Program Parameters Set      MD:Cs11: 
+M3350->DP:$60482        ; TA0
+M3351->DP:$60483        ; TS0
+M3352->DP:$60484  	; X0
+M3353->F:$60485   	; X1
+M3354->F:$60486   	; X2
+
+; &12 DPRAM Program Parameters Set      MD:Cs12: 
+M3355->DP:$60487        ; TA0
+M3356->DP:$60488        ; TS0
+M3357->DP:$60489  	; X0
+M3358->F:$6048a   	; X1
+M3359->F:$6048b   	; X2
+
+; &13 DPRAM Program Parameters Set      MD:Cs13: 
+M3360->DP:$6048c        ; TA0
+M3361->DP:$6048d        ; TS0
+M3362->DP:$6048e  	; X0
+M3363->F:$6048f   	; X1
+M3364->F:$60490   	; X2
+
+; &14 DPRAM Program Parameters Set      MD:Cs14: 
+M3365->DP:$60491        ; TA0
+M3366->DP:$60492        ; TS0
+M3367->DP:$60493  	; X0
+M3368->F:$60494   	; X1
+M3369->F:$60495   	; X2
+
+; &15 DPRAM Program Parameters Set      MD:Cs15: 
+M3370->DP:$60496        ; TA0
+M3371->DP:$60497        ; TS0
+M3372->DP:$60498  	; X0
+M3373->F:$60499   	; X1
+M3374->F:$6049a   	; X2
+
+; &16 DPRAM Program Parameters Set      MD:Cs16: 
+M3375->DP:$6049b        ; TA0
+M3376->DP:$6049c        ; TS0
+M3377->DP:$6049d  	; X0
+M3378->F:$6049e   	; X1
+M3379->F:$6049f   	; X2

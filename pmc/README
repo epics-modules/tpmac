@@ -1,0 +1,47 @@
+These are the files to be loaded into PMAC in order to start working with
+EPICS. The downloading is supposed to be done with the PMAC Windows
+Executable (PEWIN32) software supplied by Delta Tau. One has to proceed
+with downloading according to the directories order:
+
+1_begin_generic
+2_ioc-specific
+3_motion-prg
+
+-- and load the PMC files in the order they are listed in each directory.
+
+The first directory (1_begin_generic) is just an example. It has nothing to
+do with EPICS, but configures PMAC to handel different types of motors
+(servos, steppers, piezos, encoder types, and etc.). One has to read Delta
+Tau documentation and modify those file accordingly to the set of motors
+connected to his PMAC.
+
+
+The second directory (2_ioc-specific) contains 3 examples:
+-- 16 generic one-motor assemblies (to work with MD databases)
+-- 16 two-motor assemblies (to work with XY, CS, HS, MO, and MI databases)
+-- 31 motors grouped in assemblies as at the GMCA CAT 23i beamline.
+
+The purpose of these files is to prepare PMAC dual-ported RAM (DPRAM), so
+that the EPICS databases write and read the DPRAM at the right memory
+locations for different motors assemblies. Here is how it works and what it
+is for: When one executes a motion program on an assembly, the program needs
+various parameters like acceleration time and requested positions for each
+drive. In our implementation 4+2*n paramters are required (where "n" is the
+number of motors in the assembly). It means that 6 parameters are needed
+for 1-motor assembly, 8 for 2-motor, 10 for 3-motor, and etc. The motion
+program reads those parameters from the Q70...Q80 PMAC variables that are
+available for each coordinate system (see the files q70*.pmc and the motion
+programs in the 3_motion-prg directory). Those Q-variables are mapped into a
+unique set of M-variables in the PMAC: M33xx-.... (see q70*.pmc). In their
+turn the M-variables are mapped to the DPRAM accessible from the EPICS
+databases (see m3300*.pmc). Finally, the files pcs*.pmc declare the
+coordinate systems and the number of axes in each coordinate system.
+
+
+The last directory (3_motion-prg) defines motion programs. Here three types
+of motion programs are defined ("slew", "backlash", and "position") for
+assemblies containing 1, 2, and 3 motors. More motion programs can be added
+by analogy.
+
+-- Sergey
+

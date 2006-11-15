@@ -1,0 +1,4 @@
+;Copy input register to the memory for readout via DPRAM
+OPEN PLC2 CLEAR
+M3600=M3570
+CLOSE // use command "ENA PLC 1" to activate this setting

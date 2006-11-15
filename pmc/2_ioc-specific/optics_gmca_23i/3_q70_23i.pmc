@@ -1,0 +1,191 @@
+; Q-variable Definitions
+
+CLOSE	; To ensure commands are on-line
+
+&1 	;Coordinate System      WS:Av: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=1      	; CS#
+Q71=3300  	; TA0  3300+(PREVIOUS RAM)
+Q72=3301  	; TS0
+Q73=3302  	; X0
+Q74=3303  	; X1
+Q75=3304  	; X2
+Q76=3305  	; Y0
+Q77=3306  	; Y1
+Q78=3307  	; Y2
+
+&2 	;Coordinate System      WS:Ah: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=2      	; CS#
+Q71=3308  	; TA0  3300+(PREVIOUS RAM)
+Q72=3309  	; TS0
+Q73=3310  	; X0
+Q74=3311  	; X1
+Q75=3312  	; X2
+Q76=3313  	; Y0
+Q77=3314  	; Y1
+Q78=3315  	; Y2
+
+&3 	;Coordinate System      MO:Ps: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=3      	; CS#
+Q71=3316  	; TA0  3300+(PREVIOUS RAM)
+Q72=3317  	; TS0
+Q73=3318  	; X0
+Q74=3319  	; X1
+Q75=3320  	; X2
+Q76=3321  	; Y0
+Q77=3322  	; Y1
+Q78=3323  	; Y2
+
+&4 	;Coordinate System      MO:En: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=4      	; CS#
+Q71=3324  	; TA0  3300+(PREVIOUS RAM)
+Q72=3325  	; TS0
+Q73=3326  	; X0
+Q74=3327  	; X1
+Q75=3328  	; X2
+Q76=3329  	; Y0
+Q77=3330  	; Y1
+Q78=3331  	; Y2
+
+&5 	;Coordinate System      MO:Tn1: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=5      	; CS#
+Q71=3332  	; TA0  3300+(PREVIOUS RAM)
+Q72=3333  	; TS0
+Q73=3334  	; X0
+Q74=3335  	; X1
+Q75=3336  	; X2
+
+&6 	;Coordinate System      MO:Tn2: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=6      	; CS#
+Q71=3337  	; TA0  3300+(PREVIOUS RAM)
+Q72=3338  	; TS0
+Q73=3339  	; X0
+Q74=3340  	; X1
+Q75=3341  	; X2
+Q76=3342  	; Y0
+Q77=3343  	; Y1
+Q78=3344  	; Y2
+
+&7 	;Coordinate System      BP:Mo: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=7      	; CS#
+Q71=3345  	; TA0  3300+(PREVIOUS RAM)
+Q72=3346  	; TS0
+Q73=3347  	; X0
+Q74=3348  	; X1
+Q75=3349  	; X2
+
+&8 	;Coordinate System      CS:Av: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=8      	; CS#
+Q71=3350  	; TA0  3300+(PREVIOUS RAM)
+Q72=3351  	; TS0
+Q73=3352  	; X0
+Q74=3353  	; X1
+Q75=3354  	; X2
+Q76=3355  	; Y0
+Q77=3356  	; Y1
+Q78=3357  	; Y2
+
+&9 	;Coordinate System      CS:Ah: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=9      	; CS#
+Q71=3358  	; TA0  3300+(PREVIOUS RAM)
+Q72=3359  	; TS0
+Q73=3360  	; X0
+Q74=3361  	; X1
+Q75=3362  	; X2
+Q76=3363  	; Y0
+Q77=3364  	; Y1
+Q78=3365  	; Y2
+
+&10 	;Coordinate System      KB:Hz: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=10      	; CS#
+Q71=3366  	; TA0  3300+(PREVIOUS RAM)
+Q72=3367  	; TS0
+Q73=3368  	; X0
+Q74=3369  	; X1
+Q75=3370  	; X2
+Q76=3371  	; Y0
+Q77=3372  	; Y1
+Q78=3373  	; Y2
+Q79=3374  	; Z0
+Q80=3375  	; Z1
+Q81=3376  	; Z2
+
+&11 	;Coordinate System      KB:Hy: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=11      	; CS#
+Q71=3377  	; TA0  3300+(PREVIOUS RAM)
+Q72=3378  	; TS0
+Q73=3379  	; X0
+Q74=3380  	; X1
+Q75=3381  	; X2
+Q76=3382  	; Y0
+Q77=3383  	; Y1
+Q78=3384  	; Y2
+
+&12 	;Coordinate System      KB:Vz: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=12      	; CS#
+Q71=3385  	; TA0  3300+(PREVIOUS RAM)
+Q72=3386  	; TS0
+Q73=3387  	; X0
+Q74=3388  	; X1
+Q75=3389  	; X2
+Q76=3390  	; Y0
+Q77=3391  	; Y1
+Q78=3392  	; Y2
+Q79=3393  	; Z0
+Q80=3394  	; Z1
+Q81=3395  	; Z2
+
+&13 	;Coordinate System      KB:Vy: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=13      	; CS#
+Q71=3396  	; TA0  3300+(PREVIOUS RAM)
+Q72=3397  	; TS0
+Q73=3398  	; X0
+Q74=3399  	; X1
+Q75=3400  	; X2
+Q76=3401  	; Y0
+Q77=3402  	; Y1
+Q78=3403  	; Y2
+
+&14 	;Coordinate System      BP:Kb: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=14      	; CS#
+Q71=3404  	; TA0  3300+(PREVIOUS RAM)
+Q72=3405  	; TS0
+Q73=3406  	; X0
+Q74=3407  	; X1
+Q75=3408  	; X2
+
+; Unused Coordinate Systems
+
+&15	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&16	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
