@@ -96,7 +96,24 @@ typedef struct drvPmac
     epicsTimeStamp now;
 } drvPmac_t;
 
+/* These two #define affect the behaviour of the driver.
+
+   REMOVE_LIMITS_ON_HOME removes the limits protection when homing if
+    - ms??,i912 indicates you are homing onto a limit
+    - ms??,i913 and the home velocity indicate that the limit you trigger.
+      for home detection is the one you are homing towards.
+    - any home offset is in the opposite sense to the home velocity.
+   SIMULATE_SET_POSITION uses a driver level offset to simulate a PMAC command
+   to set the current demand and actual to a specific position. The alternative
+   is to write to M161 and M162. The consequences are:
+    + Motor doesn't move (writing to M161 and M162 invariable creates a small move.
+    + M161 and M162 don't need to be defined.
+    - The offset doesn't survive a reboot - the motor record only calls SET_POSITION
+      of the current actual is close to zero and is a long way away from the demand.
+*/
+
 #define REMOVE_LIMITS_ON_HOME
+/* #define SIMULATE_SET_POSITION */
 
 typedef struct motorAxisHandle
 {
@@ -107,6 +124,10 @@ typedef struct motorAxisHandle
     motorAxisLogFunc print;
     void * logParam;
     epicsMutexId axisMutex;
+#ifdef SIMULATE_SET_POSITION
+    double enc_offset;
+    int homeSignal;
+#endif
 #ifdef REMOVE_LIMITS_ON_HOME
     int limitsDisabled;
 #endif
@@ -130,6 +151,9 @@ static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
     printf( "Found driver for drvPmac card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis );
 
     if (level > 0) printf( "drvPmac->axisMutex = %p\n", pAxis->axisMutex );
+#ifdef SIMULATE_SET_POSITION
+    if (level > 0) printf( "Encoder offset = %f\n", pAxis->enc_offset );
+#endif
 
     if (level > 1)
     {
@@ -310,68 +334,100 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
         char command[64]="\0";
         char response[64];
 
-        switch (function)
-        {
-        case motorAxisPosition:
-        {
-            int position = (int) floor(value*32 + 0.5);
-
-            sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08 J/",
-                     pAxis->axis,
-                     pAxis->axis, position, pAxis->axis, 
-                     pAxis->axis, position, pAxis->axis );
-
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Set card %d, axis %d to position %f\n", pAxis->pDrv->card, pAxis->axis, value );
-
-            break;
-        }
-        case motorAxisEncoderRatio:
-        {
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d encoder ratio (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisLowLimit:
-        {
-            sprintf( command, "I%d14=%f", pAxis->axis, value );
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d low limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisHighLimit:
-        {
-            sprintf( command, "I%d13=%f", pAxis->axis, value );
-           pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d high limit (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisPGain:
-        {
-            sprintf( command, "I%d30=%f", pAxis->axis, value );
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d pgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisIGain:
-        {
-            sprintf( command, "I%d33=%f", pAxis->axis, value );
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d igain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisDGain:
-        {
-            sprintf( command, "I%d31=%f", pAxis->axis, value );
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Setting PMAC card %d, axis %d dgain (%f)\n", pAxis->pDrv->card, pAxis->axis, value );
-            break;
-        }
-        case motorAxisClosedLoop:
-        {
-            pAxis->print( pAxis->logParam, TRACE_FLOW, "Cannot set PMAC card %d, axis %d closed loop (%s)\n", pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
-            break;
-        }
-        default:
-            status = MOTOR_AXIS_ERROR;
-            break;
-        }
-
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
+            switch (function)
+            {
+            case motorAxisPosition:
+            {
+#ifdef SIMULATE_SET_POSITION
+                double position, highLimit, lowLimit;
+
+                motorParam->getDouble( pAxis->params, motorAxisPosition,  &position );
+                motorParam->getDouble( pAxis->params, motorAxisHighLimit, &highLimit );
+                motorParam->getDouble( pAxis->params, motorAxisLowLimit,  &lowLimit );
+
+                pAxis->enc_offset += value - position;
+                sprintf( command, "I%d13=%f I%d14=%f",
+                         pAxis->axis, (highLimit - pAxis->enc_offset),
+                         pAxis->axis, (lowLimit  - pAxis->enc_offset)  );
+
+                printf( "Set PMAC card %d, axis %d to position %f, offset %f, old position %f\n",
+                        pAxis->pDrv->card, pAxis->axis, value, pAxis->enc_offset, position );
+#else
+                int position = (int) floor(value*32 + 0.5);
+
+                sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08 J/",
+                         pAxis->axis,
+                         pAxis->axis, position, pAxis->axis, 
+                         pAxis->axis, position, pAxis->axis );
+
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Set card %d, axis %d to position %f\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+
+#endif
+                break;
+            }
+            case motorAxisEncoderRatio:
+            {
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Cannot set PMAC card %d, axis %d encoder ratio (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisLowLimit:
+            {
+                sprintf( command, "I%d14=%f", pAxis->axis, value );
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d low limit (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisHighLimit:
+            {
+                sprintf( command, "I%d13=%f", pAxis->axis, value );
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d high limit (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisPGain:
+            {
+                sprintf( command, "I%d30=%f", pAxis->axis, value );
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d pgain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisIGain:
+            {
+                sprintf( command, "I%d33=%f", pAxis->axis, value );
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d igain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisDGain:
+            {
+                sprintf( command, "I%d31=%f", pAxis->axis, value );
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d dgain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );
+                break;
+            }
+            case motorAxisClosedLoop:
+            {
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Cannot set PMAC card %d, axis %d closed loop (%s)\n",
+                              pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
+                break;
+            }
+            default:
+                status = MOTOR_AXIS_ERROR;
+                break;
+            }
+
             if ( command[0] != 0 && status == MOTOR_AXIS_OK)
             {
                 status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
@@ -421,8 +477,14 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
             }
         }
 
+#ifdef SIMULATE_SET_POSITION
+        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
+                 (relative?"J^":"J="),
+                 (relative?position:position - pAxis->enc_offset) );
+#else
         sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
                  (relative?"J^":"J="), position );
+#endif
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
@@ -639,13 +701,37 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
         }
         else
         {
+            int homeSignal = ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0);
+            int direction;
+
+#ifdef SIMULATE_SET_POSITION
+            if ( homeSignal && !pAxis->homeSignal )
+            {
+                double highLimit, lowLimit;
+
+                /* Just finished homing - remove encoder offset */
+                motorParam->getDouble( pAxis->params, motorAxisHighLimit, &highLimit );
+                motorParam->getDouble( pAxis->params, motorAxisLowLimit,  &lowLimit );
+
+                pAxis->enc_offset = 0;
+                sprintf( command, "I%d13=%f I%d14=%f",
+                         pAxis->axis, highLimit, pAxis->axis, lowLimit );
+                cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+            }
+            pAxis->homeSignal = homeSignal;
+
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error+pAxis->enc_offset) );
+#else
             motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+#endif
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
 
-            motorParam->setInteger( pAxis->params, motorAxisDirection,     (velocity >= 0) );
+            /* Don't set direction if velocity equals zero and was previously negative */
+            motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
+            motorParam->setInteger( pAxis->params, motorAxisDirection,     ((velocity >= 0) || (velocity == 0 && direction)) );
             motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
-            motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0) );
+            motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
             motorParam->callCallback( pAxis->params );           
