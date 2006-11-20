@@ -1,6 +1,6 @@
 ; Clear existing definitions
 CLOSE ; Make sure no buffer is open
-M0..8191->* ; All M-variables are now self-referenced
+;M0..8191->* ; All M-variables are now self-referenced
 
 ; JI/O Port M-variables
 M0->Y:$078400,0        ; I/O00 Data Line; J3 Pin 1
