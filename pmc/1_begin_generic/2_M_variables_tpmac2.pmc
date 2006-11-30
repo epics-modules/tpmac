@@ -1,5 +1,5 @@
 ; Clear existing definitions
-CLOSE ; Make sure no buffer is open
+;CLOSE ; Make sure no buffer is open
 ;M0..8191->* ; All M-variables are now self-referenced
 
 ; JI/O Port M-variables
