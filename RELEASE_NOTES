@@ -78,7 +78,8 @@ The parameters for the second routine are:
                    axis.
  - nAxes (int)     #axes to configure (zero based). Note that since PMAC
                    axes are 1 based and drvAsynMotor axes are 0 based
-                   this will generate a non-fatal warning.
+                   this will generate a non-fatal warning of the form:
+                   <datestamp> drvAsynMotorConfigure: Failed to open axis 0
 
 To connect motor records to this driver, use:
 
