@@ -1,0 +1,113 @@
+<html>
+  <head><title>Backing up PMAC-related information</title></head>
+<body>
+
+<center>
+<H2>Backing up PMAC-related information</H2>
+</center>
+
+<p>This document is intended for the GM/CA CAT staff. It explains how to 
+backup various parameters related to PMAC motion controllers.</p>
+
+<p>There are two groups of parameters pertaining the PMAC motion controllers. 
+The first group is constituted by the parameters like motors speeds, 
+in-position bands, various servo loop gains, and etc. The second group 
+consist of calibration parameters like scaling factors and offsets that are 
+used to recalculate encoders data into engineering units and beamline 
+elements positions.<p> 
+
+<h3>Servo parameters</h3>
+
+<p>The first group of parameters is typically modified with the help of the 
+PWIN32 (Delta Tau Windows Executable software) or through the following MEDM 
+form:<p>
+
+<center><img src="img/MtrStatus_adl.jpg" border=2></center>
+
+<p>Generally it must be saved in the PMAC flash memory which allows to keep 
+those parameter under a reset or power-up cycle. To save the parameters, press
+<B>Save</B> on the above MEDM screen.</p> 
+
+<p>In addition, one can create a snapshot (backup) file with all those 
+parameters saved on the workstation hard drive. This may only be needed as
+a precaution in case of potential PMAC factory reset or malfunction. To 
+save the parameters follow the chart below:</p>
+
+<center><img src="img/PMAC_saving2.jpg" border=2></center>
+
+<p>The snapshot files are saved in /home/gmca/DATA with the names like:</p>
+
+<pre>	MtrBackup-pmac10p2004-Oct-05-1824.pmc</pre>
+
+<p>-- i.e. the PMAC name as well as the date/time stamps are appended. The 
+software making the backups is the PERL script named:</p>
+
+<pre>	/home/gmca/epics/pezca/mtrBackup.pl</pre>
+
+<p>We have several tools to upload stored snapshots back into PMAC controllers.
+Given the complexity of PMAC, restoring should not be done without consulting
+with Oleg or Sergey.</p>
+
+
+<h3>Calibration parameters</h3>
+
+<p>The second group of parameters is typically modified through the calibration
+MEDM forms that look like:<p>
+
+<center><img src="img/Calib_adl.jpg" border=2></center>
+
+<p>Generally those parameters are automatically backed up every 30 seconds on 
+the hard drive of workstation that loads respective VME controller. The files 
+are stored in the following folder:<p>
+
+<pre>	/home/gmca/epics/synApps/xxxNN/iocBoot/iocgmcaNN/autosave</pre> 
+
+<p>where NN stands for the VME controller number. If the VME happens to be 
+rebooted, the calibration parameters are automatically restored from these
+autobackup files. However, there might be situations when those files get 
+corrupt. Although the probability of such a failure is quite low, as an 
+additional precaution we have implemented manual backups of calibration 
+parameters that should be run in case of an essential calibration change. 
+The manual backups are stored in:</p>
+
+<pre>	/home/gmca/epics/gmcaApp/burt/23x/</pre> 
+
+<p>where "x" stands for the beamline name (i,o,b,d).</a>
+
+<p><font color="red"><B>ATTENTION:</B></font> In order to avoid any 
+confusion, make the backups on the main beamline controls computer only. At 
+present those computers are:</p>
+
+<center><table border=1>
+<tr><td>bl1ws3           </td><td>for ID-in                </td></tr>
+<tr><td>bl2dl380upper    </td><td>for ID-out               </td></tr>
+<tr><td>px0              </td><td>for the lab environment  </td></tr>
+</table></center>
+
+<p>To make a backup, call the following screen:</p>
+
+<center><img src="img/PMAC_saving1.jpg" border=2></center>
+
+<p>Also, make a hardcopy of changed configuration: </p>
+<ul>
+<li> Right-click on the calibration screen
+<li> Select "print"
+<li> Attach the printout to the beamline logbook
+</ul>
+
+<hr><br>
+<H3>Questions:</H3> 
+
+<p>Contact Sergey Stepanov or Oleg Makarov.</p>
+
+
+<p>&nbsp;</p>
+<!-- This script inserts a 'Last Modified Date Stamp' -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+        document.write('<FONT SIZE="1">Last modified ' + document.lastModified + '</FONT><BR>')
+// -->
+</SCRIPT>
+
+</body>
+</html>

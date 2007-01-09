@@ -1,0 +1,67 @@
+ms0,i903=$8FA		  //max PFM freq. is 305.72 kHz
+ms0,i904=2				//pulse width is 6.54us
+
+;wbattn-z1 BM-A-5 (xx=1)
+i116=20.0			;max program velocity
+i117=0.150		;max program acceleration
+i122=20.0			;max jog velocity
+i123=10				;homing speed
+i128=128			;in-position band
+i130=40000		;proportional gain
+i131=0			  ;derivative gain
+i132=16842		;vel feed-forward gain
+i133=10000	  ;integral gain
+i134=1			  ;integration mode
+i135=34000		;accel feed-forward gain
+I164=-16      ;'Deadband Gain'
+i165=8			  ;dead-band size
+I169=15000    ;Output Command Limit/Scale
+
+ms0,i910=7		;closed loop motion
+;homing flag PLIM
+ms0,i912=11		;capture on flag LOW and index HI
+ms0,i913=2 		;NLIM
+
+;#############################################################
+;wbattn-z2 BM-A-6 (xx=2)
+i216=20.0			  ;max program velocity
+i217=0.150			;max program acceleration
+i222=20.0		  	;max jog velocity
+i223=-10			  ;homing speed
+i228=128				;in-position band
+i230=40000			;proportional gain
+i231=0					;derivative gain
+i232=16842			;vel feed-forward gain
+i233=10000			;integral gain
+i234=1					;integration mode
+i235=34000			;accel feed-forward gain
+I264=-16      	;'Deadband Gain'
+i265=8					;dead-band size
+I269=15000    ;Output Command Limit/Scale
+
+ms1,i910=7			;closed loop motion
+;homing flag NLIM
+ms1,i912=11			;capture on flag LOW and index HI
+ms1,i913=1 			;PLIM
+
+;#############################################################
+;BP:Mo (xx=3)
+i316=30.0			;max program velocity
+i317=0.150			;max program acceleration
+i322=30.0			;max jog velocity
+i323=10			;homing speed
+i328=128			;in-position band
+i330=40000			;proportional gain
+i331=0			;derivative gain
+i332=16842			;vel feed-forward gain
+i333=10000			;integral gain
+i334=1			;integration mode
+i335=34000			;accel feed-forward gain
+i365=8			;dead-band size
+I369=15000    ;Output Command Limit/Scale
+
+ms4,i910=7			;closed loop motion
+;homing flag PLIM
+ms4,i912=11			;capture on flag LOW and index HI
+ms4,i913=2 			;NLIM
+

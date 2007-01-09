@@ -1,0 +1,12 @@
+These are 1D or X-positioner databases which in addition can be linked to the 
+beam offset produced by a vertically collimating mirror upstream.
+See Xbm_Calibrate.db and CalibXbmPs.adl for more details.
+
+-- Chitra 21.05.06
+
+These are 1D or X-positioner databases -- same as modular drives (one motor
+in coordinate system).
+See X_Calibrate.db and CalibXPs.adl for more details.
+
+-- Sergey
+

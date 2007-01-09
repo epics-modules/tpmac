@@ -1,0 +1,46 @@
+file $(TPMAC)/moDb/MO_Calibrate.db
+{
+	pattern { assy, d1, d2 }
+# pmac10:
+        { 23o:MO:En:, 23o:MO:QB:, 23o:MO:T2: }
+}
+#----------------------------------------------------------------------------  
+file $(TPMAC)/moDb/MO_LimAmp.db
+{
+ 	pattern { assy, x1, x2, d1, d2 }
+#
+        { 23o:MO:En:, 23o:MO:E:, 23o:MO:L:, 23o:MO:QB:, 23o:MO:T2: }
+}
+#----------------------------------------------------------------------------  
+# Special case for Mono Energy: we have to pass fractional part of RqsPos: 
+file $(TPMAC)/moDb/MO_TsubRqsPos.db
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion. 
+# pmac10:
+  { 23o:MO:En:, 23o:MO:E:, 23o:MO:L:, 23o:MO:QB:, 23o:MO:T2:, 23o:MO:mr:, 23o:MO:mt2:, RqsPos, 0, tsubMOEn }
+}
+#
+file "$(TPMAC)/moDb/MO_TsubRqsBkl.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# pmac10:
+  { 23o:MO:En:, 23o:MO:E:, 23o:MO:L:, 23o:MO:QB:, 23o:MO:T2:, 23o:MO:mr:, 23o:MO:mt2:, RqsBkl, 1, tsubMOEn }
+} 
+#----------------------------------------------------------------------------  
+file $(TPMAC)/moDb/MO_TsubRbk.db
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac10:
+  { 23o:MO:En:, 23o:MO:E:, "Energy", "(keV)", 23o:MO:L:, "Lambda", "(A)", 23o:MO:QB:, "Bragg Angle", "(degr)", 23o:MO:T2:, "Crystal-2 Translation", "(mm)", 23o:MO:mr:,  23o:MO:mt2:,  ActPos, 0, tsubMOEn }
+}
+#----------------------------------------------------------------------------  
+file "$(TPMAC)/moDb/MO_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac10:
+  { 23o:MO:En:, 23o:MO:E:, "(keV/s)", 23o:MO:L:, "(A/s)", 23o:MO:QB:, "(degr/s)", 23o:MO:T2:, "(mm/s)", 23o:MO:mr:,  23o:MO:mt2:,  tsubMOEn }
+
+}
+#----------------------------------------------------------------------------  

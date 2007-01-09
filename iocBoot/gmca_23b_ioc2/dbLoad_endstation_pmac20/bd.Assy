@@ -1,0 +1,37 @@
+file "$(TPMAC)/bdDb/BD_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac20:
+        { 23b:BD:Dv:, 23b:BD:VDS:, 23b:BD:VUS: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/bdDb/BD_LimAmp.db"
+{
+ 	pattern { assy, x1, x2, d1, d2 }
+# pmac20:
+        { 23b:BD:Dv:, 23b:BD:VD:, 23b:BD:VA:, 23b:BD:VDS:, 23b:BD:VUS: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/bdDb/BD_Tsub.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac20:
+  { 23b:BD:Dv:, 23b:BD:VD:, 23b:BD:VA:, 23b:BD:VDS:, 23b:BD:VUS:, 23b:BD:mvd:, 23b:BD:mvu:, RqsPos, 0, tsubBDSt }
+  { 23b:BD:Dv:, 23b:BD:VD:, 23b:BD:VA:, 23b:BD:VDS:, 23b:BD:VUS:, 23b:BD:mvd:, 23b:BD:mvu:, RqsBkl, 1, tsubBDSt }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/bdDb/BD_TsubRbk.db"
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac20:
+  { 23b:BD:Dv:, 23b:BD:VD:, "Beam pipe V-pos.", "(mm)", 23b:BD:VA:, "Beam pipe V-Angle", "(mrad)", 23b:BD:VDS:, "Vert.pipe DS",  "(mm)", 23b:BD:VUS:, "Vert.pipe US",  "(mm)", 23b:BD:mvd:,  23b:BD:mvu:,  ActPos, 0, tsubBDSt }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/bdDb/BD_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac20:
+  { 23b:BD:Dv:, 23b:BD:VD:, "(mm/s)", 23b:BD:VA:, "(mrad/s)", 23b:BD:VDS:, "(mm/s)", 23b:BD:VUS:, "(mm/s)", 23b:BD:mvd:,  23b:BD:mvu:, tsubBDSt }
+}

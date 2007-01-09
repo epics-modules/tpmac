@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% $(P)RB:Rr:  Robot dewar rotation (phy)
+%
+
+file assy.req ASSY=$(P)RB:Rr
+file mtr1.req MTR1=$(P)RB:mra
+file drv1.req DRV1=$(P)RB:RA
+

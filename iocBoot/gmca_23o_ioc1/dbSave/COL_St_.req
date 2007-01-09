@@ -1,0 +1,14 @@
+%
+% BURT Request File
+%
+% $(P)COL:St:  Collimator Support (X-Y positioner)
+%
+
+file assy.req ASSY=$(P)COL:St
+file mtr1.req MTR1=$(P)COL:mh
+file mtr1.req MTR1=$(P)COL:mv
+file drv1.req DRV1=$(P)COL:H
+file drv1.req DRV1=$(P)COL:V
+
+$(P)COL:V:RqsPosMem1
+$(P)COL:V:RqsPosMem2

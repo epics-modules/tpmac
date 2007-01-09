@@ -1,0 +1,33 @@
+file $(TPMAC)/pmacDb/mtrdat.db
+{
+	pattern { assy, mtr, desc, C, m, S, asloPos, asloVel, prec } 
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number; not used in the DB/
+#		  S =   0  12  24  36  48  60  72  84 ...
+#--------------------------------------
+# pmac11:
+        { 23b:AT:Av:,  23b:AT:mz1:,  "mtr WBATT Z1",            1,  1,   0, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:AT:Av:,  23b:AT:mz2:,  "mtr WBATT Z2",            1,  2,  12, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:BP:Mo:,  23b:BP:mmo:,  "mtr DCM BPM",             1,  3,  24, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:CS:Av:,  23b:CS:mz1:,  "mtr MB slit top slide",   1,  4,  36, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:CS:Av:,  23b:CS:mz2:,  "mtr MB slit btm slide",   1,  5,  48, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:CS:Ah:,  23b:CS:my1:,  "mtr MB slit outb. slide", 1,  6,  60, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:CS:Ah:,  23b:CS:my2:,  "mtr MB slit inb. slide",  1,  7,  72, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Vz:,  23b:VF:mz1:,  "VFM Z1",                  1,  8,  84, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Vz:,  23b:VF:mz2:,  "VFM Z2",                  1,  9,  96, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Vz:,  23b:VF:mz3:,  "VFM z3",                  1, 10, 108, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Vy:,  23b:VF:my1:,  "VFM mirror y1",           1, 11, 120, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Vy:,  23b:VF:my2:,  "VFM mirror y2",           1, 12, 132, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:VF:Be:,  23b:VF:mbe:,  "VFM bender",              1, 13, 144, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:BP:Vf:,  23b:BP:mvf:,  "mtr VFM BPM",             1, 14, 156, 3.2552e-04, 3.2552e-04, 0 }
+}
+#----------------------------------------------------------------------------  
+file "$(TPMAC)/pmacDb/mtrdat_out.db"
+{
+	pattern { mtr, desc, C, m, S, asloPos, asloVel, prec } 
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number/
+#		  S =   0  12  24  36  48  60  72  84 ... / 12*(m-1)/
+#--------------------------------------
+# pmac11:
+####    { 23b:pmac11:mo:,            "pmac11: motor output",    1, 32, 372, 3.2552e-04, 3.2552e-04 }       #macro needs to be installed 
+}
+

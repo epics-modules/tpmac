@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)GS:Av:  Guard slits, Vertical Aperture (type: Huber slits)
+%
+
+file assy.req ASSY=$(P)GS:Av
+$(P)GS:Av:Invert
+file mtr1.req MTR1=$(P)GS:mt
+file mtr1.req MTR1=$(P)GS:mb
+file drv1.req DRV1=$(P)GS:ZT
+file drv1.req DRV1=$(P)GS:ZB
+file axs1.req AXS1=$(P)GS:ZC
+file axs1.req AXS1=$(P)GS:ZS
+

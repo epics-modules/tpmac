@@ -1,0 +1,9 @@
+a:hover 	{color: #cc6600}
+a.menu		{color: #2c4252; text-decoration: none}
+a.menu:active	{color: #000000; text-decoration: none}
+a:link 		{text-decoration: none}
+a:visited	{text-decoration: none}
+a:active	{color: #990000}
+a.m2		{color: #cc6600; text-decoration: none}
+a.m2:link	{color: #cc6600}
+.m2		{color: #cc6600; text-decoration: none}

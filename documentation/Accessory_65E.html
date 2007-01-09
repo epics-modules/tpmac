@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Accessory 65E</title>
+</head>
+<body>
+<h3 ALIGN="center"><FONT COLOR="#000099">Accessory 65E</FONT></h3>
+
+<p>
+<a href="http://www.deltatau.com/fmenu/ACC-65E.PDF">Accessory 65E</a> is an
+optoisolated 24-bit in &amp; 24-bit out digital I/O board used at the UMAC
+<a href="http://www.macro.org/">MACRO</a> station.<br>
+Input active level 12 to 24 V<br>
+Output max current 600 mA.<br>
+<div style="text-align: center;"><span style="font-weight: bold;">Settings
+applied to the UMAC MACRO</span></div>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td style="white-space: nowrap; vertical-align: top;"><span
+ lang="EN-US" style="font-size: 10pt; font-family: &quot;Courier New&quot;;"><br>
+MS0,I71=$10C0A0208800</span></td>
+      <td style="vertical-align: top;">
+      <p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Sets
+      </span><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">24-bit-wide
+data </span><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">transfer
+between nodes 2&amp;3 and ACC-65E<o:p></o:p><br>
+C0A0
+is an address for node 2<o:p></o:p></span></p>
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">8800
+is a base address for the accessory 65E</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MS0,MI975=$C</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Enable
+nodes <b>2, 3 </b>for I/O at MACRO Station</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MS0,MI19=1</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Sets
+period for data transfer equal to one servo period</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MSSAVE0</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Saves
+to macro station</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MS$$$0</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Reset
+macro station to enable changes</span></td>
+    </tr>
+  </tbody>
+</table>
+<div style="text-align: center; font-weight: bold;"><br>
+Settings
+applied to the
+Turbo PMAC2 Ultralite</div>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: middle;"><span lang="EN-US"
+ style="font-size: 10pt;">I6841=$0FB33F</span></td>
+      <td style="vertical-align: middle;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Change
+from </span><span lang="EN-US" style="font-size: 10pt; color: green;">$0FB333
+to
+$0FB33F enables I / O nodes 2&amp;3<br>
+      </span></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<div style="text-align: center; font-weight: bold;">Testing
+Accessory 65E over serial interface:</div>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 10pt;">RHX:$78420&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ;&nbsp; </span><span lang="EN-US"
+ style="font-size: 10pt; color: green;">Read input in hexadecimal
+format</span></p>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 10pt;">WX:$78424, $f0f0f0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; ;&nbsp; </span><span lang="EN-US"
+ style="font-size: 10pt; color: green;">Write $f0f0f0 to the output</span><span
+ lang="EN-US" style="font-size: 10pt; color: green;"><o:p> <br>
+</o:p></span></p>
+<div style="text-align: center; font-weight: bold;"><br>
+Settings
+needed for I/O readout through DPRAM</div>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 10pt;">M3570-&gt;X:$78420,0,24&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp; ; </span><span lang="EN-US"
+ style="font-size: 10pt; color: green;">Input word, 24 bit, node2<br>
+</span></p>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 10pt;">M3600-&gt;X:$0010F0,0,24&nbsp;&nbsp;
+&nbsp;&nbsp; ; </span><span lang="EN-US"
+ style="font-size: 10pt; color: green;">Input mirror word</span></p>
+<span lang="EN-US" style="font-size: 11pt;"><o:p></o:p></span><span
+ lang="EN-US" style="font-size: 9pt; font-family: &quot;Courier New&quot;;">OPEN
+PLC2 CLEAR<o:p></o:p></span>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;;">M3600=M3570&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ; </span><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;; color: green;">Copy
+input
+register to the memory for readout via DPRAM</span><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;;"> </span></p>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;;">CLOSE<br>
+</span></p>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;;">I5=3&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; ; <span
+ style="color: rgb(0, 102, 0);">Foreground PLCs enabled; background
+PLCs enabled</span><br>
+</span></p>
+<p class="MsoNormal" style=""><span lang="EN-US"
+ style="font-size: 9pt; font-family: &quot;Courier New&quot;;">ENA PLC
+2&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ; <span
+ style="color: rgb(0, 102, 0);">Enables PLC execution</span></span></p>
+</body>
+</html>

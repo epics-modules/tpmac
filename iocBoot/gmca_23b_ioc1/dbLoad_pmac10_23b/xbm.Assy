@@ -1,0 +1,37 @@
+file $(TPMAC)/xbmDb/Xbm_Calibrate.db
+{
+        pattern { assy, d1, angleVCM }
+# pmac10:
+        { 23b:MO:Ps:,   23b:MO:Z:, 23b:VC:VA:  }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xbmDb/Xbm_LimAmp.db
+{
+ 	pattern { assy, d1 }
+# pmac10:
+        { 23b:MO:Ps:,   23b:MO:Z:   }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xbmDb/Xbm_Tsub.db
+{
+	pattern { assy, d1, m1, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion. 
+# pmac10:
+        { 23b:MO:Ps:,  23b:MO:Z:,   23b:MO:mz:,  RqsPos, 0, tsubXbmPs }
+        { 23b:MO:Ps:,  23b:MO:Z:,   23b:MO:mz:,  RqsBkl, 1, tsubXbmPs }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xbmDb/Xbm_TsubRbk.db
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+# pmac10:
+        { 23b:MO:Ps:,  23b:MO:Z:,   "DCM Z",                  "(mm)",   23b:MO:mz:,  ActPos, 0, tsubXbmPs }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xbmDb/Xbm_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, m1, tsub }
+# pmac10:
+         { 23b:MO:Ps:,  23b:MO:Z:,   "(mm/s)",   23b:MO:mz:,   tsubXbmPs }
+}

@@ -1,0 +1,43 @@
+file "$(TPMAC)/miDb/MI_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac10:
+        { 23i:KB:Hy:, 23i:KB:HY1:, 23i:KB:HY2: }
+        { 23i:KB:Vy:, 23i:KB:VY1:, 23i:KB:VY2: }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/miDb/MI_LimAmp.db"
+{
+ 	pattern { assy, x1, x2, d1, d2 }
+# pmac10:
+        { 23i:KB:Hy:, 23i:KB:HY:, 23i:KB:HA:, 23i:KB:HY1:, 23i:KB:HY2: }
+        { 23i:KB:Vy:, 23i:KB:VL:, 23i:KB:VW:, 23i:KB:VY1:, 23i:KB:VY2: }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/miDb/MI_Tsub.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac10:
+  { 23i:KB:Hy:, 23i:KB:HY:, 23i:KB:HA:, 23i:KB:HY1:, 23i:KB:HY2:, 23i:KB:mhy1:, 23i:KB:mhy2:, RqsPos, 0, tsubMISt }
+  { 23i:KB:Hy:, 23i:KB:HY:, 23i:KB:HA:, 23i:KB:HY1:, 23i:KB:HY2:, 23i:KB:mhy1:, 23i:KB:mhy2:, RqsBkl, 1, tsubMISt }
+  { 23i:KB:Vy:, 23i:KB:VL:, 23i:KB:VW:, 23i:KB:VY1:, 23i:KB:VY2:, 23i:KB:mvy1:, 23i:KB:mvy2:, RqsPos, 0, tsubMISt }
+  { 23i:KB:Vy:, 23i:KB:VL:, 23i:KB:VW:, 23i:KB:VY1:, 23i:KB:VY2:, 23i:KB:mvy1:, 23i:KB:mvy2:, RqsBkl, 1, tsubMISt }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/miDb/MI_TsubRbk.db"
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac10:
+  { 23i:KB:Hy:, 23i:KB:HY:, "H-mirror Y",    "(mm)", 23i:KB:HA:, "H-mirror Angle", "(mrad)", 23i:KB:HY1:, "H-mirror Y1", "(mm)", 23i:KB:HY2:, "H-mirror Y2", "(mm)", 23i:KB:mhy1:,  23i:KB:mhy2:,  ActPos, 0, tsubMISt }
+  { 23i:KB:Vy:, 23i:KB:VL:, "V-mirror Lane", "(mm)", 23i:KB:VW:, "V-mirror Yaw",   "(mrad)", 23i:KB:VY1:, "V-mirror Y1", "(mm)", 23i:KB:VY2:, "V-mirror Y2", "(mm)", 23i:KB:mvy1:,  23i:KB:mvy2:,  ActPos, 0, tsubMISt }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/miDb/MI_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac10:
+  { 23i:KB:Hy:, 23i:KB:HY:, "(mm/s)", 23i:KB:HA:, "(mrad/s)", 23i:KB:HY1:, "(mm/s)", 23i:KB:HY2:, "(mm/s)", 23i:KB:mhy1:,  23i:KB:mhy2:, tsubMISt }
+  { 23i:KB:Vy:, 23i:KB:VL:, "(mm/s)", 23i:KB:VW:, "(mrad/s)", 23i:KB:VY1:, "(mm/s)", 23i:KB:VY2:, "(mm/s)", 23i:KB:mvy1:,  23i:KB:mvy2:, tsubMISt }
+}

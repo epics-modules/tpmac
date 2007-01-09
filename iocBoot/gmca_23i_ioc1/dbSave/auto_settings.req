@@ -1,0 +1,20 @@
+file BP_Kb_.req  P=23i:
+file BP_Mo_.req  P=23i:
+file CS_Ah_.req  P=23i:
+file CS_Av_.req  P=23i:
+file KB_Hy_.req  P=23i:
+file KB_Hz_.req  P=23i:
+file KB_Vy_.req  P=23i:
+file KB_Vz_.req  P=23i:
+file MO_En_.req  P=23i:
+file MO_Ps_.req  P=23i:
+file MO_Tn1_.req P=23i:
+file MO_Tn2_.req P=23i:
+file WS_Ah_.req  P=23i:
+file WS_Av_.req  P=23i:
+%
+file keithleys.req P=23i:
+%
+%
+% file scanrec.req REC=23i:3:scan1
+%

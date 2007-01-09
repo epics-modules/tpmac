@@ -336,7 +336,7 @@ long pmacVmeConfig
 				MyName, pPmacCtlr->irqVector - 1);
 	)
 
-	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector - 1,
+	status = devConnectInterruptVME (pPmacCtlr->irqVector - 1,
 				(void *)pmacMbxReceiptISR, (void *) pPmacCtlr);
 	if (!RTN_SUCCESS(status))
 	{
@@ -351,7 +351,7 @@ long pmacVmeConfig
 				MyName, pPmacCtlr->irqVector);
 	)
 
-	status = devConnectInterrupt (intVME, pPmacCtlr->irqVector,
+	status = devConnectInterruptVME (pPmacCtlr->irqVector,
 				(void *)pmacMbxReadmeISR, (void *) pPmacCtlr);
 	if (!RTN_SUCCESS(status))
 	{

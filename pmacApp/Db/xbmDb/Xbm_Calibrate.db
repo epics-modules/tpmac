@@ -1,0 +1,56 @@
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-04")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)S") {
+  field(DESC, "Beam shft @smple due to mirr")
+  field(DOL, "0.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)Dms") {
+  field(DESC, "Sample to mirror distance")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1000.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ai, "$(assy)aV") {
+  field(DESC, "VCM angle")
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(INP, "$(angleVCM)ActPos CA NMS")
+  field(SCAN, "2 second")
+# field(PINI, "yes")
+  field(PREC, "3")
+  field(EGU, "(mrad)")
+}
+
+record(bo, "$(assy)mLink") {
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Mirr.Unlink")
+  field(ONAM, "Mirr.Link")
+}
+
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "500")
+}
+

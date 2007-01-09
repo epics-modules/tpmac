@@ -1,0 +1,383 @@
+//goniometer
+
+//(omega)encoder 11840 lines/turn * 4096 = 48 496 640 / 32 = 1 515 520 counts/turn 
+//(omega)encoder 11840 lines/turn * 2000 = 23 680 000 counts/turn
+
+//(kappa)encoder 2048 counts/turn
+//gear box1 69.164609:1 or 141649.119232 counts/turn
+//gear box2 72:1 or 10198736.5847 counts/turn
+
+//(phi)encoder 2048 counts/turn
+//gear box1 1669.994752:1 or 3420149.252 counts/turn
+//gear box2 32:15 or 7296318.40447 counts/turn
+
+//(phi-z)encoder 40 counts/turn
+//gear box1 64:1 or 2560 counts/turn
+//gear box2 18:12 or 3840 counts/turn
+//screw 2 turns per mm or 7680 counts/mm
+
+M571->X:$0002B4,24,S ; #5 Present phase position (counts *Ixx70)
+ms08,i105=$96  // point to ch1 of ACC51E in the ECT MACRO 1 
+ms08,i910=3    // #05 (omega)  CW
+ms08,i916=1
+ms08,i912=1
+ms08,i913=1
+
+I500=1                   ;Motor 5 Activate
+I501=3                   ;Motor 5 Commutation Enable
+I502=$78430              ;Motor 5 Command Output Address
+I503=$350A               ;Motor 5 Position Address
+I504=$350A               ;Motor 5 'Velocity' Address
+I505=$35C0               ;Motor 5 Master Position Address
+I506=0                   ;Motor 5 Master Follow Enable
+I507=96                  ;Motor 5 Master Scale Factor
+I508=96                  ;Motor 5 Position Scale Factor
+I509=96                  ;Motor 5 Velocity Scale Factor
+I510=$0                  ;Motor 5 Power-on Servo Position Address
+I511=2694258             ;Motor 5 Fatal Following Error Limit
+I512=1347129             ;Motor 5 Warning Following Error Limit
+I513=0                   ;Motor 5 + Software Position Limit
+I514=0                   ;Motor 5 - Software Position Limit
+I515=100                 ;Motor 5 Abort/Lim Decel Rate
+I516=378.880             ;Motor 5 Maximum Velocity
+I517=100                 ;Motor 5 Maximum Acceleration
+I518=0                   ;(Reserved)
+I519=100                 ;Motor 5 Maximum Jog Acceleration
+I520=400                 ;Motor 5 Jog/Home Acceleration Time
+I521=200                 ;Motor 5 Jog/Home S-Curve Time
+I522=378.880             ;Motor 5 Jog Speed
+I523=378.880             ;Motor 5 Homing Speed And Direction
+I524=$260001             ;Motor 5 Flag Mode Control
+I525=$3448               ;Motor 5 Flag Address
+I526=-983404             ;Motor 5 Home Offset
+I527=0                   ;Motor 5 Position Rollover Range
+I528=160                 ;Motor 5 In-Position Band
+I529=50                  ;Motor 5 Output/1st Phase Offset
+I530=100000              ;Motor 5 PID Proportional Gain
+I531=2000                ;Motor 5 PID Derivative Gain
+I532=2004                ;Motor 5 PID Velocity Feed Forward Gain
+I533=400000              ;Motor 5 PID Integral Gain
+I534=1                   ;Motor 5 PID Integration Mode
+I535=8500                ;Motor 5 PID Acceleration Feed Forward Gain
+I536=0                   ;Motor 5 PID Notch Filter Coefficient N1
+I537=0                   ;Motor 5 PID Notch Filter Coefficient N2
+I538=0                   ;Motor 5 PID Notch Filter Coefficient D1
+I539=0                   ;Motor 5 PID Notch Filter Coefficient D2
+I540=0.75                 ;Motor 5 Trajectory Filter Constant
+I541=0                   ;Motor 5 Desired Position Limit Band
+I542=$0                  ;(Reserved)
+I543=$0                  ;(Reserved)
+I544=0                   ;(Reserved)
+I545=0                   ;(Reserved)
+I546=0                   ;(Reserved)
+I547=0                   ;(Reserved)
+I548=0                   ;(Reserved)
+I549=0                   ;(Reserved)
+I550=0                   ;(Reserved)
+I551=0                   ;(Reserved)
+I552=0                   ;(Reserved)
+I553=0                   ;(Reserved)
+I554=0                   ;(Reserved)
+I555=$0                  ;Motor 5 Commutation Table Address Offset
+I556=0                   ;Motor 5 Commutation Delay Compensation
+I557=5570                ;Motor 5 Continuous Current Limit
+I558=1929                ;Motor 5 Integrated Current Limit
+I559=0                   ;Motor 5 User Written Servo Enable
+I560=0                   ;Motor 5 Servo Cycle Period Extension
+I561=0                   ;Motor 5 Current Loop Integral Gain
+I562=0                   ;Motor 5 Current Loop Prop. Gain (Forward Path)
+I563=4194304             ;Motor 5 Integration Limit
+I564=-16                 ;Motor 5 'Deadband Gain'
+I565=8                   ;Motor 5 Deadband Size
+I566=6527                ;Motor 5 PWM Scale Factor (PMAC2 Only)
+I567=4194304             ;Motor 5 Position Error Limit
+I568=0                   ;Motor 5 Friction Feedforward
+I569=23428               ;Motor 5 Output Command Limit/Scale
+I570=1                   ;Motor 5 Number of Commutation Cycles (N)
+// range 0 - 8 388 607
+// 1515520 / 9 * 32 = 5 388 515.5555555555555555555555556
+// 48 496 640
+// 23 680 000 / 9 * 32 = 84 195 555.555555555555555555555556
+
+I571=5388516             ;Motor 5 Counts Per N Commutation Cycles
+I572=683                 ;Motor 5 Commutation Phase Angle
+I573=0                   ;Motor 5 Phase Finding Output Value
+I574=0                   ;Motor 5 Phase Finding Time
+I575=2851560             ;Motor 5 Phase Position Offset
+I576=0                   ;Motor 5 Current Loop Proportional Gain (Back Path)
+I577=0                   ;Motor 5 Induction Motor Magnetization Current
+I578=0                   ;Motor 5 Induction Motor Slip Gain
+I579=0                   ;Motor 5 2nd Phase Output (DAC) Bias
+I580=1                   ;Motor 5 Power-Up Mode
+I581=$3448               ;Motor 5 Power-On Phase Position Address
+I582=$0                  ;Motor 5 Current loop Feedback Address
+I583=$78430              ;Motor 5 Commutation Position Address
+I584=$0                  ;Motor 5 Current-Loop Feedback Mask Word
+I585=0                   ;Motor 5 Backlash Take-up Rate
+I586=0                   ;Motor 5 Backlash Size
+I587=64                  ;Motor 5 Backlash Hysteresis
+I588=0                   ;Motor 5 In-Position Number of Cycles
+I589=0                   ;(Reserved)
+I590=0                   ;Motor 5 Rapid Speed Select
+I591=$BB0000             ;Motor 5 Power-on Phase Position Format
+I592=10                  ;Motor 5 Jog-To-Position Calculation Time
+I593=0                   ;(Reserved)
+I594=0                   ;(Reserved)
+I595=$0                  ;Motor 5 Power-On Servo Position Format
+I596=0                   ;Motor 5 Output Mode Control
+I597=1                   ;Motor 5 Position Capture/Trigger Mode Control
+I598=0                   ;Motor 5 Third-Resolver Gear Ratio
+I599=0                   ;Motor 5 Second-Resolver Gear Ratio
+
+//ms09,i910=7    // #06 (kappa)  CCW
+//ms09,i916=1
+//ms12,i910=7    // #07 (phi)  CCW
+//ms12,i916=1
+//ms13,i910=7    // #08 (phi-z) CCW
+//ms13,i916=1
+ms09,i910=8    // #06 (kappa)  CCW
+ms09,i916=3
+ms09,i912=0
+ms09,i913=0
+ms12,i910=8    // #07 (phi)  CCW
+ms12,i916=3
+ms12,i912=0
+ms12,i913=0
+ms13,i910=8    // #08 (phi-z) CCW
+ms13,i916=3
+ms13,i912=0
+ms13,i913=0
+
+I0601=0	       //commutation on MACRO disable
+I0600=1
+
+I0701=0	       //commutation on MACRO disable
+I0700=1
+
+I0801=0	       //commutation on MACRO disable
+I0800=1
+
+I0602=$78434+2
+I0702=$78438+2
+I0802=$7843C+2
+
+I0603=$350C	// Position-Loop Feedback Address
+I0703=$350E	// Position-Loop Feedback Address
+I0803=$3510	// Position-Loop Feedback Address
+
+I0604=$350C	// Velocity-Loop Feedback Address
+I0704=$350E	// Velocity-Loop Feedback Address
+I0804=$3510	// Velocity-Loop Feedback Address
+
+I0605=$35C0    	// Master Position Address
+I0705=$35C0	// Master Position Address
+I0805=$35C0	// Master Position Address
+I0606=0		// Master Follow Enable
+I0706=0 	// Master Follow Enable
+I0806=0 	// Master Follow Enable
+I0607=96	// Master Scale Factor
+I0707=96	// Master Scale Factor
+I0807=96	// Master Scale Factor
+I0608=96   	// Position Scale Factor
+I0708=96   	// Position Scale Factor
+I0808=96   	// Position Scale Factor
+I0609=96	// Velocity-Loop Scale Factor
+I0709=96	// Velocity-Loop Scale Factor
+I0809=96	// Velocity-Loop Scale Factor
+I0610=$0	// Power-on Servo Position Address
+I0710=$0	// Power-on Servo Position Address
+I0810=$0	// Power-on Servo Position Address
+I0611=2694258	// Fatal Following Error Limit
+I0711=2694258	// Fatal Following Error Limit
+I0811=2694258	// Fatal Following Error Limit
+I0612=1347129	// Warning Following Error Limit
+I0712=1347129	// Warning Following Error Limit
+I0812=1347129	// Warning Following Error Limit
+
+//I0613=0 	// + Software Position Limit
+//I0713=0 	// + Software Position Limit
+//I0813=0 	// + Software Position Limit
+I0613=100000 	// + Software Position Limit
+I0713=100000 	// + Software Position Limit
+I0813=100000 	// + Software Position Limit
+
+//I0614=0 	// - Software Position Limit
+//I0714=0 	// - Software Position Limit
+//I0814=0 	// - Software Position Limit
+I0614=-100000 	// - Software Position Limit
+I0714=-100000 	// - Software Position Limit
+I0814=-100000 	// - Software Position Limit
+
+//I0615=1	// Abort/Lim Decel Rate
+//I0715=2	// Abort/Lim Decel Rate
+//I0815=.1	// Abort/Lim Decel Rate
+I0615=.1	// Abort/Lim Decel Rate
+I0715=.1	// Abort/Lim Decel Rate
+I0815=.1	// Abort/Lim Decel Rate
+
+//I0616=200	// Maximum Velocity
+//I0716=300	// Maximum Velocity
+//I0816=8	// Maximum Velocity
+I0616=10	// Maximum Velocity
+I0716=10	// Maximum Velocity
+I0816=10	// Maximum Velocity
+
+//I0617=1	// Maximum Acceleration
+//I0717=2	// Maximum Acceleration
+//I0817=.1	// Maximum Acceleration
+I0617=.1	// Maximum Acceleration
+I0717=.1	// Maximum Acceleration
+I0817=.1	// Maximum Acceleration
+
+I0618=0 	// RESERVED
+I0718=0 	// RESERVED
+I0818=0 	// RESERVED
+
+//I0619=1	// Maximum Jog Acceleration
+//I0719=2	// Maximum Jog Acceleration
+//I0819=.1	// Maximum Jog Acceleration
+I0619=.1	// Maximum Jog Acceleration
+I0719=.1	// Maximum Jog Acceleration
+I0819=.1	// Maximum Jog Acceleration
+
+I0620=400	// Jog/Home Acceleration Time
+I0720=400	// Jog/Home Acceleration Time
+I0820=400	// Jog/Home Acceleration Time
+I0621=200	// Jog/Home S-curve Time
+I0721=200	// Jog/Home S-curve Time
+I0821=200	// Jog/Home S-curve Time
+
+//I0622=200	// Jog Speed
+//I0722=300	// Jog Speed
+//I0822=8	// Jog Speed
+I0622=10	// Jog Speed
+I0722=10	// Jog Speed
+I0822=10	// Jog Speed
+
+//I0623=100	// Homing Speed and Direction
+//I0723=150	// Homing Speed and Direction
+//I0823=4	// Homing Speed and Direction
+I0623=5	// Homing Speed and Direction
+I0723=5	// Homing Speed and Direction
+I0823=5	// Homing Speed and Direction
+
+//I0624=$240001	// Flag Mode Control
+//I0724=$260001	// Flag Mode Control
+//I0824=$240001	// Flag Mode Control
+I0624=$260001	// Flag Mode Control
+I0724=$260001	// Flag Mode Control
+I0824=$260001	// Flag Mode Control
+
+I0625=$3449
+I0725=$344C
+I0825=$344D
+
+I0626=0 	// Home Offset
+I0726=0 	// Home Offset
+I0826=0 	// Home Offset
+
+I0627=0 	// Position Rollover Range
+I0727=0 	// Position Rollover Range
+I0827=0 	// Position Rollover Range
+
+I0628=160	// In-Position Band
+I0728=160	// In-Position Band
+I0828=160	// In-Position Band
+
+I0629=0		// Output/1st Phase Offset
+I0729=0		// Output/1st Phase Offset
+I0829=0		// Output/1st Phase Offset
+
+//I0630=3000000	// PID Proportional Gain
+//I0730=3000000	// PID Proportional Gain
+//I0830=8388607	// PID Proportional Gain
+I0630=2000	// PID Proportional Gain
+I0730=2000	// PID Proportional Gain
+I0830=2000	// PID Proportional Gain
+
+//I0631=1000	// PID Derivative Gain
+//I0731=400	// PID Derivative Gain
+//I0831=1000	// PID Derivative Gain
+I0631=0	// PID Derivative Gain
+I0731=0	// PID Derivative Gain
+I0831=0	// PID Derivative Gain
+
+//I0632=1070	//Motor xx PID Velocity Feed Forvard Gain
+//I0732=453	//Motor xx PID Velocity Feed Forvard Gain
+//I0832=1350	//Motor xx PID Velocity Feed Forvard Gain
+I0632=4650	//Motor xx PID Velocity Feed Forvard Gain
+I0732=4650	//Motor xx PID Velocity Feed Forvard Gain
+I0832=4650	//Motor xx PID Velocity Feed Forvard Gain
+
+//I0633=1000000	//Motor xx PID Integral Gain
+//I0733=100000	//Motor xx PID Integral Gain
+//I0833=200000	//Motor xx PID Integral Gain
+I0633=0	//Motor xx PID Integral Gain
+I0733=0	//Motor xx PID Integral Gain
+I0833=0	//Motor xx PID Integral Gain
+
+I0634=1		//Motor xx Integration Mode
+I0734=1		//Motor xx Integration Mode
+I0834=1		//Motor xx Integration Mode
+
+//I0635=2000	//Motor xx PID Acceleration Feed Forward Gain
+//I0735=1500	//Motor xx PID Acceleration Feed Forward Gain
+//I0835=9000	//Motor xx PID Acceleration Feed Forward Gain
+I0635=9000	//Motor xx PID Acceleration Feed Forward Gain
+I0735=9000	//Motor xx PID Acceleration Feed Forward Gain
+I0835=9000	//Motor xx PID Acceleration Feed Forward Gain
+I0664=-16			// Deadband 'gain'
+I0764=-16			// Deadband 'gain'
+I0864=-16			// Deadband 'gain'
+
+I0665=8			// Deadband size
+I0765=8			// Deadband size
+I0865=8			// Deadband size
+
+//I0668=3000	// Friction feedforvard
+//I0768=800	// Friction feedforvard
+//I0868=2000	// Friction feedforvard
+I0668=0	// Friction feedforvard
+I0768=0	// Friction feedforvard
+I0868=0	// Friction feedforvard
+
+I0669=32767	// output command limit/scale
+I0769=32767	// output command limit/scale
+//I0869=17790	// output command limit/scale
+I0869=32767	// output command limit/scale
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

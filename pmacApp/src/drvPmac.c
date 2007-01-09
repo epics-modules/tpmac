@@ -89,6 +89,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<string.h>	/* Sergey */
 #define __PROTOTYPE_5_0		/* Sergey */
 #include	<logLib.h>	/* Sergey */
+#include	<semLib.h>	/* semGive() */
 
 
 /* EPICS Includes */
@@ -101,6 +102,8 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<errMdef.h>
 #include	<taskwd.h>
 #include	<callback.h>
+#include	<dbLock.h>
+#include	<dbCommon.h>
 
 #define PMAC_ASYN
 #ifdef PMAC_ASYN
@@ -177,7 +180,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define PMAC_VAR_STACK		(8000)
 
 #define PMAC_OPN_SCAN		"pmacOpn"
-#define PMAC_OPN_PRI		(46)		/* OLeg 2005/11/15 (was 45) */
+#define PMAC_OPN_PRI		(46)		/* Oleg 2005/11/15 (was 45) */
 #define PMAC_OPN_RATE		(vxTicksPerSecond*1)
 #define PMAC_OPN_OPT		(VX_FP_TASK)
 #define PMAC_OPN_STACK		(8000)
@@ -1566,7 +1569,6 @@ char drvPmacMbxWriteRead (
 ) {
     /* char * MyName = "drvPmacMbxWriteRead"; */
     char	terminator;
-
 #ifdef PMAC_ASYN
     asynStatus status;
     const double timeout=1.0;
@@ -1645,7 +1647,7 @@ void drvPmacMbxScan
 	PMAC_CARD *	pCard;
 
 	pCard = &drvPmacCard[pMbxIo->card];
-
+	
 	if ( rngBufPut(pCard->scanMbxQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
 	{
 		errMessage (0,"drvPmacMbxScan: rngBufPut overflow.");
@@ -1721,6 +1723,9 @@ int drvPmacMbxTask
 
 	PMAC_MBX_IO *		pMbxIo;
 
+	struct dbCommon *	pRec;
+	struct rset *		pRset;
+	
 	FOREVER
 	{
                 /*ajf: Change WAIT_TIMEOUT to WAIT_FOREVER           */
@@ -1731,7 +1736,6 @@ int drvPmacMbxTask
 		{
 			errMessage(0,"drvPmacMbxTask: semTake returned error.");
 		}
-
 		while ( rngNBytes(pCard->scanMbxQ) >= sizeof(pMbxIo) )
 		{
 			if( rngBufGet(pCard->scanMbxQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
@@ -1757,20 +1761,32 @@ int drvPmacMbxTask
 					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName,
 						pMbxIo->card, pMbxIo->command,0,0,0);
 					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
-				}
+				} else {
 
 				PMAC_DEBUG
 				(	6,
 					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
 				)
-
+				}
+/*
 				callbackRequest (&pMbxIo->callback);
 
 				PMAC_DEBUG
 				(	6,
 					PMAC_MESSAGE ("%s: Callback requested.\n", MyName,0,0,0,0,0);
 				)
+*/
+	callbackGetUser (pRec, &pMbxIo->callback);
 
+
+	if (pRec) {
+          dbScanLock (pRec);
+	  pRset = pRec->rset;
+	  (*(pRset->process))(pRec);
+          dbScanUnlock (pRec);
+	} else {
+	  logMsg("%s: pMbxIo->callback = 0x%x, pRec = 0x%x \n", (int)MyName, (int)&pMbxIo->callback, (int)pRec,0,0,0);
+	}
 
 			}
 

@@ -68,6 +68,7 @@ record(bi,"$(mtr)HmCplt") {
   field(ZSV,"MINOR")
   field(ZNAM,"N/A")
   field(ONAM,"Completed")
+  field(FLNK, "$(assy)Homed.PROC PP MS")
 }
 
 record(bi, "$(mtr)AmpFltErr") {
@@ -93,7 +94,7 @@ record(bi, "$(mtr)InPos") {
   field(ZNAM, "Moving")
   field(ONAM, "Positioned")
 }
- 
+
 ### The default asloPos is: 1/(32*Ix08) = 1/(32*96) = 1/3072 = 3.2552e-04
 ### where Ix08 is motor position scale factor.
 record(ai, "$(mtr)ActPos") {

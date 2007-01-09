@@ -1,0 +1,98 @@
+file $(TPMAC)/pmacDb/AsciiMtr.db
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac10:
+        { 23o:WS:mt:,      0,  1 }
+        { 23o:WS:mb:,      0,  2 }
+        { 23o:WS:mo:,      0,  3 }
+        { 23o:WS:mi:,      0,  4 }
+        { 23o:MO:mz:,      0,  5 }
+        { 23o:MO:my:,      0,  6 }
+        { 23o:MO:mr:,      0,  7 }
+        { 23o:MO:mt2:,     0,  8 }
+        { 23o:pmac10:re1:, 0,  9 }
+        { 23o:pmac10:re2:, 0, 10 }
+        { 23o:pmac10:re3:, 0, 11 }
+        { 23o:pmac10:re4:, 0, 12 }
+        { 23o:MO:mr1:,     0, 17 }
+        { 23o:MO:mp2:,     0, 18 }
+        { 23o:MO:mr2:,     0, 19 }
+        { 23o:BP:mmo:,     0, 20 }
+        { 23o:HD:mz1:,     0, 21 }
+        { 23o:HD:mz2:,     0, 22 }
+        { 23o:HD:mz3:,     0, 23 }
+        { 23o:HD:muy1:,    0, 24 }
+        { 23o:HD:muy2:,    0, 25 }
+        { 23o:HD:mdy1:,    0, 26 }
+        { 23o:HD:mdy2:,    0, 27 }
+        { 23o:BP:mh1z:,    0, 28 }
+        { 23o:pmac10:mo:,  0, 32 }
+}
+#----------------------------------------------------------------------------  
+file $(TPMAC)/pmacDb/IxMtrMv.db
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac10:
+        { 23o:WS:mt:,      0,  1 }
+        { 23o:WS:mb:,      0,  2 }
+        { 23o:WS:mo:,      0,  3 }
+        { 23o:WS:mi:,      0,  4 }
+        { 23o:MO:mz:,      0,  5 }
+        { 23o:MO:my:,      0,  6 }
+        { 23o:MO:mr:,      0,  7 }
+        { 23o:MO:mt2:,     0,  8 }
+#       { 23o:pmac10:re1:, 0,  9 }       # not used
+#       { 23o:pmac10:re2:, 0, 10 }       # not used
+#       { 23o:pmac10:re3:, 0, 11 }       # not used
+#       { 23o:pmac10:re4:, 0, 12 }       # not used
+        { 23o:MO:mr1:,     0, 17 }
+        { 23o:MO:mp2:,     0, 18 }
+        { 23o:MO:mr2:,     0, 19 }
+        { 23o:BP:mmo:,     0, 20 }
+        { 23o:HD:mz1:,     0, 21 }
+        { 23o:HD:mz2:,     0, 22 }
+        { 23o:HD:mz3:,     0, 23 }
+        { 23o:HD:muy1:,    0, 24 }
+        { 23o:HD:muy2:,    0, 25 }
+        { 23o:HD:mdy1:,    0, 26 }
+        { 23o:HD:mdy2:,    0, 27 }
+        { 23o:BP:mh1z:,    0, 28 }
+#       { 23o:pmac10:mo:,  0, 32 }       # not used
+}
+#----------------------------------------------------------------------------  
+file $(TPMAC)/pmacDb/OpnLp.db
+{
+	pattern { mtr, C, M }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  M = 1 2 3 4 5 6 7 8
+# pmac10:
+        { 23o:WS:mt:,      0,  1 }
+        { 23o:WS:mb:,      0,  2 }
+        { 23o:WS:mo:,      0,  3 }
+        { 23o:WS:mi:,      0,  4 }
+        { 23o:MO:mz:,      0,  5 }
+        { 23o:MO:my:,      0,  6 }
+        { 23o:MO:mr:,      0,  7 }
+        { 23o:MO:mt2:,     0,  8 }
+#       { 23o:pmac10:re1:, 0,  9 }       # not used
+#       { 23o:pmac10:re2:, 0, 10 }       # not used
+#       { 23o:pmac10:re3:, 0, 11 }       # not used
+#       { 23o:pmac10:re4:, 0, 12 }       # not used
+        { 23o:MO:mr1:,     0, 17 }
+        { 23o:MO:mp2:,     0, 18 }
+        { 23o:MO:mr2:,     0, 19 }
+        { 23o:BP:mmo:,     0, 20 }
+        { 23o:HD:mz1:,     0, 21 }
+        { 23o:HD:mz2:,     0, 22 }
+        { 23o:HD:mz3:,     0, 23 }
+        { 23o:HD:muy1:,    0, 24 }
+        { 23o:HD:muy2:,    0, 25 }
+        { 23o:HD:mdy1:,    0, 26 }
+        { 23o:HD:mdy2:,    0, 27 }
+        { 23o:BP:mh1z:,    0, 28 }
+#       { 23o:pmac10:mo:,  0, 32 }       # not used
+}

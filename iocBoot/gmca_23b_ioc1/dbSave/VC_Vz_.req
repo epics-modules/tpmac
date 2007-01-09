@@ -1,0 +1,19 @@
+%
+% BURT Request File
+%
+% $(P)VC:Vz:  VCM Z-adjustment
+%
+
+file assy.req ASSY=$(P)VC:Vz
+$(P)VC:Vz:Base1:23
+$(P)VC:Vz:Base23
+file mtr1.req MTR1=$(P)VC:mz1
+file mtr1.req MTR1=$(P)VC:mz2
+file mtr1.req MTR1=$(P)VC:mz3
+file drv1.req DRV1=$(P)VC:Z1
+file drv1.req DRV1=$(P)VC:Z2
+file drv1.req DRV1=$(P)VC:Z3
+file axs1.req AXS1=$(P)VC:VZ
+file axs1.req AXS1=$(P)VC:VA
+file axs1.req AXS1=$(P)VC:VR
+

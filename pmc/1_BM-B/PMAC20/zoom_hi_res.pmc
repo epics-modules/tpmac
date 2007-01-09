@@ -1,0 +1,57 @@
+// zoom_motor hi resolution
+// 64X microstepping, 24 steps/turn,
+// gearbox 261.409911:1 or 401525.623296 pulses/turn
+
+ms56,i910=8 //no encoder feedback
+ms56,i916=3 //PFM output
+ms56,i917=2
+ms56,i918=0 // Do not invert direction signal (+ = low; - = high)
+ms56,i912=10 //capture on flag low
+ms56,i913=0 //select home flag
+
+I2900=1                   ;Activate
+I2901=0                   ;Commutation Enable
+I2902=$07B430+2
+I2903=$00353A
+I2904=$00353A
+
+//tuning parameters
+I2916=300				// max. velocity
+I2922=300				// jog speed
+I2923=-100		// homing speed and direction
+I2915=2.5		// abort/lim decel. rate
+I2917=0.5// max. acceleration
+I2919=0.5// max. jog acceleration
+
+I2924=$260001
+I2925=$3478
+I2930=10010
+I2931=0
+I2932=931
+I2933=10000
+I2934=1
+I2935=2090
+I2964=-16 //deadband gain
+I2965=9 //deadband size
+I2968=0
+I2969=2100
+I2981=$0
+I2982=$0
+I2983=$0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

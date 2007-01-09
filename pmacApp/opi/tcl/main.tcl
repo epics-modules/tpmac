@@ -30,7 +30,7 @@ pack .fTitle -side top -pady 1m -fill x
 proc menuMain {name icon} {
 global icondir sp
 frame .f$name
-label .l$name  -text $name -fg White -font -adobe-times-bold-r-normal--14-100-100-100-p-76-iso8859-1
+label .l$name  -text $name -fg SteelBlue -font -adobe-times-bold-r-normal--14-100-100-100-p-76-iso8859-1
 menubutton .mb$name -relief raised -bitmap @${icondir}${icon} -fg PowderBlue -bg SteelBlue -menu .mb$name.m
 pack .mb$name .l$name -in .f$name -side top -padx 10
 pack .f$name -side top -pady 1m

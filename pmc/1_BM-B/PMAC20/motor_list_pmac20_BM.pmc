@@ -1,0 +1,48 @@
+01 00  Cold Stream 
+02 01  Beam Delivery horizontal DS
+03 04  Beam Delivery vertical DS
+04 05  Beam Delivery vertical US
+
+05 08  Gonio omega
+06 09  Gonio kappa
+07 12  Gonio phi
+08 13  Gonio crystall z
+
+09 16  Crystal X
+10 17  Crystal y
+11 20  Gonio support horiz
+12 21  Gonio support vert
+
+13 24  GEO_1-1 marccd across A-frame
+14 25  GEO_1-2 marccd along A-frame
+15 28	 GEO_2-1 marccd vertical US
+16 29  GEO_2-2 marccd vertical DS
+
+17 32  Guard Slits Support X
+18 33  Guard Slits Support pitch
+19 36  Guard Slits top
+20 37  Guard Slits bottom
+
+21 40  Guard Slits outboard
+22 41  Guard Slits inboard
+23 44  Beam Stop X
+24 45  Beam Stop pitch
+
+25 48  Beam Stop yaw
+26 49
+27 52
+28 53
+
+29 56  TV:mz1:Hi-res zoom
+30 57  TV:mz2:Lo-res zoom
+31 60  Shutter
+32 61	 channel for fast scanning
+
+
+
+
+
+
+
+
+

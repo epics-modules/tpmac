@@ -1,0 +1,177 @@
+
+endg
+del gat
+
+; 24-bit-wide data transfer between nodes 2&3 and ACC-65E
+;   C0A0 is an address for node 2
+;   8800 is a base address for the accessory 65E
+MS0,I71=$10C0A0208800
+
+; Enable nodes 2, 3 for I/O at MACRO Station
+MS0,MI975=$C
+
+; Set period for data transfer equal to one servo period
+MS0,MI19=1
+
+#Define 	output_word 	m3571
+#Define 	output_reg 		m3601
+;Settings needed for I/O readout via DPRAM
+M3570->X:$78420,0,24        ; Input word, 24 bit, node2
+M3571->X:$78424,0,24        ; Output word, 24 bit, node3
+;M3571->X:$7842C,0,24        ; Output word, 24 bit, node3
+M3600->X:$0010F0,0,24      ; Input mirror word
+M3601->Y:$0010F0,0,24      ; Output mirror word
+
+/* The following are MACRO definitions to program variables and their address */
+#Define PWM_out1		 				M8000
+M8000->Y:$10F2,8,16,s		;Open memory to which PWM output is written to
+#Define PWM_out2		 				M8001
+M8001->Y:$10F3,8,16,s		;Open memory to which PWM output is written to
+
+#Define PWM1								M0102
+M0102->Y:$78420,8,16,s		;Present value of commanded PWM
+#Define PWM2								M0202
+M0202->Y:$78424,8,16,s		;Present value of commanded PWM
+
+#Define Dir1								M0154
+M0154->Y:$003440,14,1 ; MACRO IC 0 Node 0 amplifier enable flag
+#Define Dir2								M0254
+M0254->Y:$003441,14,1 ; MACRO IC 0 Node 1 amplifier enable flag
+
+#Define In_pos1						M140
+M140->Y:$0000C0,0,1 ; #1 Background in-position bit
+#Define In_pos2						M0240
+M240->Y:$000140,0,1 ; #2 Background in-position bit
+
+#Define Int_err1					M0141
+M0141->D:$00009E ; #1 PID integrated position error
+#Define Int_err2					M0241
+M0241->D:$00011E ; #2 PID integrated position error
+
+#Define Desired_pos1				M0161
+M161->D:$000088 ; #1 Commanded position (1/[Ixx08*32] cts)
+#Define Desired_pos2				M0261
+M261->D:$000108 ; #2 Commanded position (1/[Ixx08*32] cts)
+
+#Define Actual_pos1				M0162
+M162->D:$00008B ; #1 Actual position (1/[Ixx08*32] cts)
+#Define Actual_pos2				M0262
+M262->D:$00010B ; #2 Actual position (1/[Ixx08*32] cts)
+
+#Define PWM_p1						 	P0199
+#Define PWM_p2						 	P0299
+;Previous value of commanded PWM
+
+#Define Dead_zone_min1			P0198
+#Define Dead_zone_min2			P0298
+;Servo disconnected
+
+#Define Dead_zone_max1			P0197
+#Define Dead_zone_max2			P0297
+;Servo reconnected
+
+#Define Abs_Pos_Err1				P0196
+#Define Abs_Pos_Err2				P0296
+#Define PWM_zero1						P0195
+#Define PWM_zero2						P0295
+Dead_zone_min1=6144		; 96*32*2
+Dead_zone_min2=6144		; 96*32*2
+Dead_zone_max1=12288		; 96*32*4
+Dead_zone_max2=12288		; 96*32*4
+PWM_zero1=-7252; max 7373;-2340; max 2459;
+PWM_zero2=-7252; max 7373;-2340
+
+;servo routine for piezo stages
+
+Open PLCC0 clear
+
+If (PWM_out1 > 0)
+  Dir1 = 1
+Else
+  Dir1 = 0
+EndIf
+
+If (In_pos1 != 1)
+  PWM_p1 = PWM_zero1 + abs(PWM_out1)
+Else
+  Abs_Pos_Err1 = abs(Desired_pos1 - Actual_pos1)
+  If (Abs_Pos_Err1 > Dead_zone_max1)
+    PWM_p1 = PWM_zero1 + abs(PWM_out1)
+  Else
+    If (Abs_Pos_Err1 !> Dead_zone_min1)
+      PWM_p1 = PWM_zero1
+      Int_err1 = 0
+    Else
+      If (PWM_p1 = PWM_zero1)
+        Int_err1 = 0
+      Else
+        PWM_p1 = PWM_zero1 + abs(PWM_out1)
+      EndIf
+    EndIf
+  EndIf
+EndIf
+
+PWM1 = PWM_p1
+
+If (PWM_out2 > 0)
+  Dir2 = 1
+Else
+  Dir2 = 0
+EndIf
+
+If (In_pos2 != 1)
+  PWM_p2 = PWM_zero2 + abs(PWM_out2)
+Else
+  Abs_Pos_Err2 = abs(Desired_pos2 - Actual_pos2)
+  If (Abs_Pos_Err2 > Dead_zone_max2)
+    PWM_p2 = PWM_zero2 + abs(PWM_out2)
+  Else
+    If (Abs_Pos_Err2 !> Dead_zone_min2)
+      PWM_p2 = PWM_zero2
+      Int_err2 = 0
+    Else
+      If (PWM_p2 = PWM_zero2)
+        Int_err2 = 0
+      Else
+        PWM_p2 = PWM_zero2 + abs(PWM_out2)
+      EndIf
+    EndIf
+  EndIf
+EndIf
+
+PWM2 = PWM_p2
+
+M3600=M3570        ; Copy input register to the memory for readout via DPRAM
+M3571=M3601				 ; Copy memory to the output register
+
+CLOSE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

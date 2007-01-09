@@ -1,0 +1,22 @@
+file "$(TPMAC)/pmacDb/AsciiPcs.db"
+{
+	pattern { pcs, C, x }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  x =   1   2   3   4   5   6   7   8
+#                              (pcs == _p_mac _c_oordinate _s_ystem)
+# pmac10:
+        { 23i:WS:Av:,  0,  1 }
+        { 23i:WS:Ah:,  0,  2 }
+        { 23i:MO:Ps:,  0,  3 }
+        { 23i:MO:En:,  0,  4 }
+ 	{ 23i:MO:Tn1:, 0,  5 }
+ 	{ 23i:MO:Tn2:, 0,  6 }
+ 	{ 23i:BP:Mo:,  0,  7 }
+ 	{ 23i:CS:Av:,  0,  8 }
+ 	{ 23i:CS:Ah:,  0,  9 }
+  	{ 23i:KB:Hz:,  0, 10 }
+  	{ 23i:KB:Hy:,  0, 11 }
+  	{ 23i:KB:Vz:,  0, 12 }
+  	{ 23i:KB:Vy:,  0, 13 }
+  	{ 23i:BP:Kb:,  0, 14 }
+}

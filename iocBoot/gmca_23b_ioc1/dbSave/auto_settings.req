@@ -1,0 +1,22 @@
+%
+%%% pmac-10
+file WS_Av_.req    P=23b:
+file WS_Ah_.req    P=23b:
+file VC_Vz_.req    P=23b:
+file VC_Vy_.req    P=23b:
+file VC_Be_.req    P=23b:
+file MObm_Ps_.req  P=23b:
+file MObm_En_.req  P=23b:
+file MObm_Tn1_.req P=23b:
+file MObm_Tn2_.req P=23b:
+file MObm_Be_.req  P=23b:
+%
+%%% pmac-11
+file AT_Av_.req    P=23b:
+file BP_Mo_.req    P=23b:
+file CS_Av_.req    P=23b:
+file CS_Ah_.req    P=23b:
+file VF_Vz_.req    P=23b:
+file VF_Vy_.req    P=23b:
+file VF_Be_.req    P=23b:
+file BP_Vf_.req    P=23b:

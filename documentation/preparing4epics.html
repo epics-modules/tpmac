@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=us-ascii">
+<meta name="author" content="Oleg Makarov and Sergey Stepanov"></head>
+<title>Steps to prepare Turbo PMAC VME working with EPICS</title>
+</head>
+<body>
+
+<H2><CENTER>Steps to prepare Turbo PMAC VME working with EPICS</CENTER></H2>
+
+<p>This document describes how to setup Turbo PMAC VME working with the
+EPICS system implemented at four sectors (19:SBC-CAT, 18:Bio-CAT, 23:GMCA-CAT,
+21:LS-CAT). These groups use a set of standard EPICS records (ai, ao, bi, bo,
+calc, fanout) interacting with each other in order to achieve flexible mapping
+into EPICS of the complex PMAC functionality where one deals with coordinated
+motions of 1,2,3,4,... and etc motors. This extensive set (about 100 records
+per motor at GMCA-CAT and LS-CAT and considerably more in the older systems
+used at SBC and BioCAT) is introduced instead of a single
+<a href="http://www.aps.anl.gov/upd/people/sluiter/epics/modules/mechanism/motor/">Motor
+Record</a> per motor because the latter is not flexible enough to map the PMAC
+coordinated motions, choice of motion programs and etc. For those who still
+want to try Motor Record with PMAC, respective driver support is included
+in pmacApp/pmacAsynMotorSrrc.</p>
+
+<H3>Step-1: Setup all motors in PEWIN32</H3>
+
+<ul COMPACT>
+<li>Check all limit switches
+<li>Tune all motors
+</ul>
+
+<p>This step is a pre-requisition because EPICS support is built on top of
+tuned, working motors. The tools to tune motors in EPICS are rather limited.
+That is why even after the EPICS support is built and made operational, you
+will still need to have PEWIN around and the possibility to connect the PC
+with PEWIN to the PMAC serial console. In most case the two systems (EPICS
+and PEWIN) can be used simultaneously.</p>
+
+<H3>Step-2: Prepare PMAC for VME communications</H3>
+
+<p>This part is described in a <A HREF="VME_bus_setup.html">separate document</A>.</p>
+
+<H3>Step-3: Prepare PMAC to work with EPICS</H3>
+
+<p>Set the following I-variables:</p>
+
+<table border>
+<tr VALIGN="top">
+ <td> I1=0   </td><td> Serial port mode = CS handshake used</td>
+</tr>
+<tr VALIGN="top">
+ <td> I2=3   </td><td> Control panel = disable.</td>
+</tr>
+<tr VALIGN="top">
+ <td> I3=2   </td><td> I/O Handshake Control: PMAC acknowledges valid command
+                       with "ACK" and invalid with "BELL" Messages are sent as
+                       DATA  ... DATA .</td>
+</tr>
+<tr VALIGN="top">
+ <td> I4=0   </td><td> Communications Integrity Mode: checksums disabled; serial
+                       errors are reported immediately.</td>
+</tr>
+<tr VALIGN="top">
+ <td> I6=1   </td><td> Error Reporting Mode: the error message format is
+                       {error message}.</td>
+</tr>
+<tr VALIGN="top">
+ <td> I7=9   </td><td> Phase Cycle Extension: number of consecutive cycles to
+                       detect "In-position".</td>
+</tr>
+<tr VALIGN="top">
+ <td> I9=0   </td><td> Full/Abbreviated Listing Control: the programs are sent
+                       back in short form; decimal-address I-variable return.</td>
+</tr>
+<tr VALIGN="top">
+ <td> I58=1  </td><td> DPRAM ASCII Communications Enable = yes.</td>
+</tr>
+<tr VALIGN="top">
+ <td> I68=15 </td><td> Coordinate System Activation Control: (number of PCS)-1.</td>
+</tr>
+</table>
+
+<H3>Step-4: Map your PMAC coordinate systems</H3>
+
+<p>Produce with text editor a file pcs.pmc (see examples in pmc/2_ioc-specific).
+The file will look like:</p>
+
+<pre>
+; (1) WS:Av:
+&1
+#1->X  ; WS:mt:
+#2->Y  ; WS:mb:
+
+; (2) WS:Ah:
+&2
+#3->X  ; WS:mo:
+#4->Y  ; WS:mi:
+
+; (3) VC:Vz:
+&3
+#5->X ; VC:mz1:
+#6->Y ; VC:mz2:
+#7->Z ; VC:mz3:
+</pre>
+
+<p>... and etc. Then, using the script called <B>mapDPRAM.pl</B> produce the two files
+m3300.pmc and q70.pmc mapping PMAC DPRAM for these coordinate systems. Load
+all three files into PMAC using PEWIN32.</p>
+
+
+<H3>Step-5: Load motion programs</H3>
+
+<p>Load into PMAC the set of motion programs from pmc/3_motion-prg. The set
+contains 9 basis programs for the coordinate systems of 1,2 and 3 motors:</p>
+
+<ul compact>
+<li>SLEW: move motor(s) from A to B
+<li>BACKLASH: move motor(s) from A to B with backlash
+<li>POSITION: move motor(s) from A to B and perform backlash compensation for
+	     one direction only.
+</ul>
+
+<p>These operations conclude preparing the PMAC communications and PMAC DPRAM.</p>
+
+
+<H3>Step-6: Edit EPICS DB loading templates</H3>
+
+<p>Now, prepare EPICS databases for loading. In many cases no database development
+is needed because the provided set has DBs for a number of common coordinations
+like slits, double-crystal monochromator, mirrors. 3-point tables, and etc.
+Locate examples in the iocboot directory and analyze the files st_pmac.cmd
+and EPICS templates in the dbLoad subdirectories. Start with assy.AssyGeneric
+and edit the files one by one. These templates are self-explanatory: they
+contain comments on what offsets should be used to properly map PMAC DPRAM
+access at the EPICS DB side.</p>
+
+<p>Note that in the current setup the communication with assembly of 1 motor
+requires 5 addresses of DPRAM, communication with assembly of 2 motors
+requires 8 addresses of DPRAM, and communication with assembly of 3 motors
+requires 11 addresses of DPRAM. Only those databases that reside in pmacDB
+communicate with PMAC. The databases in softDb serve common DB interaction
+and locking and the databases in the other directories are specific for a
+given coordination (slits, mono, mirror, and etc).</p>
+
+<p>Finally, locate pmacApp/opi/tcl and edit file configXX.tcl (where XX stand
+for the beamline name). This file will contain the information about
+configuration of PMAC motors loaded into IOC in order to call the right MEDM
+screens.</p>
+
+<p><B>Some DB naming conventions:</B></p>
+
+<table border>
+<tr VALIGN="top">
+ <td><nobr> prefix: </nobr></td><td> use something like 23i, 23o, 23b, 18ID,
+            and etc. for the beamline name prefix.</td>
+</tr>
+<tr VALIGN="top">
+ <td><nobr> pmac names: </nobr></td><td>use pmac10, pmac11, pmac12,... for PMACs
+           in IOC1 and pmac20, pmac21, pmac22,... for PMACs in IOC2.
+</tr>
+</table>
+
+<H3>Step-7: If you need to design a new type of motor assembly</H3>
+
+<ol compact>
+<li>take one of existing assemblies with the same number of motors as
+   a template and edit respective 5 files:
+   <ul>
+       <li>XX_calibtate.db -- assembly calibration parameter (scale factors,
+                          offsets, and etc)
+       <li>XX_LimAmp.db -- propagation of limits switch signal from individual
+                       motors to combined axes
+       <li>XX_Tsub.db -- service around the transformation routine (tsub) mapping
+                     requested axes positions into requested motor counts
+       <li>XX_TsubRbk.db -- same in the backward direction
+       <li>XX_TsubSpeed.db -- same for motors speed propagation.
+    </ul>
+<li>take an existing tsub routine from pmacApp/tsubSrc, tweak and name it
+   accordingly, and add the tsubSrc Makefile.
+</ol>
+</body>
+</html>

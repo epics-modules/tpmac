@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)HS:Av:  Huber slits, Vertical Aperture
+%
+
+file assy.req ASSY=$(P)HS:Av
+$(P)HS:Av:Invert
+file mtr1.req MTR1=$(P)HS:mt
+file mtr1.req MTR1=$(P)HS:mb
+file drv1.req DRV1=$(P)HS:ZT
+file drv1.req DRV1=$(P)HS:ZB
+file axs1.req AXS1=$(P)HS:ZC
+file axs1.req AXS1=$(P)HS:ZS
+

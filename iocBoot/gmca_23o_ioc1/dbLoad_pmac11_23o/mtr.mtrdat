@@ -1,0 +1,35 @@
+file $(TPMAC)/pmacDb/mtrdat.db
+{
+	pattern { assy, mtr, desc, C, m, S, asloPos, asloVel, prec } 
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number; not used in the DB/
+#		  S =   0  12  24  36  48  60  72  84 ...
+#--------------------------------------
+# pmac11:
+        { 23o:BP:Hd2:, 23o:BP:mh2z:, "mtr HDM2 BPM",            1,  1,   0, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:CS:Av:,  23o:CS:mz1:,  "mtr MB slit top slide",   1,  2,  12, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:CS:Av:,  23o:CS:mz2:,  "mtr MB slit btm slide",   1,  3,  24, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:CS:Ah:,  23o:CS:my1:,  "mtr MB slit outb. slide", 1,  4,  36, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:CS:Ah:,  23o:CS:my2:,  "mtr MB slit inb. slide",  1,  5,  48, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Hz:,  23o:KB:mhz1:, "mtr horiz.mirror z1",     1,  6,  60, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Hz:,  23o:KB:mhz2:, "mtr horiz.mirror z2",     1,  7,  72, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Hz:,  23o:KB:mhz3:, "mtr horiz.mirror z3",     1,  8,  84, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Hy:,  23o:KB:mhy1:, "mtr horiz.mirror y1",     1,  9,  96, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Hy:,  23o:KB:mhy2:, "mtr horiz.mirror y2",     1, 10, 108, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Vz:,  23o:KB:mvz1:, "mtr vert. mirror z1",     1, 11, 120, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Vz:,  23o:KB:mvz2:, "mtr vert. mirror z2",     1, 12, 132, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Vz:,  23o:KB:mvz3:, "mtr vert. mirror z3",     1, 13, 144, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Vy:,  23o:KB:mvy1:, "mtr vert. mirror y1",     1, 14, 156, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:KB:Vy:,  23o:KB:mvy2:, "mtr vert. mirror y2",     1, 15  168, 3.2552e-04, 3.2552e-04, 0 }
+        { 23o:BP:Kb:,  23o:BP:mkb:,  "mtr mirror BPM",          1, 16, 180, 3.2552e-04, 3.2552e-04, 0 }
+}
+#----------------------------------------------------------------------------  
+file "$(TPMAC)/pmacDb/mtrdat_out.db"
+{
+	pattern { mtr, desc, C, m, S, asloPos, asloVel, prec } 
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number/
+#		  S =   0  12  24  36  48  60  72  84 ... / 12*(m-1)/
+#--------------------------------------
+# pmac11:
+####    { 23o:pmac11:mo:,            "pmac11: motor output",    1, 32, 372, 3.2552e-04, 3.2552e-04 }       #macro needs to be installed 
+}
+

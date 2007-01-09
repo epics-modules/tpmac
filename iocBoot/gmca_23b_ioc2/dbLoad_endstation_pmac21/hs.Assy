@@ -1,0 +1,44 @@
+file "$(TPMAC)/hsDb/HS_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac21:
+        { 23b:HS:Av:, 23b:HS:ZT:, 23b:HS:ZB:}
+        { 23b:HS:Ah:, 23b:HS:YO:, 23b:HS:YI:}
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/hsDb/HS_LimAmp.db"
+{
+ 	pattern { assy, x1, x2, d1, d2 }
+# pmac21:
+        { 23b:HS:Av:, 23b:HS:ZC:, 23b:HS:ZS:, 23b:HS:ZT:, 23b:HS:ZB: }
+        { 23b:HS:Ah:, 23b:HS:YC:, 23b:HS:YS:, 23b:HS:YO:, 23b:HS:YI: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/hsDb/HS_Tsub.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac21:
+  { 23b:HS:Av:, 23b:HS:ZC:, 23b:HS:ZS:, 23b:HS:ZT:, 23b:HS:ZB:, 23b:HS:mt:,  23b:HS:mb:,  RqsPos, 0, tsubHSAp }
+  { 23b:HS:Ah:, 23b:HS:YC:, 23b:HS:YS:, 23b:HS:YO:, 23b:HS:YI:, 23b:HS:mo:,  23b:HS:mi:,  RqsPos, 0, tsubHSAp }
+  { 23b:HS:Av:, 23b:HS:ZC:, 23b:HS:ZS:, 23b:HS:ZT:, 23b:HS:ZB:, 23b:HS:mt:,  23b:HS:mb:,  RqsBkl, 1, tsubHSAp }
+  { 23b:HS:Ah:, 23b:HS:YC:, 23b:HS:YS:, 23b:HS:YO:, 23b:HS:YI:, 23b:HS:mo:,  23b:HS:mi:,  RqsBkl, 1, tsubHSAp }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/hsDb/HS_TsubRbk.db"
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac21:
+  { 23b:HS:Av:, 23b:HS:ZC:, "HS Z-center", "(mm)", 23b:HS:ZS:, "HS Z-size", "(mm)", 23b:HS:ZT:, "HS Z-top",      "(mm)", 23b:HS:ZB:, "HS Z-bottom",  "(mm)", 23b:HS:mt:,  23b:HS:mb:,  ActPos, 0, tsubHSAp }
+  { 23b:HS:Ah:, 23b:HS:YC:, "HS Y-center", "(mm)", 23b:HS:YS:, "HS Y-size", "(mm)", 23b:HS:YO:, "HS Y-outboard", "(mm)", 23b:HS:YI:, "HS Y-inboard", "(mm)", 23b:HS:mo:,  23b:HS:mi:,  ActPos, 0, tsubHSAp }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/hsDb/HS_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac21:
+  { 23b:HS:Av:, 23b:HS:ZC:, "(mm/s)", 23b:HS:ZS:, "(mm/s)", 23b:HS:ZT:, "(mm/s)", 23b:HS:ZB:, "(mm/s)", 23b:HS:mt:, 23b:HS:mb:, tsubHSAp }
+  { 23b:HS:Ah:, 23b:HS:YC:, "(mm/s)", 23b:HS:YS:, "(mm/s)", 23b:HS:YO:, "(mm/s)", 23b:HS:YI:, "(mm/s)", 23b:HS:mo:, 23b:HS:mi:, tsubHSAp }
+}
+

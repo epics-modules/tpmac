@@ -1,0 +1,121 @@
+//Cold stream
+
+//encoder 2000 counts/turn
+//gearhead 13.799184:1
+//leed screw 8 turns / inch
+//8692.39937 counts/mm 1.150430344e-4 mm/count
+
+ms0,i910=3		// CCW
+ms0,i916=1
+MS0,I912=11		//capture on flag LOW
+MS0,I913=2		//homing on MLIM
+
+I100=1                  ;Activate
+I101=0                  ;Commutation Enable
+I102=$78420             ;Command Output Address
+I103=$3502              ;Position Address
+I104=$3502              ;'Velocity' Address
+I105=$35C0              ;Master Position Address
+I106=0                  ;Master Follow Enable
+I107=96                 ;Master Scale Factor
+I108=96                 ;Position Scale Factor
+I109=96                 ;Velocity Scale Factor
+I110=$0                 ;Power-on Servo Position Address
+I111=32000              ;Fatal Following Error Limit
+I112=16000              ;Warning Following Error Limit
+I113=0                  ;+ Software Position Limit
+I114=0                  ;- Software Position Limit
+I115=1.0                ;Abort/Lim Decel Rate
+I116=90                ;Maximum Velocity
+I117=1.0                ;Maximum Acceleration
+I118=0                  ;(Reserved)
+I119=1.0                ;Maximum Jog Acceleration
+I120=0                  ;Jog/Home Acceleration Time
+I121=50                 ;Jog/Home S-Curve Time
+I122=90                ;Jog Speed
+I123=90                ;Homing Speed And Direction
+I124=$240001             ;Flag Mode Control
+I125=$3440              ;Flag Address
+I126=0                  ;Home Offset
+I127=0                  ;Position Rollover Range
+I128=160                ;In-Position Band
+I129=0                  ;Output/1st Phase Offset
+I130=2000000            ;PID Proportional Gain
+I131=400                ;PID Derivative Gain
+I132=520                ;PID Velocity Feed Forward Gain
+I133=200000             ;PID Integral Gain
+I134=0                  ;PID Integration Mode
+I135=3000               ;PID Acceleration Feed Forward Gain
+I136=0                  ;PID Notch Filter Coefficient N1
+I137=0                  ;PID Notch Filter Coefficient N2
+I138=0                  ;PID Notch Filter Coefficient D1
+I139=0                  ;PID Notch Filter Coefficient D2
+I140=0                  ;Trajectory Filter Constant
+I141=0                  ;Desired Position Limit Band
+I142=$0                 ;(Reserved)
+I143=$0                 ;(Reserved)
+I144=0                  ;(Reserved)
+I145=0                  ;(Reserved)
+I146=0                  ;(Reserved)
+I147=0                  ;(Reserved)
+I148=0                  ;(Reserved)
+I149=0                  ;(Reserved)
+I150=0                  ;(Reserved)
+I151=0                  ;(Reserved)
+I152=0                  ;(Reserved)
+I153=0                  ;(Reserved)
+I154=0                  ;(Reserved)
+I155=$0                 ;Commutation Table Address Offset
+I156=0                  ;Commutation Delay Compensation
+I157=0                  ;Continuous Current Limit
+I158=0                  ;Integrated Current Limit
+I159=0                  ;User Written Servo Enable
+I160=0                  ;Servo Cycle Period Extension
+I161=0                  ;Current Loop Integral Gain
+I162=0                  ;Current Loop Prop. Gain (Forward Path)
+I163=4194304            ;Integration Limit
+I164=0                  ;'Deadband Gain'
+I165=16                 ;Deadband Size
+I166=6527               ;PWM Scale Factor (PMAC2 Only)
+I167=4194304            ;Position Error Limit
+I168=700                ;Friction Feedforward
+I169=32767              ;Output Command Limit/Scale
+I170=1                  ;Number of Commutation Cycles (N)
+I171=1000               ;Counts Per N Commutation Cycles
+I172=1365               ;Commutation Phase Angle
+I173=0                  ;Phase Finding Output Value
+I174=0                  ;Phase Finding Time
+I175=0                  ;Phase Position Offset
+I176=0                  ;Current Loop Proportional Gain (Back Path)
+I177=0                  ;Induction Motor Magnetization Current
+I178=0                  ;Induction Motor Slip Gain
+I179=0                  ;2nd Phase Output (DAC) Bias
+I180=0                  ;Power-Up Mode
+I181=$0                 ;Power-On Phase Position Address
+I182=$0                 ;Current loop Feedback Address
+I183=$78420             ;Commutation Position Address
+I184=$0                 ;Current-Loop Feedback Mask Word
+I185=0                  ;Backlash Take-up Rate
+I186=0                  ;Backlash Size
+I187=64                 ;Backlash Hysteresis
+I188=0                  ;In-Position Number of Cycles
+I189=0                  ;(Reserved)
+I190=0                  ;Rapid Speed Select
+I191=$0                 ;Power-on Phase Position Format
+I192=10                 ;Jog-To-Position Calculation Time
+I193=0                  ;(Reserved)
+I194=0                  ;(Reserved)
+I195=$0                 ;Power-On Servo Position Format
+I196=0                  ;Output Mode Control
+I197=0                  ;Position Capture/Trigger Mode Control
+I198=0                  ;Third-Resolver Gear Ratio
+I199=0                  ;Second-Resolver Gear Ratio
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,34 @@
+file $(TPMAC)/softDb/LimTransfer.db
+{
+	pattern { drv, mtr }
+#--------------------------------------
+#  Developed 98/10 by Stepanov for "LimSet" and "AmpEna" controls
+# See also:
+# mtr.bkgfix1mtr -> pmacDb/bkgfix1mtr.db (propagation of "AmpEna" from motor)
+# mtr.svofix1    -> pmacDb/svofix1.db    (propagation of "NgLimSet" & "PsLimSet" from motor)
+# xx.LimAmp      -> xxDb/XX_LimAmp.db    (triggering all NgLimSet/PsLimSet and AmpEna in the assembly
+#--------------------------------------
+# Drives <- Motors
+# pmac10:
+        { 23b:WS:ZT:,  23b:WS:mt:  }
+        { 23b:WS:ZB:,  23b:WS:mb:  }
+        { 23b:WS:YO:,  23b:WS:mo:  }
+        { 23b:WS:YI:,  23b:WS:mi:  }
+        { 23b:VC:Z1:, 23b:VC:mz1:  }
+        { 23b:VC:Z2:, 23b:VC:mz2:  }
+        { 23b:VC:Z3:, 23b:VC:mz3:  }
+        { 23b:VC:Y1:, 23b:VC:my1:  }
+        { 23b:VC:Y2:, 23b:VC:my2:  }
+        { 23b:VC:BE:, 23b:VC:mbe:  }
+        { 23b:MO:Z:,  23b:MO:mz:   }
+        { 23b:MO:QB:,  23b:MO:mr:  }
+        { 23b:MO:T2:, 23b:MO:mt2:  }
+        { 23b:MO:T1:, 23b:MO:mt1:  }
+        { 23b:MO:R1:, 23b:MO:mr1:  }
+        { 23b:MO:P2:, 23b:MO:mp2:  }
+        { 23b:MO:R2:, 23b:MO:mr2:  }
+        { 23b:MO:W2:, 23b:MO:mw2:  }
+        { 23b:MO:B1:, 23b:MO:mb1:  }
+        { 23b:MO:B2:, 23b:MO:mb2:  }
+}
+

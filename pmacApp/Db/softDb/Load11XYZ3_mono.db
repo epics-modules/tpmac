@@ -43,3 +43,26 @@ record(tsub, "$(assy)Load") {
   field(IPA0, "0")
 }
 
+
+#---------------------------------------------------------------
+# Added by Sergey on 2006/05/09
+# This is a DB calculating the homing status of assembly from the homing
+# statuses of individual motors. The status is "Homed" when all participating
+# motors have HmCplt flag equal to 1 ("Completed") -- see mtrdat.db.
+
+record(bi, "$(assy)Homed") {
+  field(DESC, "Assy Homed Status")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "NotHomed")
+  field(ONAM, "Homed")
+  field(PINI, "YES")
+  field(INP, "$(assy)HomedCALC.VAL PP MS")
+}
+
+record(calc, "$(assy)HomedCALC") {
+  field(CALC, "(A#0)&&(B#0)&&(C#0)")
+  field(INPA, "$(m1)HmCplt.VAL NPP MS")
+  field(INPB, "$(m2)HmCplt.VAL NPP MS")
+  field(INPC, "$(m3)HmCplt.VAL NPP MS")
+}
+

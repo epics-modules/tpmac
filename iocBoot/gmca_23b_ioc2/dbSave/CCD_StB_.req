@@ -1,0 +1,20 @@
+%
+% BURT Request File
+%
+% $(P)CCD:StB:  CCD support for BM line
+%
+
+file assy.req ASSY=$(P)CCD:StB
+$(P)CCD:StB:dH
+$(P)CCD:StB:L
+$(P)CCD:StB:Lh
+$(P)CCD:StB:Lv
+file mtr1.req MTR1=$(P)CCD:mx
+file mtr1.req MTR1=$(P)CCD:mus
+file mtr1.req MTR1=$(P)CCD:mds
+file drv1.req DRV1=$(P)CCD:X
+file drv1.req DRV1=$(P)CCD:VUS
+file drv1.req DRV1=$(P)CCD:VDS
+file axs1.req AXS1=$(P)CCD:D
+file axs1.req AXS1=$(P)CCD:2Q
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Accessory 51E</title>
+</head>
+<body>
+<h3 ALIGN="center"><FONT COLOR="#000099">Accessory 51E</FONT></h3>
+
+<p>
+<a href="http://www.deltatau.com/fmenu/ACC-51E.PDF">Accessory 51E</a> is a
+4096X encoder interpolator board used at the UMAC
+<a href="http://www.macro.org/">MACRO</a> station.<br>
+Input signals &plusmn;1 V.<br>
+<span style="font-weight: bold;"><br>
+</span><span style="font-family: &quot;courier new&quot;;">OPEN PLC2 CLEAR<br>
+; Add Acc-51E to the encoder conversion table<br>
+P1=$F0A000 MSW0,MI128,P1 ;$18<br>
+P1=$A005&nbsp;&nbsp; MSW0,MI129,P1 ;$19<br>
+P1=$0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSW0,MI130,P1 ;$1a<br>
+P1=$F0A008 MSW0,MI131,P1 ;$1b<br>
+P1=$A00D&nbsp;&nbsp; MSW0,MI132,P1 ;$1c<br>
+P1=$0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSW0,MI133,P1 ;$1d<br>
+P1=$F0A010 MSW0,MI134,P1 ;$1e<br>
+P1=$A015&nbsp;&nbsp; MSW0,MI135,P1 ;$1f<br>
+P1=$0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSW0,MI136,P1 ;$20<br>
+P1=$F0A018 MSW0,MI137,P1 ;$21<br>
+P1=$A01D&nbsp;&nbsp; MSW0,MI138,P1 ;$22<br>
+P1=$0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSW0,MI139,P1 ;$23<br>
+<br>
+; substitute 1-4 motor feedback<br>
+P1=$1a MSW0,I101,P1<br>
+;P1=$1d MSW0,I102,P1<br>
+;P1=$20 MSW0,I103,P1<br>
+;P1=$23 MSW0,I104,P1<br>
+<br>
+P1=$E8A004 MSW0,MI198,P1 ;Point to Global Clock Control Register.<br>
+P2=$0038D2 MSW0,MI199,P2 ;Put $38D2 into the register.<br>
+P1=$E8A005 MSW0,MI198,P1 ;Point to control word for channel 1.<br>
+P2=$000003 MSW0,MI199,P2 ;Put P2 into the register.<br>
+P1=$E8A00D MSW0,MI198,P1 ;Point to control word for channel 2.<br>
+MSW0,MI199,P2 ;Put P2 into the register.<br>
+P1=$E8A015 MSW0,MI198,P1 ;Point to control word for channel 3.<br>
+MSW0,MI199,P2 ;Put P2 into the register.<br>
+P1=$E8A01D MSW0,MI198,P1 ;Point to control word for channel 4.<br>
+MSW0,MI199,P2 ;Put P2 into the register.<br>
+P1=$E80018 MSW0,MI198,P1 ;Point to 1st 3-line entry in encoder
+conversion table (X side).<br>
+P2=$000003 MSW0,MI199,P2 ;Place control word here (must be the same as
+#1 above)<br>
+P1=$E8001B MSW0,MI198,P1 ;Point to 2nd 3-line entry in encoder
+conversion table (X side).<br>
+MSW0,MI199,P2 ;Place control word here (must be the same as #2 above)<br>
+P1=$E8001E MSW0,MI198,P1 ;Point to 3rd 3-line entry in encoder
+conversion table (X side).<br>
+MSW0,MI199,P2 ;Place control word here (must be the same as #3 above)<br>
+P1=$E80021,MSW0,MI198,P1 ;Point to 4th 3-line entry in encoder
+conversion table (X side).<br>
+MSW0,MI199,P2 ;Place control word here (must be the same as #4 above)<br>
+DISPLC2 ;Run this PLC only once at startup or MACRO Station reset.<br>
+CLOSE<br>
+<br>
+</span>
+</body>
+</html>

@@ -1,0 +1,134 @@
+; Q-variable Definitions
+
+CLOSE	; To ensure commands are on-line
+
+&1 	;Coordinate System      BP:HD2: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=1      	; CS#
+Q71=3300  	; TA0  3300+(PREVIOUS RAM)
+Q72=3301  	; TS0
+Q73=3302  	; X0
+Q74=3303  	; X1
+Q75=3304  	; X2
+
+&2 	;Coordinate System      CS:Av: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=2      	; CS#
+Q71=3305  	; TA0  3300+(PREVIOUS RAM)
+Q72=3306  	; TS0
+Q73=3307  	; X0
+Q74=3308  	; X1
+Q75=3309  	; X2
+Q76=3310  	; Y0
+Q77=3311  	; Y1
+Q78=3312  	; Y2
+
+&3 	;Coordinate System      CS:Ah: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=3      	; CS#
+Q71=3313  	; TA0  3300+(PREVIOUS RAM)
+Q72=3314  	; TS0
+Q73=3315  	; X0
+Q74=3316  	; X1
+Q75=3317  	; X2
+Q76=3318  	; Y0
+Q77=3319  	; Y1
+Q78=3320  	; Y2
+
+&4 	;Coordinate System      KB:Hz: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=4      	; CS#
+Q71=3321  	; TA0  3300+(PREVIOUS RAM)
+Q72=3322  	; TS0
+Q73=3323  	; X0
+Q74=3324  	; X1
+Q75=3325  	; X2
+Q76=3326  	; Y0
+Q77=3327  	; Y1
+Q78=3328  	; Y2
+Q79=3329  	; Z0
+Q80=3330  	; Z1
+Q81=3331  	; Z2
+
+&5 	;Coordinate System      KB:Hy: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=5      	; CS#
+Q71=3332  	; TA0  3300+(PREVIOUS RAM)
+Q72=3333  	; TS0
+Q73=3334  	; X0
+Q74=3335  	; X1
+Q75=3336  	; X2
+Q76=3337  	; Y0
+Q77=3338  	; Y1
+Q78=3339  	; Y2
+
+&6 	;Coordinate System      KB:Vz: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=6      	; CS#
+Q71=3340  	; TA0  3300+(PREVIOUS RAM)
+Q72=3341  	; TS0
+Q73=3342  	; X0
+Q74=3343  	; X1
+Q75=3344  	; X2
+Q76=3345  	; Y0
+Q77=3346  	; Y1
+Q78=3347  	; Y2
+Q79=3348  	; Z0
+Q80=3349  	; Z1
+Q81=3350  	; Z2
+
+&7 	;Coordinate System      KB:Vy: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=7      	; CS#
+Q71=3351  	; TA0  3300+(PREVIOUS RAM)
+Q72=3352  	; TS0
+Q73=3353  	; X0
+Q74=3354  	; X1
+Q75=3355  	; X2
+Q76=3356  	; Y0
+Q77=3357  	; Y1
+Q78=3358  	; Y2
+
+&8 	;Coordinate System      BP:Kb: 
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=8      	; CS#
+Q71=3359  	; TA0  3300+(PREVIOUS RAM)
+Q72=3360  	; TS0
+Q73=3361  	; X0
+Q74=3362  	; X1
+Q75=3363  	; X2
+
+; Unused Coordinate Systems
+
+&9	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&10	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&11	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&12	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&13	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&14	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&15	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+
+&16	; Coordinate System
+Q70..99=3540	; Default for non-existent parameters
+

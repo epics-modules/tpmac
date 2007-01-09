@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>VME bus setup</title>
+</head>
+<body>
+<p align="center"><b><big><big><font color="#660000">
+Setting Mailbox and DPRAM base addresses:</font>
+</big></big></b></p>
+
+<p> I90 to I99 I-variables define: Mailbox addresses as 0x7FA000-0x7FA1FF and
+DPRAM addresses as 0x700000-0x703FFF at the VME A24 address space, interrupt
+level 2, and interrupt vectors 0xA0, 0xA1, and 0xA2.</p>
+
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr VALIGN="top">
+      <th>Description</th>
+      <th><nobr>I-variable</nobr></th>
+      <th>Value</th>
+      <th>Comment</th>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Address Modifier</td>
+      <td>I90</td>
+      <td>$39</td>
+      <td>24-bit addressing</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Address Modifier Don&#8217;t Care
+Bits</td>
+      <td>I91</td>
+      <td>$4</td>
+      <td>permits both "non-privileged" and "supervisory" data access</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Base Address Bits A31-A24</td>
+      <td>I92</td>
+      <td>$0</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Mailbox Base Address Bits
+A23-A16</td>
+      <td>I93</td>
+      <td>$7F</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Mailbox Base Address Bits
+A15-A08</td>
+      <td>I94</td>
+      <td>$A0</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Interrupt Level </td>
+      <td>I95</td>
+      <td>$2</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Interrupt Vector </td>
+      <td>I96</td>
+      <td>$A1</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME DPRAM Base Address Bits A23-A20</td>
+      <td>I97</td>
+      <td>$70</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME DPRAM Enable </td>
+      <td>I98</td>
+      <td>$E0</td>
+      <td>enables DPRAM </td>
+    </tr>
+    <tr VALIGN="top">
+      <td>VME Address Width Control</td>
+      <td>I99</td>
+      <td>$90</td>
+      <td>DPRAM 24-bit addressing </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+
+<p><B><FONT COLOR="Red">NOTE:</FONT></B> The above VME settings must correspond
+to the driver configuration parameters in the IOC startup script st_pmac.cmd
+(see examples in the iocBoot directories):</p>
+<pre>
+### Configure PMAC-VME Hardware
+#	args:	(1) EPICS VME Card #
+#		(2) PMAC Base Address
+#		(3) PMAC DPRAM Address (0=none)
+#		(4) PMAC IRQ Vectors (v must be odd) (uses v-1,v,v+1)
+#		(5) IRQ Level
+pmacVmeDebug
+devPmacMbxDebug
+devPmacRamDebug
+drvPmacDebug
+
+# For 24-bit PMAC settings:
+# DPRAM address range is A24 0xF0700000 - 0xF0703FFF
+# MBOX  address range is A24 0xF07FA000 - 0xF07FA1FF
+  pmacVmeConfig (1, 0x7FA000, 0x700000, 0xa1, 2)
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+file "$(TPMAC)/xDb/X_Calibrate.db"
+{
+        pattern { assy, d1 }
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:DL:  }
+        { 23b:GO:Om:,   23b:GO:OM:   }
+        { 23b:JET:Ps:,  23b:JET:P:   }
+        { 23b:BD:DhB:,  23b:BD:HD:   }
+        { 23b:TV:V1:,   23b:TV:ZM1:  }
+	{ 23b:TV:V2:,   23b:TV:ZM2:  }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_LimAmp.db"
+{
+ 	pattern { assy, d1 }
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:DL:  }
+        { 23b:GO:Om:,   23b:GO:OM:   }
+        { 23b:JET:Ps:,  23b:JET:P:   }
+        { 23b:BD:DhB:,  23b:BD:HD:   }
+        { 23b:TV:V1:,   23b:TV:ZM1:  }
+	{ 23b:TV:V2:,   23b:TV:ZM2:  }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_Tsub.db"
+{
+	pattern { assy, d1, m1, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:DL:, 23b:CCD:ml:, RqsPos, 0, tsubXPs }
+        { 23b:CCD:LpB:, 23b:CCD:DL:, 23b:CCD:ml:, RqsBkl, 1, tsubXPs }
+        { 23b:GO:Om:,   23b:GO:OM:,  23b:GO:mom:, RqsPos, 0, tsubXPs }
+        { 23b:GO:Om:,   23b:GO:OM:,  23b:GO:mom:, RqsBkl, 1, tsubXPs }
+        { 23b:JET:Ps:,  23b:JET:P:,  23b:JET:mp:, RqsPos, 0, tsubXPs }
+        { 23b:JET:Ps:,  23b:JET:P:,  23b:JET:mp:, RqsBkl, 1, tsubXPs }
+        { 23b:BD:DhB:,  23b:BD:HD:,  23b:BD:mhd:, RqsPos, 0, tsubXPs }
+        { 23b:BD:DhB:,  23b:BD:HD:,  23b:BD:mhd:, RqsBkl, 1, tsubXPs }
+        { 23b:TV:V1:,   23b:TV:ZM1:, 23b:TV:mz1:, RqsPos, 0, tsubXPs }
+        { 23b:TV:V1:,   23b:TV:ZM1:, 23b:TV:mz1:, RqsBkl, 1, tsubXPs }
+	{ 23b:TV:V2:,   23b:TV:ZM2:, 23b:TV:mz2:, RqsPos, 0, tsubXPs }
+	{ 23b:TV:V2:,   23b:TV:ZM2:, 23b:TV:mz2:, RqsBkl, 1, tsubXPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_TsubRbk.db"
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:DL:, "CCD later.pos.",   "(mm)",   23b:CCD:ml:, ActPos, 0, tsubXPs }
+        { 23b:GO:Om:,   23b:GO:OM:,  "gonio omega",      "(mm)",   23b:GO:mom:, ActPos, 0, tsubXPs }
+        { 23b:JET:Ps:,  23b:JET:P:,  "cryo position",    "(mm)",   23b:JET:mp:, ActPos, 0, tsubXPs }
+        { 23b:BD:DhB:,  23b:BD:HD:,  "Beam pipe H-pos.", "(mm)",   23b:BD:mhd:, ActPos, 0, tsubXPs }
+        { 23b:TV:V1:,   23b:TV:ZM1:, "hi-res. zoom",     "(mm)",   23b:TV:mz1:, ActPos, 0, tsubXPs }
+	{ 23b:TV:V2:,   23b:TV:ZM2:, "lo-res. zoom",     "(mm)",   23b:TV:mz2:, ActPos, 0, tsubXPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, m1, tsub }
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:DL:, "(mm/s)",   23b:CCD:ml:, tsubXPs }
+        { 23b:GO:Om:,   23b:GO:OM:,  "(degr/s)", 23b:GO:mom:, tsubXPs }
+        { 23b:JET:Ps:,  23b:JET:P:,  "(mm/s)",   23b:JET:mp:, tsubXPs }
+        { 23b:BD:DhB:,  23b:BD:HD:,  "(mm/s)",   23b:BD:mhd:, tsubXPs }
+        { 23b:TV:V1:,   23b:TV:ZM1:, "(mm/s)",   23b:TV:mz1:, tsubXPs }
+        { 23b:TV:V2:,   23b:TV:ZM2:, "(mm/s)",   23b:TV:mz2:, tsubXPs }
+}

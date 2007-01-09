@@ -1,0 +1,38 @@
+Steps to install EPICS controls on Windows:
+
+1) Install cygwin into c:/cygwin; install optional cygwin X11 server (XWin).
+Add c:/cygwin/bin;c:/cygwin/usr/X11R6/bin to path.
+
+2) Install ActiveState Tcl  into c:/tcl. Add c:/tcl/bin to path (if installer
+has not done it).
+
+3) Install ActiveState PERL into c:/perl Add c:/perl/bin to path (if installer
+has not done it).
+
+4) Install Hummingbird Exceed; add c:/Progra~1/Hummingbird/Connectivity/9.00/Exceed
+to PATH (Hummingbird installation can be skipped if EPICS is compiled with cygwin).
+
+5) Optionally install Microsoft Visual C++ and compile pezca -- this will add
+pezca to the Perl installation.
+
+6) Install EPICS in c:/usr/local/epics (binary distribution can be copied from
+another computer)
+
+7) Set environment: EPICS_HOST_ARCH=win32-x86
+                    EPICS_CA_ADDR_LIST=164.54.210.2 164.54.210.7 164.54.210.9....
+		    EPICS_CA_AUTO_ADDR_LIST=NO
+
+8) Add c:/usr/local/epics/base/bin/%EPICS_HOST_ARCH%;
+       c:/usr/local/epics/extensions/bin/%EPICS_HOST_ARCH%;
+-- to PATH
+
+9) Set environment: DISPLAY=127.0.0.1:0.0
+
+10) Copy GM/CA screens into c:/gmca
+
+11) Optionally install SUN Java (for fast scans)
+
+12) Set environment: FASTSCANS=c:/gmca/fastscans
+
+13) Copy getenv.exe into some PATH location.
+

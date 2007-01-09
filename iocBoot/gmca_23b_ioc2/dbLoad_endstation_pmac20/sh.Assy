@@ -1,0 +1,37 @@
+file "$(TPMAC)/shDb/SH_Calibrate.db"
+{
+        pattern { assy, d1 }
+# pmac20:
+	{ 23b:SH:Ps:,  23b:SH:P:    }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/shDb/SH_LimAmp.db"
+{
+ 	pattern { assy, d1 }
+# pmac20:
+	{ 23b:SH:Ps:,  23b:SH:P:    }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/shDb/SH_Tsub.db"
+{
+	pattern { assy, d1, m1, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac20:
+	{ 23b:SH:Ps:,  23b:SH:P:,   23b:SH:mp:,  RqsPos, 0, tsubSHPs }
+	{ 23b:SH:Ps:,  23b:SH:P:,   23b:SH:mp:,  RqsBkl, 1, tsubSHPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/shDb/SH_TsubRbk.db"
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+# pmac20:
+	{ 23b:SH:Ps:,  23b:SH:P:,   "shutter pos.",    "(degr)", 23b:SH:mp:,  ActPos, 0, tsubSHPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/shDb/SH_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, m1, tsub }
+# pmac20:
+        { 23b:SH:Ps:,  23b:SH:P:,   "(degr/s)", 23b:SH:mp:,  tsubSHPs }
+}

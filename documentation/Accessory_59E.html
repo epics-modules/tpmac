@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Accessory 59E</title>
+</head>
+<body>
+<h3 ALIGN="center"><FONT COLOR="#000099">Accessory 59E</FONT></h3>
+
+<p>
+<a href="http://www.deltatau.com/fmenu/ACC-59E.PDF">Accessory 59E</a> is a
+8-Channel 12-Bit ADC/DAC Board used at the UMAC
+<a href="http://www.macro.org/">MACRO</a> station.<br>
+<br>
+<span style="font-weight: bold; color: rgb(0, 0, 153);">INPUTS</span><span
+ style="color: rgb(0, 0, 153);">:</span><br>
+For a single-ended connection (using ADCx and GND), the voltage range
+should be from 0 to 20V for unipolar signals and -10V to +10V for
+bipolar signals. <br>
+For a differential connection (using ADCx and ADCx/), the voltage range
+should between -10 and 10V for unipolar signals and -5V to 5V for
+bipolar signals. <br>
+<br>
+<span style="font-weight: bold; color: rgb(0, 0, 153);">OUTPUTS</span><span
+ style="color: rgb(0, 0, 153);">:</span><br>
+For unipolar mode, the voltage range is from 0 to 20V. A value of 0 in
+the address of DAC will correspond to 0V and a value of 4095 will
+correspond to about 20V.<br>
+For bipolar mode, the voltage range is from -20 to 20V. A value of 0 in
+the address of DAC will correspond to -20V and a value of 4095 ($FFF)
+will correspond to about 20V.<br>
+<br>
+<div style="text-align: center; color: rgb(0, 0, 153);"><span
+ style="font-weight: bold;">Settings
+applied to the UMAC MACRO<br>
+</span>
+<div style="text-align: left;"><span style="color: rgb(204, 0, 0);">NOTE:
+firmware version of MACRO-16 card should not be older than 1.203</span><br>
+</div>
+</div>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><small>ms0,i19=4</small><br>
+      </td>
+      <td style="vertical-align: top; color: rgb(0, 102, 0);">Set
+period for data transfer equal to four servo periods</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small>ms0,i987=1</small><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="color: rgb(0, 102, 0);">enable the automatic ADC transfer</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small>ms0,i988=$FF</small><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="color: rgb(0, 102, 0);">set up for bipolar (-10 to +10V) inputs</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small>ms0,i989=$8840</small><br>
+      </td>
+      <td style="vertical-align: top;"><span
+ style="color: rgb(0, 102, 0);">ACC59E address</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><small> MS0,MI975=$CC0</small></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Enable
+nodes <b>6, 7, 10, 11 </b>for I/O at MACRO Station</span></td>
+    </tr>
+    <tr>
+      <td style="white-space: nowrap; vertical-align: top;"><span
+ lang="EN-US" style="font-size: 10pt; font-family: &quot;Courier New&quot;;">ms0,i173=$20C0A9000200<br>
+ms0,i175=$20C0A8000206<br>
+      </span></td>
+      <td style="vertical-align: top;"> <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">six
+12-bit transfers ADC 1-6, nodes 6-7 16-bit registers</span><span
+ lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;"><o:p></o:p></span><br>
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">two
+12-bit transfers ADC 7-8, nodes 6-7 24-bit registers<br>
+      </span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">ms0,i20=$FFFF<br>
+      <br>
+ms0,i21=$C4C0B0548848<br>
+ms0,i22=$548848C4C0B0<br>
+      <br>
+ms0,i23=$DCC0B1548849<br>
+ms0,i24=$548849DCC0B1<br>
+      <br>
+ms0,i25=$DCC0B254884A<br>
+ms0,i26=$54884ADCC0B2<br>
+      <br>
+ms0,i27=$DCC0B354884B</span><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;"><br>
+ms0,i28=$54884BDCC0B3<br>
+      <br>
+ms0,i29=$C4C0B4608848 <br>
+ms0,i30=$608848C4C0B4<br>
+      <br>
+ms0,i31=$DCC0B5608849<br>
+ms0,i32=$608849DCC0B5<br>
+      <br>
+ms0,i33=$DCC0B660884A<br>
+ms0,i34=$60884ADCC0B6<br>
+      <br>
+ms0,i35=$DCC0B760884B<br>
+ms0,i36=$60884BDCC0B7<br>
+      </span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);">enable
+16 data transfers for DAC<br>
+      <br>
+DAC1 node 10
+24-bit<br>
+DAC1<br>
+      <br>
+DAC2 node 10
+16-bit<br>
+DAC2<br>
+      <br>
+DAC3 node 10
+16-bit<br>
+DAC3<br>
+      <br>
+DAC4 node 10
+16-bit<br>
+DAC4<br>
+      <br>
+DAC5 node 11
+24-bit<br>
+DAC5<br>
+      <br>
+DAC6 node 11
+16-bit</span><br style="color: rgb(0, 102, 0);">
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);">DAC6</span><br
+ style="color: rgb(0, 102, 0);">
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);"><br>
+DAC7 node 11
+16-bit</span><br style="color: rgb(0, 102, 0);">
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);">DAC7</span><br
+ style="color: rgb(0, 102, 0);">
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);"><br>
+DAC8 node 11
+16-bit</span><br style="color: rgb(0, 102, 0);">
+      <span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: rgb(0, 102, 0);">DAC8</span><span
+ lang="EN-US" style="font-size: 10pt; font-family: &quot;Courier New&quot;;"><br>
+      </span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MSSAVE0</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Saves
+to macro station</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MS$$$0</span></td>
+      <td style="vertical-align: top;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Reset
+macro station to enable changes</span></td>
+    </tr>
+  </tbody>
+</table>
+<div style="text-align: center; font-weight: bold;"><br>
+<span style="color: rgb(0, 0, 153);">Settings
+applied to the
+Turbo PMAC2 Ultralite</span></div>
+<table cellpadding="2" cellspacing="2" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: middle;"><span lang="EN-US"
+ style="font-size: 10pt;">I6841=$0FBFF3</span></td>
+      <td style="vertical-align: middle;"><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;; color: green;">Change
+from </span><span lang="EN-US" style="font-size: 10pt; color: green;">$0FB333
+to
+$0FBFF3 enables I / O nodes 6,7,10,11<br>
+      </span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+M1001-&gt;X:$078429,8,12<br>
+M1002-&gt;X:$07842A,8,12<br>
+M1003-&gt;X:$07842B,8,12<br>
+M1004-&gt;X:$07842D,8,12<br>
+M1005-&gt;X:$07842E,8,12<br>
+M1006-&gt;X:$07842F,8,12<br>
+M1007-&gt;X:$078428,0,12<br>
+M1008-&gt;X:$07842C,0,12</td>
+      <td style="vertical-align: top;"><span
+ style="color: rgb(0, 102, 0);">M-variables for ADC 1-8 readout</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC1, node6 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC2, node6 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC3, node6 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC4, node7 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC5, node7 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC6, node7 16-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC7, node6 24-bit</span><br
+ style="color: rgb(0, 102, 0);">
+      <span style="color: rgb(0, 102, 0);">ADC8, node7 24-bit</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><br>
+M1011-&gt;X:$078430,0,12 <br>
+M1012-&gt;X:$078431,8,12<br>
+M1013-&gt;X:$078432,8,12<br>
+M1014-&gt;X:$078433,8,12<br>
+M1015-&gt;X:$078434,0,12<br>
+M1016-&gt;X:$078435,8,12<br>
+M1017-&gt;X:$078436,8,12<br>
+M1018-&gt;X:$078437,8,12<br>
+      </td>
+      <td style="vertical-align: top; color: rgb(0, 102, 0);">M-variables
+for DAC 1-8 control<br>
+DAC1, node10 24-bit<br>
+DAC2, node10 16-bit<br>
+DAC3, node10 16-bit<br>
+DAC4, node10 16-bit<br>
+DAC5, node11 24-bit<br>
+DAC6, node11 16-bit<br>
+DAC7, node11 16-bit<br>
+DAC8, node11 16-bit<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+</body>
+</html>

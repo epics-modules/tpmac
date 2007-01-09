@@ -1,0 +1,11 @@
+%
+% BURT Request File
+%
+% $(P)XY:P11:  X-Y positioner #11
+%
+
+file assy.req ASSY=$(P)XY:P11
+file mtr1.req MTR1=$(P)XY:mx11
+file mtr1.req MTR1=$(P)XY:my11
+file drv1.req DRV1=$(P)XY:X11
+file drv1.req DRV1=$(P)XY:Y11

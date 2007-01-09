@@ -1,0 +1,6 @@
+file "$(TPMAC)/pmacDb/CtlPnlPmac.db"
+{
+	pattern { pmac, C }
+
+        { 23i:pmac21:, 1 }
+}

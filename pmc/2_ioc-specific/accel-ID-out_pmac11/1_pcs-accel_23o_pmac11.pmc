@@ -1,0 +1,47 @@
+; Coordinate System Definitions
+;
+; pmac10 /Accel 23o/PMAC2
+
+undef all	; clear all coordinate systems
+
+; (1) BP:HD2:
+&1
+#1->X  ; BP:mh2z:
+
+; (2) CS:Av:
+&2
+#2->X  ; CS:mz1:
+#3->Y  ; CS:mz2:
+
+; (3) CS:Ah:
+&3
+#4->X  ; CS:my1:
+#5->Y  ; CS:my2:
+
+; (4) KB:Hz:
+&4
+#6->X ; KB:mhz1:
+#7->Y ; KB:mhz2:
+#8->Z ; KB:mhz3:
+
+; (5) KB:Hy:
+&5
+#9->X ;  KB:mhy1:
+#10->Y ; KB:mhy2:
+
+; (6) KB:Vz:
+&6
+#11->X ; KB:mvz1:
+#12->Y ; KB:mvz2:
+#13->Z ; KB:mvz3:
+
+; (7) KB:Vy:
+&7
+#14->X ; KB:mvy1:
+#15->Y ; KB:mvy2:
+
+; (8) BP:Kb:
+&8
+#16->X ; BP:mkb:
+
+

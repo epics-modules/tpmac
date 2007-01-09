@@ -1,0 +1,49 @@
+file "$(TPMAC)/xDb/X_Calibrate.db"
+{
+        pattern { assy, d1 }
+# pmac21:
+        { 23b:RB:Rr:,  23b:RB:RA:   }
+        { 23b:FLU:Di:, 23b:FLU:D:   }
+        { 23b:PIN:St:, 23b:PIN:P:   }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_LimAmp.db"
+{
+ 	pattern { assy, d1 }
+# pmac21:
+        { 23b:RB:Rr:,  23b:RB:RA:   }
+        { 23b:FLU:Di:, 23b:FLU:D:   }
+        { 23b:PIN:St:, 23b:PIN:P:   }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_Tsub.db"
+{
+	pattern { assy, d1, m1, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac21:
+        { 23b:RB:Rr:,  23b:RB:RA:,  23b:RB:mra:, RqsPos, 0, tsubXPs }
+        { 23b:RB:Rr:,  23b:RB:RA:,  23b:RB:mra:, RqsBkl, 1, tsubXPs }
+        { 23b:FLU:Di:, 23b:FLU:D:,  23b:FLU:md:, RqsPos, 0, tsubXPs }
+        { 23b:FLU:Di:, 23b:FLU:D:,  23b:FLU:md:, RqsBkl, 1, tsubXPs }
+        { 23b:PIN:St:, 23b:PIN:P:,  23b:PIN:mp:, RqsPos, 0, tsubXPs }
+        { 23b:PIN:St:, 23b:PIN:P:,  23b:PIN:mp:, RqsBkl, 1, tsubXPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_TsubRbk.db"
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+# pmac21:
+        { 23b:RB:Rr:,  23b:RB:RA:,  "robot rotation" , "(degr)", 23b:RB:mra:, ActPos, 0, tsubXPs }
+        { 23b:FLU:Di:, 23b:FLU:D:,  "flu.det.distnce", "(mm)",   23b:FLU:md:, ActPos, 0, tsubXPs }
+        { 23b:PIN:St:, 23b:PIN:P:,  "pin diode suprt", "(mm)",   23b:PIN:mp:, ActPos, 0, tsubXPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, m1, tsub }
+# pmac21:
+        { 23b:RB:Rr:,  23b:RB:RA:,  "(degr/s)", 23b:RB:mra:, tsubXPs }
+        { 23b:FLU:Di:, 23b:FLU:D:,  "(mm/s)",   23b:FLU:md:, tsubXPs }
+        { 23b:PIN:St:, 23b:PIN:P:,  "(mm/s)",   23b:PIN:mp:, tsubXPs }
+}

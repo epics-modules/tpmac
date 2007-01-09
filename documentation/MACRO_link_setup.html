@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>MACRO link setup</title>
+</head>
+<body>
+<div style="text-align: center; font-weight: bold;"><big><big><span
+ style="color: rgb(102, 0, 0);">S</span></big></big><big><big><span
+ style="color: rgb(102, 0, 0);">etting </span></big></big><big><big><span
+ style="color: rgb(102, 0, 0);">parameters for communication between</span></big></big><big><big><span
+ style="color: rgb(102, 0, 0);"> </span><span
+ style="color: rgb(102, 0, 0);"><br>
+Turbo PMAC2-VME and UMAC MACRO</span><span
+ style="color: rgb(102, 0, 0);">:</span><br>
+</big></big></div>
+<span style="font-weight: bold; color: rgb(102, 0, 0);"><small><span
+ style="color: rgb(0, 0, 0);">;**********************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; SET MACRO GATES FOR 16
+MOTORS &amp; 2 I/O NODES</span><br style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; RING CONTROLLER IS
+MASTER 0</span><br style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; RING MASTER IS MASTER 1</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;**********************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6840=$4030</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6841=$fB33F</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6890=$10</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6891=$1fB333</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6940=$10</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6941=$2f8000</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6990=$10</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i6991=$3f8000</span><br
+ style="color: rgb(0, 0, 0);">
+<br style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;**********************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; ENABLE MACRO AXIS
+CONTROL/STATUS FLAG TRANSFR</span><br style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; SET TIMEOUT FOR MACRO
+I/O TO 32 SERVO CYCLES</span><br style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;**********************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i70=$3333</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i71=$3333</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i72=$3333</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i73=$3333</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i78=32</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">i79=32</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;******************************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;&nbsp;&nbsp; SETUP MACRO STATION 16
+MOTOR/SERVO CHANNELS TO DAC OUTPUT MODE</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">;******************************************************************</span><br
+ style="color: rgb(0, 0, 0);">
+</small></span><span style="font-weight: bold; color: rgb(102, 0, 0);"><small><span
+ style="color: rgb(0, 0, 0);">; setup nodes 0 to 15</span><br
+ style="color: rgb(0, 0, 0);">
+</small></span><span lang="EN-US"
+ style="font-size: 10pt; font-family: &quot;Courier New&quot;;">MS0,</span><span
+ lang="EN-US" style="font-size: 10pt;"> I996=$0FB33F<br>
+</span><span style="font-weight: bold; color: rgb(102, 0, 0);"><small><span
+ style="color: rgb(0, 0, 0);">; setup nodes 16 to 31</span><br
+ style="color: rgb(0, 0, 0);">
+<span style="color: rgb(0, 0, 0);">MS0,MI1996=$1FB333&nbsp; // Must
+MSSAVE &amp; MS$$$ before activated</span><br
+ style="color: rgb(0, 0, 0);">
+<br>
+</small><br style="color: rgb(0, 0, 0);">
+</span><br>
+<span style="font-weight: bold; color: rgb(102, 0, 0);"><br
+ style="font-weight: bold; color: rgb(102, 0, 0);">
+</span>
+</body>
+</html>

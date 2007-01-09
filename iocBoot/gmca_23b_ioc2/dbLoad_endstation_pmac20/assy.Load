@@ -1,0 +1,48 @@
+file "$(TPMAC)/softDb/Load05X3.db"
+{
+	pattern { assy, m1, C, pcs }
+#                              pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac20:
+        { 23b:CCD:LpB:, 23b:CCD:ml:,  0,  1 }
+        { 23b:GO:Om:,   23b:GO:mom:,  0,  3 }
+        { 23b:JET:Ps:,  23b:JET:mp:,  0,  7 }
+        { 23b:BD:DhB:,  23b:BD:mhd:,  0,  8 }
+        { 23b:TV:V1:,   23b:TV:mz1:,  0, 14 }
+        { 23b:TV:V2:,   23b:TV:mz2:,  0, 15 }
+        { 23b:SH:Ps:,   23b:SH:mp:,   0, 16 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/softDb/Load08XY3.db"
+{
+	pattern { assy, m1, m2, C, pcs }
+#				   pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac20:
+        { 23b:GO:Cr:,  23b:GO:mcx:,  23b:GO:mcy:,  0,  5 }
+        { 23b:GO:StB:, 23b:GO:msh:,  23b:GO:msv:,  0,  6 }
+        { 23b:BD:Dv:,  23b:BD:mvd:,  23b:BD:mvu:,  0,  9 }
+        { 23b:GS:StB:, 23b:GS:mx:,   23b:GS:mpt:,  0, 10 }
+        { 23b:GS:Av:,  23b:GS:mt:,   23b:GS:mb:,   0, 11 }
+        { 23b:GS:Ah:,  23b:GS:mo:,   23b:GS:mi:,   0, 12 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/softDb/Load11XYZ3.db"
+{
+	pattern { assy, m1, m2, m3, C, pcs }
+#				       pcs =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac20:
+        { 23b:CCD:StB:, 23b:CCD:mx:,  23b:CCD:mus:, 23b:CCD:mds:, 0,  2 }
+        { 23b:GO:Kp:,   23b:GO:mkp:,  23b:GO:mph:,  23b:GO:mcz:,  0,  4 }
+        { 23b:BS:Ps:,   23b:BS:md:,   23b:BS:mpt:,  23b:BS:myw:,  0, 13 }
+}

@@ -24,7 +24,7 @@ record(calc, "$(pv)IncCalc$(i)") {
   field(CALC, "A+(B*C)")
   field(INPA, "$(pv).VAL NPP MS")
   field(INPB, "$(pv)Inc$(i).VAL NPP MS")
-  field(INPC, "$(pv)IncBmp$(i).VAL NPP MS")
+  field(INPC, "$(pv)IncSign$(i).VAL NPP MS")
 }
 
 

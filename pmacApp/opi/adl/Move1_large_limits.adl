@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Move1_large_limits.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
@@ -170,95 +170,6 @@ text {
 		bclr=56
 	}
 	limits {
-	}
-}
-composite {
-	object {
-		x=288
-		y=65
-		width=41
-		height=10
-	}
-	"composite name"=""
-	children {
-		oval {
-			object {
-				x=288
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=304
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=319
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=288
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)NgLimSet"
-			}
-		}
-		oval {
-			object {
-				x=304
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)PsLimSet"
-			}
-		}
-		oval {
-			object {
-				x=319
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=30
-			}
-			"dynamic attribute" {
-				vis="if zero"
-				chan="$(ax1)AmpEna"
-			}
-		}
 	}
 }
 "text entry" {
@@ -751,4 +662,134 @@ composite {
 	}
 	label="store"
 	press_msg="1"
+}
+composite {
+	object {
+		x=28
+		y=152
+		width=152
+		height=14
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=28
+				y=152
+				width=62
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="homed"
+			align="horiz. right"
+		}
+		"text update" {
+			object {
+				x=100
+				y=152
+				width=80
+				height=14
+			}
+			monitor {
+				chan="$(assy)Homed"
+				clr=32
+				bclr=14
+			}
+			clrmod="alarm"
+			align="horiz. centered"
+			limits {
+			}
+		}
+	}
+}
+composite {
+	object {
+		x=288
+		y=65
+		width=41
+		height=10
+	}
+	"composite name"=""
+	children {
+		oval {
+			object {
+				x=288
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=288
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(ax1)NgLimSet"
+			}
+		}
+		oval {
+			object {
+				x=319
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=319
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(ax1)PsLimSet"
+			}
+		}
+		oval {
+			object {
+				x=304
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=304
+				y=65
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(ax1)AmpEna"
+			}
+		}
+	}
 }

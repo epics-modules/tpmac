@@ -1,12 +1,12 @@
 
 file {
-	name="c:\gmca\mtrApp\adl\ConfigXYZPs.adl"
-	version=030004
+	name="/home/gmca/epics/mtrApp/adl/ConfigXYZPs.adl"
+	version=030101
 }
 display {
 	object {
-		x=366
-		y=408
+		x=484
+		y=383
 		width=360
 		height=265
 	}
@@ -128,8 +128,8 @@ text {
 }
 composite {
 	object {
-		x=6
-		y=58
+		x=15
+		y=33
 		width=334
 		height=201
 	}
@@ -137,8 +137,8 @@ composite {
 	children {
 		rectangle {
 			object {
-				x=6
-				y=85
+				x=15
+				y=60
 				width=95
 				height=172
 			}
@@ -148,8 +148,8 @@ composite {
 		}
 		text {
 			object {
-				x=13
-				y=60
+				x=22
+				y=35
 				width=55
 				height=14
 			}
@@ -161,8 +161,8 @@ composite {
 		}
 		text {
 			object {
-				x=127
-				y=95
+				x=136
+				y=70
 				width=55
 				height=14
 			}
@@ -174,8 +174,8 @@ composite {
 		}
 		rectangle {
 			object {
-				x=107
-				y=84
+				x=116
+				y=59
 				width=95
 				height=175
 			}
@@ -187,8 +187,8 @@ composite {
 		}
 		menu {
 			object {
-				x=113
-				y=58
+				x=122
+				y=33
 				width=80
 				height=16
 			}
@@ -200,8 +200,8 @@ composite {
 		}
 		composite {
 			object {
-				x=245
-				y=84
+				x=254
+				y=59
 				width=95
 				height=125
 			}
@@ -209,8 +209,8 @@ composite {
 			children {
 				rectangle {
 					object {
-						x=245
-						y=84
+						x=254
+						y=59
 						width=95
 						height=125
 					}
@@ -222,8 +222,8 @@ composite {
 				}
 				text {
 					object {
-						x=263
-						y=95
+						x=272
+						y=70
 						width=55
 						height=14
 					}
@@ -235,8 +235,8 @@ composite {
 				}
 				text {
 					object {
-						x=264
-						y=115
+						x=273
+						y=90
 						width=55
 						height=14
 					}
@@ -248,8 +248,8 @@ composite {
 				}
 				"text entry" {
 					object {
-						x=253
-						y=132
+						x=262
+						y=107
 						width=80
 						height=20
 					}
@@ -263,8 +263,8 @@ composite {
 				}
 				"text entry" {
 					object {
-						x=253
-						y=182
+						x=262
+						y=157
 						width=80
 						height=20
 					}
@@ -278,8 +278,8 @@ composite {
 				}
 				text {
 					object {
-						x=265
-						y=165
+						x=274
+						y=140
 						width=55
 						height=14
 					}
@@ -293,8 +293,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=118
+				x=20
+				y=93
 				width=84
 				height=14
 			}
@@ -306,8 +306,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=141
+				x=20
+				y=116
 				width=84
 				height=14
 			}
@@ -319,8 +319,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=164
+				x=20
+				y=139
 				width=84
 				height=14
 			}
@@ -332,8 +332,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=188
+				x=20
+				y=163
 				width=84
 				height=14
 			}
@@ -345,8 +345,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=213
+				x=20
+				y=188
 				width=84
 				height=14
 			}
@@ -358,8 +358,8 @@ composite {
 		}
 		text {
 			object {
-				x=11
-				y=236
+				x=20
+				y=211
 				width=84
 				height=14
 			}
@@ -371,8 +371,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=115
+				x=123
+				y=90
 				width=80
 				height=20
 			}
@@ -386,8 +386,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=138
+				x=123
+				y=113
 				width=80
 				height=20
 			}
@@ -401,8 +401,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=161
+				x=123
+				y=136
 				width=80
 				height=20
 			}
@@ -416,8 +416,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=185
+				x=123
+				y=160
 				width=80
 				height=20
 			}
@@ -431,8 +431,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=210
+				x=123
+				y=185
 				width=80
 				height=20
 			}
@@ -446,8 +446,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=114
-				y=233
+				x=123
+				y=208
 				width=80
 				height=20
 			}
@@ -463,69 +463,117 @@ composite {
 }
 composite {
 	object {
-		x=6
-		y=30
-		width=334
-		height=16
+		x=0
+		y=239
+		width=360
+		height=26
 	}
 	"composite name"=""
 	children {
+		rectangle {
+			object {
+				x=0
+				y=239
+				width=360
+				height=26
+			}
+			"basic attribute" {
+				clr=56
+			}
+		}
 		text {
 			object {
-				x=6
-				y=30
-				width=90
+				x=5
+				y=245
+				width=45
 				height=16
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="Pmac:"
-			align="horiz. centered"
+			textix="pmac="
+			align="horiz. right"
 		}
 		"text update" {
 			object {
-				x=95
-				y=30
+				x=50
+				y=245
 				width=110
 				height=16
 			}
 			monitor {
 				chan="$(assy)Pmac"
 				clr=14
-				bclr=4
+				bclr=56
 			}
-			align="horiz. centered"
 			limits {
+			}
+		}
+		composite {
+			object {
+				x=148
+				y=245
+				width=80
+				height=16
+			}
+			"composite name"=""
+			children {
+				text {
+					object {
+						x=148
+						y=245
+						width=40
+						height=16
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="pcs="
+					align="horiz. right"
+				}
+				"text update" {
+					object {
+						x=188
+						y=245
+						width=40
+						height=16
+					}
+					monitor {
+						chan="$(assy)Pcs"
+						clr=14
+						bclr=56
+					}
+					limits {
+					}
+				}
 			}
 		}
 		text {
 			object {
-				x=260
-				y=30
-				width=40
+				x=238
+				y=245
+				width=120
 				height=16
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="Pcs="
-			align="horiz. right"
-		}
-		"text update" {
-			object {
-				x=300
-				y=30
-				width=40
-				height=16
-			}
-			monitor {
-				chan="$(assy)Pcs"
-				clr=14
-				bclr=4
-			}
-			limits {
-			}
+			textix="ioc=$(ioc)"
 		}
 	}
+}
+"message button" {
+	object {
+		x=220
+		y=215
+		width=135
+		height=20
+	}
+	control {
+		chan="$(ioc):saveTrigger.PROC"
+		clr=0
+		bclr=58
+	}
+	label="Save $(ioc)"
+	press_msg="1"
 }

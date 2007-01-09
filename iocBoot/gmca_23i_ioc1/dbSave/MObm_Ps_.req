@@ -1,0 +1,12 @@
+%
+% BURT Request File
+%
+% $(P)MO:Ps:  Monochromator Positioning (alignment)
+%
+
+file assy.req ASSY=$(P)MO:Ps
+file mtr1.req MTR1=$(P)MO:mz
+file drv1.req DRV1=$(P)MO:Z
+
+$(P)MO:Ps:Dms
+$(P)MO:Ps:mLink

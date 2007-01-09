@@ -1,0 +1,42 @@
+//setup for ACC-51E with $9040 base address
+
+; Add Acc-51E to the encoder conversion table
+P1=$F09040 MSW16,MI124,P1 ;$94
+P1=$9045   MSW16,MI125,P1 ;$95
+P1=$0      MSW16,MI126,P1 ;$96
+P1=$F09048 MSW16,MI127,P1 ;$97
+P1=$904D   MSW16,MI128,P1 ;$98
+P1=$0      MSW16,MI129,P1 ;$99
+P1=$F09050 MSW16,MI130,P1 ;$9A
+P1=$9055   MSW16,MI131,P1 ;$9B
+P1=$0      MSW16,MI132,P1 ;$9C
+P1=$F09058 MSW16,MI133,P1 ;$9D
+P1=$905D   MSW16,MI134,P1 ;$9E
+P1=$0      MSW16,MI135,P1 ;$9F
+
+
+P1=$96 MSW0,I105,P1; substitute motor #5 feedback
+;P1=$99 MSW0,I106,P1
+;P1=$9C MSW0,I107,P1
+;P1=$9F MSW0,I108,P1
+
+P1=$E89044 MSW0,MI198,P1 ;Point to Global Clock Control Register.
+P2=$0038D2 MSW0,MI199,P2 ;Put $38D2 into the register.
+P1=$E89045 MSW0,MI198,P1 ;Point to control word for channel 1.
+P2=$000003 MSW0,MI199,P2 ;Put P2 into the register.
+P1=$E8904D MSW0,MI198,P1 ;Point to control word for channel 2.
+MSW0,MI199,P2 ;Put P2 into the register.
+P1=$E89055 MSW0,MI198,P1 ;Point to control word for channel 3.
+MSW0,MI199,P2 ;Put P2 into the register.
+P1=$E8905D MSW0,MI198,P1 ;Point to control word for channel 4.
+MSW0,MI199,P2 ;Put P2 into the register.
+P1=$E80094 MSW0,MI198,P1 ;Point to 1st 3-line entry in encoder conversion table (X side).
+P2=$000003 MSW0,MI199,P2 ;Place control word here (must be the same as #1 above)
+P1=$E80097 MSW0,MI198,P1 ;Point to 2nd 3-line entry in encoder conversion table (X side).
+MSW0,MI199,P2 ;Place control word here (must be the same as #2 above)
+P1=$E8009A MSW0,MI198,P1 ;Point to 3rd 3-line entry in encoder conversion table (X side).
+MSW0,MI199,P2 ;Place control word here (must be the same as #3 above)
+P1=$E8009D,MSW0,MI198,P1 ;Point to 4th 3-line entry in encoder conversion table (X side).
+MSW0,MI199,P2 ;Place control word here (must be the same as #4 above)
+
+

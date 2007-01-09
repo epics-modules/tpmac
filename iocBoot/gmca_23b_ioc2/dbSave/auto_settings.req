@@ -1,0 +1,59 @@
+file CCD_LpB_.req  P=23b:
+file CCD_StB_.req  P=23b:
+file GO_Om_.req    P=23b:
+file GO_Kp_.req    P=23b:
+file GO_Cr_.req    P=23b:
+file GO_StB_.req   P=23b:
+file JET_Ps_.req   P=23b:
+file BD_DhB_.req   P=23b:
+file BD_Dv_.req    P=23b:
+file GS_StB_.req   P=23b:
+file GS_Av_.req    P=23b:
+file GS_Ah_.req    P=23b:
+file BS_Ps_.req    P=23b:
+file TV_V1_.req    P=23b:
+file TV_V2_.req    P=23b:
+file SH_Ps_.req    P=23b:
+
+file COL_St_.req   P=23b:
+file RB_Rd_.req    P=23b:
+file RB_Rr_.req    P=23b:
+file FLU_Di_.req   P=23b:
+file PIN_St_.req   P=23b:
+
+% file HS_Av_.req  P=23b:
+% file HS_Ah_.req  P=23b:
+% file XY_P1_.req  P=23b:
+% file XY_P2_.req  P=23b:
+% file XY_P3_.req  P=23b:
+% file XY_P4_.req  P=23b:
+% file XY_P5_.req  P=23b:
+% file XY_P6_.req  P=23b:
+% file XY_P7_.req  P=23b:
+% file XY_P8_.req  P=23b:
+% file XY_P9_.req  P=23b:
+
+% file scanrec.req REC=23b:2:scan1
+
+file icb_mca_settings.req P=23b:,M=aim_adc1
+file icb_adc_settings.req P=23b:,ADC=aim_adc1
+file icb_tca_settings.req P=23b:,TCA=aim_tca1
+% file icb_hvps_settings.req P=23b:,HVPS=hvps1
+% file icb_hvps_settings.req P=23b:,HVPS=hvps2
+% file icb_amp_settings.req P=23b:,AMP=aim_amp1
+% file icb_dsp_settings.req P=23b:,DSP=aim_dsp1
+
+% file fluoresCalib.req P=23b:,MCA=aim_adc1
+
+file DAC128_single.req P=23b:,D=1,N=1
+file DAC128_single.req P=23b:,D=1,N=2
+file DAC128_single.req P=23b:,D=1,N=3
+file DAC128_single.req P=23b:,D=1,N=4
+file DAC128_single.req P=23b:,D=1,N=5
+file DAC128_single.req P=23b:,D=1,N=6
+file DAC128_single.req P=23b:,D=1,N=7
+file DAC128_single.req P=23b:,D=1,N=8
+
+file bluice.req P=23b:
+
+file robot.req P=23b:R:

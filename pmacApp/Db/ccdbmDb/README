@@ -1,0 +1,23 @@
+These are databases for CCD detector at GM/CA BM line:
+
+CCDSt provide coordinated motions for 3-motor CCD detector support.
+The coordinate system consists of 3 motors:
+- one horizontal slide (detector motion along the beam)
+- two vertical slides (upstream and downstream) defining
+  detector angle 2*Theta and keeping detector face perpendicular
+  to the X-ray beam.
+See more details in file "detector_equations_Sergey.ppt"
+and in files CCDSt_Calibrate.db and CalibCCDSt.adl.
+
+The only difference of these eqations from the CCD support at the GMCA
+ID lines is the exclusion of vertical focusong mirror angle, since the
+BM line beam should travel horizontally (the reflections for white beam
+mirror and the vertical focusing mirror should compensate each other).
+
+CCDLp is a 1-motor assembly providing lateral motion of CCD detector.
+It is not present here because a standard XPs (X-positioner) is used
+(which is again different from the ID lines).
+
+-- Sergey
+
+

@@ -1,0 +1,161 @@
+;BM VFM (M2) Setup Parameters. These parameters should be loaded onto BM PMAC #2 (pmac11).
+
+;VERTCAL Stage Parameters
+
+;vfmz1 motor# BM-A-28 (xx=8)
+i816=1			;max program velocity
+i822=1			;max jog velocity
+i823=0.5			;homing speed
+i828=64			;in-position band
+i830=500000			;proportional gain
+i831=0			;derivative gain
+i832=22800			;velocity feed forward gain
+i833=0			;integral gain
+i834=1			;integration mode
+i835=40000			;accel feed forward gain
+i865=8			;dead-band size
+
+ms13,i910=7			;closed loop motion
+;homing flag PLIM
+ms13,i912=10		;capture on flag LOW
+ms13,i913=2 		;NLIM
+;##################################################
+ms16,i903=$8FA		  //max PFM freq. is 305.72 kHz
+ms16,i904=2				//pulse width is 6.54us
+
+;vfmz2 motor# BM-A-29 (xx=9)
+i916=1			;max program velocity
+i922=1			;max jog velocity
+i923=0.5			;homing speed
+i928=64			;in-position band
+i930=500000			;proportional gain
+i931=0			;derivative gain
+i932=22800			;velocity feed forward gain
+i933=0			;integral gain
+i934=1			;integration mode
+i935=40000			;accel feed forward gain
+i965=8			;dead-band size
+
+ms16,i910=7			;closed loop motion
+;homing flag PLIM
+ms16,i912=10		;capture on flag LOW
+ms16,i913=2 		;NLIM
+;##################################################
+
+;vfmz3 motor# BM-A-30 (xx=10)
+i1016=1			;max program velocity
+i1022=1			;max jog velocity
+i1023=0.5			;homing speed
+i1028=64			;in-position band
+i1030=500000			;proportional gain
+i1031=0			;derivative gain
+i1032=22600		;velocity feed forward gain
+i1033=0			;integral gain
+i1034=1			;integration mode
+i1035=40000		;accel feed forward gain
+i1065=8			;dead-band size
+
+ms17,i910=7			;closed loop motion
+;homing flag PLIM
+ms17,i912=10		;capture on flag LOW
+ms17,i913=2 		;NLIM
+;##################################################
+
+;HORIZONTAL stage Parameters
+
+;vfmy1 (Y1) motor# BM-A-31 (xx=11)
+i1116=3.0			;max program velocity
+i1122=3.0			;max jog velocity
+i1123=-1.0			;homing speed
+i1128=64			;in-position band
+i1130=500000			;proportional gain
+i1131=0			;derivative gain
+i1132=13500		;velocity feed-forward gain
+i1133=0			;integral gain
+i1134=1			;integration mode
+i1135=25000		;accel feed forward gain
+i1165=8			;dead-band size
+
+ms20,i910=3			;closed loop motion
+;homing flag NLIM
+ms20,i912=10		;capture on flag LOW
+ms20,i913=1 		;PLIM
+;##################################################
+
+;vfmy2 (Y2) motor# BM-A-32 (xx=12)
+i1216=3.0			;max program velocity
+i1222=3.0			;max jog velocity
+i1223=-1.0		;homing speed
+i1228=64			;in-position band
+i1230=500000	;proportional gain
+i1231=0			  ;derivative gain
+i1232=13500		;velocity feed-forward gain
+i1233=0     	;integral gain
+i1234=1			  ;integration mode
+i1235=25000		;accel feed forward gain
+i1265=8			  ;dead-band size
+
+ms21,i910=7		;closed loop motion
+;homing flag PLIM
+ms21,i912=10		;capture on flag LOW
+ms21,i913=1 		;PLIM
+;##################################################
+ms24,i907=$8FA		//max PFM freq. is 305.72 kHz
+ms24,i908=2			//pulse width is 6.54us
+
+
+;vfm bender motor# BM-A-33 (xx=13)
+i1316=20.0			;max program velocity
+i1322=20.0			;max jog velocity
+i1323=10.0			;homing speed
+i1328=64			;in-position band
+i1330=500000			;proportional gain
+i1331=0			;derivative gain
+i1332=674			;velocity feed-forward gain
+i1333=0			;integral gain
+i1334=1			;integration mode
+i1335=1000			;accel feed forward gain
+i1365=8			;dead-band size
+
+ms24,i910=8			;internal loop motion (no encoder)
+;homing flag PLIM (CVE 16.5.2006 - not checked yet with bender!!)
+ms24,i912=6			;capture on flag HI
+ms24,i913=0 		;HOME
+
+
+;BP:Vf
+i1416=20.0			;max program velocity
+i1422=20.0			;max jog velocity
+i1423=10.0			;homing speed
+i1428=64			;in-position band
+i1430=500000			;proportional gain
+i1431=0			;derivative gain
+i1432=674			;velocity feed-forward gain
+i1433=0			;integral gain
+i1434=1			;integration mode
+i1435=1000			;accel feed forward gain
+i1465=8			;dead-band size
+
+ms25,i910=8			;internal loop motion (no encoder)
+;homing flag PLIM (CVE 16.5.2006 - not checked yet with bender!!)
+ms25,i912=6			;capture on flag HI
+ms25,i913=0 		;HOME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

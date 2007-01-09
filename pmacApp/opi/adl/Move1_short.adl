@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Move1_short.adl"
-	version=030003
+	version=030101
 }
 display {
 	object {
@@ -416,17 +416,6 @@ composite {
 		}
 		oval {
 			object {
-				x=142
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
 				x=126
 				y=67
 				width=10
@@ -442,7 +431,18 @@ composite {
 		}
 		oval {
 			object {
-				x=142
+				x=157
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=157
 				y=67
 				width=10
 				height=10
@@ -457,7 +457,7 @@ composite {
 		}
 		oval {
 			object {
-				x=157
+				x=142
 				y=67
 				width=10
 				height=10
@@ -468,7 +468,7 @@ composite {
 		}
 		oval {
 			object {
-				x=157
+				x=142
 				y=67
 				width=10
 				height=10

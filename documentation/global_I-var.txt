@@ -1,0 +1,56 @@
+General Global Setup I-Variables
+
+ I0 Serial Card Number
+ I1 Serial Port Mode
+ I2 Control Panel Port Activation
+ I3 I/O Handshake Control
+ I4 Communications Integrity Mode
+ I5 PLC Program Control
+ I6 Error Reporting Mode
+ I7 Phase Cycle Extension
+ I8 Real-Time Interrupt Period
+ I9 Full/Abbreviated Listing Control
+I10 Servo Interrupt Time
+I11 Programmed Move Calculation Time
+I12 Lookahead Time Spline Enable
+I13 Foreground In-Position Check Enable
+I14 Temporary Buffer Save Enable
+I15 Degree/Radian Control for User Trig Functions
+I16 Rotary Buffer Request On Point
+I17 Rotary Buffer Request Off Point
+I18 Fixed Buffer Full Warning Point
+I19 Clock Source I-Variable Number (Turbo PMAC2 only)
+I20 MACRO IC 0 Base Address (Turbo PMAC2 only)
+I21 MACRO IC 1 Base Address (Turbo PMAC2 only)
+I22 MACRO IC 2 Base Address (Turbo PMAC2 only)
+I23 MACRO IC 3 Base Address (Turbo PMAC2 only)
+I24 Main DPRAM Base Address
+I30 Compensation Table Wrap Enable
+I37 Additional Wait States
+I39 UBUS Accessory ID Variable Display Control
+I40 Watchdog Timer Reset Value
+I41 I-Variable Lockout Control
+I42 Spline/PVT Time Control Mode
+I43 Auxiliary Serial Port Parser Disable
+I44 PMAC Ladder Program Enable {Special Firmware Only}
+I45 Foreground Binary Rotary Buffer Transfer Enable
+I46 P & Q-Variable Storage Location
+I47 DPRAM Motor Data Foreground Reporting Period
+I48 DPRAM Motor Data Foreground Reporting Enable
+I49 DPRAM Background Data Reporting Enable
+I50 DPRAM Background Data Reporting Period
+I51 Compensation Table Enable
+I52 CPU Frequency Control
+I53 Auxiliary Serial Port Baud Rate Control
+I54 Serial Port Baud Rate Control
+I55 DPRAM Background Variable Buffers Enable
+I56 DPRAM ASCII Communications Interrupt Enable
+I57 DPRAM Motor Data Background Reporting Enable
+I58 DPRAM ASCII Communications Enable
+I59 Motor/C.S. Group Select
+I60 Filtered Velocity Sample Time
+I61 Filtered Velocity Shift
+I62 Internal Message Carriage Return Control
+I63 Control-X Echo Enable
+I64 Internal Response Tag Enable
+I68 Coordinate System Activation Control

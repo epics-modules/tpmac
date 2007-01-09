@@ -1,14 +1,14 @@
 
 file {
-	name="/home/gmca/epics/pmacApp/adl/IxMtrMv.adl"
+	name="/mnt/software/gmca_epics/pmacApp/adl/IxMtrMv.adl"
 	version=030004
 }
 display {
 	object {
 		x=474
 		y=255
-		width=555
-		height=105
+		width=510
+		height=120
 	}
 	clr=14
 	bclr=4
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=555
+		width=510
 		height=26
 	}
 	"basic attribute" {
@@ -100,7 +100,7 @@ rectangle {
 }
 text {
 	object {
-		x=426
+		x=387
 		y=4
 		width=120
 		height=18
@@ -185,134 +185,145 @@ text {
 	limits {
 	}
 }
-"text update" {
+composite {
 	object {
 		x=7
-		y=60
-		width=210
-		height=14
+		y=72
+		width=422
+		height=42
 	}
-	monitor {
-		chan="$(mtr)Ix20:LI.DESC"
-		clr=14
-		bclr=4
-	}
-	align="horiz. right"
-	limits {
-	}
-}
-"text entry" {
-	object {
-		x=291
-		y=58
-		width=50
-		height=18
-	}
-	control {
-		chan="$(mtr)Ix20:LO"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=349
-		y=60
-		width=80
-		height=14
-	}
-	monitor {
-		chan="$(mtr)Ix20:LI.EGU"
-		clr=14
-		bclr=4
-	}
-	limits {
+	"composite name"=""
+	children {
+		"text update" {
+			object {
+				x=7
+				y=74
+				width=210
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix20:LI.DESC"
+				clr=14
+				bclr=4
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=291
+				y=72
+				width=50
+				height=18
+			}
+			control {
+				chan="$(mtr)Ix20:LO"
+				clr=14
+				bclr=51
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=349
+				y=74
+				width=80
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix20:LI.EGU"
+				clr=14
+				bclr=4
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=224
+				y=74
+				width=60
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix20:LI"
+				clr=31
+				bclr=14
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=7
+				y=98
+				width=210
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix21:LI.DESC"
+				clr=14
+				bclr=4
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=291
+				y=96
+				width=50
+				height=18
+			}
+			control {
+				chan="$(mtr)Ix21:LO"
+				clr=14
+				bclr=51
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=349
+				y=98
+				width=80
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix21:LI.EGU"
+				clr=14
+				bclr=4
+			}
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=224
+				y=98
+				width=60
+				height=14
+			}
+			monitor {
+				chan="$(mtr)Ix21:LI"
+				clr=31
+				bclr=14
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
 	}
 }
 "text update" {
 	object {
 		x=224
-		y=60
-		width=60
-		height=14
-	}
-	monitor {
-		chan="$(mtr)Ix20:LI"
-		clr=31
-		bclr=14
-	}
-	align="horiz. right"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=7
-		y=84
-		width=210
-		height=14
-	}
-	monitor {
-		chan="$(mtr)Ix21:LI.DESC"
-		clr=14
-		bclr=4
-	}
-	align="horiz. right"
-	limits {
-	}
-}
-"text entry" {
-	object {
-		x=291
-		y=82
-		width=50
-		height=18
-	}
-	control {
-		chan="$(mtr)Ix21:LO"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=349
-		y=84
-		width=80
-		height=14
-	}
-	monitor {
-		chan="$(mtr)Ix21:LI.EGU"
-		clr=14
-		bclr=4
-	}
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=224
-		y=84
-		width=60
-		height=14
-	}
-	monitor {
-		chan="$(mtr)Ix21:LI"
-		clr=31
-		bclr=14
-	}
-	align="horiz. right"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=492
-		y=36
+		y=54
 		width=60
 		height=14
 	}
@@ -327,27 +338,42 @@ text {
 }
 text {
 	object {
-		x=447
-		y=36
-		width=40
+		x=7
+		y=54
+		width=210
 		height=14
 	}
 	"basic attribute" {
 		clr=14
 	}
-	textix="Ix22="
+	textix="Reference: Jog speed (Ix22)"
 	align="horiz. right"
 }
-text {
+"text update" {
 	object {
-		x=455
+		x=349
 		y=55
-		width=98
+		width=80
 		height=14
 	}
-	"basic attribute" {
+	monitor {
+		chan="$(mtr)Ix22:AI.EGU"
 		clr=14
+		bclr=4
 	}
-	textix="(Jog speed)"
-	align="horiz. right"
+	limits {
+	}
+}
+menu {
+	object {
+		x=433
+		y=36
+		width=75
+		height=14
+	}
+	control {
+		chan="$(mtr)Ix16:AI.SCAN"
+		clr=14
+		bclr=4
+	}
 }

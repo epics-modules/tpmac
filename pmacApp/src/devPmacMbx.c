@@ -984,16 +984,23 @@ static long devPmacMbxAi_read
 			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro,0,0,0,0);
 		)
 
-		sscanf (pMbxIo->response, "%lf", &valD);
+		if (pRec->inp.value.vmeio.signal == 0xfff) {
+		   /* this is for the ACC59E ADC conversion */
+		   int	valI;
+		   sscanf (pMbxIo->response, "%d", &valI);
+		   valD =  (valI & 0x800) ? (double)(0xFFF-valI) * pRec->egul / 0x7FF : (double)valI * pRec->eguf / 0x7ff;
+		}else{
+		   sscanf (pMbxIo->response, "%lf", &valD);
 
-		/* Adjust Slope And Offset */
-		if (pRec->aslo != 0.0)
-		{
+		   /* Adjust Slope And Offset */
+		   if (pRec->aslo != 0.0)
+		   {
 			valD *= pRec->aslo;
-		}
-		if (pRec->aoff != 0.0)
-		{
+		   }
+		   if (pRec->aoff != 0.0)
+		   {
 			valD += pRec->aoff;
+		   }
 		}
 
 		/* pRec->linr Conversion Ignored */
@@ -1277,19 +1284,27 @@ LOCAL long devPmacMbxAo_write
 		/* Output Value */
 		valD = (double) pRec->oval;
 
-		/* Adjust Slope And Offset */
-		if (pRec->aoff != 0.0)
-		{
-			valD -= (double) pRec->aoff;
-		}
-		if (pRec->aslo != 0.0)
-		{
-			valD /= (double) pRec->aslo;
-		}
+		if(pRec->out.value.vmeio.signal == 0xfff) {
+			/* this is for the ACC59E DAC conversion */
+		  	valD = (double)0xfff * (pRec->oval - pRec->egul) / (pRec->eguf - pRec->egul) + 0.5;
+		
+			sprintf (pMbxIo->command, "%s%d", pRec->out.value.vmeio.parm, (int)valD);
+		} else {
 
-		/* pRec->linr Conversion Ignored */
+			/* Adjust Slope And Offset */
+			if (pRec->aoff != 0.0)
+			{
+				valD -= (double) pRec->aoff;
+			}
+			if (pRec->aslo != 0.0)
+			{
+				valD /= (double) pRec->aslo;
+			}
 
-		sprintf (pMbxIo->command, "%s%f", pRec->out.value.vmeio.parm, valD);
+			/* pRec->linr Conversion Ignored */
+
+			sprintf (pMbxIo->command, "%s%f", pRec->out.value.vmeio.parm, valD);
+		}
 
 		PMAC_TRACE
 		(	2,
@@ -1640,7 +1655,8 @@ LOCAL void devPmacMbxCallback
 	(	2,
 		PMAC_MESSAGE ("%s: CALLBACK [%s].\n", MyName, pRec->name,0,0,0,0);
 	)
-
+/*OAM*/
+	logMsg("%s: pRec = 0x%x, pRset = 0x%x \n", (int)MyName, (int)pRec,(int)pRset,0,0,0);
         dbScanLock (pRec);
 	(*(pRset->process))(pRec);
         dbScanUnlock (pRec);

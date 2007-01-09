@@ -1,0 +1,214 @@
+; Q-variable Definitions
+
+CLOSE	; To ensure commands are on-line
+
+&1 	;Coordinate System      CCD:Lp:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=1      	; CS#
+Q71=3300  	; TA0  3300+(PREVIOUS RAM)
+Q72=3301  	; TS0
+Q73=3302  	; X0
+Q74=3303  	; X1
+Q75=3304  	; X2
+
+&2 	;Coordinate System      CCD:St:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=2      	; CS#
+Q71=3305  	; TA0  3300+(PREVIOUS RAM)
+Q72=3306  	; TS0
+Q73=3307  	; X0
+Q74=3308  	; X1
+Q75=3309  	; X2
+Q76=3310  	; Y0
+Q77=3311  	; Y1
+Q78=3312  	; Y2
+Q79=3313  	; Z0
+Q80=3314  	; Z1
+Q81=3315  	; Z2
+
+&3 	;Coordinate System      GO:Om:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=3      	; CS#
+Q71=3316  	; TA0  3300+(PREVIOUS RAM)
+Q72=3317  	; TS0
+Q73=3318  	; X0
+Q74=3319  	; X1
+Q75=3320  	; X2
+
+&4 	;Coordinate System      GO:Kp:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=4      	; CS#
+Q71=3321  	; TA0  3300+(PREVIOUS RAM)
+Q72=3322  	; TS0
+Q73=3323  	; X0
+Q74=3324  	; X1
+Q75=3325  	; X2
+Q76=3326  	; Y0
+Q77=3327  	; Y1
+Q78=3328  	; Y2
+Q79=3329  	; Z0
+Q80=3330  	; Z1
+Q81=3331  	; Z2
+
+&5 	;Coordinate System      GO:Cr:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=5      	; CS#
+Q71=3332  	; TA0  3300+(PREVIOUS RAM)
+Q72=3333  	; TS0
+Q73=3334  	; X0
+Q74=3335  	; X1
+Q75=3336  	; X2
+Q76=3337  	; Y0
+Q77=3338  	; Y1
+Q78=3339  	; Y2
+
+&6 	;Coordinate System      GO:St:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=6      	; CS#
+Q71=3340  	; TA0  3300+(PREVIOUS RAM)
+Q72=3341  	; TS0
+Q73=3342  	; X0
+Q74=3343  	; X1
+Q75=3344  	; X2
+Q76=3345  	; Y0
+Q77=3346  	; Y1
+Q78=3347  	; Y2
+Q79=3348  	; Z0
+Q80=3349  	; Z1
+Q81=3350  	; Z2
+
+&7 	;Coordinate System      JET:Ps:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=7      	; CS#
+Q71=3351  	; TA0  3300+(PREVIOUS RAM)
+Q72=3352  	; TS0
+Q73=3353  	; X0
+Q74=3354  	; X1
+Q75=3355  	; X2
+
+&8 	;Coordinate System      BD:Dh:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=8      	; CS#
+Q71=3356  	; TA0  3300+(PREVIOUS RAM)
+Q72=3357  	; TS0
+Q73=3358  	; X0
+Q74=3359  	; X1
+Q75=3360  	; X2
+Q76=3361  	; Y0
+Q77=3362  	; Y1
+Q78=3363  	; Y2
+
+&9 	;Coordinate System      BD:Dv:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=9      	; CS#
+Q71=3364  	; TA0  3300+(PREVIOUS RAM)
+Q72=3365  	; TS0
+Q73=3366  	; X0
+Q74=3367  	; X1
+Q75=3368  	; X2
+Q76=3369  	; Y0
+Q77=3370  	; Y1
+Q78=3371  	; Y2
+
+&10 	;Coordinate System      GS:St:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=10      	; CS#
+Q71=3372  	; TA0  3300+(PREVIOUS RAM)
+Q72=3373  	; TS0
+Q73=3374  	; X0
+Q74=3375  	; X1
+Q75=3376  	; X2
+Q76=3377  	; Y0
+Q77=3378  	; Y1
+Q78=3379  	; Y2
+Q79=3380  	; Z0
+Q80=3381  	; Z1
+Q81=3382  	; Z2
+
+&11 	;Coordinate System      GS:Av:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=11      	; CS#
+Q71=3383  	; TA0  3300+(PREVIOUS RAM)
+Q72=3384  	; TS0
+Q73=3385  	; X0
+Q74=3386  	; X1
+Q75=3387  	; X2
+Q76=3388  	; Y0
+Q77=3389  	; Y1
+Q78=3390  	; Y2
+
+&12 	;Coordinate System      GS:Ah:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=12      	; CS#
+Q71=3391  	; TA0  3300+(PREVIOUS RAM)
+Q72=3392  	; TS0
+Q73=3393  	; X0
+Q74=3394  	; X1
+Q75=3395  	; X2
+Q76=3396  	; Y0
+Q77=3397  	; Y1
+Q78=3398  	; Y2
+
+&13 	;Coordinate System      BS:Ps:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=13      	; CS#
+Q71=3399  	; TA0  3300+(PREVIOUS RAM)
+Q72=3400  	; TS0
+Q73=3401  	; X0
+Q74=3402  	; X1
+Q75=3403  	; X2
+Q76=3404  	; Y0
+Q77=3405  	; Y1
+Q78=3406  	; Y2
+Q79=3407  	; Z0
+Q80=3408  	; Z1
+Q81=3409  	; Z2
+
+&14 	;Coordinate System      TV:V1:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=14      	; CS#
+Q71=3410  	; TA0  3300+(PREVIOUS RAM)
+Q72=3411  	; TS0
+Q73=3412  	; X0
+Q74=3413  	; X1
+Q75=3414  	; X2
+
+&15 	;Coordinate System      TV:V2:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=15      	; CS#
+Q71=3415  	; TA0  3300+(PREVIOUS RAM)
+Q72=3416  	; TS0
+Q73=3417  	; X0
+Q74=3418  	; X1
+Q75=3419  	; X2
+
+&16 	;Coordinate System      SH:Ps:
+Q70..99=3540	; Default for non-existent parameters
+
+Q70=16      	; CS#
+Q71=3420  	; TA0  3300+(PREVIOUS RAM)
+Q72=3421  	; TS0
+Q73=3422  	; X0
+Q74=3423  	; X1
+Q75=3424  	; X2
+; these are generated manually (no Perl script)
+Q76=3425  	; shutter open pos
+Q77=3426  	; shutter close pos
+
+; Unused Coordinate Systems
+

@@ -1,0 +1,83 @@
+file "$(TPMAC)/softDb/RqsTwkMem.db"
+{
+	pattern { pref, prec }
+# "prec" is "precision": the number of digits after comma
+# (usually 3 for real numbers and zero for integers).
+#
+# pmac20:
+#mtr
+	{ 23o:CCD:ml:,  0 }
+	{ 23o:CCD:mx:,  0 }
+	{ 23o:CCD:mus:, 0 }
+	{ 23o:CCD:mds:, 0 }
+	{ 23o:GO:mom:,  0 }
+	{ 23o:GO:mkp:,  0 }
+	{ 23o:GO:mph:,  0 }
+	{ 23o:GO:mcz:,  0 }
+	{ 23o:GO:mcx:,  0 }
+	{ 23o:GO:mcy:,  0 }
+	{ 23o:GO:msh:,  0 }
+	{ 23o:GO:msw:,  0 }
+	{ 23o:GO:msv:,  0 }
+	{ 23o:JET:mp:,  0 }
+	{ 23o:BD:mhd:,  0 }
+	{ 23o:BD:mhu:,  0 }
+	{ 23o:BD:mvd:,  0 }
+	{ 23o:BD:mvu:,  0 }
+        { 23o:GS:myw:,  0 }
+        { 23o:GS:mx:,   0 }
+        { 23o:GS:mpt:,  0 }
+        { 23o:GS:mt:,   0 }
+	{ 23o:GS:mb:,   0 }
+	{ 23o:GS:mo:,   0 }
+	{ 23o:GS:mi:,   0 }
+	{ 23o:BS:md:,   0 }
+	{ 23o:BS:mpt:,  0 }
+	{ 23o:BS:myw:,  0 }
+	{ 23o:TV:mz1:,  0 }
+	{ 23o:TV:mz2:,  0 }
+	{ 23o:SH:mp:,   0 }
+#drv
+	{ 23o:CCD:DL:,  3 }
+	{ 23o:CCD:X:,   3 }
+	{ 23o:CCD:VUS:, 3 }
+	{ 23o:CCD:VDS:, 3 }
+	{ 23o:GO:OM:,   3 }
+	{ 23o:GO:KP:,   3 }
+	{ 23o:GO:PH:,   3 }
+	{ 23o:GO:CZ:,   3 }
+	{ 23o:GO:CX:,   3 }
+	{ 23o:GO:CY:,   3 }
+	{ 23o:GO:SH:,   3 }
+	{ 23o:GO:SW:,   3 }
+	{ 23o:GO:SV:,   3 }
+	{ 23o:JET:P:,   3 }
+	{ 23o:BD:HDS:,  3 }
+	{ 23o:BD:HUS:,  3 }
+	{ 23o:BD:VDS:,  3 }
+	{ 23o:BD:VUS:,  3 }
+        { 23o:GS:YW:,   3 }
+        { 23o:GS:X:,    3 }
+        { 23o:GS:PT:,   3 }
+        { 23o:GS:ZT:,   3 }
+	{ 23o:GS:ZB:,   3 }
+	{ 23o:GS:YO:,   3 }
+	{ 23o:GS:YI:,   3 }
+	{ 23o:BS:D:,    3 }
+	{ 23o:BS:PT:,   3 }
+	{ 23o:BS:YW:,   3 }
+	{ 23o:TV:ZM1:,  3 }
+	{ 23o:TV:ZM2:,  3 }
+	{ 23o:SH:P:,    3 }
+#axs
+	{ 23o:CCD:D:,   3 }
+	{ 23o:CCD:2Q:,  3 }
+        { 23o:BD:HD:,   3 }
+        { 23o:BD:HA:,   3 }
+        { 23o:BD:VD:,   3 }
+        { 23o:BD:VA:,   3 }
+        { 23o:GS:ZC:,   3 }
+        { 23o:GS:ZS:,   3 }
+        { 23o:GS:YC:,   3 }
+        { 23o:GS:YS:,   3 }
+}

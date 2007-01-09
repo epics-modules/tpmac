@@ -88,7 +88,7 @@ static long get_precision();
 #define get_value       NULL
 #define get_array_info  NULL
 #define put_array_info  NULL
-#define get_enum_str    NULL
+static long get_enum_str();
 #define get_enum_strs   NULL
 #define put_enum_str    NULL
 
@@ -128,6 +128,25 @@ static void decodeBits();
 static void activateAllLink();
 static void activateNewLink();
 
+static long get_enum_str(paddr,pstring)
+    struct dbAddr *paddr;
+    char	  *pstring;
+{
+    struct statusRecord	*pstatus=(struct statusRecord *)paddr->precord;
+    int                 index;
+    unsigned short      *pfield = (unsigned short *)paddr->pfield;
+    index = dbGetFieldIndex(paddr);
+    if(index >= statusRecordBI00 && index <= statusRecordBI31) {
+      if(*pfield==0) {
+	strcpy(pstring,"OFF");
+      } else {
+	strcpy(pstring,"ON");
+      }
+    } else {
+	strcpy(pstring,"Illegal_Value");
+    }
+    return(0);
+}
 
 static long init_record(pstatus,pass)
     struct statusRecord	*pstatus;

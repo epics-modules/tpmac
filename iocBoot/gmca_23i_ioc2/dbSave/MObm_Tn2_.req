@@ -1,0 +1,14 @@
+%
+% BURT Request File
+%
+% $(P)MO:Tn2:  Monochromator Crystal-2 tuning
+%
+
+file assy.req ASSY=$(P)MO:Tn2
+file mtr1.req MTR1=$(P)MO:mp2
+file mtr1.req MTR1=$(P)MO:mr2
+file mtr1.req MTR1=$(P)MO:mw2
+file drv1.req DRV1=$(P)MO:P2
+file drv1.req DRV1=$(P)MO:R2
+file drv1.req DRV1=$(P)MO:W2
+

@@ -1,14 +1,14 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/CalibMISt.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
-		x=132
-		y=352
+		x=254
+		y=151
 		width=615
-		height=290
+		height=320
 	}
 	clr=14
 	bclr=4
@@ -975,73 +975,6 @@ text {
 }
 composite {
 	object {
-		x=265
-		y=4
-		width=230
-		height=16
-	}
-	"composite name"=""
-	children {
-		"text update" {
-			object {
-				x=310
-				y=4
-				width=110
-				height=16
-			}
-			monitor {
-				chan="$(assy)Pmac"
-				clr=14
-				bclr=56
-			}
-			limits {
-			}
-		}
-		text {
-			object {
-				x=265
-				y=4
-				width=45
-				height=16
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="pmac="
-			align="horiz. right"
-		}
-		"text update" {
-			object {
-				x=455
-				y=4
-				width=40
-				height=16
-			}
-			monitor {
-				chan="$(assy)Pcs"
-				clr=14
-				bclr=56
-			}
-			limits {
-			}
-		}
-		text {
-			object {
-				x=415
-				y=4
-				width=40
-				height=16
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="pcs="
-			align="horiz. right"
-		}
-	}
-}
-composite {
-	object {
 		x=545
 		y=182
 		width=70
@@ -1106,4 +1039,120 @@ text {
 	}
 	textix="mtr="
 	align="horiz. right"
+}
+composite {
+	object {
+		x=0
+		y=294
+		width=615
+		height=26
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=0
+				y=294
+				width=615
+				height=26
+			}
+			"basic attribute" {
+				clr=56
+			}
+		}
+		composite {
+			object {
+				x=5
+				y=300
+				width=230
+				height=16
+			}
+			"composite name"=""
+			children {
+				text {
+					object {
+						x=5
+						y=300
+						width=45
+						height=16
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="pmac="
+					align="horiz. right"
+				}
+				"text update" {
+					object {
+						x=50
+						y=300
+						width=110
+						height=16
+					}
+					monitor {
+						chan="$(assy)Pmac"
+						clr=14
+						bclr=56
+					}
+					limits {
+					}
+				}
+				text {
+					object {
+						x=155
+						y=300
+						width=40
+						height=16
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="pcs="
+					align="horiz. right"
+				}
+				"text update" {
+					object {
+						x=195
+						y=300
+						width=40
+						height=16
+					}
+					monitor {
+						chan="$(assy)Pcs"
+						clr=14
+						bclr=56
+					}
+					limits {
+					}
+				}
+			}
+		}
+		text {
+			object {
+				x=260
+				y=300
+				width=150
+				height=16
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="ioc=$(ioc)"
+		}
+		"message button" {
+			object {
+				x=447
+				y=298
+				width=163
+				height=20
+			}
+			control {
+				chan="$(ioc):saveTrigger.PROC"
+				clr=0
+				bclr=58
+			}
+			label="Save $(ioc)"
+			press_msg="1"
+		}
+	}
 }

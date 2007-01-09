@@ -1,0 +1,19 @@
+file $(TPMAC)/pmacDb/bkgfix1pcs.db
+{
+	pattern { pcs, C, S }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  S =   0  32  64  96 128 160 192 224
+#                              (pcs == _p_mac _c_oordinate _s_ystem)
+# pmac10:
+        { 23o:WS:Av:,  0,   0 }
+        { 23o:WS:Ah:,  0,  32 }
+        { 23o:MO:Ps:,  0,  64 }
+        { 23o:MO:En:,  0,  96 }
+        { 23o:MO:Tn1:, 0, 128 }
+        { 23o:MO:Tn2:, 0, 160 }
+        { 23o:BP:Mo:,  0, 192 }
+        { 23o:HD:St:,  0, 224 }
+        { 23o:HD:Up:,  0, 256 }
+        { 23o:HD:Dn:,  0, 288 }
+        { 23o:BP:Hd1:, 0, 320 }
+}

@@ -1,0 +1,90 @@
+;GMCA BM MBSL setup Parameters (This should be loaded onto PMAC #2 of the BM line)
+
+;mbsl vertical carrier (TOP) motor# BM-A-24 (xx=4)
+ms5,i910=7			;closed loop motion
+i416=30.0			;max program velocity
+i417=0.150			;max program acceleration
+i422=30.0			;max jog velocity
+i423=-10			;homing speed
+i428=128			;in-position band
+i430=40000			;proportional gain
+i431=0				;derivative gain
+i432=16842			;vel feed-forward gain
+i433=10000				;integral gain
+i434=1				;integration mode
+i435=34000			;accel feed-forward gain
+i465=8				;dead-band size
+I469=15000    ;Output Command Limit/Scale
+
+;homing flag PLIM
+ms5,i912=11			;capture on flag LOW and index HI
+ms5,i913=1 		    	;PLIM
+
+ms8,i907=$8FA		//max PFM freq. is 305.72 kHz
+ms8,i908=2			//pulse width is 6.54us
+
+;#############################################################
+;mbsl vertical rider (BOTTOM) BM-A-25 (xx=5)
+i516=30.0			;max program velocity
+i517=0.150			;max program acceleration
+i522=30.0			;max jog velocity
+i523=10				;homing speed
+i528=128			;in-position band
+i530=40000			;proportional gain
+i531=0				;derivative gain
+i532=16842			;vel feed-forward gain
+i533=10000				;integral gain
+i534=1				;integration mode
+i535=34000			;accel feed-forward gain
+i565=8				;dead-band size
+I569=15000    ;Output Command Limit/Scale
+
+ms8,i910=7			;closed loop motion
+;homing flag NLIM
+ms8,i912=11			;capture on flag LOW and index HI
+ms8,i913=2 			;NLIM
+
+;#############################################################
+;mbsl horizontal carrier (OB) (I BM-A-26 (xx=6)
+i616=30.0			;max program velocity
+i617=0.150			;max program acceleration
+i622=30.0			;max jog velocity
+i623=-10			;homing speed
+i628=128			;in-position band
+i630=40000			;proportional gain
+i631=0				;derivative gain
+i632=16842			;vel feed-forward gain
+i633=10000				;integral gain
+i634=1				;integration mode
+i635=34000			;accel feed-forward gain
+i665=8				;dead-band size
+I669=15000    ;Output Command Limit/Scale
+
+ms9,i910=7			;closed loop motion
+;homing flag PLIM
+ms9,i912=11			;capture on flag LOW and index HI
+ms9,i913=1 			;PLIM
+
+;#############################################################
+;mbsl horizontal rider (IB) BM-A-27 (xx=7)
+i716=30.0			;max program velocity
+i717=0.150			;max program acceleration
+i722=30.0			;max jog velocity
+i723=60				;homing speed
+i728=128			;in-position band
+i730=40000			;proportional gain
+i731=0				;derivative gain
+i732=16842			;vel feed-forward gain
+i733=10000				;integral gain
+i734=1				;integration mode
+i735=34000			;accel feed-forward gain
+i765=8				;dead-band size
+I769=15000    ;Output Command Limit/Scale
+
+ms12,i910=7			;closed loop motion
+;homing flag NLIM
+ms12,i912=11			;capture on flag LOW and index HI
+ms12,i913=2 			;NLIM
+
+
+

@@ -1,0 +1,18 @@
+file $(TPMAC)/pmacDb/CtlPnlPcs.db
+{
+	pattern { pcs, pmac, wrd }
+#				pcs =   1   2   3   4   5   6   7   8
+#				wrd =   1   2   3   4   5   6   7   8
+#                              (pcs == _p_mac _c_oordinate _s_ystem)
+# pmac10:
+        { 23b:WS:Av:,  23b:pmac10:,  1 }
+        { 23b:WS:Ah:,  23b:pmac10:,  2 }
+        { 23b:VC:Vz:,  23b:pmac10:,  3 }
+        { 23b:VC:Vy:,  23b:pmac10:,  4 }
+        { 23b:VC:Be:,  23b:pmac10:,  5 }
+        { 23b:MO:Ps:,  23b:pmac10:,  6 }
+        { 23b:MO:En:,  23b:pmac10:,  7 }
+        { 23b:MO:Tn1:, 23b:pmac10:,  8 }
+        { 23b:MO:Tn2:, 23b:pmac10:,  9 }
+        { 23b:MO:Be:,  23b:pmac10:, 10 }
+}

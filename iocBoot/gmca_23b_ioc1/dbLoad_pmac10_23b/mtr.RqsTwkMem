@@ -1,0 +1,64 @@
+file $(TPMAC)/softDb/RqsTwkMem.db
+{
+	pattern { pref, prec }
+# "prec" is "precision": the number of digits after comma
+# (usually 3 for real numbers and zero for integers).
+#---------------------------
+# pmac10:
+#mtr
+        { 23b:WS:mt:,   0 }
+        { 23b:WS:mb:,   0 }
+        { 23b:WS:mo:,   0 }
+        { 23b:WS:mi:,   0 }
+        { 23b:VC:mz1:,  0 }
+        { 23b:VC:mz2:,  0 }
+        { 23b:VC:mz3:,  0 }
+        { 23b:VC:my1:,  0 }
+        { 23b:VC:my2:,  0 }
+        { 23b:VC:mbe:,  0 }
+        { 23b:MO:mz:,   0 }
+        { 23b:MO:mr:,   0 }
+        { 23b:MO:mt2:,  0 }
+        { 23b:MO:mt1:,  0 }
+        { 23b:MO:mr1:,  0 }
+        { 23b:MO:mp2:,  0 }
+        { 23b:MO:mr2:,  0 }
+        { 23b:MO:mw2:,  0 }
+        { 23b:MO:mb1:,  0 }
+        { 23b:MO:mb2:,  0 }
+#drv
+        { 23b:WS:ZT:,   3 }
+        { 23b:WS:ZB:,   3 }
+        { 23b:WS:YO:,   3 }
+        { 23b:WS:YI:,   3 }
+        { 23b:VC:Z1:,   3 }
+        { 23b:VC:Z2:,   3 }
+        { 23b:VC:Z3:,   3 }
+        { 23b:VC:Y1:,   3 }
+        { 23b:VC:Y2:,   3 }
+        { 23b:VC:BE:,   3 }
+        { 23b:MO:Z:,    3 }
+        { 23b:MO:QB:,   3 }
+        { 23b:MO:T2:,   3 }
+        { 23b:MO:T1:,   3 }
+        { 23b:MO:R1:,   3 }
+        { 23b:MO:P2:,   3 }
+        { 23b:MO:R2:,   3 }
+        { 23b:MO:W2:,   3 }
+        { 23b:MO:B1:,   3 }
+        { 23b:MO:B2:,   3 }
+#axs
+        { 23b:WS:ZC:,   3 }
+        { 23b:WS:ZS:,   3 }
+        { 23b:WS:YC:,   3 }
+        { 23b:WS:YS:,   3 }
+        { 23b:VC:VZ:,   3 }
+        { 23b:VC:VA:,   3 }
+        { 23b:VC:VR:,   3 }
+        { 23b:VC:VL:,   3 }
+        { 23b:VC:VW:,   3 }
+        { 23b:MO:E:,    5 }
+        { 23b:MO:L:,    5 }
+        { 23b:MO:BE:,   5 }
+        { 23b:MO:BT:,   5 }
+}

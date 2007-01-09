@@ -1,0 +1,91 @@
+;GMCA BM WBSL setup Parameters (This should be loaded onto PMAC #1 (pmac10) of the BM line)
+
+;ms0,i903=$8FA		//max PFM freq. is 305.72 kHz
+;ms0,i904=2				//pulse width is 6.54us
+;wbsl vertical TOP BM-A-1 (xx=1)
+i116=30.0			;max program velocity
+i117=0.150			;max program acceleration
+i122=30.0			;max jog velocity
+i123=10			;homing speed
+i128=128			;in-position band
+i130=100000			;proportional gain
+i131=0			;derivative gain
+i132=6737			;vel feed-forward gain
+i133=0			;integral gain
+i134=1			;integration mode
+i135=14000			;accel feed-forward gain
+i165=8			;dead-band size
+I166=16384  ;PWM Scale Factor (PMAC2 Only)
+I169=32767     ;Output Command Limit/Scale
+
+ms0,i910=7			;closed loop motion
+;homing flag PLIM
+ms0,i912=11			;capture on flag LOW and index HI
+ms0,i913=2 		      ;NLIM
+
+;#############################################################
+;wbsl vertical BOTTOM BM-A-2 (xx=2)
+i216=30.0			;max program velocity
+i217=0.150			;max program acceleration
+i222=30.0			;max jog velocity
+i223=-10			;homing speed
+i228=128			;in-position band
+i230=100000			;proportional gain
+i231=0			;derivative gain
+i232=6737			;vel feed-forward gain
+i233=0			;integral gain
+i234=1			;integration mode
+i235=14000			;accel feed-forward gain
+i265=8			;dead-band size
+I266=16384  ;PWM Scale Factor (PMAC2 Only)
+I269=32767     ;Output Command Limit/Scale
+
+ms1,i910=7			;closed loop motion
+;homing flag PLIM
+ms1,i912=11			;capture on flag LOW and index HI
+ms1,i913=1 			;PLIM
+
+;#############################################################
+;wbsl horizontal OB BM-A-3 (xx=3)
+i316=30.0			;max program velocity
+i317=0.150			;max program acceleration
+i322=30.0			;max jog velocity
+i323=10			;homing speed
+i328=128			;in-position band
+i330=100000			;proportional gain
+i331=0			;derivative gain
+i332=6737			;vel feed-forward gain
+i333=0			;integral gain
+i334=1			;integration mode
+i335=14000			;accel feed-forward gain
+i365=8			;dead-band size
+I366=16384  ;PWM Scale Factor (PMAC2 Only)
+I369=32767     ;Output Command Limit/Scale
+
+ms4,i910=7			;closed loop motion
+;homing flag MLIM
+ms4,i912=11			;capture on flag LOW and index HI
+ms4,i913=2 			;MLIM
+
+;#############################################################
+;wbsl horizontal IB BM-A-4 (xx=4)
+i416=30.0			;max program velocity
+i417=0.150			;max program acceleration
+i422=30.0			;max jog velocity
+i423=-10			;homing speed
+i428=128			;in-position band
+i430=100000			;proportional gain
+i431=0			;derivative gain
+i432=6737			;vel feed-forward gain
+i433=0			;integral gain
+i434=1			;integration mode
+i435=14000			;accel feed-forward gain
+i465=8			;dead-band size
+I466=16384  ;PWM Scale Factor (PMAC2 Only)
+I469=32767     ;Output Command Limit/Scale
+
+ms5,i910=7			;closed loop motion
+;homing flag PLIM
+ms5,i912=11			;capture on flag LOW and index HI
+ms5,i913=1 			;PLIM
+

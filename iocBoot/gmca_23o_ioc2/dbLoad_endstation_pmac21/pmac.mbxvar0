@@ -1,0 +1,6 @@
+file "$(TPMAC)/pmacDb/mbxvar0.db"
+{
+	pattern { pmac, C }
+
+        { 23o:pmac21:, 1 }
+}

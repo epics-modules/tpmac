@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)HD:Up:  Horiz Deflecting mirror #1 (US) Y-positioning
+%
+
+file assy.req ASSY=$(P)HD:Up
+$(P)HD:Up:BaseLength
+file mtr1.req MTR1=$(P)HD:muy1
+file mtr1.req MTR1=$(P)HD:muy2
+file drv1.req DRV1=$(P)HD:UY1
+file drv1.req DRV1=$(P)HD:UY2
+file axs1.req AXS1=$(P)HD:UY
+file axs1.req AXS1=$(P)HD:UA
+

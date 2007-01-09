@@ -1,13 +1,16 @@
-This is a TCL/TK based GUI to call all PMAC-related MEDM screens. The
-example corresponds to the GM/CA 23ID beamline at the APS.
+These are TCL/TK based GUI to call all PMAC-related MEDM screens. The
+three examples correspond to the three GM/CA beamlines at the Sector
+23 of the Advanced Photon Source (APS).
 
-Usage:           ./23ID.tcl
+Usage:           ./23b.tcl
+                 ./23i.tcl
+                 ./23o.tcl
 
-One has to modify the config23ID.tcl file according to the names
+One has to modify respective configXX.tcl file according to the names
 of loaded PMAC-related databases (see the iocBoot directories).
 
 Also file config.tcl has to be updated with the locations of
 external programs like medm and xterm (in the attached version
 everything is assumed to be in the system path).
 
--- Sergey
+-- Sergey Stepanov <sstepanov@anl.gov>

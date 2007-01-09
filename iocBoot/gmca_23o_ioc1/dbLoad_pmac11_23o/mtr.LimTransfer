@@ -1,0 +1,31 @@
+file $(TPMAC)/softDb/LimTransfer.db
+{
+	pattern { drv, mtr }
+#--------------------------------------
+#  Developed 98/10 by Stepanov for "LimSet" and "AmpEna" controls
+# See also:
+# mtr.bkgfix1mtr -> pmacDb/bkgfix1mtr.db (propagation of "AmpEna" from motor)
+# mtr.svofix1    -> pmacDb/svofix1.db    (propagation of "NgLimSet" & "PsLimSet" from motor)
+# xx.LimAmp      -> xxDb/XX_LimAmp.db    (triggering all NgLimSet/PsLimSet and AmpEna in the assembly
+#--------------------------------------
+# Drives <- Motors
+# pmac11:
+        { 23o:BP:H2Z:, 23o:BP:mh2z: }
+# Do not use LimTransfer.db for CS-type assembly (see comment in CS_LimAmp.db)
+#       { 23o:CS:ZT:,  23o:CS:mz1:  }
+#       { 23o:CS:ZB:,  23o:CS:mz2:  }
+#       { 23o:CS:YO:,  23o:CS:my1:  }
+#       { 23o:CS:YI:,  23o:CS:my2:  }
+        { 23o:KB:HZ1:, 23o:KB:mhz1: }
+        { 23o:KB:HZ2:, 23o:KB:mhz2: }
+        { 23o:KB:HZ3:, 23o:KB:mhz3: }
+        { 23o:KB:HY1:, 23o:KB:mhy1: }
+        { 23o:KB:HY2:, 23o:KB:mhy2: }
+        { 23o:KB:VZ1:, 23o:KB:mvz1: }
+        { 23o:KB:VZ2:, 23o:KB:mvz2: }
+        { 23o:KB:VZ3:, 23o:KB:mvz3: }
+        { 23o:KB:VY1:, 23o:KB:mvy1: }
+        { 23o:KB:VY2:, 23o:KB:mvy2: }
+        { 23o:BP:KBZ:, 23o:BP:mkb:  }
+}
+

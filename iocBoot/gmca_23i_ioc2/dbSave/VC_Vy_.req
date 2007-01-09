@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)VC:Up:  VCM Y-adjustment
+%
+
+file assy.req ASSY=$(P)VC:Vy
+$(P)VC:Vy:BaseLength
+file mtr1.req MTR1=$(P)VC:my1
+file mtr1.req MTR1=$(P)VC:my2
+file drv1.req DRV1=$(P)VC:Y1
+file drv1.req DRV1=$(P)VC:Y2
+file axs1.req AXS1=$(P)VC:VL
+file axs1.req AXS1=$(P)VC:VW
+

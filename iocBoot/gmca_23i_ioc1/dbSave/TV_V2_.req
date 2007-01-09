@@ -1,0 +1,12 @@
+%
+% BURT Request File
+%
+% $(P)TV:V2:  Low Resolution camera
+%
+
+file assy.req ASSY=$(P)TV:V2
+# file mtr1.req MTR1=$(P)TV:my
+file mtr1.req MTR1=$(P)TV:mz2
+# file drv1.req DRV1=$(P)TV:Y
+file drv1.req DRV1=$(P)TV:ZM2
+

@@ -1,0 +1,57 @@
+i6841=$0FB3FF	//MACRO IC Node Activate Control
+i6891=$1FB333	//MACRO IC Node Activate Control
+;i6941=$2F8333	//MACRO IC Node Activate Control
+;i6991=$3F8033	//MACRO IC Node Activate Control
+
+ms0,i996=$0FB3FF  //MACRO IC 0 Node Activate Control
+ms0,i1996=$1FB333 //MACRO IC 1 Node Activate Control
+;ms32,i996=$2f8333 //MACRO IC 2 Node Activate Control
+;ms32,i1996=$3F8033//MACRO IC 3 Node Activate Control
+
+ms0,i19=1; Set period for data transfer equal to four servo periods
+ms0,i975=$0CC ;activate nodes 2-3, 6-7 for acc59e;
+ms0,i987=1		;enable the automatic ADC transfer
+ms0,i988=$FF	;set up for bipolar (-10 to +10V) inputs
+ms0,i989=$8800;ACC59E address
+ms0,i173=$20C0A1000200 ;six 12-bit transfers ADC 1-6
+ms0,i174=0
+M1001->X:$078421,8,12
+M1002->X:$078422,8,12
+M1003->X:$078423,8,12
+M1004->X:$078425,8,12
+M1005->X:$078426,8,12
+M1006->X:$078427,8,12
+ms0,i175=$20C0A0000206 ;two 12-bit transfers ADC 7-8
+M1007->X:$078420,0,12
+M1008->X:$078424,0,12
+
+ms0,i20=$ffff
+ms0,i21=$C4C0A8548808  ;DAC1 node 6 24-bit
+ms0,i22=$548808C4C0A8  ;DAC1
+ms0,i23=$DCC0A9548809  ;DAC2 node 6 16-bit
+ms0,i24=$548809DCC0A9  ;DAC2
+ms0,i25=$DCC0AA54880A  ;DAC3 node 6 16-bit
+ms0,i26=$54880ADCC0AA  ;DAC3
+ms0,i27=$DCC0AB54880B  ;DAC4 node 6 16-bit
+ms0,i28=$54880BDCC0AB  ;DAC4
+ms0,i29=$C4C0AC608808  ;DAC5 node 7 24-bit
+ms0,i30=$608808C4C0AC  ;DAC5
+ms0,i31=$DCC0AD608809  ;DAC6 node 7 16-bit
+ms0,i32=$608809DCC0AD  ;DAC6
+ms0,i33=$DCC0AE60880A  ;DAC7 node 7 16-bit
+ms0,i34=$60880ADCC0AE  ;DAC7
+ms0,i35=$DCC0AF60880B  ;DAC8 node 7 16-bit
+ms0,i36=$60880BDCC0AF  ;DAC8
+
+M1011->X:$078428,0,12 ;DAC1, node6 24-bit
+M1012->X:$078429,8,12 ;DAC2, node6 16-bit
+M1013->X:$07842A,8,12 ;DAC3, node6 16-bit
+M1014->X:$07842B,8,12 ;DAC4, node6 16-bit
+M1015->X:$07842C,0,12 ;DAC5, node7 24-bit
+M1016->X:$07842D,8,12 ;DAC6, node7 16-bit
+M1017->X:$07842E,8,12 ;DAC7, node7 16-bit
+M1018->X:$07842F,8,12 ;DAC8, node7 16-bit
+
+
+msclrf0
+;msclrf32

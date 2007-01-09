@@ -1,0 +1,27 @@
+file "$(TPMAC)/pmacDb/AsciiPcs.db"
+{
+	pattern { pcs, C, x }
+#				pcs =   1   2   3   4   5   6   7   8
+#				  x =   1   2   3   4   5   6   7   8
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac20:
+        { 23o:CCD:Lp:, 0,  1 }
+        { 23o:CCD:St:, 0,  2 }
+        { 23o:GO:Om:,  0,  3 }
+        { 23o:GO:Kp:,  0,  4 }
+        { 23o:GO:Cr:,  0,  5 }
+ 	{ 23o:GO:St:,  0,  6 }
+ 	{ 23o:JET:Ps:, 0,  7 }
+ 	{ 23o:BD:Dh:,  0,  8 }
+ 	{ 23o:BD:Dv:,  0,  9 }
+        { 23o:GS:St:,  0, 10 }
+        { 23o:GS:Av:,  0, 11 }
+  	{ 23o:GS:Ah:,  0, 12 }
+  	{ 23o:BS:Ps:,  0, 13 }
+  	{ 23o:TV:V1:,  0, 14 }
+  	{ 23o:TV:V2:,  0, 15 }
+  	{ 23o:SH:Ps:,  0, 16 }
+}

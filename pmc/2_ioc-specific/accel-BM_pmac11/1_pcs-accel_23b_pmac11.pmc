@@ -1,0 +1,45 @@
+; Coordinate System Definitions
+;
+; pmac11 /Accel 23b/
+
+undef all	; clear all coordinate systems
+
+; (1) AT:Av:
+&1
+#1->X  ; AT:mz1:
+#2->Y  ; AT:mz2:
+
+; (2) BP:Mo:
+&2
+#3->X ; BP:mmo:
+
+; (3) CS:Av:
+&3
+#4->X  ; CS:mz1:
+#5->Y  ; CS:mz2:
+
+; (4) CS:Ah:
+&4
+#6->X  ; CS:my1:
+#7->Y  ; CS:my2:
+
+; (5) VF:Vz:
+&5
+#8->X  ; VF:mz1:
+#9->Y  ; VF:mz2:
+#10->Z ; VF:mz3:
+
+; (6) VF:Vy:
+&6
+#11->X ; VF:my1:
+#12->Y ; VF:my2:
+
+; (7) VF:Be:
+&7
+#13->X ; VF:mbe:
+
+; (8) BP:Vf:
+&8
+#14->X ; BP:mvf:
+
+

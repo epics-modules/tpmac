@@ -1,0 +1,49 @@
+record(calc, "$(assy)$(val)SDISm") {
+  field(CALC, "A")
+  field(INPA, "$(assy)$(val)TsubDrv.PACT NPP MS")
+}
+
+record(tsub, "$(assy)$(val)TsubMtr") {
+  field(SDIS, "$(assy)$(val)SDISm.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Mtr")
+  field(OTA1, "$(d1)$(val) PP MS")
+  field(INPA, "$(m1)$(val) NPP MS")
+  field(INPD, "$(assy)Dms NPP MS")
+  field(INPM, "$(assy)aV NPP MS")
+  field(INPN, "$(assy)mLink NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(NLA, "$(nla)")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(tsub, "$(assy)$(val)TsubDrv") {
+  field(SDIS, "$(assy)$(val)SDISd.VAL PP MS")
+  field(INAM, "$(tsub)")
+  field(SNAM, "$(tsub)Drv")
+  field(OTA0, "$(m1)$(val) PP MS")
+  field(INPA, "$(d1)$(val) NPP MS")
+  field(INPD, "$(assy)Dms NPP MS")
+  field(INPM, "$(assy)aV NPP MS")
+  field(INPN, "$(assy)mLink NPP MS")
+  field(IPA0, "$(d1)Offset NPP MS")
+  field(IPA1, "$(d1)Scale NPP MS")
+  field(NLA, "$(nla)")
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+}
+
+record(ao, "$(m1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubMtr.PROC PP MS")
+}
+
+record(ao, "$(d1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
+  field(PREC, "3")
+}
+
+record(calc, "$(assy)$(val)SDISd") {
+  field(CALC, "A")
+  field(INPA, "$(assy)$(val)TsubMtr.PACT NPP MS")
+}
+

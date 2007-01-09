@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% $(P)VC:Be:  VCM Bender
+%
+
+file assy.req ASSY=$(P)VC:Be
+file mtr1.req MTR1=$(P)VC:mbe
+file drv1.req DRV1=$(P)VC:BE
+

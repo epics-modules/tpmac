@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% $(P)BD:DhB: Horizontal Beam Delivery for BM line (type: XPs)
+%
+
+file assy.req ASSY=$(P)BD:DhB
+file mtr1.req MTR1=$(P)BD:mhd
+file drv1.req DRV1=$(P)BD:HD
+

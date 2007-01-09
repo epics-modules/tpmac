@@ -1,3 +1,17 @@
+### This DB is for a fast endstation shutter that is a
+### fast motor controlled by PMAC. This motor should be
+### controllable from both EPICS and directly from PMAC
+### (the later is needed for precise synchronization of
+### shuuter with gonio head).
+### For this shutter we have two motion programs "prgOpen"
+### and "prgClose" that read the shutter destinations from
+### DP:"DPopen" and DP:"DPclose" respectively. Then, the
+### shutter readback Tsub assignes the shutter status $(m1)bo:rbk
+### to be either "Open" or "Close" depending on whether the
+### shutter motor current position is closer to $(m1)OpenPos
+### or $(m1)ClosePos.
+### See pmacDb/shutter.db for more details.
+
 record(tsub, "$(assy)$(val)TsubMtr") {
   field(INAM, "$(tsub)")
   field(SNAM, "$(tsub)Mtr")
@@ -28,59 +42,3 @@ record(tsub, "$(assy)Sync") {
   field(INPA, "$(m1)ActPos NPP MS")
   field(OUTA, "$(m1)RqsPos PP MS")
 }
-
-
-### Shutter readback support:
-
-record(ao, "$(m1)OpenPos") {
-}
-
-record(ao, "$(m1)ClosePos") {
-}
-
-record(bo, "$(m1)bo:rbk") {
-  field(DOL, "0")
-  field(ZNAM,"Closed")
-  field(ONAM,"Open")
-  field(OSV, "MINOR") 
-} 
-
-### Shutter control support:
-
-record(bo, "$(m1)bo") {
-  field(DOL, "0")
-  field(ZNAM,"Closed")
-  field(ONAM,"Open")
-  field(OSV, "MINOR") 
-  field(FLNK, "$(m1)boFan.PROC PP MS") 
-} 
-
-record(fanout, "$(m1)boFan") {
-  field(LNK1, "$(m1)goClose.PROC PP MS") 
-  field(LNK2, "$(m1)goOpen.PROC PP MS") 
-} 
-
-record(stringout, "$(m1)goClose") {
-  field(SDIS, "$(m1)CloseSDIS.VAL PP MS") 
-  field(DTYP, "Soft Channel")
-  field(OUT, "$(m1)StrCmd PP MS")
-  field(VAL, "&16B4R")
-}
-
-record(stringout, "$(m1)goOpen") {
-  field(SDIS, "$(m1)OpenSDIS.VAL PP MS") 
-  field(DTYP, "Soft Channel")
-  field(OUT, "$(m1)StrCmd PP MS")
-  field(VAL, "&16B2R")
-}
-
-record(calc, "$(m1)CloseSDIS") {
-  field(CALC, "(A=1)") 
-  field(INPA, "$(m1)bo.VAL NPP MS")
-}
-  
-record(calc, "$(m1)OpenSDIS") {
-  field(CALC, "(A=0)") 
-  field(INPA, "$(m1)bo.VAL NPP MS")
-}
-  

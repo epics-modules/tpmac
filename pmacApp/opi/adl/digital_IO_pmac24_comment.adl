@@ -108,7 +108,7 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="$(P) digital I/O"
+	textix="$(P): digital I/O"
 }
 rectangle {
 	object {
@@ -142,7 +142,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo0"
+		chan="$(P):bo0"
 		clr=14
 		bclr=51
 	}
@@ -156,7 +156,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo1"
+		chan="$(P):bo1"
 		clr=14
 		bclr=51
 	}
@@ -170,7 +170,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo2"
+		chan="$(P):bo2"
 		clr=14
 		bclr=51
 	}
@@ -184,7 +184,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo3"
+		chan="$(P):bo3"
 		clr=14
 		bclr=51
 	}
@@ -198,7 +198,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo4"
+		chan="$(P):bo4"
 		clr=14
 		bclr=51
 	}
@@ -212,7 +212,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo5"
+		chan="$(P):bo5"
 		clr=14
 		bclr=51
 	}
@@ -226,7 +226,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo6"
+		chan="$(P):bo6"
 		clr=14
 		bclr=51
 	}
@@ -240,7 +240,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo7"
+		chan="$(P):bo7"
 		clr=14
 		bclr=51
 	}
@@ -280,7 +280,7 @@ text {
 	display[0] {
 		label="More"
 		name="digital_IO_pmac24.adl"
-		args="P=$(P),BL=$(BL),SAVE_DIR=$(SAVE_DIR)"
+		args="P=$(P),BL=$(BL),SAVE_DIR=$(SAVE_DIR),PMAC=$(PMAC)"
 		policy="replace display"
 	}
 	clr=14
@@ -295,7 +295,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo8"
+		chan="$(P):bo8"
 		clr=14
 		bclr=51
 	}
@@ -309,7 +309,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo9"
+		chan="$(P):bo9"
 		clr=14
 		bclr=51
 	}
@@ -323,7 +323,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo10"
+		chan="$(P):bo10"
 		clr=14
 		bclr=51
 	}
@@ -337,7 +337,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo11"
+		chan="$(P):bo11"
 		clr=14
 		bclr=51
 	}
@@ -351,7 +351,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo12"
+		chan="$(P):bo12"
 		clr=14
 		bclr=51
 	}
@@ -365,7 +365,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo13"
+		chan="$(P):bo13"
 		clr=14
 		bclr=51
 	}
@@ -379,7 +379,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo14"
+		chan="$(P):bo14"
 		clr=14
 		bclr=51
 	}
@@ -393,7 +393,7 @@ text {
 		height=18
 	}
 	control {
-		chan="$(P)bo15"
+		chan="$(P):bo15"
 		clr=14
 		bclr=51
 	}
@@ -730,7 +730,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo16"
+		chan="$(P):bo16"
 		clr=14
 		bclr=51
 	}
@@ -744,7 +744,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo17"
+		chan="$(P):bo17"
 		clr=14
 		bclr=51
 	}
@@ -758,7 +758,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo18"
+		chan="$(P):bo18"
 		clr=14
 		bclr=51
 	}
@@ -772,7 +772,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo19"
+		chan="$(P):bo19"
 		clr=14
 		bclr=51
 	}
@@ -786,7 +786,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo20"
+		chan="$(P):bo20"
 		clr=14
 		bclr=51
 	}
@@ -800,7 +800,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo21"
+		chan="$(P):bo21"
 		clr=14
 		bclr=51
 	}
@@ -814,7 +814,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo22"
+		chan="$(P):bo22"
 		clr=14
 		bclr=51
 	}
@@ -828,7 +828,7 @@ composite {
 		height=18
 	}
 	control {
-		chan="$(P)bo23"
+		chan="$(P):bo23"
 		clr=14
 		bclr=51
 	}
@@ -1414,7 +1414,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi0"
+						chan="$(P):bi0"
 					}
 				}
 				oval {
@@ -1429,7 +1429,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi1"
+						chan="$(P):bi1"
 					}
 				}
 				oval {
@@ -1444,7 +1444,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi2"
+						chan="$(P):bi2"
 					}
 				}
 				oval {
@@ -1459,7 +1459,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi3"
+						chan="$(P):bi3"
 					}
 				}
 				oval {
@@ -1474,7 +1474,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi4"
+						chan="$(P):bi4"
 					}
 				}
 				oval {
@@ -1489,7 +1489,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi5"
+						chan="$(P):bi5"
 					}
 				}
 				oval {
@@ -1504,7 +1504,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi6"
+						chan="$(P):bi6"
 					}
 				}
 				oval {
@@ -1519,7 +1519,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi7"
+						chan="$(P):bi7"
 					}
 				}
 				oval {
@@ -1534,7 +1534,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi8"
+						chan="$(P):bi8"
 					}
 				}
 				oval {
@@ -1549,7 +1549,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi9"
+						chan="$(P):bi9"
 					}
 				}
 				oval {
@@ -1564,7 +1564,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi10"
+						chan="$(P):bi10"
 					}
 				}
 				oval {
@@ -1579,7 +1579,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi11"
+						chan="$(P):bi11"
 					}
 				}
 				oval {
@@ -1594,7 +1594,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi12"
+						chan="$(P):bi12"
 					}
 				}
 				oval {
@@ -1609,7 +1609,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi13"
+						chan="$(P):bi13"
 					}
 				}
 				oval {
@@ -1624,7 +1624,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi14"
+						chan="$(P):bi14"
 					}
 				}
 				oval {
@@ -1639,7 +1639,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi15"
+						chan="$(P):bi15"
 					}
 				}
 				oval {
@@ -1654,7 +1654,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi16"
+						chan="$(P):bi16"
 					}
 				}
 				oval {
@@ -1669,7 +1669,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi17"
+						chan="$(P):bi17"
 					}
 				}
 				oval {
@@ -1684,7 +1684,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi18"
+						chan="$(P):bi18"
 					}
 				}
 				oval {
@@ -1699,7 +1699,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi19"
+						chan="$(P):bi19"
 					}
 				}
 				oval {
@@ -1714,7 +1714,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi20"
+						chan="$(P):bi20"
 					}
 				}
 				oval {
@@ -1729,7 +1729,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi21"
+						chan="$(P):bi21"
 					}
 				}
 				oval {
@@ -1744,7 +1744,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi22"
+						chan="$(P):bi22"
 					}
 				}
 				oval {
@@ -1759,7 +1759,7 @@ composite {
 					}
 					"dynamic attribute" {
 						vis="if not zero"
-						chan="$(P)bi23"
+						chan="$(P):bi23"
 					}
 				}
 			}
@@ -2119,7 +2119,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo0.DESC"
+				chan="$(P):bo0.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2134,7 +2134,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo1.DESC"
+				chan="$(P):bo1.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2149,7 +2149,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo2.DESC"
+				chan="$(P):bo2.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2164,7 +2164,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo3.DESC"
+				chan="$(P):bo3.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2179,7 +2179,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo4.DESC"
+				chan="$(P):bo4.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2194,7 +2194,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo5.DESC"
+				chan="$(P):bo5.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2209,7 +2209,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo6.DESC"
+				chan="$(P):bo6.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2224,7 +2224,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo7.DESC"
+				chan="$(P):bo7.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2239,7 +2239,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo8.DESC"
+				chan="$(P):bo8.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2254,7 +2254,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo9.DESC"
+				chan="$(P):bo9.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2269,7 +2269,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo10.DESC"
+				chan="$(P):bo10.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2284,7 +2284,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo11.DESC"
+				chan="$(P):bo11.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2299,7 +2299,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo12.DESC"
+				chan="$(P):bo12.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2314,7 +2314,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo13.DESC"
+				chan="$(P):bo13.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2329,7 +2329,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo14.DESC"
+				chan="$(P):bo14.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2344,7 +2344,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo15.DESC"
+				chan="$(P):bo15.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2359,7 +2359,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo16.DESC"
+				chan="$(P):bo16.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2374,7 +2374,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo17.DESC"
+				chan="$(P):bo17.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2389,7 +2389,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo18.DESC"
+				chan="$(P):bo18.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2404,7 +2404,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo19.DESC"
+				chan="$(P):bo19.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2419,7 +2419,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo20.DESC"
+				chan="$(P):bo20.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2434,7 +2434,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo21.DESC"
+				chan="$(P):bo21.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2449,7 +2449,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo22.DESC"
+				chan="$(P):bo22.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2464,7 +2464,7 @@ composite {
 				height=18
 			}
 			control {
-				chan="$(P)bo23.DESC"
+				chan="$(P):bo23.DESC"
 				clr=14
 				bclr=3
 			}
@@ -2769,7 +2769,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb0"
+				chan="$(P):rb0"
 			}
 		}
 		oval {
@@ -2784,7 +2784,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb1"
+				chan="$(P):rb1"
 			}
 		}
 		oval {
@@ -2799,7 +2799,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb2"
+				chan="$(P):rb2"
 			}
 		}
 		oval {
@@ -2814,7 +2814,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb3"
+				chan="$(P):rb3"
 			}
 		}
 		oval {
@@ -2829,7 +2829,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb4"
+				chan="$(P):rb4"
 			}
 		}
 		oval {
@@ -2844,7 +2844,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb5"
+				chan="$(P):rb5"
 			}
 		}
 		oval {
@@ -2859,7 +2859,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb6"
+				chan="$(P):rb6"
 			}
 		}
 		oval {
@@ -2874,7 +2874,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb7"
+				chan="$(P):rb7"
 			}
 		}
 		oval {
@@ -2889,7 +2889,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb8"
+				chan="$(P):rb8"
 			}
 		}
 		oval {
@@ -2904,7 +2904,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb9"
+				chan="$(P):rb9"
 			}
 		}
 		oval {
@@ -2919,7 +2919,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb10"
+				chan="$(P):rb10"
 			}
 		}
 		oval {
@@ -2934,7 +2934,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb11"
+				chan="$(P):rb11"
 			}
 		}
 		oval {
@@ -2949,7 +2949,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb12"
+				chan="$(P):rb12"
 			}
 		}
 		oval {
@@ -2964,7 +2964,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb13"
+				chan="$(P):rb13"
 			}
 		}
 		oval {
@@ -2979,7 +2979,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb14"
+				chan="$(P):rb14"
 			}
 		}
 		oval {
@@ -2994,7 +2994,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb15"
+				chan="$(P):rb15"
 			}
 		}
 		oval {
@@ -3009,7 +3009,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb16"
+				chan="$(P):rb16"
 			}
 		}
 		oval {
@@ -3024,7 +3024,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb17"
+				chan="$(P):rb17"
 			}
 		}
 		oval {
@@ -3039,7 +3039,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb18"
+				chan="$(P):rb18"
 			}
 		}
 		oval {
@@ -3054,7 +3054,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb19"
+				chan="$(P):rb19"
 			}
 		}
 		oval {
@@ -3069,7 +3069,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb20"
+				chan="$(P):rb20"
 			}
 		}
 		oval {
@@ -3084,7 +3084,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb21"
+				chan="$(P):rb21"
 			}
 		}
 		oval {
@@ -3099,7 +3099,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb22"
+				chan="$(P):rb22"
 			}
 		}
 		oval {
@@ -3114,7 +3114,7 @@ composite {
 			}
 			"dynamic attribute" {
 				vis="if not zero"
-				chan="$(P)rb23"
+				chan="$(P):rb23"
 			}
 		}
 	}
@@ -3152,7 +3152,7 @@ rectangle {
 	}
 	command[0] {
 		label="Backup to BURT file"
-		name="cd $(SAVE_DIR); burtrb -f digital_IO_pmac24.req -o $(BL)_digital_IO_pmac24.snap -DBEAMLINE=$(BL)"
+		name="cd $(SAVE_DIR); burtrb -f digital_IO_pmac24.req -o $(BL)_digital_IO_$(PMAC).snap -DPREFIX=$(P)"
 	}
 	clr=14
 	bclr=61
@@ -3178,7 +3178,7 @@ text {
 	}
 	command[0] {
 		label="Restore from BURT file"
-		name="cd $(SAVE_DIR); burtwb -f $(BL)_digital_IO_pmac24.snap"
+		name="cd $(SAVE_DIR); burtwb -f $(BL)_digital_IO_$(PMAC).snap"
 	}
 	clr=14
 	bclr=61
@@ -3205,7 +3205,7 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="$(SAVE_DIR)$(BL)_digital_IO_pmac24.snap"
+	textix="$(SAVE_DIR)$(BL)_digital_IO_$(PMAC).snap"
 }
 polyline {
 	object {

@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Motion control basics</title>
+</head>
+<body>
+<h1 style="text-align: center;">Motion control at GM/CA beamlines</h1>
+To get access to the motion control screens one should press the "<img
+ src="img/icon23o.png" title="23id" alt="Data acquisitiom"
+ style="width: 32px; height: 32px;">" icon, or type a command line
+"23id &lt;Enter&gt;" in the terminal window.<br>
+<div style="text-align: left;">This will open a top level menu with a
+beamline name in the title:<br>
+</div>
+<div style="text-align: center;"><img src="img/23-ID-out.png"
+ title="Top-Level Menu" alt="23-ID-out"
+ style="width: 119px; height: 470px;"><br>
+<div style="text-align: left;">Use "MOTION" button to access motion
+control screens.<span style="font-weight: bold;"><br>
+</span>
+<h2 style="text-align: center;">Initialization of the motors</h2>
+After switching on the power for a VME crate, UMAC MACRO chassis and
+motor amplifiers all motors are in the passive state: motor amplifiers
+are disabled, and servo loops are open. To initialize a motor you will
+need a motor control screen&nbsp;
+accessible from hierarchical menu "MOTION -&gt; ... -&gt; ... -&gt; ...
+-&gt; View Status / Jog / Home motor". This screen is different for
+different motor types. Most of them are DC brush servo motors and step
+motors. To initialize such motor: <br>
+1) Click "Enable" button to enable the servo amplifier. Amplifier
+Enable status bit has to alter from "Disabled" to "Enabled".<br>
+2) Click "Stop" button to close the servo loop. In Position status bit
+has to display a "Positioned" state.<br>
+<div style="text-align: center;"><img src="img/MtrStatus_adl.jpg"
+ title="View Staus / Jog / Home motor" alt="MtrStatus.adl"
+ style="width: 550px; height: 377px;"><br>
+</div>
+<br>
+Some motors are DC brushless servo, such as a motor on the goniometer
+"omega" rotary stage or motors on the "X" and "Y" stages of the XY
+Positioner-9. These motors require to establish rotor position relative
+to the motor coils. To initialize such motor:<br>
+1) Click "Ini ($)" button. This will use a Hall sensor on the motor to
+establish rough phasing with an accuracy of +-15 degrees. Amplifier
+Enable status bit should display "Enabled", and In Position status bit
+should display "Positioned".<br>
+2) Click "Home" button. This will move motor till the encoder index
+position.<br>
+3) When motor reaches encoder index position "Actual Position(cts)"
+field
+will be resetted to 0. After that, to perform an exact phasing one
+should click the "Sync.Phase Mx71" button. This will copy an exact
+phase
+value to the phase register.<br>
+<div style="text-align: center;">&nbsp;<img src="img/UMAC_brushless.jpg"
+ title="View Status / Jog / Home motor" alt="motor control"
+ style="width: 552px; height: 377px;"><br>
+</div>
+<br>
+Four motors are controlled by Geo MACRO drives. These motors are for
+the MAR
+CCD detector motion. Click "Clear Fault N..." button before
+initializing these motors. This
+should clear an amplifier fault register on the Geo MACRO drive. Then
+proceed
+with initialization of the motor as described above.<br>
+<div style="text-align: center;"><img src="img/GEO_brush.jpg"
+ title="View Status / Jog / Home motor" alt="MtrStatus_geo.adl"
+ style="width: 552px; height: 377px;"><br>
+</div>
+<br>
+<div style="text-align: center;"><img src="img/GEO_brushless.jpg"
+ title="View Status / Jog / Home brushless-geo"
+ alt="MtrStatus_brushgeo.adl" style="width: 552px; height: 377px;"><br>
+</div>
+<br>
+<h2 style="text-align: center;">Homing procedure</h2>
+Most of the motors at the beamline are used with incremental encoders.
+A few step motors have no encoders though. To establish a referenced
+position a homing procedure has to be completed, i.e. motion is
+performed until the limit switch is engaged, then direction of motion
+is reversed and the position of the first index pulse after the limit
+switch is disengaged becomes a point of origin for given axis. If
+encoder does not have an index pulse, the axis origin is selected at
+the limit switch disengaging point. Steps for the homing procedure are:<br>
+<br>
+1)&nbsp; Click a "Home speed Ix23" button to request direction and
+value of the motor home speed. This will place a command &lt;Ixx23&gt;
+into the "MTR CMD=" field; and PMAC controller response will appear
+next to it. If motion controller returned a positive
+value, the negative limit switch should be used in the homing
+procedure;
+otherwise - the positive limit switch.<br>
+<br>
+2) Click "Jog-" or "Jog+" button to run the motor and wait until
+motion will be stopped by the limit switch.<br>
+The Negative/Positive End Limit status will change its state from "OK"
+to "Tripped".<br>
+<br>
+3) Click "Home" button. Motor should move off the limit switch. The
+Negative/Positive End Limit status will change its state from "Tripped"
+to "OK". The "Actual Position(cts)" field will be resetted to 0.<br>
+<br>
+Exceptions:<br>
+1) Goniometer "omega" axis has no limit switches; skip the first and
+the second steps, and proceed to the step 3. Rotary stage will be homed
+by the encoder index position.<br>
+2)&nbsp; Zoom axis on both video cameras have no limit switches nor
+encoders; skip the first and the second steps. Click "Jog+" button,
+then "Stop" button; this will move motor in the positive direction to
+make sure the home switch is not activated; proceed to the step 3. Zoom
+will be homed at the lowest magnification.<br>
+<h2 style="text-align: center;">Homing script</h2>
+Homing of the motor assemblies automated by Perl scripts can be started
+from the hierarchical menu by pressing "TOOLS" -&gt; "Home Beamline
+Optics/Endstation motors" -&gt; "Home ...".&nbsp; Script will open an
+MEDM screens for affected motors and a terminal window which will show
+the progress of homing procedures.<br>
+<h2 style="text-align: center;">Calibration</h2>
+Calibration of the motion axes to physical units (millimeters, degrees,
+photon energy in keV, etc.) are done with MEDM calibration screens
+accessible from the hierarchical menu by pressing "MOTION" -&gt;&nbsp;
+... -&gt; ... -&gt; "Calibrate". Slope, offset and possibly other
+parameters are used to translate motor counts to physical units.<br>
+<h2 style="text-align: center; color: rgb(0, 0, 0);">Troubleshooting</h2>
+<h3 style="color: rgb(204, 0, 0);">Resetting the Turbo PMAC2 VME
+UltraLite motion controller</h3>
+<span style="font-weight: bold;">Soft reset: </span>send a &lt;$$$&gt;
+command to the PMAC controller, then reboot the IOC.<br>
+<br>
+<span style="font-weight: bold;">Hard reset: </span>cycle the power at
+the VME crate, wait for IOC reboot, run homing scripts for affected
+motors.<br>
+<br>
+<h3><span style="color: rgb(204, 0, 0);">Resetting the UMAC MACRO and
+Geo MACRO drives</span> <br>
+</h3>
+<span style="font-weight: bold;">Soft reset: </span>send a command to
+the PMAC controller:<br>
+<br>
+<span style="font-weight: bold;">ms$$$0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; </span>- resets Geo MACRO #1&nbsp; (vertical motors for
+MAR CCD support)<br>
+<span style="font-weight: bold;">ms$$$4&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; </span>- resets UMAC MACRO #1 <br>
+<span style="font-weight: bold;">ms$$$16&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+</span>- resets Geo MACRO #2<br>
+<span style="font-weight: bold;">ms$$$32&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+</span>- resets UMAC MACRO #2<br>
+<br>
+<span style="font-weight: bold;">Hard reset: </span>cycle the power at
+the UMAC MACRO chassis / Geo MACRO drive.<br>
+<br>
+Run homing scripts for affected motors.<br>
+<h3><span style="color: rgb(204, 0, 0);">Resetting motor amplifiers</span><br>
+</h3>
+<span style="font-weight: bold;">Soft reset </span>(available only for
+Geo MACRO drives):<br>
+<br>
+<span style="font-weight: bold;">msclrf0</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">msclrf16</span><br
+ style="font-weight: bold;">
+<br>
+<span style="font-weight: bold;">Hard reset: </span>may be required
+for high power amplifiers used with brushless DC servo motors.<br>
+<br>
+If "Amplifier enable" LED is off on the AeroTech amplifier while status
+at the PMAC controller is "Enabled" - unplug the amplifier power for
+5-10-15 seconds and plug it back.<br>
+<br>
+If "Power" LED is flashing on the TA310 amplifier, unplug the amplifier
+power for 5-10-15 seconds and plug it back. "Power" LED should be in
+the "ON" state.<br>
+</div>
+</div>
+</body>
+</html>

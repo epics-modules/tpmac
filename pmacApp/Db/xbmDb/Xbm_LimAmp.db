@@ -1,0 +1,9 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+}
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+}
+

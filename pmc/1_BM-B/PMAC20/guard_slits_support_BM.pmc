@@ -1,0 +1,126 @@
+//guard slits support
+// distance encoder 2048 counts/turn
+// gear box 66.2204082:1 or 135619.3959936 counts/turn
+// precision screw 2 mm per turn or 67809.6979968 counts/mm
+
+//pitch encoder 2048 counts/turn
+// gear box1 ? (was 140.759183:1) or ? counts/turn
+// gear box2 60:1 or ? counts/turn
+// precision screw 20 turns per inch or ? counts/mm
+// arm length 16 inch
+
+ms32,i910=3		// #17 (distance) CW
+ms32,i916=1
+ms33,i910=3		// #18 (pitch)  CCW
+ms33,i916=1
+
+MS32,I912=11		//capture on index HIGH and flag LOW
+MS32,I913=2		//homing on MLIM
+MS33,I912=11		//capture on flag LOW and index HIGH
+MS33,I913=1		//homing on PLIM
+
+I1701=0
+I1700=1
+
+I1801=0
+I1800=1
+
+I1702=$7A420
+I1802=$7A424
+
+I1703=$3522
+I1803=$3524
+
+I1704=$3522
+I1804=$3524
+
+I1725=$3460
+I1825=$3461
+
+I1724=$240001
+I1824=$240001
+
+I1708=96
+I1808=96
+
+I1709=96
+I1809=96
+
+//tuning parameters
+I1716=200				// max. velocity
+I1816=200				// max. velocity
+
+I1722=200				// jog speed
+I1822=200				// jog speed
+
+I1723=100		// homing speed and direction
+I1823=-200		// homing speed and direction
+
+I1715=1		// abort/lim decel. rate
+I1815=1		// abort/lim decel. rate
+
+I1717=1// max. acceleration
+I1817=1// max. acceleration
+
+I1719=1// max. jog acceleration
+I1819=1// max. jog acceleration
+
+I1730=1000000 //Kp
+I1830=4000000 //Kp
+
+I1731=2000		//Kd
+I1831=300		//Kd
+
+I1732=2225		//Kvff
+I1832=342		//Kvff
+
+I1733=400000	//Ki
+I1833=800000	//Ki
+
+I1734=1				//integration mode
+I1834=1				//integration mode
+
+I1735=10000		//Kaff
+I1835=1800		//Kaff
+
+I1769=32767		//output command limit/scale
+I1869=32767		//output command limit/scale
+
+I1768=1800 	//friction feedfoeward
+I1868=4000 	//friction feedfoeward
+
+I1711=3200 //fatal flw error limit
+I1811=3200 //fatal flw error limit
+
+I1712=1600 //warning flw error limit
+I1812=1600 //warning flw error limit
+
+I1764=-16 //deadband gain
+I1864=-16 //deadband gain
+
+I1765=16 //deadband size
+I1865=16 //deadband size
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

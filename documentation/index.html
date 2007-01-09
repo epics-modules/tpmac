@@ -1,17 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=us-ascii">
-<meta name="author" content="Oleg Makarov and Sergey Stepanov"></head>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=us-ascii">
+  <meta name="author" content="Oleg Makarov and Sergey Stepanov">
+  <link href="css/style.css" rel=stylesheet>
 <title>synApps tpmac</title>
 </head>
 <body>
-<img src="logo101.gif" alt="EPICS" align="right" hspace="5">
+<img src="img/logo101.gif" alt="EPICS" align="right" hspace="5">
 
 <h1>synApps: tpmac</h1>
 
-<p>Module Owners: Oleg Makarov and Sergey Stepanov, Argonne National Laboratory</p>
+<table border=0 CELLPADDING="4" CELLSPACING="4">
+<tr VALIGN="top">
+ <td>Module Owners:</td>
+ <td>Oleg Makarov and Sergey Stepanov, <a href="http://www.anl.gov">Argonne National Laboratory</a><br>
+     Nick Rees, <a href="http://www.diamond.ac.uk">Diamond Light Source</a></td>
+</tr>
+</table>
 
-<p>This page is the home of <b>tpmac</b>.</p>
+<p>This page is the home of <b>tpmac</b>. The most recent version of it can be
+found at <a href="http://www.gmca.aps.anl.gov/TPMAC2/">www.gmca.aps.anl.gov/TPMAC2/</a>.
+There is also a plan to setup a development system at
+<a href="http://sourceforge.net/projects/epics">sourceforge.net/projects/epics</a>.
+</p>
 
 <p><b>tpmac</b> supports Turbo PMAC2-VME Ultralite by
 <a href="http://www.deltatau.com/">Delta Tau</a> which is a
@@ -28,25 +40,25 @@ and generally tweak any motion parameter.
 <li> programmable I/O for synchronizing motions with external devices.
 </ul>
 
-<center><img SRC="Pmac_photo.gif" WIDTH="643" HEIGHT="257"><br>
+<center><img SRC="img/Pmac_photo.gif" WIDTH="643" HEIGHT="257"><br>
 Figure 1: Layout of Turbo PMAC2-VME Ultralite with remote MACRO stations
 </center>
 
-<p><u>The module consists of:</u>
+<p><B><u>The module consists of:</u></B><br>
 <ol>
 <li>PMAC ASCII (PMAC mailbox) driver support for ai, ao, bi, bo, longin, longout,
 mbbi, mbbo, stringin, and stringout records. This provides the basic functionality
 of PMAC console. In principle, just one DB file pmacApp/Db/pmacDb/AsciiPmac_basic.db
 will be enough to start communicating with PMAC. However, such a communication
-will obviously be not fast enough to gain the full functionality of PMAC.
+will obviously be not fast enough to gain the full functionality of PMAC.<br>&nbsp;
 
 <li>PMAC DPRAM (dual ported RAM) driver support for ai, ao, bi, bo, longin,
 longout, mbbi, mbbo, and status records. This provides fast communications
 with PMAC, but the DPRAM must be properly configured (mapped) so that the
-EPICS databases access required PMAC parameters.
+EPICS databases access required PMAC parameters.<br>&nbsp;
 
 <li>Status record with PMAC DPRAM driver support. This is used for decoding
-PMAC servo status bits.
+PMAC servo status bits.<br>&nbsp;
 
 <li>Tsub record -- a soft record not communicating with any hardware (i.e.
 strictly speaking it is not directly related to PMAC). In this module tsub
@@ -55,7 +67,7 @@ combined motion axes (e.g. monochromator energy or mirror angle) and
 individual drives (e.g. monochromator rotary or mirror support). Each
 instance of Tsub record must be supplied with a transformation routine which
 is a small program written in C and performing the transformations. See
-examples in pmacApp/tsubSrc.
+examples in pmacApp/tsubSrc.<br>&nbsp;
 
 <li>Extensive set of EPICS databases consisting of files in pmacApp/Db/pmacDb
 (the databases directly communicating with PMAC console or DPRAM), files in
@@ -68,13 +80,13 @@ flexibility of PMAC where one deals with coordinated motions of 1,2,3,4,...
 and etc. motors a generic solution like
 <a href="http://www.aps.anl.gov/upd/people/sluiter/epics/modules/mechanism/motor/">Motor
 Record</a> used with the OMS-58 controller would not be able to access much of
-PMAC functionality.
+PMAC functionality.<br>&nbsp;
 
 <li>PMAC motion programs and example PMAC configuration files (see the
-"pmc" directory).
+"pmc" directory).<br>&nbsp;
 
 <li>MEDM screens (see the "adl" directory). The MEDM screens can be called from
-a root GUI written in Tcl.Tk (see the "GUI_controls" folder).
+a root GUI written in Tcl.Tk (see the "GUI_controls" folder).<br>&nbsp;
 
 </ol>
 
@@ -83,7 +95,7 @@ a root GUI written in Tcl.Tk (see the "GUI_controls" folder).
 <p>A schematic of operating PMAC controller with EPICS DPRAM driver and databases
 is shown on Fig.2.</p>
 
-<center><img SRC="Epics-Pmac.gif" WIDTH="700" HEIGHT="632"><br>
+<center><img SRC="img/Epics-Pmac.gif" WIDTH="700" HEIGHT="632"><br>
 Figure 2: Operation of EPICS databases with PMAC DPRAM driver.
 </center>
 
@@ -110,9 +122,20 @@ pulses. Therefore, on top of "motors" databases another EPICS database layer is
 built called "drives". The positions of "drives" are in engineering units and
 typical relations between motors and drives are:</p>
 
-<pre>
+<p><center><pre>
 		  d = m * scale + offset
-</pre>
+</pre></center></p>
+
+<blockquote>
+<p><FONT COLOR="Red">NOTE:</FONT> Newer generation of PMAC controllers like
+Turbo PMAC2 provide a way to hide the "motors" level. i.e. to communicate
+with PMAC in engineering unit. In that case "scale" and "offset" become PMAC
+I-variables. The current set of databases is not designed to support this
+feature, but it could be done in the future. At present the decision to exclude
+"motors" from EPICS databases is not yet taken because in some cases it is
+convenient to communicate with motors in raw units.</p>
+</blockquote>
+
 
 <p>If a PMAC coordinate system provides any combined motion (e.g. a slit size
 being determined by a combined motion of two jaws), then one more level is
@@ -130,14 +153,14 @@ motors. Fig.4 presents the MEDM screen for a slit which is a tree-level
 database. Here "Z-center" and "Z-size" are axes (combined motions), "Z-top"
 and "Z-bottom" are drives, and "top" and "btm" are motors.</p>
 
-<center><img SRC="medm_XY.jpg" WIDTH="635" HEIGHT="238"><br>
+<center><img SRC="img/medm_XY.jpg" WIDTH="635" HEIGHT="238"><br>
 Figure 3: MEDM screen for XY-positioner (two independent drives with common
 start and abort).
 </center>
 
 <p>&nbsp;</p>
 
-<center><img SRC="medm_CS.jpg" WIDTH="815" HEIGHT="238"><br>
+<center><img SRC="img/medm_CS.jpg" WIDTH="815" HEIGHT="238"><br>
 Figure 4: MEDM screen for collimator slits (two drives are combined to provide
 slit center and size).
 </center>
@@ -168,23 +191,43 @@ enable/disable signals from "motors" to "axes" and "drives".
 
 <table summary="Where to find the software" border="1">
 <tbody>
-<tr align="center">
+<tr align="center" valign="top">
   <td><b>Module Version</b></td>
   <td><b> Release Date</b></td>
   <td><b>Filename</b></td>
-  <td><b>Documentation</b></td>
+  <td><b>Notes</b></td>
 </tr>
-<tr>
-  <td>2-2</td>
-  <td>May-2004</td>
-  <td><a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/tpmac2-2.zip">tpmac2-2.zip</a></td>
-  <td><a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/index.html">pmacDoc</a></td>
+<tr align="center" valign="top">
+  <td><nobr>3-3</nobr></td>
+  <td><nobr>12/2006</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-3.zip">tpmac3-3.zip</a></nobr></td>
+  <td ALIGN="left">Switched to <a href="http://www.aps.anl.gov/epics/">EPICS asyn driver</a> for
+      communicating with PMAC and replaced PMAC Mailbox communications by PMAC
+      DPRAM ASCII communications. The new driver is mostly due to
+      <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at
+      <a href="http://www.diamond.ac.uk">Diamond Light Source</a>.
+      Also, added the support for PMAC ADC/DAC (ACC-59E) and Digital IO (ACC-65E),
+      revised some DBs, Tcl/Tk menus and MEDM screens.</td>
 </tr>
-<tr>
-  <td>2-0</td>
-  <td>May-2003</td>
-  <td><a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/tpmac2-0.zip">tpmac2-0.zip</a></td>
-  <td><a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/index.html">pmacDoc</a></td>
+<tr align="center" valign="top">
+  <td><nobr>2-3</nobr></td>
+  <td><nobr>02/2006</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac2-3.zip">tpmac2-3.zip</a></nobr></td>
+  <td ALIGN="left">Added DB and tsub support for non-integer counts produced by encoder
+                  interpolator.</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>2-2</nobr></td>
+  <td><nobr>05/2004</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac2-2.zip">tpmac2-2.zip</a></nobr></td>
+  <td ALIGN="left">Converted the driver to work with EPICS-3.14.</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>2-0</nobr></td>
+  <td><nobr>05/2003</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac2-0.zip">tpmac2-0.zip</a></nobr></td>
+  <td ALIGN="left">The first release supporting Turbo PMAC2 Ultraligh (as distinct from PMAC1
+   supported by initial driver writthen by Tom Coleman)</a></td>
 </tr>
 </tbody>
 </table>
@@ -193,19 +236,31 @@ enable/disable signals from "motors" to "axes" and "drives".
 <table summary="Required Modules" border="1">
 <tbody>
 <tr align="center">
-  <td><b>Module Version</b></td>
-  <td><b>Requires module</b></td>
-  <td><b>Release needed</b></td>
-  <td><b>Required for</b></td>
+  <th>Module Version</th>
+  <th>Requires module</th>
+  <th>Release needed</th>
+  <th>Required for</th>
 </tr>
-<tr>
-  <td><p align="left">2-2</p></td>
+<tr align="center">
+  <td>3-3</td>
+  <td>EPICS base</td>
+  <td ALIGN="center">3.14.8 and asyn 4.6</td>
+  <td>Base support</td>
+</tr>
+<tr align="center">
+  <td>2-3</td>
+  <td>EPICS base</td>
+  <td ALIGN="center">3.14.4 - 3.14.8</td>
+  <td>Base support</td>
+</tr>
+<tr align="center">
+  <td>2-2</td>
   <td>EPICS base</td>
   <td>3.14.4</td>
   <td>Base support</td>
 </tr>
-<tr>
-  <td><p align="left">2-0</p></td>
+<tr align="center">
+  <td>2-0</td>
   <td>EPICS base</td>
   <td>3.13.7</td>
   <td>Base support</td>
@@ -272,39 +327,48 @@ interacting with PMAC -- see examples in the iocBoot/iocgmca1/st_pmac.cmd file
 and iocBoot/iocgmca1/dbLoad directory.
 </li>
 
-<li>Please email <a href="mailto:makarov@anl.gov">Oleg Makarov</a> or
+<li>Please email to <a href="mailto:makarov@anl.gov">Oleg Makarov</a> or
 <a href="mailto:sstepanov@anl.gov">Sergey Stepanov</a> so that a
-record can be kept of which sites are using this software.
+record can be kept of what sites are using this software.
 </li>
 </ol>
 
 <h2>In Use</h2>
-This software was derived from the <a href="gemini.pdf">EPICS support for PMAC1</a>
+This software was derived from the <a href="pdf/gemini.pdf">EPICS support for PMAC1</a>
 motion controllers originally developed by Thomas Coleman at Argonne National Lab
 and successfully used for a number of years by both SBC and BIO CATs at the APS.
 
 <p>The <B>tpmac</B> is in use at all three GM/CA CAT beamlines at the APS.
 From two to three PMAC2-VME cards per one beamline provide controls for all
-GM/CA CAT motors.
+GM/CA CAT motors. Since the fall of 2006 the system is also operational at
+the LS-CAT beamlines at the APS.
 
-<p>Please email any comments and bug reports to <a href="mailto:makarov@anl.gov">Oleg
-Makarov</a> (PMAC drivers and PMAC configuration) or <a href="mailto:sstepanov@anl.gov">Sergey
-Stepanov</a> (PMAC databases).</p>
+<p>Please submit any comments and bug reports to
+<a href="mailto:makarov@anl.gov">Oleg Makarov</a> (PMAC driver and PMAC
+configuration),
+<a href="mailto:sstepanov@anl.gov">Sergey Stepanov</a>
+(structure of EPICS layer and PMAC databases), or <a
+href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a>
+(EPICS driver, asyn support, and Motor Record for PMAC).
+</p>
 
 <h2>More info</h2>
 
 <ul>
 
-<li> <a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/EPICS_driver_tpmac2.html">Notes
+<li> <a href="EPICS_driver_tpmac2.html">Notes
 on PMAC board preparation before using it with EPICS</a>.
 
-<li> <a href="http://www.gmca.aps.anl.gov/makarov/tpmac2_driver.html">A short
+<li> <a href="preparing4epics.html">Notes
+on installing SBC-BIO-GMCA-LS-style EPICS support for PMAC VME boards</a>.
+
+<li> <a href="tpmac2_driver.html">A short
 overview of Turbo PMAC2-VME Ultralite features</a>.
 
-<li>Old notes on <a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/PMAC1_configure.html">configuring
+<li>Old notes on <a href="PMAC1_configure.html">configuring
 PMAC1 to work with EPICS driver</a>.
 
-<li>Old notes on <a href="http://www.gmca.aps.anl.gov/makarov/TPMAC2/PMAC1_tune.html">tuning
+<li>Old notes on <a href="PMAC1_tune.html">tuning
 PMAC1 motors servo loops under EPICS</a>.
 
 <li><a href="http://www.deltatau.com/fmenu/fmenu.htm">PMAC manuals</a> and

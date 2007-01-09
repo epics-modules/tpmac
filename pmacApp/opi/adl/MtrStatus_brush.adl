@@ -1,12 +1,12 @@
 
 file {
 	name="/home/gmca/epics/pmacApp/adl/MtrStatus_brush.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
-		x=540
-		y=93
+		x=34
+		y=204
 		width=540
 		height=370
 	}
@@ -110,166 +110,6 @@ text {
 	}
 	textix="$(mtr)"
 	align="horiz. right"
-}
-"text update" {
-	object {
-		x=876
-		y=245
-		width=100
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AsgnToCs"
-		clr=32
-		bclr=14
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=876
-		y=261
-		width=100
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AmpEna"
-		clr=32
-		bclr=14
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=876
-		y=277
-		width=100
-		height=12
-	}
-	monitor {
-		chan="$(mtr)StpOnPosLim"
-		clr=32
-		bclr=14
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=716
-		y=245
-		width=150
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AsgnToCs.DESC"
-		clr=14
-		bclr=5
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=716
-		y=261
-		width=150
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AmpEna.DESC"
-		clr=14
-		bclr=5
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=716
-		y=277
-		width=150
-		height=12
-	}
-	monitor {
-		chan="$(mtr)StpOnPosLim.DESC"
-		clr=14
-		bclr=5
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=876
-		y=293
-		width=100
-		height=12
-	}
-	monitor {
-		chan="$(mtr)HmCplt"
-		clr=32
-		bclr=14
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=876
-		y=309
-		width=100
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AmpFltErr"
-		clr=32
-		bclr=14
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=716
-		y=293
-		width=150
-		height=12
-	}
-	monitor {
-		chan="$(mtr)HmCplt.DESC"
-		clr=14
-		bclr=5
-	}
-	align="horiz. centered"
-	limits {
-	}
-}
-"text update" {
-	object {
-		x=716
-		y=309
-		width=150
-		height=12
-	}
-	monitor {
-		chan="$(mtr)AmpFltErr.DESC"
-		clr=14
-		bclr=5
-	}
-	align="horiz. centered"
-	limits {
-	}
 }
 "text update" {
 	object {
@@ -1554,6 +1394,11 @@ composite {
 		label="Clock"
 		name="PmacClock.adl"
 		args="pmac=$(pmac)"
+	}
+	display[2] {
+		label="Servo Status bits"
+		name="MtrServoStatus.adl"
+		args="pmac=$(pmac), mtr=$(mtr), mtrNo=$(mtrNo)"
 	}
 	clr=14
 	bclr=60

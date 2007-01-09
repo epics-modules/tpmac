@@ -1,0 +1,19 @@
+These are databases for Double Crystal Monochromator (DCM) energy with two
+motors. They correspond to a constant-exit-height monochromator with vertical
+translations of the second crystal at energy scans (at Bragg angle changes).
+The longitudinal translation of second is not included into those databases
+(see BioCAT-type mono for example with longitudinal translation included).
+The motions of the rotary motor and the second crystal translation are mapped
+into mono energy and wavelength or back. The transformations use the
+monochromator d-spacing as a parameter. The translation of second crystal
+can be turned off. See MO_Calibrate.db and CalibMOEn.adl for more details.
+
+
+DCM Energy           - these files
+DCM alignment        - use XYPs database
+DCM crystal 1 tuning - use MDCs database
+DCM crystal 2 tuning - use XYPs database
+
+
+-- Sergey
+

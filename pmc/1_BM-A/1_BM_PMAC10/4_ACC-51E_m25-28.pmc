@@ -1,0 +1,63 @@
+;set SW1-1,2,3,5,6 to ON, SW1-4 to OFF, E1 to TURBO. This sets a base address to $A000.
+;Download a PLC2 program (see below) with PEWIN and save it.
+;Initialize ACC-51E by the ENAPLC2 command.
+OPEN PLC2 CLEAR
+; Add Acc-51E to the encoder conversion table
+P1=$F0A000 MSW48,MI128,P1 ;$90
+P1=$A005   msw48,MI129,P1 ;$91
+P1=$0      MSW48,MI130,P1 ;$92
+P1=$F0A008 msw48,MI131,P1 ;$93
+P1=$A00D   msw48,MI132,P1 ;$94
+P1=$0      msw48,MI133,P1 ;$95
+P1=$F0A010 msw48,MI134,P1 ;$96
+P1=$A015   msw48,MI135,P1 ;$97
+P1=$0      msw48,MI136,P1 ;$98
+P1=$F0A018 msw48,MI137,P1 ;$99
+P1=$A01D   msw48,MI138,P1 ;$9A
+P1=$0      msw48,MI139,P1 ;$9B
+
+; substitute 23-26 motor feedback
+P1=$92 MSW48,I101,P1
+P1=$95 MSW48,I102,P1
+P1=$98 MSW48,I103,P1
+P1=$9B MSW48,I104,P1
+
+P1=$9C MSW48,I105,P1
+P1=$9C MSW48,I106,P1
+P1=$9C MSW48,I107,P1
+P1=$9C MSW48,I108,P1
+
+P1=$E8A004 msw48,MI198,P1 ;Point to Global Clock Control Register.
+P2=$0038D2 msw48,MI199,P2 ;Put $38D2 into the register.
+
+P1=$E8A005 msw48,MI198,P1 ;Point to control word for channel 1.
+P2=$000007 msw48,MI199,P2 ;Put P2 into the register.
+P1=$E8A00D msw48,MI198,P1 ;Point to control word for channel 2.
+           msw48,MI199,P2 ;Put P2 into the register.
+P1=$E8A015 msw48,MI198,P1 ;Point to control word for channel 3.
+           msw48,MI199,P2 ;Put P2 into the register.
+P1=$E8A01D msw48,MI198,P1 ;Point to control word for channel 4.
+           msw48,MI199,P2 ;Put P2 into the register.
+
+P1=$E80090 msw48,MI198,P1 ;Point to 1st 3-line entry in encoder conversion table (X side).
+P2=$000007 msw48,MI199,P2 ;Place control word here (must be the same as #1 above)
+P1=$E80093 msw48,MI198,P1 ;Point to 2nd 3-line entry in encoder conversion table (X side).
+           msw48,MI199,P2 ;Place control word here (must be the same as #2 above)
+P1=$E80096 msw48,MI198,P1 ;Point to 3rd 3-line entry in encoder conversion table (X side).
+           msw48,MI199,P2 ;Place control word here (must be the same as #3 above)
+P1=$E80099,msw48,MI198,P1 ;Point to 4th 3-line entry in encoder conversion table (X side).
+           msw48,MI199,P2 ;Place control word here (must be the same as #4 above)
+DISPLC2 ;Run this PLC only once at startup or MACRO Station reset.
+CLOSE
+
+
+
+
+
+
+
+
+
+
+
+

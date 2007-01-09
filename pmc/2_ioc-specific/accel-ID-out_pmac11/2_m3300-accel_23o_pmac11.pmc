@@ -1,0 +1,87 @@
+; M-variable Definitions
+; point to motion program parameters in the DPRAM
+; use together with 1_pcs-accel_23o_pmac2.pmc and 3_q70-accel_23o_pmac2.pmc
+
+CLOSE	; To ensure commands are on-line
+M3300..3540->*	; To clear existing definitions
+; use together with 1_pcs-accel_23o_pmac2.pmc and 2_m3300-accel_23o_pmac2.pmc
+
+; &1 DPRAM Program Parameters Set      BP:HD2: 
+M3300->DP:$60450        ; TA0
+M3301->DP:$60451        ; TS0
+M3302->DP:$60452  	; X0
+M3303->F:$60453   	; X1
+M3304->F:$60454   	; X2
+
+; &2 DPRAM Program Parameters Set      CS:Av: 
+M3305->DP:$60455        ; TA0
+M3306->DP:$60456        ; TS0
+M3307->DP:$60457  	; X0
+M3308->F:$60458   	; X1
+M3309->F:$60459   	; X2
+M3310->DP:$6045a  	; Y0
+M3311->F:$6045b   	; Y1
+M3312->F:$6045c   	; Y2
+
+; &3 DPRAM Program Parameters Set      CS:Ah: 
+M3313->DP:$6045d        ; TA0
+M3314->DP:$6045e        ; TS0
+M3315->DP:$6045f  	; X0
+M3316->F:$60460   	; X1
+M3317->F:$60461   	; X2
+M3318->DP:$60462  	; Y0
+M3319->F:$60463   	; Y1
+M3320->F:$60464   	; Y2
+
+; &4 DPRAM Program Parameters Set      KB:Hz: 
+M3321->DP:$60465        ; TA0
+M3322->DP:$60466        ; TS0
+M3323->DP:$60467  	; X0
+M3324->F:$60468   	; X1
+M3325->F:$60469   	; X2
+M3326->DP:$6046a  	; Y0
+M3327->F:$6046b   	; Y1
+M3328->F:$6046c   	; Y2
+M3329->DP:$6046d  	; Z0
+M3330->F:$6046e   	; Z1
+M3331->F:$6046f   	; Z2
+
+; &5 DPRAM Program Parameters Set      KB:Hy: 
+M3332->DP:$60470        ; TA0
+M3333->DP:$60471        ; TS0
+M3334->DP:$60472  	; X0
+M3335->F:$60473   	; X1
+M3336->F:$60474   	; X2
+M3337->DP:$60475  	; Y0
+M3338->F:$60476   	; Y1
+M3339->F:$60477   	; Y2
+
+; &6 DPRAM Program Parameters Set      KB:Vz: 
+M3340->DP:$60478        ; TA0
+M3341->DP:$60479        ; TS0
+M3342->DP:$6047a  	; X0
+M3343->F:$6047b   	; X1
+M3344->F:$6047c   	; X2
+M3345->DP:$6047d  	; Y0
+M3346->F:$6047e   	; Y1
+M3347->F:$6047f   	; Y2
+M3348->DP:$60480  	; Z0
+M3349->F:$60481   	; Z1
+M3350->F:$60482   	; Z2
+
+; &7 DPRAM Program Parameters Set      KB:Vy: 
+M3351->DP:$60483        ; TA0
+M3352->DP:$60484        ; TS0
+M3353->DP:$60485  	; X0
+M3354->F:$60486   	; X1
+M3355->F:$60487   	; X2
+M3356->DP:$60488  	; Y0
+M3357->F:$60489   	; Y1
+M3358->F:$6048a   	; Y2
+
+; &8 DPRAM Program Parameters Set      BP:Kb: 
+M3359->DP:$6048b        ; TA0
+M3360->DP:$6048c        ; TS0
+M3361->DP:$6048d  	; X0
+M3362->F:$6048e   	; X1
+M3363->F:$6048f   	; X2

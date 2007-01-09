@@ -1,0 +1,27 @@
+file "$(TPMAC)/pmacDb/CtlPnlPcs.db"
+{
+	pattern { pcs, pmac, wrd }
+#		pcs =  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
+#		wrd =  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
+#
+# In these files "pcs" is the coordinate system number.
+# pcs == _p_mac _c_oordinate _s_ystem
+#
+# pmac21:
+        { 23b:COL:St:, 23b:pmac21:,   1  }
+        { 23b:XY:P1:,  23b:pmac21:,   2  }
+        { 23b:RB:Rd:,  23b:pmac21:,   3  }
+        { 23b:RB:Rr:,  23b:pmac21:,   4  }
+ 	{ 23b:FLU:Di:, 23b:pmac21:,   5  }
+ 	{ 23b:PIN:St:, 23b:pmac21:,   6  }
+ 	{ 23b:HS:Av:,  23b:pmac21:,   7  }
+ 	{ 23b:HS:Ah:,  23b:pmac21:,   8  }
+ 	{ 23b:XY:P2:,  23b:pmac21:,   9  }
+        { 23b:XY:P3:,  23b:pmac21:,  10  }
+        { 23b:XY:P4:,  23b:pmac21:,  11  }
+  	{ 23b:XY:P5:,  23b:pmac21:,  12  }
+  	{ 23b:XY:P6:,  23b:pmac21:,  13  }
+  	{ 23b:XY:P7:,  23b:pmac21:,  14  }
+  	{ 23b:XY:P8:,  23b:pmac21:,  15  }
+  	{ 23b:XY:P9:,  23b:pmac21:,  16  }
+}

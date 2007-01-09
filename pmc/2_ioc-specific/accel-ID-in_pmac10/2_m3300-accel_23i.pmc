@@ -1,0 +1,144 @@
+; M-variable Definitions
+; point to motion program parameters in the DPRAM
+; use together with 1_pcs-accel_23i.pmc and 3_q70-accel_23i.pmc
+
+CLOSE	; To ensure commands are on-line
+M3300..3540->*	; To clear existing definitions
+; use together with 1_pcs-accel_23i.pmc and 2_m3300-accel_23i.pmc
+
+; &1 DPRAM Program Parameters Set      WS:Av: 
+M3300->DP:$60450        ; TA0
+M3301->DP:$60451        ; TS0
+M3302->DP:$60452  	; X0
+M3303->F:$60453   	; X1
+M3304->F:$60454   	; X2
+M3305->DP:$60455  	; Y0
+M3306->F:$60456   	; Y1
+M3307->F:$60457   	; Y2
+
+; &2 DPRAM Program Parameters Set      WS:Ah: 
+M3308->DP:$60458        ; TA0
+M3309->DP:$60459        ; TS0
+M3310->DP:$6045a  	; X0
+M3311->F:$6045b   	; X1
+M3312->F:$6045c   	; X2
+M3313->DP:$6045d  	; Y0
+M3314->F:$6045e   	; Y1
+M3315->F:$6045f   	; Y2
+
+; &3 DPRAM Program Parameters Set      MO:Ps: 
+M3316->DP:$60460        ; TA0
+M3317->DP:$60461        ; TS0
+M3318->DP:$60462  	; X0
+M3319->F:$60463   	; X1
+M3320->F:$60464   	; X2
+M3321->DP:$60465  	; Y0
+M3322->F:$60466   	; Y1
+M3323->F:$60467   	; Y2
+
+; &4 DPRAM Program Parameters Set      MO:En: 
+M3324->DP:$60468        ; TA0
+M3325->DP:$60469        ; TS0
+M3326->DP:$6046a  	; X0
+M3327->F:$6046b   	; X1
+M3328->F:$6046c   	; X2
+M3329->DP:$6046d  	; Y0
+M3330->F:$6046e   	; Y1
+M3331->F:$6046f   	; Y2
+
+; &5 DPRAM Program Parameters Set      MO:Tn1: 
+M3332->DP:$60470        ; TA0
+M3333->DP:$60471        ; TS0
+M3334->DP:$60472  	; X0
+M3335->F:$60473   	; X1
+M3336->F:$60474   	; X2
+
+; &6 DPRAM Program Parameters Set      MO:Tn2: 
+M3337->DP:$60475        ; TA0
+M3338->DP:$60476        ; TS0
+M3339->DP:$60477  	; X0
+M3340->F:$60478   	; X1
+M3341->F:$60479   	; X2
+M3342->DP:$6047a  	; Y0
+M3343->F:$6047b   	; Y1
+M3344->F:$6047c   	; Y2
+
+; &7 DPRAM Program Parameters Set      BP:Mo: 
+M3345->DP:$6047d        ; TA0
+M3346->DP:$6047e        ; TS0
+M3347->DP:$6047f  	; X0
+M3348->F:$60480   	; X1
+M3349->F:$60481   	; X2
+
+; &8 DPRAM Program Parameters Set      CS:Av: 
+M3350->DP:$60482        ; TA0
+M3351->DP:$60483        ; TS0
+M3352->DP:$60484  	; X0
+M3353->F:$60485   	; X1
+M3354->F:$60486   	; X2
+M3355->DP:$60487  	; Y0
+M3356->F:$60488   	; Y1
+M3357->F:$60489   	; Y2
+
+; &9 DPRAM Program Parameters Set      CS:Ah: 
+M3358->DP:$6048a        ; TA0
+M3359->DP:$6048b        ; TS0
+M3360->DP:$6048c  	; X0
+M3361->F:$6048d   	; X1
+M3362->F:$6048e   	; X2
+M3363->DP:$6048f  	; Y0
+M3364->F:$60490   	; Y1
+M3365->F:$60491   	; Y2
+
+; &10 DPRAM Program Parameters Set      KB:Hz: 
+M3366->DP:$60492        ; TA0
+M3367->DP:$60493        ; TS0
+M3368->DP:$60494  	; X0
+M3369->F:$60495   	; X1
+M3370->F:$60496   	; X2
+M3371->DP:$60497  	; Y0
+M3372->F:$60498   	; Y1
+M3373->F:$60499   	; Y2
+M3374->DP:$6049a  	; Z0
+M3375->F:$6049b   	; Z1
+M3376->F:$6049c   	; Z2
+
+; &11 DPRAM Program Parameters Set      KB:Hy: 
+M3377->DP:$6049d        ; TA0
+M3378->DP:$6049e        ; TS0
+M3379->DP:$6049f  	; X0
+M3380->F:$604a0   	; X1
+M3381->F:$604a1   	; X2
+M3382->DP:$604a2  	; Y0
+M3383->F:$604a3   	; Y1
+M3384->F:$604a4   	; Y2
+
+; &12 DPRAM Program Parameters Set      KB:Vz: 
+M3385->DP:$604a5        ; TA0
+M3386->DP:$604a6        ; TS0
+M3387->DP:$604a7  	; X0
+M3388->F:$604a8   	; X1
+M3389->F:$604a9   	; X2
+M3390->DP:$604aa  	; Y0
+M3391->F:$604ab   	; Y1
+M3392->F:$604ac   	; Y2
+M3393->DP:$604ad  	; Z0
+M3394->F:$604ae   	; Z1
+M3395->F:$604af   	; Z2
+
+; &13 DPRAM Program Parameters Set      KB:Vy: 
+M3396->DP:$604b0        ; TA0
+M3397->DP:$604b1        ; TS0
+M3398->DP:$604b2  	; X0
+M3399->F:$604b3   	; X1
+M3400->F:$604b4   	; X2
+M3401->DP:$604b5  	; Y0
+M3402->F:$604b6   	; Y1
+M3403->F:$604b7   	; Y2
+
+; &14 DPRAM Program Parameters Set      BP:Kb: 
+M3404->DP:$604b8        ; TA0
+M3405->DP:$604b9        ; TS0
+M3406->DP:$604ba  	; X0
+M3407->F:$604bb   	; X1
+M3408->F:$604bc   	; X2

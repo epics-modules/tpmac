@@ -1,12 +1,12 @@
 
 file {
-	name="c:\gmca\mtrApp\adl\ConfigXPs.adl"
-	version=030004
+	name="/home/gmca/epics/mtrApp/adl/ConfigXPs.adl"
+	version=030101
 }
 display {
 	object {
-		x=371
-		y=411
+		x=500
+		y=498
 		width=360
 		height=180
 	}
@@ -126,140 +126,135 @@ text {
 	limits {
 	}
 }
+text {
+	object {
+		x=216
+		y=74
+		width=35
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="time:"
+	align="horiz. right"
+}
 composite {
 	object {
-		x=6
-		y=58
-		width=329
-		height=115
+		x=0
+		y=154
+		width=360
+		height=26
 	}
 	"composite name"=""
 	children {
 		rectangle {
 			object {
-				x=6
-				y=88
-				width=90
-				height=83
+				x=0
+				y=154
+				width=360
+				height=26
 			}
 			"basic attribute" {
-				clr=5
+				clr=56
 			}
 		}
 		text {
 			object {
-				x=6
-				y=65
-				width=90
-				height=14
+				x=5
+				y=160
+				width=45
+				height=16
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="Motion"
-			align="horiz. centered"
+			textix="pmac="
+			align="horiz. right"
 		}
-		text {
+		"text update" {
 			object {
-				x=122
-				y=98
-				width=55
-				height=14
+				x=50
+				y=160
+				width=110
+				height=16
 			}
-			"basic attribute" {
+			monitor {
+				chan="$(assy)Pmac"
 				clr=14
+				bclr=56
 			}
-			textix="backlash"
-			align="horiz. centered"
-		}
-		rectangle {
-			object {
-				x=102
-				y=87
-				width=95
-				height=85
-			}
-			"basic attribute" {
-				clr=14
-				fill="outline"
-				width=2
+			limits {
 			}
 		}
-		menu {
+		composite {
 			object {
-				x=107
-				y=63
+				x=148
+				y=160
 				width=80
 				height=16
 			}
-			control {
-				chan="$(assy)Motion"
-				clr=14
-				bclr=51
+			"composite name"=""
+			children {
+				text {
+					object {
+						x=148
+						y=160
+						width=40
+						height=16
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="pcs="
+					align="horiz. right"
+				}
+				"text update" {
+					object {
+						x=188
+						y=160
+						width=40
+						height=16
+					}
+					monitor {
+						chan="$(assy)Pcs"
+						clr=14
+						bclr=56
+					}
+					limits {
+					}
+				}
 			}
 		}
 		text {
 			object {
-				x=14
-				y=121
-				width=77
-				height=14
+				x=238
+				y=160
+				width=120
+				height=16
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="$(d1)"
-			align="horiz. right"
+			textix="ioc=$(ioc)"
 		}
-		"text entry" {
-			object {
-				x=109
-				y=118
-				width=80
-				height=20
-			}
-			control {
-				chan="$(d1)RqsBkl"
-				clr=14
-				bclr=2
-			}
-			limits {
-			}
-		}
-		text {
-			object {
-				x=12
-				y=142
-				width=77
-				height=14
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="$(m1)"
-			align="horiz. right"
-		}
-		"text entry" {
-			object {
-				x=109
-				y=139
-				width=80
-				height=20
-			}
-			control {
-				chan="$(m1)RqsBkl"
-				clr=14
-				bclr=2
-			}
-			limits {
-			}
-		}
+	}
+}
+composite {
+	object {
+		x=256
+		y=33
+		width=95
+		height=95
+	}
+	"composite name"=""
+	children {
 		rectangle {
 			object {
-				x=240
-				y=58
+				x=256
+				y=33
 				width=95
-				height=115
+				height=95
 			}
 			"basic attribute" {
 				clr=14
@@ -269,21 +264,8 @@ composite {
 		}
 		text {
 			object {
-				x=258
-				y=63
-				width=55
-				height=14
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="time"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=259
-				y=83
+				x=275
+				y=38
 				width=55
 				height=14
 			}
@@ -295,8 +277,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=248
-				y=100
+				x=264
+				y=55
 				width=80
 				height=20
 			}
@@ -310,8 +292,8 @@ composite {
 		}
 		"text entry" {
 			object {
-				x=248
-				y=145
+				x=264
+				y=100
 				width=80
 				height=20
 			}
@@ -325,8 +307,8 @@ composite {
 		}
 		text {
 			object {
-				x=250
-				y=128
+				x=266
+				y=83
 				width=75
 				height=14
 			}
@@ -338,68 +320,145 @@ composite {
 		}
 	}
 }
+"message button" {
+	object {
+		x=220
+		y=131
+		width=135
+		height=20
+	}
+	control {
+		chan="$(ioc):saveTrigger.PROC"
+		clr=0
+		bclr=58
+	}
+	label="Save $(ioc)"
+	press_msg="1"
+}
 composite {
 	object {
-		x=6
-		y=30
-		width=334
-		height=16
+		x=10
+		y=38
+		width=191
+		height=109
 	}
 	"composite name"=""
 	children {
+		rectangle {
+			object {
+				x=10
+				y=63
+				width=90
+				height=83
+			}
+			"basic attribute" {
+				clr=5
+			}
+		}
 		text {
 			object {
-				x=6
-				y=30
+				x=10
+				y=40
 				width=90
-				height=16
+				height=14
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="Pmac:"
+			textix="Motion"
 			align="horiz. centered"
 		}
-		"text update" {
+		text {
 			object {
-				x=95
-				y=30
-				width=110
+				x=126
+				y=73
+				width=55
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="backlash"
+			align="horiz. centered"
+		}
+		rectangle {
+			object {
+				x=106
+				y=62
+				width=95
+				height=85
+			}
+			"basic attribute" {
+				clr=14
+				fill="outline"
+				width=2
+			}
+		}
+		menu {
+			object {
+				x=111
+				y=38
+				width=80
 				height=16
 			}
-			monitor {
-				chan="$(assy)Pmac"
+			control {
+				chan="$(assy)Motion"
 				clr=14
-				bclr=4
+				bclr=51
 			}
-			align="horiz. centered"
+		}
+		text {
+			object {
+				x=18
+				y=96
+				width=77
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="$(d1)"
+			align="horiz. right"
+		}
+		"text entry" {
+			object {
+				x=113
+				y=93
+				width=80
+				height=20
+			}
+			control {
+				chan="$(d1)RqsBkl"
+				clr=14
+				bclr=2
+			}
 			limits {
 			}
 		}
 		text {
 			object {
-				x=260
-				y=30
-				width=40
-				height=16
+				x=16
+				y=117
+				width=77
+				height=14
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="Pcs="
+			textix="$(m1)"
 			align="horiz. right"
 		}
-		"text update" {
+		"text entry" {
 			object {
-				x=300
-				y=30
-				width=40
-				height=16
+				x=113
+				y=114
+				width=80
+				height=20
 			}
-			monitor {
-				chan="$(assy)Pcs"
+			control {
+				chan="$(m1)RqsBkl"
 				clr=14
-				bclr=4
+				bclr=2
 			}
 			limits {
 			}

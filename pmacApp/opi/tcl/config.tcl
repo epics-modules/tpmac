@@ -1,5 +1,14 @@
 # config.tcl
 
+if { [info exists env(HOST)] } {
+   set HOST $env(HOST)
+} elseif { [info exists env(HOSTNAME)] } {
+   set HOST $env(HOSTNAME)
+} else {
+   set HOST "unknown"
+   puts "!!! gmca: unknown host"
+}
+
 if { [ file exists /etc/passwd ] } {
    set SYSTEM LINUX
 } else {
@@ -8,31 +17,55 @@ if { [ file exists /etc/passwd ] } {
 
 if { ${SYSTEM} == "LINUX" } {
 #
-    set et       wish
+    set wish     wish
     set sp       /
     set myhome   $env(HOME)
-    set topdir   .
+    set topdir   [pwd]/..
     set topdir2  ${topdir}
+    set snapdir  ${myhome}
     set adldir   adl
     set tcldir   tcl
     set burtdir  burt
-    set xterm    "xterm +cm -sb -sl 5000"
+    set xterm    "gnome-terminal --hide-menubar -x "
 #
 } else {
-    set et       wish
-    set sp       \\\\
-    set myhome   .
+#
+    set wish     wish
+    set sp       /
+    set myhome   [pwd]/..
     set topdir   ${myhome}
-    set topdir   ${myhome}
+    set topdir2  ${topdir}
+    set snapdir  ${myhome}
     set adldir   adl
     set tcldir   tcl
     set burtdir  burt
-    set xterm    xterm.exe
+    set xterm    "xterm +cm -sb -rightbar -sl 5000 -e"
+    if { $env(EPICS_HOST_ARCH) == "win32-x86-cygwin" } {
+### Cygwin-specific:
+        set topdir2  /cygdrive/${topdir2}
+	regsub -all :  ${topdir2} / topdir2
+	regsub -all \\ ${topdir2} / topdir2
+    }
 }
 
-  set adlMTR      ${topdir}${sp}..${sp}${adldir}${sp}
-  set adlPMAC     ${topdir}${sp}..${sp}${adldir}${sp}
-  set icondir     .${sp}
+  set adlGMCA     ${topdir2}${sp}${adldir}${sp}
+  set adlMCA      ${topdir2}${sp}${adldir}${sp}
+  set adlMTR      ${topdir2}${sp}${adldir}${sp}
+  set adlPMAC     ${topdir2}${sp}${adldir}${sp}
+  set adlSTD      ${topdir2}${sp}${adldir}${sp}
+
+  set tclGMCA     ${topdir}${sp}${tcldir}${sp}
+  set tclMTR      ${topdir}${sp}${tcldir}${sp}
+  set icondir     ${tclGMCA}
+
+  set burtGMCA    $topdir${sp}${burtdir}${sp}
+  set burtSTD     $topdir${sp}${burtdir}${sp}
 
   set medm        medm
   set varyFont    { -displayFont alias }
+  set burtSave    burtrb
+  set burtRestore burtwb
+  set burtgooey   ${tclGMCA}burtgui
+  set stripTool   StripTool
+  set perl	  perl
+

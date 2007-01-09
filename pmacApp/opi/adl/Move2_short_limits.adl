@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Move2_short_limits.adl"
-	version=030003
+	version=030101
 }
 display {
 	object {
@@ -359,206 +359,6 @@ composite {
 		}
 	}
 }
-composite {
-	object {
-		x=119
-		y=67
-		width=127
-		height=10
-	}
-	"composite name"=""
-	children {
-		composite {
-			object {
-				x=119
-				y=67
-				width=127
-				height=10
-			}
-			"composite name"=""
-			children {
-				composite {
-					object {
-						x=119
-						y=67
-						width=41
-						height=10
-					}
-					"composite name"=""
-					children {
-						oval {
-							object {
-								x=119
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=135
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=150
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=119
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=21
-							}
-							"dynamic attribute" {
-								vis="if not zero"
-								chan="$(ax1)NgLimSet"
-							}
-						}
-						oval {
-							object {
-								x=135
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=21
-							}
-							"dynamic attribute" {
-								vis="if not zero"
-								chan="$(ax1)PsLimSet"
-							}
-						}
-						oval {
-							object {
-								x=150
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=30
-							}
-							"dynamic attribute" {
-								vis="if zero"
-								chan="$(ax1)AmpEna"
-							}
-						}
-					}
-				}
-				composite {
-					object {
-						x=205
-						y=67
-						width=41
-						height=10
-					}
-					"composite name"=""
-					children {
-						oval {
-							object {
-								x=205
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=221
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=236
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=7
-							}
-						}
-						oval {
-							object {
-								x=205
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=21
-							}
-							"dynamic attribute" {
-								vis="if not zero"
-								chan="$(ax2)NgLimSet"
-							}
-						}
-						oval {
-							object {
-								x=221
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=21
-							}
-							"dynamic attribute" {
-								vis="if not zero"
-								chan="$(ax2)PsLimSet"
-							}
-						}
-						oval {
-							object {
-								x=236
-								y=67
-								width=10
-								height=10
-							}
-							"basic attribute" {
-								clr=30
-							}
-							"dynamic attribute" {
-								vis="if zero"
-								chan="$(ax2)AmpEna"
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
 text {
 	object {
 		x=104
@@ -725,6 +525,195 @@ composite {
 				chan="$(assy)Motion"
 			}
 			textix="Disabled"
+		}
+	}
+}
+composite {
+	object {
+		x=119
+		y=67
+		width=127
+		height=10
+	}
+	"composite name"=""
+	children {
+		composite {
+			object {
+				x=119
+				y=67
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=119
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=119
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax1)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=150
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=150
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax1)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=135
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=135
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax1)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=205
+				y=67
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=205
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=205
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax2)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=236
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=236
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax2)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=221
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=221
+						y=67
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax2)AmpEna"
+					}
+				}
+			}
 		}
 	}
 }

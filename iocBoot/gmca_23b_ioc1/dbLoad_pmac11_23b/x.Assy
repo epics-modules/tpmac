@@ -1,0 +1,49 @@
+file $(TPMAC)/xDb/X_Calibrate.db
+{
+        pattern { assy, d1 }
+# pmac11:
+        { 23b:BP:Mo:,  23b:BP:MOZ: }
+        { 23b:VF:Be:,  23b:VF:BE: }
+        { 23b:BP:Vf:,  23b:BP:VFZ: }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xDb/X_LimAmp.db
+{
+ 	pattern { assy, d1 }
+# pmac11:
+        { 23b:BP:Mo:,  23b:BP:MOZ: }
+        { 23b:VF:Be:,  23b:VF:BE: }
+        { 23b:BP:Vf:,  23b:BP:VFZ: }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xDb/X_Tsub.db
+{
+	pattern { assy, d1, m1, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion. 
+# pmac11:
+        { 23b:BP:Mo:,  23b:BP:MOZ:, 23b:BP:mmo:, RqsPos, 0, tsubXPs }
+	{ 23b:BP:Mo:,  23b:BP:MOZ:, 23b:BP:mmo:, RqsBkl, 1, tsubXPs }
+        { 23b:VF:Be:,  23b:VF:BE:,  23b:VF:mbe:, RqsPos, 0, tsubXPs }
+	{ 23b:VF:Be:,  23b:VF:BE:,  23b:VF:mbe:, RqsBkl, 1, tsubXPs }
+        { 23b:BP:Vf:,  23b:BP:VFZ:, 23b:BP:mvf:, RqsPos, 0, tsubXPs }
+        { 23b:BP:Vf:,  23b:BP:VFZ:, 23b:BP:mvf:, RqsBkl, 1, tsubXPs }
+}
+#---------------------------------------------------------------------------- 
+file $(TPMAC)/xDb/X_TsubRbk.db
+{
+	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+# pmac11:
+        { 23b:BP:Mo:,  23b:BP:MOZ:, "DCM BPM Z",      "(mm)",   23b:BP:mmo:, ActPos, 0, tsubXPs }
+        { 23b:VF:Be:,  23b:VF:BE:,  "VFM Bender",     "(mm)",   23b:VF:mbe:, ActPos, 0, tsubXPs }
+        { 23b:BP:Vf:,  23b:BP:VFZ:, "VFM BPM Z",      "(mm)",   23b:BP:mvf:, ActPos, 0, tsubXPs }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xDb/X_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, m1, tsub }
+# pmac11:
+        { 23b:BP:Mo:,  23b:BP:MOZ:, "(mm/s)",   23b:BP:mmo:,  tsubXPs }
+        { 23b:VF:Be:,  23b:VF:BE:,  "(mm/s)",   23b:VF:mbe:,  tsubXPs }
+        { 23b:BP:Vf:,  23b:BP:VFZ:, "(mm/s)",   23b:BP:mvf:,  tsubXPs }
+}

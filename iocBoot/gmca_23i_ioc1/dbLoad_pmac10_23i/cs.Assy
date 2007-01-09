@@ -1,0 +1,43 @@
+file "$(TPMAC)/csDb/CS_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac10:
+        { 23i:CS:Av:, 23i:CS:ZT:, 23i:CS:ZB:}
+        { 23i:CS:Ah:, 23i:CS:YO:, 23i:CS:YI:}
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/csDb/CS_LimAmp.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2 }
+# pmac10:
+        { 23i:CS:Av:, 23i:CS:ZC:, 23i:CS:ZS:, 23i:CS:ZT:, 23i:CS:ZB:, 23i:CS:mz1:, 23i:CS:mz2: }
+        { 23i:CS:Ah:, 23i:CS:YC:, 23i:CS:YS:, 23i:CS:YO:, 23i:CS:YI:, 23i:CS:my1:, 23i:CS:my2: }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/csDb/CS_Tsub.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac10: 
+  { 23i:CS:Av:, 23i:CS:ZC:, 23i:CS:ZS:, 23i:CS:ZT:, 23i:CS:ZB:, 23i:CS:mz1:, 23i:CS:mz2:, RqsPos, 0, tsubCSAp }
+  { 23i:CS:Av:, 23i:CS:ZC:, 23i:CS:ZS:, 23i:CS:ZT:, 23i:CS:ZB:, 23i:CS:mz1:, 23i:CS:mz2:, RqsBkl, 1, tsubCSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, 23i:CS:YS:, 23i:CS:YO:, 23i:CS:YI:, 23i:CS:my1:, 23i:CS:my2:, RqsPos, 0, tsubCSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, 23i:CS:YS:, 23i:CS:YO:, 23i:CS:YI:, 23i:CS:my1:, 23i:CS:my2:, RqsBkl, 1, tsubCSAp }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/csDb/CS_TsubRbk.db"
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac10:
+  { 23i:CS:Av:, 23i:CS:ZC:, "CS Z-center", "(mm)", 23i:CS:ZS:, "CS Z-size", "(mm)", 23i:CS:ZT:, "CS Z-top",      "(mm)", 23i:CS:ZB:, "CS Z-bottom",  "(mm)", 23i:CS:mz1:, 23i:CS:mz2:, ActPos, 0, tsubCSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, "CS Y-center", "(mm)", 23i:CS:YS:, "CS Y-size", "(mm)", 23i:CS:YO:, "CS Y-outboard", "(mm)", 23i:CS:YI:, "CS Y-inboard", "(mm)", 23i:CS:my1:, 23i:CS:my2:, ActPos, 0, tsubCSAp }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/csDb/CS_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac10:
+  { 23i:CS:Av:, 23i:CS:ZC:, "(mm/s)", 23i:CS:ZS:, "(mm/s)", 23i:CS:ZT:, "(mm/s)", 23i:CS:ZB:, "(mm/s)", 23i:CS:mz1:, 23i:CS:mz2:, tsubCSAp }
+  { 23i:CS:Ah:, 23i:CS:YC:, "(mm/s)", 23i:CS:YS:, "(mm/s)", 23i:CS:YO:, "(mm/s)", 23i:CS:YI:, "(mm/s)", 23i:CS:my1:, 23i:CS:my2:, tsubCSAp }
+}

@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)BD:Dv: Vertical Beam Delivery (type: Downstream Support)
+%
+
+file assy.req ASSY=$(P)BD:Dv
+$(P)BD:Dv:BaseLength
+$(P)BD:Dv:RotOrigin
+file mtr1.req MTR1=$(P)BD:mvd
+file mtr1.req MTR1=$(P)BD:mvu
+file drv1.req DRV1=$(P)BD:VDS
+file drv1.req DRV1=$(P)BD:VUS
+file axs1.req AXS1=$(P)BD:VD
+file axs1.req AXS1=$(P)BD:VA

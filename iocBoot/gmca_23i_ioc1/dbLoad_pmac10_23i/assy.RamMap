@@ -1,0 +1,62 @@
+file "$(TPMAC)/pmacDb/Ram05X3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac10
+        { 23i:MO:Tn1:, 0,  32 }
+        { 23i:BP:Mo:,  0,  45 }
+        { 23i:BP:Kb:,  0, 104 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/Ram08XY3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac10
+        { 23i:WS:Av:,  0,   0 }
+        { 23i:WS:Ah:,  0,   8 }
+        { 23i:MO:Ps:,  0,  16 }
+        { 23i:MO:En:,  0,  24 }
+ 	{ 23i:MO:Tn2:, 0,  37 }
+ 	{ 23i:CS:Av:,  0,  50 }
+  	{ 23i:CS:Ah:,  0,  58 }
+  	{ 23i:KB:Hy:,  0,  77 }
+  	{ 23i:KB:Vy:,  0,  96 }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/pmacDb/Ram11XYZ3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac10
+        { 23i:KB:Hz:,  0,  66 }
+        { 23i:KB:Vz:,  0,  85 }
+}
+

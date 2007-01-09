@@ -1,0 +1,180 @@
+//guard slits
+//encoder 64 counts/turn
+//gear box 1:140.759183 or 9008.587712 counts/turn
+//precision screw 80 turns per inch
+//     	28373.50460 counts/mm @ screw
+// filter arms 141 mm : 60 mm
+// 			12073.83175 counts/mm @ filter or 8.2823748167e-5 mm/count
+
+ms36,i910=3		// 19 top CW
+ms36,i916=1
+ms37,i910=7		// 20 bottom CCW
+ms37,i916=1
+ms40,i910=3		// 21 outboard CW
+ms40,i916=1
+ms41,i910=7		// 22 inboard CCW
+ms41,i916=1
+
+MS36,I912=11 //homing on flag low & Index high
+MS37,I912=11 //homing on flag low & Index high
+MS40,I912=11 //homing on flag low & Index high
+MS41,I912=11 //homing on flag low & Index high
+
+MS36,I913=1	// capture on PLIM
+MS37,I913=2	// capture on MLIM
+MS40,I913=1	// capture on PLIM
+MS41,I913=2	// capture on MLIM
+
+I1901=0
+I1900=1
+
+I2001=0
+I2000=1
+
+I2101=0
+I2100=1
+
+I2201=0
+I2200=1
+
+I1902=$7A428
+I2002=$7A42C
+I2102=$7A430
+I2202=$7A434
+
+I1903=$3526
+I2003=$3528
+I2103=$352A
+I2203=$352C
+
+I1904=$3526
+I2004=$3528
+I2104=$352A
+I2204=$352C
+
+I1925=$3464
+I2025=$3465
+I2125=$3468
+I2225=$3469
+
+I1924=$240001
+I2024=$240001
+I2124=$240001
+I2224=$240001
+
+I1908=96
+I2008=96
+I2108=96
+I2208=96
+
+I1909=96
+I2009=96
+I2109=96
+I2209=96
+
+
+
+//tuning parameters
+I1916=10				// max. velocity
+I2016=10				// max. velocity
+I2116=10				// max. velocity
+I2216=10				// max. velocity
+
+I1922=10				// jog speed
+I2022=10				// jog speed
+I2122=10				// jog speed
+I2222=10				// jog speed
+
+I1923=-5		// homing speed and direction
+I2023=5		// homing speed and direction
+I2123=-5		// homing speed and direction
+I2223=5		// homing speed and direction
+
+I1915=0.25		// abort/lim decel. rate
+I2015=0.25		// abort/lim decel. rate
+I2115=0.25		// abort/lim decel. rate
+I2215=0.25		// abort/lim decel. rate
+
+I1917=0.015625// max. acceleration
+I2017=0.015625// max. acceleration
+I2117=0.015625// max. acceleration
+I2217=0.015625// max. acceleration
+
+I1919=0.015625// max. jog acceleration
+I2019=0.015625// max. jog acceleration
+I2119=0.015625// max. jog acceleration
+I2219=0.015625// max. jog acceleration
+
+I1930=8388607 //Kp
+I2030=8388607 //Kp
+I2130=8388607 //Kp
+I2230=8388607 //Kp
+I1931=2000		//Kd
+I2031=2000		//Kd
+I2131=2000		//Kd
+I2231=2000		//Kd
+
+I1932=2500		//Kvff
+I2032=2500		//Kvff
+I2132=2500		//Kvff
+I2232=2500		//Kvff
+
+I1933=100000	//Ki
+I2033=100000	//Ki
+I2133=100000	//Ki
+I2233=100000	//Ki
+
+I1934=1				//integration mode
+I2034=1				//integration mode
+I2134=1				//integration mode
+I2234=1				//integration mode
+
+I1935=25000		//Kaff
+I2035=25000		//Kaff
+I2135=25000		//Kaff
+I2235=25000		//Kaff
+
+I1969=32767		//output command limit/scale
+I2069=32767		//output command limit/scale
+I2169=32767		//output command limit/scale
+I2269=32767		//output command limit/scale
+
+I1968=1500 	//friction feedfoeward
+I2068=1500 	//friction feedfoeward
+I2168=1500 	//friction feedfoeward
+I2268=1500 	//friction feedfoeward
+
+I1911=32000 //fatal flw error limit
+I2011=32000 //fatal flw error limit
+I2111=32000 //fatal flw error limit
+I2211=32000 //fatal flw error limit
+
+I1912=16000 //warning flw error limit
+I2012=16000 //warning flw error limit
+I2112=16000 //warning flw error limit
+I2212=16000 //warning flw error limit
+
+I1964=-16 //deadband gain
+I2064=-16 //deadband gain
+I2164=-16 //deadband gain
+I2264=-16 //deadband gain
+
+I1965=16 //deadband size
+I2065=16 //deadband size
+I2165=16 //deadband size
+I2265=16 //deadband size
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

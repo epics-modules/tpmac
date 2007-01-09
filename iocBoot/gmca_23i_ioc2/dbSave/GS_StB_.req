@@ -1,0 +1,12 @@
+%
+% BURT Request File
+%
+% $(P)GS:St:  GS support
+%
+
+file assy.req ASSY=$(P)GS:StB
+file mtr1.req MTR1=$(P)GS:mx
+file mtr1.req MTR1=$(P)GS:mpt
+file drv1.req DRV1=$(P)GS:X
+file drv1.req DRV1=$(P)GS:PT
+

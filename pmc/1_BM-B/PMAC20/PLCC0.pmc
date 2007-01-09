@@ -1,0 +1,88 @@
+close
+endg
+del gat
+
+#Define 	raw_position 	m8009
+m8009->X:$350A,24,U; raw encoder_#5 position
+
+m573->Y:$2CE,24,U; encoder home capture register
+
+; M8013->X:$350E,0,24,S; raw encoder_#7 position
+; m773->Y:$3CE,0,24,S; encoder home capture register
+
+#Define 	sh_open 			M3426
+#Define 	sh_close 			M3427
+#Define hysteresis			M3428
+M3426->X:$10F1,0,24,U; open shutter register
+M3427->X:$10F2,0,24,U; close shutter register
+M3428->X:$10F4,0,24,U; close shutter register
+#Define 	sh_ctl 			  P3100
+P3100=0
+
+#Define 	output_word 	m3571
+#Define 	output_reg 		m3601
+;Settings needed for I/O readout via DPRAM
+M3570->X:$78420,0,24        ; Input word, 24 bit, node2
+M3571->X:$78424,0,24        ; Output word, 24 bit, node3
+;M3571->X:$7842C,0,24        ; Output word, 24 bit, node3
+M3600->X:$0010F0,0,24      ; Input mirror word
+M3601->Y:$0010F0,0,24      ; Output mirror word
+
+
+
+Open PLCC0 clear
+
+; shutter portion
+If (sh_ctl = 1)
+  If (sh_open < sh_close)
+    If (output_reg&1 = 0)
+      If (raw_position > sh_open And raw_position < sh_close-hysteresis)
+        hysteresis =256
+        
+        output_reg |= 1
+        cmd "&16b2r"		;open
+      EndIf
+    Else
+      If (raw_position > sh_close Or raw_position < sh_open-hysteresis)
+        output_reg &= $fffffe
+        cmd "&16b4r"
+      EndIf
+    EndIf
+  Else
+    If (output_reg&1 = 0)
+      If (raw_position > sh_open Or raw_position < sh_close-hysteresis)
+        output_reg |= 1
+        cmd "&16b2r"		;open
+      EndIf
+    Else
+      If (raw_position > sh_close And raw_position < sh_open-hysteresis)
+        output_reg &= $fffffe
+        cmd "&16b4r"
+      EndIf
+    EndIf
+  EndIf
+EndIf
+
+CLOSE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

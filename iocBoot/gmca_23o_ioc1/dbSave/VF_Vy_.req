@@ -1,0 +1,15 @@
+%
+% BURT Request File
+%
+% $(P)VF:Vy:  VFM Y-positioning
+%
+
+file assy.req ASSY=$(P)VF:Vy
+$(P)VF:Vy:BaseLength
+file mtr1.req MTR1=$(P)VF:my1
+file mtr1.req MTR1=$(P)VF:my2
+file drv1.req DRV1=$(P)VF:Y1
+file drv1.req DRV1=$(P)VF:Y2
+file axs1.req AXS1=$(P)VF:VL
+file axs1.req AXS1=$(P)VF:VW
+

@@ -1,0 +1,46 @@
+file $(TPMAC)/mobmDb/MO_Calibrate.db
+{
+	pattern { assy, d1, d2, d3, angleVCM }
+# pmac10:
+        { 23b:MO:En:, 23b:MO:QB:, 23b:MO:T2:, 23b:MO:T1:, 23b:VC:VA: }
+}
+#----------------------------------------------------------------------------
+file $(TPMAC)/mobmDb/MO_LimAmp.db
+{
+ 	pattern { assy, x1, x2, d1, d2, d3 }
+#
+        { 23b:MO:En:, 23b:MO:E:, 23b:MO:L:, 23b:MO:QB:, 23b:MO:T2:, 23b:MO:T1:}
+}
+#----------------------------------------------------------------------------
+# Special case for Mono Energy: we have to pass fractional part of RqsPos:
+file $(TPMAC)/mobmDb/MO_TsubRqsPos.db
+{
+ 	pattern { assy, x1, x2, d1, d2, d3, m1, m2, m3, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac10:
+  { 23b:MO:En:, 23b:MO:E:, 23b:MO:L:, 23b:MO:QB:, 23b:MO:T2:, 23b:MO:T1:, 23b:MO:mr:, 23b:MO:mt2:, 23b:MO:mt1:, RqsPos, 0, tsubMOEn }
+}
+#
+file "$(TPMAC)/mobmDb/MO_TsubRqsBkl.db"
+{
+ 	pattern { assy, x1, x2, d1, d2, d3, m1, m2, m3, val, nla, tsub }
+# pmac10:
+  { 23b:MO:En:, 23b:MO:E:, 23b:MO:L:, 23b:MO:QB:, 23b:MO:T2:, 23b:MO:T1:, 23b:MO:mr:, 23b:MO:mt2:, 23b:MO:mt1:, RqsBkl, 1, tsubMOEn }
+}
+#----------------------------------------------------------------------------
+file $(TPMAC)/mobmDb/MO_TsubRbk.db
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, d3, desc_d3, egu_d3, m1, m2, m3, val, nla, tsub }
+# pmac10:
+  { 23b:MO:En:, 23b:MO:E:, "Energy", "(keV)", 23b:MO:L:, "Lambda", "(A)", 23b:MO:QB:, "Bragg Angle", "(degr)", 23b:MO:T2:, "Crystal-2 Perp. Trans", "(mm)", 23b:MO:T1:, "Crystal-2 Parall. Trans", "(mm)", 23b:MO:mr:, 23b:MO:mt2:, 23b:MO:mt1:, ActPos, 0, tsubMOEn }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/mobmDb/MO_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, d3, egu_d3, m1, m2, m3, tsub }
+# pmac10:
+  { 23b:MO:En:, 23b:MO:E:, "(keV/s)", 23b:MO:L:, "(A/s)", 23b:MO:QB:, "(degr/s)", 23b:MO:T2:, "(mm/s)", 23b:MO:T1:, "(mm/s)", 23b:MO:mr:, 23b:MO:mt2:, 23b:MO:mt1:,  tsubMOEn }
+
+}
+#----------------------------------------------------------------------------

@@ -1,0 +1,19 @@
+%
+% BURT Request File
+%
+% $(P)KB:Vz:  Horizontal KB mirror Z-positioning
+%
+
+file assy.req ASSY=$(P)KB:Vz
+$(P)KB:Vz:Base1:23
+$(P)KB:Vz:Base23
+file mtr1.req MTR1=$(P)KB:mvz1
+file mtr1.req MTR1=$(P)KB:mvz2
+file mtr1.req MTR1=$(P)KB:mvz3
+file drv1.req DRV1=$(P)KB:VZ1
+file drv1.req DRV1=$(P)KB:VZ2
+file drv1.req DRV1=$(P)KB:VZ3
+file axs1.req AXS1=$(P)KB:VZ
+file axs1.req AXS1=$(P)KB:VA
+file axs1.req AXS1=$(P)KB:VR
+

@@ -1,0 +1,60 @@
+; Coordinate System Definitions
+;
+; pmac10 /Accel 23o/PMAC1
+
+undef all	; clear all coordinate systems
+
+; (1) WS:Av:
+&1
+#1->X  ; WS:mt:
+#2->Y  ; WS:mb:
+
+; (2) WS:Ah:
+&2
+#3->X  ; WS:mo:
+#4->Y  ; WS:mi:
+
+; (3) MO:Ps:
+&3
+#5->X  ; MO:mz:
+#6->Y  ; MO:my:
+
+; (4) MO:En:
+&4
+#7->X  ; MO:mr:
+#8->Y  ; MO:mt2:
+
+; (5) MO:Tn1:
+&5
+#17->X  ; MO:mr1:
+
+; (6) MO:Tn2:
+&6
+#18->X ; MO:mp2:
+#19->Y ; MO:mr2:
+
+; (7) BP:Mo:
+&7
+#20->X ; BP:mmo:
+
+; (8) HD:St:
+&8
+#21->X ; HD:mz1:
+#22->Y ; HD:mz2:
+#23->Z ; HD:mz3:
+
+; (9) HD:Up:
+&9
+#24->X ; HD:muy1:
+#25->Y ; HD:muy2:
+
+; (10) HD:Dn:
+&10
+#26->X ; HD:mdy1:
+#27->Y ; HD:mdy2:
+
+; (11) BP:HD1:
+&11
+#28->X ; BP:mh1z:
+
+

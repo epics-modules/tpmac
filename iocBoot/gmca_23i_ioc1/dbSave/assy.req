@@ -1,0 +1,9 @@
+%
+% BURT Request File
+%
+% $(ASSY)
+%
+$(ASSY):Start.DESC
+$(ASSY):AccelTime
+$(ASSY):AccelCurve
+$(ASSY):Motion

@@ -1,7 +1,24 @@
-These are Shutter Motor databases  -- nearly the same as X-positioner or 
-modular drives (one motor in coordinate system). The only diffrence is 
+These are Shutter Motor databases  -- nearly the same as X-positioner or
+modular drives (one motor in coordinate system). The only diffrence is
 that they output binary statusflag "shutter open/close".
-See SH_Calibrate.db and CalibSHPs.adl for more details.
+See SH_TsubRbk.db, pmacDb/shutter.db, and CalibSHPs.adl for
+more details.
+
+Comments from shutter.db and SH_TsubRbk.db:
+
+### This DB is for a fast endstation shutter that is a
+### fast motor controlled by PMAC. This motor should be
+### controllable from both EPICS and directly from PMAC
+### (the later is needed for precise synchronization of
+### shuuter with gonio head).
+### For this shutter we have two motion programs "prgOpen"
+### and "prgClose" that read the shutter destinations from
+### DP:"DPopen" and DP:"DPclose" respectively. Then, the
+### shutter readback Tsub assignes the shutter status $(m1)bo:rbk
+### to be either "Open" or "Close" depending on whether the
+### shutter motor current position is closer to $(m1)OpenPos
+### or $(m1)ClosePos.
+
 
 -- Sergey
 

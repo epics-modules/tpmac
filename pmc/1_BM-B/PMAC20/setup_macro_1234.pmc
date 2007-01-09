@@ -1,0 +1,153 @@
+I10=4195840; 3713991	//Servo Interrupt Time
+I6800=2457; $197F	//MACRO IC MaxPhase/PWM Frequency Control
+I6801=2; 0	//MACRO IC Phase Clock Frequency Control
+I6802=3	//MACRO IC Servo Clock Frequency Control
+I6850=2457; $197F	//MACRO IC MaxPhase/PWM Frequency Control
+I6851=2; 0	//MACRO IC Phase Clock Frequency Control
+I6852=3	//MACRO IC Servo Clock Frequency Control
+I6900=2457; $197F	//MACRO IC MaxPhase/PWM Frequency Control
+I6901=2; 0	//MACRO IC Phase Clock Frequency Control
+I6902=3	//MACRO IC Servo Clock Frequency Control
+I6950=2457; $197F	//MACRO IC MaxPhase/PWM Frequency Control
+I6951=2; 0	//MACRO IC Phase Clock Frequency Control
+I6952=3	//MACRO IC Servo Clock Frequency Control
+
+;**********************************************************
+;   SET MACRO GATES FOR 32 MOTORS & 2 I/O NODES
+;   RING CONTROLLER IS MASTER 0
+;   RING MASTER IS MASTER 1
+;**********************************************************
+i6840=$4030	//MACRO IC Ring Configuration/Status
+i6841=$0FB33F	//MACRO IC Node Activate Control
+i6890=$90	//MACRO IC Ring Configuration/Status
+i6891=$1FFF33	//MACRO IC Node Activate Control
+i6940=$90	//MACRO IC Ring Configuration/Status
+i6941=$2FB333	//MACRO IC Node Activate Control
+i6990=$90	//MACRO IC Ring Configuration/Status
+i6991=$3FB333	//MACRO IC Node Activate Control
+
+;**********************************************************
+;   ENABLE MACRO AXIS CONTROL/STATUS FLAG TRANSFR
+;   SET TIMEOUT FOR MACRO I/O TO 32 SERVO CYCLES
+;**********************************************************
+i70=$3333	//MACRO IC 0 Node Auxiliary Register Enable
+i71=$3333	//MACRO IC 0 Node Protocol Type Control
+i72=$3333	//MACRO IC 1 Node Auxiliary Register Enable
+i73=$3333	//MACRO IC 1 Node Protocol Type Control
+i74=$3333	//MACRO IC 2 Node Auxiliary Register Enable
+i75=$3333	//MACRO IC 2 Node Protocol Type Control
+i76=$3333	//MACRO IC 3 Node Auxiliary Register Enable
+i77=$3333	//MACRO IC 3 Node Protocol Type Control
+i78=$20	//MACRO Type 1 Master/Slave Communications Timeout
+i79=$20	//MACRO Type 1 Master/Master Communications Timeout
+I80=100                    ;MACRO Ring Check Period
+I81=2                    ;MACRO Maximum Ring Error Count
+I82=2                    ;MACRO Minimum Sync Packet Count
+
+ms0,i996=$0FB33F
+ms0,i1996=$1F0833
+ms24,i996=$1F0700
+ms28,i996=$1FF000
+ms32,i996=$2FB333
+ms32,i1996=$3FB333
+
+; setup nodes 0 to 15
+MS 0,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 0,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 0,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 0,I997=2; 0		//Phase Clock Frequency Control
+
+; setup nodes 16 to 23
+MS 16,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 16,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 16,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 16,I997=2; 0		//Phase Clock Frequency Control
+
+; setup nodes 24 to 27
+MS 24,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 24,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 24,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 24,I997=2; 0		//Phase Clock Frequency Control
+
+; setup nodes 28 to 31
+MS 28,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 28,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 28,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 28,I997=2; 0		//Phase Clock Frequency Control
+
+; setup nodes 32 to 47
+MS 32,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 32,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 32,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 32,I997=2; 0		//Phase Clock Frequency Control
+
+; setup nodes 48 to 63
+MS 48,I900=2457; 6527		//PWM 1-4 Frequency Control
+MS 48,I906=2457; 6527		//PWM 5-8 Frequency Control
+MS 48,I992=2457; 6527		//MaxPhase and PWM 9-10 Frequency Control
+MS 48,I997=2; 0		//Phase Clock Frequency Control
+
+
+msclrf0
+msclrf24
+msclrf28
+msclrf32
+
+i47=20			// update period for motor data
+i48=1				// enable copying motor data
+i49=1				// enable copying C.S. data
+i50=40			// update period for C.S. data
+i55=1				// enable variable read buffer
+i58=1				// enable variable read buffer
+M100->X:$000000,0,24,S  // servo clock M-variable
+
+
+i5=3		// allow plc execution
+
+
+; 24-bit-wide data transfer between nodes 2&3 and ACC-65E
+;   C0A0 is an address for node 2
+;   8800 is a base address for the accessory 65E
+MS0,I71=$10C0A0208800
+
+; Enable nodes 2, 3 for I/O at MACRO Station
+MS0,MI975=$C
+
+; Set period for data transfer equal to one servo period
+MS0,MI19=1
+
+
+;Settings needed for I/O readout via DPRAM
+M3570->X:$78420,0,24        ; Input word, 24 bit, node2
+M3571->X:$78424,0,24        ; Output word, 24 bit, node3
+M3600->X:$0010F0,0,24      ; Input mirror word
+M3601->Y:$0010F0,0,24      ; Output mirror word
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

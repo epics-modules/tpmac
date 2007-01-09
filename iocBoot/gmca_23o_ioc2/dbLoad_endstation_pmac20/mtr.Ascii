@@ -1,0 +1,120 @@
+file "$(TPMAC)/pmacDb/AsciiMtr.db"
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac20:
+        { 23o:CCD:ml:,    0,  1 }
+        { 23o:CCD:mx:,    0,  2 }
+        { 23o:CCD:mus:,   0,  3 }
+        { 23o:CCD:mds:,   0,  4 }
+ 	{ 23o:GO:mom:,    0,  5 }
+ 	{ 23o:GO:mkp:,    0,  6 }
+ 	{ 23o:GO:mph:,    0,  7 }
+  	{ 23o:GO:mcz:,    0,  8 }
+ 	{ 23o:GO:mcx:,    0,  9 }
+ 	{ 23o:GO:mcy:,    0, 10 }
+  	{ 23o:GO:msh:,    0, 11 }
+  	{ 23o:GO:msw:,    0, 12 }
+  	{ 23o:GO:msv:,    0, 13 }
+  	{ 23o:JET:mp:,    0, 14 }
+  	{ 23o:BD:mhd:,    0, 15 }
+  	{ 23o:BD:mhu:,    0, 16 }
+        { 23o:BD:mvd:,    0, 17 }
+        { 23o:BD:mvu:,    0, 18 }
+        { 23o:GS:myw:,    0, 19 }
+        { 23o:GS:mx:,     0, 20 }
+        { 23o:GS:mpt:,    0, 21 }
+        { 23o:GS:mt:,     0, 22 }
+        { 23o:GS:mb:,     0, 23 }
+        { 23o:GS:mo:,     0, 24 }
+        { 23o:GS:mi:,     0, 25 }
+        { 23o:BS:md:,     0, 26 }
+        { 23o:BS:mpt:,    0, 27 }
+        { 23o:BS:myw:,    0, 28 }
+        { 23o:TV:mz1:,    0, 29 }
+        { 23o:TV:mz2:,    0, 30 }
+        { 23o:SH:mp:,     0, 31 }
+ 	{ 23o:pmac20:mo:, 0, 32 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/IxMtrMv.db"
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac20:
+        { 23o:CCD:ml:,    0,  1 }
+        { 23o:CCD:mx:,    0,  2 }
+        { 23o:CCD:mus:,   0,  3 }
+        { 23o:CCD:mds:,   0,  4 }
+ 	{ 23o:GO:mom:,    0,  5 }
+ 	{ 23o:GO:mkp:,    0,  6 }
+ 	{ 23o:GO:mph:,    0,  7 }
+ 	{ 23o:GO:mcz:,    0,  8 }
+ 	{ 23o:GO:mcx:,    0,  9 }
+  	{ 23o:GO:mcy:,    0, 10 }
+  	{ 23o:GO:msh:,    0, 11 }
+  	{ 23o:GO:msw:,    0, 12 }
+  	{ 23o:GO:msv:,    0, 13 }
+  	{ 23o:JET:mp:,    0, 14 }
+  	{ 23o:BD:mhd:,    0, 15 }
+  	{ 23o:BD:mhu:,    0, 16 }
+        { 23o:BD:mvd:,    0, 17 }
+        { 23o:BD:mvu:,    0, 18 }
+        { 23o:GS:myw:,    0, 19 }
+        { 23o:GS:mx:,     0, 20 }
+        { 23o:GS:mpt:,    0, 21 }
+        { 23o:GS:mt:,     0, 22 }
+        { 23o:GS:mb:,     0, 23 }
+        { 23o:GS:mo:,     0, 24 }
+        { 23o:GS:mi:,     0, 25 }
+        { 23o:BS:md:,     0, 26 }
+        { 23o:BS:mpt:,    0, 27 }
+        { 23o:BS:myw:,    0, 28 }
+        { 23o:TV:mz1:,    0, 29 }
+        { 23o:TV:mz2:,    0, 30 }
+        { 23o:SH:mp:,     0, 31 }
+#	{ 23o:pmac20:mo:, 0, 32 }       # not used
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/OpnLp.db"
+{
+	pattern { mtr, C, M }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  M = 1 2 3 4 5 6 7 8
+
+# pmac20:
+        { 23o:CCD:ml:,    0,  1 }
+        { 23o:CCD:mx:,    0,  2 }
+        { 23o:CCD:mus:,   0,  3 }
+        { 23o:CCD:mds:,   0,  4 }
+ 	{ 23o:GO:mom:,    0,  5 }
+ 	{ 23o:GO:mkp:,    0,  6 }
+ 	{ 23o:GO:mph:,    0,  7 }
+ 	{ 23o:GO:mcz:,    0,  8 }
+ 	{ 23o:GO:mcx:,    0,  9 }
+  	{ 23o:GO:mcy:,    0, 10 }
+  	{ 23o:GO:msh:,    0, 11 }
+  	{ 23o:GO:msw:,    0, 12 }
+  	{ 23o:GO:msv:,    0, 13 }
+  	{ 23o:JET:mp:,    0, 14 }
+  	{ 23o:BD:mhd:,    0, 15 }
+  	{ 23o:BD:mhu:,    0, 16 }
+        { 23o:BD:mvd:,    0, 17 }
+        { 23o:BD:mvu:,    0, 18 }
+        { 23o:GS:myw:,    0, 19 }
+        { 23o:GS:mx:,     0, 20 }
+        { 23o:GS:mpt:,    0, 21 }
+        { 23o:GS:mt:,     0, 22 }
+        { 23o:GS:mb:,     0, 23 }
+        { 23o:GS:mo:,     0, 24 }
+        { 23o:GS:mi:,     0, 25 }
+        { 23o:BS:md:,     0, 26 }
+        { 23o:BS:mpt:,    0, 27 }
+        { 23o:BS:myw:,    0, 28 }
+        { 23o:TV:mz1:,    0, 29 }
+        { 23o:TV:mz2:,    0, 30 }
+        { 23o:SH:mp:,     0, 31 }
+#	{ 23o:pmac20:mo:, 0, 32 }       # not used
+}

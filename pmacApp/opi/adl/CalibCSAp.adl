@@ -1,14 +1,14 @@
 
 file {
-	name="c:\gmca\mtrApp\adl\CalibCSAp.adl"
-	version=030004
+	name="/home/gmca/epics/mtrApp/adl/CalibCSAp.adl"
+	version=030101
 }
 display {
 	object {
-		x=846
-		y=623
+		x=246
+		y=414
 		width=670
-		height=270
+		height=300
 	}
 	clr=14
 	bclr=4
@@ -990,19 +990,43 @@ text {
 	}
 	textix="("
 }
+rectangle {
+	object {
+		x=0
+		y=274
+		width=670
+		height=26
+	}
+	"basic attribute" {
+		clr=56
+	}
+}
 composite {
 	object {
-		x=285
-		y=3
+		x=5
+		y=280
 		width=230
 		height=16
 	}
 	"composite name"=""
 	children {
+		text {
+			object {
+				x=5
+				y=280
+				width=45
+				height=16
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="pmac="
+			align="horiz. right"
+		}
 		"text update" {
 			object {
-				x=330
-				y=3
+				x=50
+				y=280
 				width=110
 				height=16
 			}
@@ -1016,21 +1040,21 @@ composite {
 		}
 		text {
 			object {
-				x=285
-				y=3
-				width=45
+				x=155
+				y=280
+				width=40
 				height=16
 			}
 			"basic attribute" {
 				clr=14
 			}
-			textix="pmac="
+			textix="pcs="
 			align="horiz. right"
 		}
 		"text update" {
 			object {
-				x=475
-				y=3
+				x=195
+				y=280
 				width=40
 				height=16
 			}
@@ -1042,18 +1066,32 @@ composite {
 			limits {
 			}
 		}
-		text {
-			object {
-				x=435
-				y=3
-				width=40
-				height=16
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="pcs="
-			align="horiz. right"
-		}
 	}
+}
+text {
+	object {
+		x=260
+		y=280
+		width=150
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ioc=$(ioc)"
+}
+"message button" {
+	object {
+		x=503
+		y=278
+		width=163
+		height=20
+	}
+	control {
+		chan="$(ioc):saveTrigger.PROC"
+		clr=0
+		bclr=58
+	}
+	label="Save $(ioc)"
+	press_msg="1"
 }

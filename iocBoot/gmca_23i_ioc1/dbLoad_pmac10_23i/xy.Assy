@@ -1,0 +1,44 @@
+file "$(TPMAC)/xyDb/XY_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac10:
+	{ 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:   }
+	{ 23i:MO:Tn2:, 23i:MO:P2:,  23i:MO:R2:  }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xyDb/XY_LimAmp.db"
+{
+ 	pattern { assy, d1, d2 }
+# pmac10:
+	{ 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:   }
+	{ 23i:MO:Tn2:, 23i:MO:P2:,  23i:MO:R2:  }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xyDb/XY_Tsub.db"
+{
+ 	pattern { assy, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac10:
+  { 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:,   23i:MO:mz:,   23i:MO:my:,   RqsPos, 0, tsubXYPs }
+  { 23i:MO:Ps:,  23i:MO:Z:,   23i:MO:Y:,   23i:MO:mz:,   23i:MO:my:,   RqsBkl, 1, tsubXYPs }
+  { 23i:MO:Tn2:, 23i:MO:P2:,  23i:MO:R2:,  23i:MO:mp2:,  23i:MO:mr2:,  RqsPos, 0, tsubXYPs }
+  { 23i:MO:Tn2:, 23i:MO:P2:,  23i:MO:R2:,  23i:MO:mp2:,  23i:MO:mr2:,  RqsBkl, 1, tsubXYPs }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xyDb/XY_TsubRbk.db"
+{
+ 	pattern { assy, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac10:
+  { 23i:MO:Ps:,  23i:MO:Z:,   "Z",               "(mm)",   23i:MO:Y:,  "Y",              "(mm)",   23i:MO:mz:,   23i:MO:my:,   ActPos, 0, tsubXYPs }
+  { 23i:MO:Tn2:, 23i:MO:P2:,  "Crystal-2 Pitch", "(mrad)", 23i:MO:R2:, "Crystal-2 Roll", "(mrad)", 23i:MO:mp2:,  23i:MO:mr2:,  ActPos, 0, tsubXYPs }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/xyDb/XY_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+# pmac10:
+  { 23i:MO:Ps:,  23i:MO:Z:,  "(mm/s)",   23i:MO:Y:,  "(mm/s)",   23i:MO:mz:,   23i:MO:my:,   tsubXYPs }
+  { 23i:MO:Tn2:, 23i:MO:P2:, "(mrad/s)", 23i:MO:R2:, "(mrad/s)", 23i:MO:mp2:,  23i:MO:mr2:,  tsubXYPs }
+}
+#---------------------------------------------------------------------------- 

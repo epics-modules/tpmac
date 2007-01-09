@@ -1,0 +1,9 @@
+file keithley_channel.req  P=$(P),D=1
+file keithley_channel.req  P=$(P),D=2
+file keithley_channel.req  P=$(P),D=3
+file keithley_channel.req  P=$(P),D=4
+file keithley_channel.req  P=$(P),D=5
+file keithley_channel.req  P=$(P),D=6
+%
+$(P)keithley:Server
+$(P)keithley:Poll

@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Move1_medium.adl"
-	version=030003
+	version=030101
 }
 display {
 	object {
@@ -212,95 +212,6 @@ text {
 	align="horiz. centered"
 	format="exponential"
 	limits {
-	}
-}
-composite {
-	object {
-		x=126
-		y=67
-		width=41
-		height=10
-	}
-	"composite name"=""
-	children {
-		oval {
-			object {
-				x=126
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=142
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=126
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)NgLimSet"
-			}
-		}
-		oval {
-			object {
-				x=142
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)PsLimSet"
-			}
-		}
-		oval {
-			object {
-				x=157
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=157
-				y=67
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=30
-			}
-			"dynamic attribute" {
-				vis="if zero"
-				chan="$(ax1)AmpEna"
-			}
-		}
 	}
 }
 text {
@@ -607,4 +518,93 @@ text {
 	}
 	textix="Limits"
 	align="horiz. right"
+}
+composite {
+	object {
+		x=126
+		y=67
+		width=41
+		height=10
+	}
+	"composite name"=""
+	children {
+		oval {
+			object {
+				x=126
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=126
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(ax1)NgLimSet"
+			}
+		}
+		oval {
+			object {
+				x=157
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=157
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=21
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(ax1)PsLimSet"
+			}
+		}
+		oval {
+			object {
+				x=142
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=7
+			}
+		}
+		oval {
+			object {
+				x=142
+				y=67
+				width=10
+				height=10
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(ax1)AmpEna"
+			}
+		}
+	}
 }

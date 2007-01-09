@@ -1,0 +1,2690 @@
+# save/restore V4.9	Automatically generated - DO NOT MODIFY - 061215-144632
+23o:CCD:Lp:Start.DESC CCD lateral pos.           
+23o:CCD:Lp:AccelTime 1000
+23o:CCD:Lp:AccelCurve 500
+23o:CCD:Lp:Motion 3
+23o:CCD:Lp:Dmhmv 1000
+23o:CCD:Lp:aH 2.6651649511801
+23o:CCD:Lp:mLink 0
+23o:CCD:ml:ActPos.EGU (cts)
+23o:CCD:ml:ActPos.DESC mtr det.lateral   
+23o:CCD:ml:RqsPos -4167065.3322854
+23o:CCD:ml:RqsPos.EGU 
+23o:CCD:ml:RqsPos.DESC 
+23o:CCD:ml:RqsPos.HOPR 0
+23o:CCD:ml:RqsPos.LOPR 0
+23o:CCD:ml:RqsPos.DRVH 0
+23o:CCD:ml:RqsPos.DRVL 0
+23o:CCD:ml:RqsBkl 0
+23o:CCD:ml:RqsBkl.EGU 
+23o:CCD:ml:RqsBkl.DESC 
+23o:CCD:ml:RqsPosInc 0
+23o:CCD:ml:MemPos 0
+23o:CCD:DL:ActPos.EGU (mm)
+23o:CCD:DL:ActPos.DESC CCD later.pos.
+23o:CCD:DL:RqsPos 0.00019143412720148
+23o:CCD:DL:RqsPos.EGU 
+23o:CCD:DL:RqsPos.DESC 
+23o:CCD:DL:RqsPos.HOPR 0
+23o:CCD:DL:RqsPos.LOPR 0
+23o:CCD:DL:RqsPos.DRVH 16.5
+23o:CCD:DL:RqsPos.DRVL -1.2
+23o:CCD:DL:RqsBkl 0
+23o:CCD:DL:RqsBkl.EGU 
+23o:CCD:DL:RqsBkl.DESC 
+23o:CCD:DL:RqsPosInc 0.5
+23o:CCD:DL:MemPos 0
+23o:CCD:DL:Offset 24.19
+23o:CCD:DL:Scale 5.804998635e-06
+23o:CCD:St:Start.DESC CCD Support                
+23o:CCD:St:AccelTime 1000
+23o:CCD:St:AccelCurve 500
+23o:CCD:St:Motion 3
+23o:CCD:St:dH 25.45
+23o:CCD:St:L 306.3
+23o:CCD:St:Lh 221
+23o:CCD:St:Lv 268
+23o:CCD:St:Dms 7255
+23o:CCD:St:aV 2.9998237866667
+23o:CCD:St:mLink 1
+23o:CCD:mx:ActPos.EGU (cts)
+23o:CCD:mx:ActPos.DESC mtr det.distance  
+23o:CCD:mx:RqsPos -1925445.7229511
+23o:CCD:mx:RqsPos.EGU 
+23o:CCD:mx:RqsPos.DESC 
+23o:CCD:mx:RqsPos.HOPR 0
+23o:CCD:mx:RqsPos.LOPR 0
+23o:CCD:mx:RqsPos.DRVH 0
+23o:CCD:mx:RqsPos.DRVL 0
+23o:CCD:mx:RqsBkl -500
+23o:CCD:mx:RqsBkl.EGU 
+23o:CCD:mx:RqsBkl.DESC 
+23o:CCD:mx:RqsPosInc 10000
+23o:CCD:mx:MemPos 0
+23o:CCD:mus:ActPos.EGU (cts)
+23o:CCD:mus:ActPos.DESC mtr det.vert.US   
+23o:CCD:mus:RqsPos 75835.246581573
+23o:CCD:mus:RqsPos.EGU 
+23o:CCD:mus:RqsPos.DESC 
+23o:CCD:mus:RqsPos.HOPR 0
+23o:CCD:mus:RqsPos.LOPR 0
+23o:CCD:mus:RqsPos.DRVH 0
+23o:CCD:mus:RqsPos.DRVL 0
+23o:CCD:mus:RqsBkl 50
+23o:CCD:mus:RqsBkl.EGU 
+23o:CCD:mus:RqsBkl.DESC 
+23o:CCD:mus:RqsPosInc 1000
+23o:CCD:mus:MemPos 0
+23o:CCD:mds:ActPos.EGU (cts)
+23o:CCD:mds:ActPos.DESC mtr det.vert.DS   
+23o:CCD:mds:RqsPos 117843.42821046
+23o:CCD:mds:RqsPos.EGU 
+23o:CCD:mds:RqsPos.DESC 
+23o:CCD:mds:RqsPos.HOPR 0
+23o:CCD:mds:RqsPos.LOPR 0
+23o:CCD:mds:RqsPos.DRVH 0
+23o:CCD:mds:RqsPos.DRVL 0
+23o:CCD:mds:RqsBkl 50
+23o:CCD:mds:RqsBkl.EGU 
+23o:CCD:mds:RqsBkl.DESC 
+23o:CCD:mds:RqsPosInc 1000
+23o:CCD:mds:MemPos 0
+23o:CCD:X:ActPos.EGU (mm)
+23o:CCD:X:ActPos.DESC CCD X-drive
+23o:CCD:X:RqsPos 798.37471454816
+23o:CCD:X:RqsPos.EGU 
+23o:CCD:X:RqsPos.DESC 
+23o:CCD:X:RqsPos.HOPR 0
+23o:CCD:X:RqsPos.LOPR 0
+23o:CCD:X:RqsPos.DRVH 994
+23o:CCD:X:RqsPos.DRVL 195
+23o:CCD:X:RqsBkl -0.0508
+23o:CCD:X:RqsBkl.EGU 
+23o:CCD:X:RqsBkl.DESC 
+23o:CCD:X:RqsPosInc 50
+23o:CCD:X:MemPos 500
+23o:CCD:X:Offset 994
+23o:CCD:X:Scale 0.0001016
+23o:CCD:VUS:ActPos.EGU (mm)
+23o:CCD:VUS:ActPos.DESC CCD vert. US
+23o:CCD:VUS:RqsPos 6.1208371154
+23o:CCD:VUS:RqsPos.EGU 
+23o:CCD:VUS:RqsPos.DESC 
+23o:CCD:VUS:RqsPos.HOPR 0
+23o:CCD:VUS:RqsPos.LOPR 0
+23o:CCD:VUS:RqsPos.DRVH 500
+23o:CCD:VUS:RqsPos.DRVL -200
+23o:CCD:VUS:RqsBkl 0.03048
+23o:CCD:VUS:RqsBkl.EGU 
+23o:CCD:VUS:RqsBkl.DESC 
+23o:CCD:VUS:RqsPosInc 3
+23o:CCD:VUS:MemPos 276
+23o:CCD:VUS:Offset 3.42
+23o:CCD:VUS:Scale 0.0006096
+23o:CCD:VDS:ActPos.EGU (mm)
+23o:CCD:VDS:ActPos.DESC CCD vert. DS
+23o:CCD:VDS:RqsPos 7.9590246363717
+23o:CCD:VDS:RqsPos.EGU 
+23o:CCD:VDS:RqsPos.DESC 
+23o:CCD:VDS:RqsPos.HOPR 0
+23o:CCD:VDS:RqsPos.LOPR 0
+23o:CCD:VDS:RqsPos.DRVH 469
+23o:CCD:VDS:RqsPos.DRVL -290
+23o:CCD:VDS:RqsBkl 0.03048
+23o:CCD:VDS:RqsBkl.EGU 
+23o:CCD:VDS:RqsBkl.DESC 
+23o:CCD:VDS:RqsPosInc 3
+23o:CCD:VDS:MemPos 276
+23o:CCD:VDS:Offset -20.35
+23o:CCD:VDS:Scale 0.0006096
+23o:CCD:D:ActPos.EGU (mm)
+23o:CCD:D:ActPos.DESC CCD distance
+23o:CCD:D:RqsPos 800.001
+23o:CCD:D:RqsPos.EGU 
+23o:CCD:D:RqsPos.DESC 
+23o:CCD:D:RqsPos.HOPR 0
+23o:CCD:D:RqsPos.LOPR 0
+23o:CCD:D:RqsPos.DRVH 996
+23o:CCD:D:RqsPos.DRVL 99.9
+23o:CCD:D:RqsBkl -0.036167671149877
+23o:CCD:D:RqsBkl.EGU 
+23o:CCD:D:RqsBkl.DESC 
+23o:CCD:D:RqsPosInc 10
+23o:CCD:D:MemPos 300
+23o:CCD:2Q:ActPos.EGU (degr)
+23o:CCD:2Q:ActPos.DESC CCD 2*Theta
+23o:CCD:2Q:RqsPos 2.3854160821605e-15
+23o:CCD:2Q:RqsPos.EGU 
+23o:CCD:2Q:RqsPos.DESC 
+23o:CCD:2Q:RqsPos.HOPR 0
+23o:CCD:2Q:RqsPos.LOPR 0
+23o:CCD:2Q:RqsPos.DRVH 12
+23o:CCD:2Q:RqsPos.DRVL -1
+23o:CCD:2Q:RqsBkl 0.0030889653153669
+23o:CCD:2Q:RqsBkl.EGU 
+23o:CCD:2Q:RqsBkl.DESC 
+23o:CCD:2Q:RqsPosInc 0.1
+23o:CCD:2Q:MemPos 0
+23o:GO:Om:Start.DESC Gonio Omega                
+23o:GO:Om:AccelTime 0
+23o:GO:Om:AccelCurve 100
+23o:GO:Om:Motion 3
+23o:GO:mom:ActPos.EGU (cts)
+23o:GO:mom:ActPos.DESC mtr gonio omega   
+23o:GO:mom:RqsPos 0
+23o:GO:mom:RqsPos.EGU 
+23o:GO:mom:RqsPos.DESC 
+23o:GO:mom:RqsPos.HOPR 0
+23o:GO:mom:RqsPos.LOPR 0
+23o:GO:mom:RqsPos.DRVH 0
+23o:GO:mom:RqsPos.DRVL 0
+23o:GO:mom:RqsBkl 0
+23o:GO:mom:RqsBkl.EGU 
+23o:GO:mom:RqsBkl.DESC 
+23o:GO:mom:RqsPosInc 4209.7
+23o:GO:mom:MemPos 4210
+23o:GO:OM:ActPos.EGU (degr)
+23o:GO:OM:ActPos.DESC Omega
+23o:GO:OM:RqsPos 0
+23o:GO:OM:RqsPos.EGU 
+23o:GO:OM:RqsPos.DESC 
+23o:GO:OM:RqsPos.HOPR 0
+23o:GO:OM:RqsPos.LOPR 0
+23o:GO:OM:RqsPos.DRVH 540
+23o:GO:OM:RqsPos.DRVL -540
+23o:GO:OM:RqsBkl 0
+23o:GO:OM:RqsBkl.EGU 
+23o:GO:OM:RqsBkl.DESC 
+23o:GO:OM:RqsPosInc 10
+23o:GO:OM:MemPos 59.515
+23o:GO:OM:Offset 0
+23o:GO:OM:Scale 0.0002375422297
+23o:GO:Kp:Start.DESC Gonio Kappa-Phi            
+23o:GO:Kp:AccelTime 1000
+23o:GO:Kp:AccelCurve 500
+23o:GO:Kp:Motion 3
+23o:GO:mkp:ActPos.EGU (cts)
+23o:GO:mkp:ActPos.DESC mtr gonio kappa   
+23o:GO:mkp:RqsPos 0
+23o:GO:mkp:RqsPos.EGU 
+23o:GO:mkp:RqsPos.DESC 
+23o:GO:mkp:RqsPos.HOPR 0
+23o:GO:mkp:RqsPos.LOPR 0
+23o:GO:mkp:RqsPos.DRVH 0
+23o:GO:mkp:RqsPos.DRVL 0
+23o:GO:mkp:RqsBkl 0
+23o:GO:mkp:RqsBkl.EGU 
+23o:GO:mkp:RqsBkl.DESC 
+23o:GO:mkp:RqsPosInc 0
+23o:GO:mkp:MemPos 0
+23o:GO:mph:ActPos.EGU (cts)
+23o:GO:mph:ActPos.DESC mtr gonio phi     
+23o:GO:mph:RqsPos 0
+23o:GO:mph:RqsPos.EGU 
+23o:GO:mph:RqsPos.DESC 
+23o:GO:mph:RqsPos.HOPR 0
+23o:GO:mph:RqsPos.LOPR 0
+23o:GO:mph:RqsPos.DRVH 0
+23o:GO:mph:RqsPos.DRVL 0
+23o:GO:mph:RqsBkl 0
+23o:GO:mph:RqsBkl.EGU 
+23o:GO:mph:RqsBkl.DESC 
+23o:GO:mph:RqsPosInc 0
+23o:GO:mph:MemPos 0
+23o:GO:mcz:ActPos.EGU (cts)
+23o:GO:mcz:ActPos.DESC mtr cr.stage Z    
+23o:GO:mcz:RqsPos 0
+23o:GO:mcz:RqsPos.EGU 
+23o:GO:mcz:RqsPos.DESC 
+23o:GO:mcz:RqsPos.HOPR 0
+23o:GO:mcz:RqsPos.LOPR 0
+23o:GO:mcz:RqsPos.DRVH 0
+23o:GO:mcz:RqsPos.DRVL 0
+23o:GO:mcz:RqsBkl 0
+23o:GO:mcz:RqsBkl.EGU 
+23o:GO:mcz:RqsBkl.DESC 
+23o:GO:mcz:RqsPosInc 0
+23o:GO:mcz:MemPos 0
+23o:GO:KP:ActPos.EGU (degr)
+23o:GO:KP:ActPos.DESC Kappa
+23o:GO:KP:RqsPos 0
+23o:GO:KP:RqsPos.EGU 
+23o:GO:KP:RqsPos.DESC 
+23o:GO:KP:RqsPos.HOPR 0
+23o:GO:KP:RqsPos.LOPR 0
+23o:GO:KP:RqsPos.DRVH 0
+23o:GO:KP:RqsPos.DRVL 0
+23o:GO:KP:RqsBkl 0
+23o:GO:KP:RqsBkl.EGU 
+23o:GO:KP:RqsBkl.DESC 
+23o:GO:KP:RqsPosInc 0
+23o:GO:KP:MemPos 0
+23o:GO:KP:Offset 0
+23o:GO:KP:Scale 3.529848987e-05
+23o:GO:PH:ActPos.EGU (degr)
+23o:GO:PH:ActPos.DESC Phi
+23o:GO:PH:RqsPos 0
+23o:GO:PH:RqsPos.EGU 
+23o:GO:PH:RqsPos.DESC 
+23o:GO:PH:RqsPos.HOPR 0
+23o:GO:PH:RqsPos.LOPR 0
+23o:GO:PH:RqsPos.DRVH 0
+23o:GO:PH:RqsPos.DRVL 0
+23o:GO:PH:RqsBkl 0
+23o:GO:PH:RqsBkl.EGU 
+23o:GO:PH:RqsBkl.DESC 
+23o:GO:PH:RqsPosInc 0
+23o:GO:PH:MemPos 0
+23o:GO:PH:Offset 0
+23o:GO:PH:Scale 4.933995202e-05
+23o:GO:CZ:ActPos.EGU (mm)
+23o:GO:CZ:ActPos.DESC Xtal-Z: phi-slide
+23o:GO:CZ:RqsPos 0
+23o:GO:CZ:RqsPos.EGU 
+23o:GO:CZ:RqsPos.DESC 
+23o:GO:CZ:RqsPos.HOPR 0
+23o:GO:CZ:RqsPos.LOPR 0
+23o:GO:CZ:RqsPos.DRVH 0
+23o:GO:CZ:RqsPos.DRVL 0
+23o:GO:CZ:RqsBkl 0
+23o:GO:CZ:RqsBkl.EGU 
+23o:GO:CZ:RqsBkl.DESC 
+23o:GO:CZ:RqsPosInc 0.05
+23o:GO:CZ:MemPos 0
+23o:GO:CZ:Offset 0
+23o:GO:CZ:Scale 0.0001302083333
+23o:GO:Cr:Start.DESC Crystal XY stage           
+23o:GO:Cr:AccelTime 100
+23o:GO:Cr:AccelCurve 50
+23o:GO:Cr:Motion 3
+23o:GO:mcx:ActPos.EGU (cts)
+23o:GO:mcx:ActPos.DESC mtr cr.stage X    
+23o:GO:mcx:RqsPos -1184162.5432392
+23o:GO:mcx:RqsPos.EGU 
+23o:GO:mcx:RqsPos.DESC 
+23o:GO:mcx:RqsPos.HOPR 0
+23o:GO:mcx:RqsPos.LOPR 0
+23o:GO:mcx:RqsPos.DRVH 0
+23o:GO:mcx:RqsPos.DRVL 0
+23o:GO:mcx:RqsBkl 2912.710720057
+23o:GO:mcx:RqsBkl.EGU 
+23o:GO:mcx:RqsBkl.DESC 
+23o:GO:mcx:RqsPosInc 1
+23o:GO:mcx:MemPos 0
+23o:GO:mcy:ActPos.EGU (cts)
+23o:GO:mcy:ActPos.DESC mtr cr.stage Y    
+23o:GO:mcy:RqsPos -1067799.7499729
+23o:GO:mcy:RqsPos.EGU 
+23o:GO:mcy:RqsPos.DESC 
+23o:GO:mcy:RqsPos.HOPR 0
+23o:GO:mcy:RqsPos.LOPR 0
+23o:GO:mcy:RqsPos.DRVH 0
+23o:GO:mcy:RqsPos.DRVL 0
+23o:GO:mcy:RqsBkl 2912.710720057
+23o:GO:mcy:RqsBkl.EGU 
+23o:GO:mcy:RqsBkl.DESC 
+23o:GO:mcy:RqsPosInc 0
+23o:GO:mcy:MemPos 0
+23o:GO:CX:ActPos.EGU (mm)
+23o:GO:CX:ActPos.DESC Crystal-X
+23o:GO:CX:RqsPos 0
+23o:GO:CX:RqsPos.EGU 
+23o:GO:CX:RqsPos.DESC 
+23o:GO:CX:RqsPos.HOPR 0
+23o:GO:CX:RqsPos.LOPR 0
+23o:GO:CX:RqsPos.DRVH 3
+23o:GO:CX:RqsPos.DRVL -3
+23o:GO:CX:RqsBkl 0.02
+23o:GO:CX:RqsBkl.EGU 
+23o:GO:CX:RqsBkl.DESC 
+23o:GO:CX:RqsPosInc 0.01
+23o:GO:CX:MemPos -0.65223848753436
+23o:GO:CX:Offset 8.131
+23o:GO:CX:Scale 6.866456e-06
+23o:GO:CY:ActPos.EGU (mm)
+23o:GO:CY:ActPos.DESC Crystal-Y
+23o:GO:CY:RqsPos 0
+23o:GO:CY:RqsPos.EGU 
+23o:GO:CY:RqsPos.DESC 
+23o:GO:CY:RqsPos.HOPR 0
+23o:GO:CY:RqsPos.LOPR 0
+23o:GO:CY:RqsPos.DRVH 2
+23o:GO:CY:RqsPos.DRVL -2
+23o:GO:CY:RqsBkl 0.02
+23o:GO:CY:RqsBkl.EGU 
+23o:GO:CY:RqsBkl.DESC 
+23o:GO:CY:RqsPosInc 0.1
+23o:GO:CY:MemPos -0.24421158465245
+23o:GO:CY:Offset 7.332
+23o:GO:CY:Scale 6.866456e-06
+23o:GO:St:Start.DESC Goniometer support         
+23o:GO:St:AccelTime 1000
+23o:GO:St:AccelCurve 500
+23o:GO:St:Motion 3
+23o:GO:msh:ActPos.EGU (cts)
+23o:GO:msh:ActPos.DESC mtr gonio horiz.  
+23o:GO:msh:RqsPos 1249236.1744761
+23o:GO:msh:RqsPos.EGU 
+23o:GO:msh:RqsPos.DESC 
+23o:GO:msh:RqsPos.HOPR 0
+23o:GO:msh:RqsPos.LOPR 0
+23o:GO:msh:RqsPos.DRVH 0
+23o:GO:msh:RqsPos.DRVL 0
+23o:GO:msh:RqsBkl 70
+23o:GO:msh:RqsBkl.EGU 
+23o:GO:msh:RqsBkl.DESC 
+23o:GO:msh:RqsPosInc 0
+23o:GO:msh:MemPos 0
+23o:GO:msw:ActPos.EGU (cts)
+23o:GO:msw:ActPos.DESC mtr gonio yaw     
+23o:GO:msw:RqsPos 500227.60355962
+23o:GO:msw:RqsPos.EGU 
+23o:GO:msw:RqsPos.DESC 
+23o:GO:msw:RqsPos.HOPR 0
+23o:GO:msw:RqsPos.LOPR 0
+23o:GO:msw:RqsPos.DRVH 0
+23o:GO:msw:RqsPos.DRVL 0
+23o:GO:msw:RqsBkl 435.85420189795
+23o:GO:msw:RqsBkl.EGU 
+23o:GO:msw:RqsBkl.DESC 
+23o:GO:msw:RqsPosInc 0
+23o:GO:msw:MemPos 0
+23o:GO:msv:ActPos.EGU (cts)
+23o:GO:msv:ActPos.DESC mtr gonio vert.   
+23o:GO:msv:RqsPos 457670
+23o:GO:msv:RqsPos.EGU 
+23o:GO:msv:RqsPos.DESC 
+23o:GO:msv:RqsPos.HOPR 0
+23o:GO:msv:RqsPos.LOPR 0
+23o:GO:msv:RqsPos.DRVH 0
+23o:GO:msv:RqsPos.DRVL 0
+23o:GO:msv:RqsBkl 510
+23o:GO:msv:RqsBkl.EGU 
+23o:GO:msv:RqsBkl.DESC 
+23o:GO:msv:RqsPosInc 0
+23o:GO:msv:MemPos 0
+23o:GO:SH:ActPos.EGU (mm)
+23o:GO:SH:ActPos.DESC G5O H-pos.
+23o:GO:SH:RqsPos 10.923
+23o:GO:SH:RqsPos.EGU 
+23o:GO:SH:RqsPos.DESC 
+23o:GO:SH:RqsPos.HOPR 0
+23o:GO:SH:RqsPos.LOPR 0
+23o:GO:SH:RqsPos.DRVH 25
+23o:GO:SH:RqsPos.DRVL -3.9
+23o:GO:SH:RqsBkl 0.000819388696
+23o:GO:SH:RqsBkl.EGU 
+23o:GO:SH:RqsBkl.DESC 
+23o:GO:SH:RqsPosInc 0.2
+23o:GO:SH:MemPos 9.8461100697692
+23o:GO:SH:Offset -3.7
+23o:GO:SH:Scale 1.17055528e-05
+23o:GO:SW:ActPos.EGU (mrad)
+23o:GO:SW:ActPos.DESC GO Yaw
+23o:GO:SW:RqsPos 0
+23o:GO:SW:RqsPos.EGU 
+23o:GO:SW:RqsPos.DESC 
+23o:GO:SW:RqsPos.HOPR 0
+23o:GO:SW:RqsPos.LOPR 0
+23o:GO:SW:RqsPos.DRVH 2
+23o:GO:SW:RqsPos.DRVL -6
+23o:GO:SW:RqsBkl 0.020911482635332
+23o:GO:SW:RqsBkl.EGU 
+23o:GO:SW:RqsBkl.DESC 
+23o:GO:SW:RqsPosInc 0.05
+23o:GO:SW:MemPos 0
+23o:GO:SW:Offset -24
+23o:GO:SW:Scale 4.797816e-05
+23o:GO:SV:ActPos.EGU (mm)
+23o:GO:SV:ActPos.DESC GO V-pos.
+23o:GO:SV:RqsPos 44.347
+23o:GO:SV:RqsPos.EGU 
+23o:GO:SV:RqsPos.DESC 
+23o:GO:SV:RqsPos.HOPR 0
+23o:GO:SV:RqsPos.LOPR 0
+23o:GO:SV:RqsPos.DRVH 58.1
+23o:GO:SV:RqsPos.DRVL -1.2
+23o:GO:SV:RqsBkl 0.051
+23o:GO:SV:RqsBkl.EGU 
+23o:GO:SV:RqsBkl.DESC 
+23o:GO:SV:RqsPosInc 0.005
+23o:GO:SV:MemPos 44.347
+23o:GO:SV:Offset -1.42
+23o:GO:SV:Scale 0.0001
+23o:JET:Ps:Start.DESC CryoJet position
+23o:JET:Ps:AccelTime 1000
+23o:JET:Ps:AccelCurve 500
+23o:JET:Ps:Motion 0
+23o:JET:mp:ActPos.EGU (cts)
+23o:JET:mp:ActPos.DESC mtr cryo pos.
+23o:JET:mp:RqsPos 0
+23o:JET:mp:RqsPos.EGU 
+23o:JET:mp:RqsPos.DESC 
+23o:JET:mp:RqsPos.HOPR 0
+23o:JET:mp:RqsPos.LOPR 0
+23o:JET:mp:RqsPos.DRVH 0
+23o:JET:mp:RqsPos.DRVL 0
+23o:JET:mp:RqsBkl 0
+23o:JET:mp:RqsBkl.EGU 
+23o:JET:mp:RqsBkl.DESC 
+23o:JET:mp:RqsPosInc 0
+23o:JET:mp:MemPos 0
+23o:JET:P:ActPos.EGU (mm)
+23o:JET:P:ActPos.DESC cryo position
+23o:JET:P:RqsPos 0
+23o:JET:P:RqsPos.EGU 
+23o:JET:P:RqsPos.DESC 
+23o:JET:P:RqsPos.HOPR 0
+23o:JET:P:RqsPos.LOPR 0
+23o:JET:P:RqsPos.DRVH 0
+23o:JET:P:RqsPos.DRVL 0
+23o:JET:P:RqsBkl 0
+23o:JET:P:RqsBkl.EGU 
+23o:JET:P:RqsBkl.DESC 
+23o:JET:P:RqsPosInc 0
+23o:JET:P:MemPos 0
+23o:JET:P:Offset 0
+23o:JET:P:Scale 0.0001
+23o:BD:Dh:Start.DESC Horizontal delivery        
+23o:BD:Dh:AccelTime 2000
+23o:BD:Dh:AccelCurve 1000
+23o:BD:Dh:Motion 3
+23o:BD:Dh:BaseLength 4.97
+23o:BD:Dh:RotOrigin 2.47
+23o:BD:mhd:ActPos.EGU (cts)
+23o:BD:mhd:ActPos.DESC mtr beam pipe-Y   
+23o:BD:mhd:RqsPos -1471976.2317312
+23o:BD:mhd:RqsPos.EGU 
+23o:BD:mhd:RqsPos.DESC 
+23o:BD:mhd:RqsPos.HOPR 0
+23o:BD:mhd:RqsPos.LOPR 0
+23o:BD:mhd:RqsPos.DRVH 0
+23o:BD:mhd:RqsPos.DRVL 0
+23o:BD:mhd:RqsBkl 1708.5908151215
+23o:BD:mhd:RqsBkl.EGU 
+23o:BD:mhd:RqsBkl.DESC 
+23o:BD:mhd:RqsPosInc 0
+23o:BD:mhd:MemPos 0
+23o:BD:mhu:ActPos.EGU (cts)
+23o:BD:mhu:ActPos.DESC mtr gimbal horiz. 
+23o:BD:mhu:RqsPos -1098493.1878502
+23o:BD:mhu:RqsPos.EGU 
+23o:BD:mhu:RqsPos.DESC 
+23o:BD:mhu:RqsPos.HOPR 0
+23o:BD:mhu:RqsPos.LOPR 0
+23o:BD:mhu:RqsPos.DRVH 0
+23o:BD:mhu:RqsPos.DRVL 0
+23o:BD:mhu:RqsBkl -2562.8862226823
+23o:BD:mhu:RqsBkl.EGU 
+23o:BD:mhu:RqsBkl.DESC 
+23o:BD:mhu:RqsPosInc 0
+23o:BD:mhu:MemPos 0
+23o:BD:HDS:ActPos.EGU (mm)
+23o:BD:HDS:ActPos.DESC Horiz.pipe DS
+23o:BD:HDS:RqsPos -5.6852955008746
+23o:BD:HDS:RqsPos.EGU 
+23o:BD:HDS:RqsPos.DESC 
+23o:BD:HDS:RqsPos.HOPR 0
+23o:BD:HDS:RqsPos.LOPR 0
+23o:BD:HDS:RqsPos.DRVH 0
+23o:BD:HDS:RqsPos.DRVL 0
+23o:BD:HDS:RqsBkl 0.02
+23o:BD:HDS:RqsBkl.EGU 
+23o:BD:HDS:RqsBkl.DESC 
+23o:BD:HDS:RqsPosInc 1
+23o:BD:HDS:MemPos -5.2877642399164
+23o:BD:HDS:Offset 11.545
+23o:BD:HDS:Scale 1.17055528e-05
+23o:BD:HUS:ActPos.EGU (mm)
+23o:BD:HUS:ActPos.DESC Horiz.pipe US
+23o:BD:HUS:RqsPos -3.8914700108213
+23o:BD:HUS:RqsPos.EGU 
+23o:BD:HUS:RqsPos.DESC 
+23o:BD:HUS:RqsPos.HOPR 0
+23o:BD:HUS:RqsPos.LOPR 0
+23o:BD:HUS:RqsPos.DRVH 0
+23o:BD:HUS:RqsPos.DRVL 0
+23o:BD:HUS:RqsBkl -0.03
+23o:BD:HUS:RqsBkl.EGU 
+23o:BD:HUS:RqsBkl.DESC 
+23o:BD:HUS:RqsPosInc 1
+23o:BD:HUS:MemPos -3.4939153388175
+23o:BD:HUS:Offset 8.967
+23o:BD:HUS:Scale 1.17055528e-05
+23o:BD:HD:ActPos.EGU (mm)
+23o:BD:HD:ActPos.DESC Beam pipe H-pos.
+23o:BD:HD:RqsPos -2.9999712260262
+23o:BD:HD:RqsPos.EGU 
+23o:BD:HD:RqsPos.DESC 
+23o:BD:HD:RqsPos.HOPR 0
+23o:BD:HD:RqsPos.LOPR 0
+23o:BD:HD:RqsPos.DRVH 3
+23o:BD:HD:RqsPos.DRVL -3
+23o:BD:HD:RqsBkl -0.054849094567405
+23o:BD:HD:RqsBkl.EGU 
+23o:BD:HD:RqsBkl.DESC 
+23o:BD:HD:RqsPosInc 0.2
+23o:BD:HD:MemPos -3
+23o:BD:HA:ActPos.EGU (mrad)
+23o:BD:HA:ActPos.DESC Beam pipe H-Angle
+23o:BD:HA:RqsPos -0.36093068210328
+23o:BD:HA:RqsPos.EGU 
+23o:BD:HA:RqsPos.DESC 
+23o:BD:HA:RqsPos.HOPR 0
+23o:BD:HA:RqsPos.LOPR 0
+23o:BD:HA:RqsPos.DRVH 2
+23o:BD:HA:RqsPos.DRVL -6.1
+23o:BD:HA:RqsBkl 0.010060362173038
+23o:BD:HA:RqsBkl.EGU 
+23o:BD:HA:RqsBkl.DESC 
+23o:BD:HA:RqsPosInc 0.1
+23o:BD:HA:MemPos -0.36093303733926
+23o:BD:Dv:Start.DESC Vertical delivery          
+23o:BD:Dv:AccelTime 2000
+23o:BD:Dv:AccelCurve 1000
+23o:BD:Dv:Motion 3
+23o:BD:Dv:BaseLength 4.97
+23o:BD:Dv:RotOrigin 1.51
+23o:BD:mvd:ActPos.EGU (cts)
+23o:BD:mvd:ActPos.DESC mtr beam pipe-Z   
+23o:BD:mvd:RqsPos 473046.78899712
+23o:BD:mvd:RqsPos.EGU 
+23o:BD:mvd:RqsPos.DESC 
+23o:BD:mvd:RqsPos.HOPR 0
+23o:BD:mvd:RqsPos.LOPR 0
+23o:BD:mvd:RqsPos.DRVH 0
+23o:BD:mvd:RqsPos.DRVL 0
+23o:BD:mvd:RqsBkl 0
+23o:BD:mvd:RqsBkl.EGU 
+23o:BD:mvd:RqsBkl.DESC 
+23o:BD:mvd:RqsPosInc 0
+23o:BD:mvd:MemPos 0
+23o:BD:mvu:ActPos.EGU (cts)
+23o:BD:mvu:ActPos.DESC mtr gimbal vert.  
+23o:BD:mvu:RqsPos 2863324.6698701
+23o:BD:mvu:RqsPos.EGU 
+23o:BD:mvu:RqsPos.DESC 
+23o:BD:mvu:RqsPos.HOPR 0
+23o:BD:mvu:RqsPos.LOPR 0
+23o:BD:mvu:RqsPos.DRVH 0
+23o:BD:mvu:RqsPos.DRVL 0
+23o:BD:mvu:RqsBkl 933.03569381509
+23o:BD:mvu:RqsBkl.EGU 
+23o:BD:mvu:RqsBkl.DESC 
+23o:BD:mvu:RqsPosInc 0
+23o:BD:mvu:MemPos 0
+23o:BD:VDS:ActPos.EGU (mm)
+23o:BD:VDS:ActPos.DESC Vert.pipe DS
+23o:BD:VDS:RqsPos 42.634678899712
+23o:BD:VDS:RqsPos.EGU 
+23o:BD:VDS:RqsPos.DESC 
+23o:BD:VDS:RqsPos.HOPR 0
+23o:BD:VDS:RqsPos.LOPR 0
+23o:BD:VDS:RqsPos.DRVH 57
+23o:BD:VDS:RqsPos.DRVL -2
+23o:BD:VDS:RqsBkl 0
+23o:BD:VDS:RqsBkl.EGU 
+23o:BD:VDS:RqsBkl.DESC 
+23o:BD:VDS:RqsPosInc 1
+23o:BD:VDS:MemPos 42.635078898688
+23o:BD:VDS:Offset -4.67
+23o:BD:VDS:Scale 0.0001
+23o:BD:VUS:ActPos.EGU (mm)
+23o:BD:VUS:ActPos.DESC Vert.pipe US
+23o:BD:VUS:RqsPos 12.318874707483
+23o:BD:VUS:RqsPos.EGU 
+23o:BD:VUS:RqsPos.DESC 
+23o:BD:VUS:RqsPos.HOPR 0
+23o:BD:VUS:RqsPos.LOPR 0
+23o:BD:VUS:RqsPos.DRVH 0
+23o:BD:VUS:RqsPos.DRVL 0
+23o:BD:VUS:RqsBkl 0.0049917695473253
+23o:BD:VUS:RqsBkl.EGU 
+23o:BD:VUS:RqsBkl.DESC 
+23o:BD:VUS:RqsPosInc 1
+23o:BD:VUS:MemPos 12.318960307754
+23o:BD:VUS:Offset -3
+23o:BD:VUS:Scale 5.350030637e-06
+23o:BD:VD:ActPos.EGU (mm)
+23o:BD:VD:ActPos.DESC Beam pipe V-pos.
+23o:BD:VD:RqsPos 3.1082380213126
+23o:BD:VD:RqsPos.EGU 
+23o:BD:VD:RqsPos.DESC 
+23o:BD:VD:RqsPos.HOPR 0
+23o:BD:VD:RqsPos.LOPR 0
+23o:BD:VD:RqsPos.DRVH 5
+23o:BD:VD:RqsPos.DRVL -5
+23o:BD:VD:RqsBkl 0.0065083836351444
+23o:BD:VD:RqsBkl.EGU 
+23o:BD:VD:RqsBkl.DESC 
+23o:BD:VD:RqsPosInc 0.1
+23o:BD:VD:MemPos 3.1082281000455
+23o:BD:VA:ActPos.EGU (mrad)
+23o:BD:VA:ActPos.DESC Beam pipe V-Angle
+23o:BD:VA:RqsPos 6.0997593948147
+23o:BD:VA:RqsPos.EGU 
+23o:BD:VA:RqsPos.DESC 
+23o:BD:VA:RqsPos.HOPR 0
+23o:BD:VA:RqsPos.LOPR 0
+23o:BD:VA:RqsPos.DRVH 8.1
+23o:BD:VA:RqsPos.DRVL -0.5
+23o:BD:VA:RqsBkl -0.0010043801906087
+23o:BD:VA:RqsBkl.EGU 
+23o:BD:VA:RqsBkl.DESC 
+23o:BD:VA:RqsPosInc 0.1
+23o:BD:VA:MemPos 6.0998226541115
+23o:GS:St:Start.DESC Guard Slits Support        
+23o:GS:St:AccelTime 1000
+23o:GS:St:AccelCurve 500
+23o:GS:St:Motion 3
+23o:GS:myw:ActPos.EGU (cts)
+23o:GS:myw:ActPos.DESC mtr GS yaw        
+23o:GS:myw:RqsPos -1486601.1942912
+23o:GS:myw:RqsPos.EGU 
+23o:GS:myw:RqsPos.DESC 
+23o:GS:myw:RqsPos.HOPR 0
+23o:GS:myw:RqsPos.LOPR 0
+23o:GS:myw:RqsPos.DRVH 0
+23o:GS:myw:RqsPos.DRVL 0
+23o:GS:myw:RqsBkl -30000
+23o:GS:myw:RqsBkl.EGU 
+23o:GS:myw:RqsBkl.DESC 
+23o:GS:myw:RqsPosInc 0
+23o:GS:myw:MemPos 0
+23o:GS:mx:ActPos.EGU (cts)
+23o:GS:mx:ActPos.DESC mtr GS X          
+23o:GS:mx:RqsPos 588927.22706813
+23o:GS:mx:RqsPos.EGU 
+23o:GS:mx:RqsPos.DESC 
+23o:GS:mx:RqsPos.HOPR 0
+23o:GS:mx:RqsPos.LOPR 0
+23o:GS:mx:RqsPos.DRVH 0
+23o:GS:mx:RqsPos.DRVL 0
+23o:GS:mx:RqsBkl 250
+23o:GS:mx:RqsBkl.EGU 
+23o:GS:mx:RqsBkl.DESC 
+23o:GS:mx:RqsPosInc 0
+23o:GS:mx:MemPos 0
+23o:GS:mpt:ActPos.EGU (cts)
+23o:GS:mpt:ActPos.DESC mtr GS pitch      
+23o:GS:mpt:RqsPos 42440080.353116
+23o:GS:mpt:RqsPos.EGU 
+23o:GS:mpt:RqsPos.DESC 
+23o:GS:mpt:RqsPos.HOPR 0
+23o:GS:mpt:RqsPos.LOPR 0
+23o:GS:mpt:RqsPos.DRVH 0
+23o:GS:mpt:RqsPos.DRVL 0
+23o:GS:mpt:RqsBkl 9.9999999999999
+23o:GS:mpt:RqsBkl.EGU 
+23o:GS:mpt:RqsBkl.DESC 
+23o:GS:mpt:RqsPosInc 0
+23o:GS:mpt:MemPos 0
+23o:GS:YW:ActPos.EGU (mrad)
+23o:GS:YW:ActPos.DESC GS Yaw
+23o:GS:YW:RqsPos 1.0002361320848
+23o:GS:YW:RqsPos.EGU 
+23o:GS:YW:RqsPos.DESC 
+23o:GS:YW:RqsPos.HOPR 0
+23o:GS:YW:RqsPos.LOPR 0
+23o:GS:YW:RqsPos.DRVH 2.1
+23o:GS:YW:RqsPos.DRVL -6.1
+23o:GS:YW:RqsBkl -0.3971427699
+23o:GS:YW:RqsBkl.EGU 
+23o:GS:YW:RqsBkl.DESC 
+23o:GS:YW:RqsPosInc 1
+23o:GS:YW:MemPos 6.1102730967051e-05
+23o:GS:YW:Offset 20.68
+23o:GS:YW:Scale 1.323809233e-05
+23o:GS:X:ActPos.EGU (mm)
+23o:GS:X:ActPos.DESC GS X
+23o:GS:X:RqsPos 1.04
+23o:GS:X:RqsPos.EGU 
+23o:GS:X:RqsPos.DESC 
+23o:GS:X:RqsPos.HOPR 0
+23o:GS:X:RqsPos.LOPR 0
+23o:GS:X:RqsPos.DRVH 5
+23o:GS:X:RqsPos.DRVL -6
+23o:GS:X:RqsBkl 0.0036867882825
+23o:GS:X:RqsBkl.EGU 
+23o:GS:X:RqsBkl.DESC 
+23o:GS:X:RqsPosInc 0.01
+23o:GS:X:MemPos 1.0199507466661
+23o:GS:X:Offset -7.645
+23o:GS:X:Scale 1.474715313e-05
+23o:GS:PT:ActPos.EGU (mrad)
+23o:GS:PT:ActPos.DESC GS Pitch
+23o:GS:PT:RqsPos 5.9999412611503
+23o:GS:PT:RqsPos.EGU 
+23o:GS:PT:RqsPos.DESC 
+23o:GS:PT:RqsPos.HOPR 0
+23o:GS:PT:RqsPos.LOPR 0
+23o:GS:PT:RqsPos.DRVH 10
+23o:GS:PT:RqsPos.DRVL -3
+23o:GS:PT:RqsBkl 1.7997e-06
+23o:GS:PT:RqsBkl.EGU 
+23o:GS:PT:RqsBkl.DESC 
+23o:GS:PT:RqsPosInc 0.1
+23o:GS:PT:MemPos 6
+23o:GS:PT:Offset -1.638
+23o:GS:PT:Scale 1.7997e-07
+23o:GS:Av:Start.DESC Vertical aperture          
+23o:GS:Av:AccelTime 1000
+23o:GS:Av:AccelCurve 500
+23o:GS:Av:Motion 3
+23o:GS:Av:Invert 1
+23o:GS:mt:ActPos.EGU (cts)
+23o:GS:mt:ActPos.DESC mtr GS top         
+23o:GS:mt:RqsPos -79525.394884306
+23o:GS:mt:RqsPos.EGU 
+23o:GS:mt:RqsPos.DESC 
+23o:GS:mt:RqsPos.HOPR 0
+23o:GS:mt:RqsPos.LOPR 0
+23o:GS:mt:RqsPos.DRVH 0
+23o:GS:mt:RqsPos.DRVL 0
+23o:GS:mt:RqsBkl 153.87219375587
+23o:GS:mt:RqsBkl.EGU 
+23o:GS:mt:RqsBkl.DESC 
+23o:GS:mt:RqsPosInc 0
+23o:GS:mt:MemPos 0
+23o:GS:mb:ActPos.EGU (cts)
+23o:GS:mb:ActPos.DESC mtr GS bottom     
+23o:GS:mb:RqsPos 72894.993155327
+23o:GS:mb:RqsPos.EGU 
+23o:GS:mb:RqsPos.DESC 
+23o:GS:mb:RqsPos.HOPR 0
+23o:GS:mb:RqsPos.LOPR 0
+23o:GS:mb:RqsPos.DRVH 0
+23o:GS:mb:RqsPos.DRVL 0
+23o:GS:mb:RqsBkl 2329.5542786147
+23o:GS:mb:RqsBkl.EGU 
+23o:GS:mb:RqsBkl.DESC 
+23o:GS:mb:RqsPosInc 0
+23o:GS:mb:MemPos 0
+23o:GS:ZT:ActPos.EGU (mm)
+23o:GS:ZT:ActPos.DESC GS Z-top     
+23o:GS:ZT:RqsPos 0.042999999999987
+23o:GS:ZT:RqsPos.EGU 
+23o:GS:ZT:RqsPos.DESC 
+23o:GS:ZT:RqsPos.HOPR 0
+23o:GS:ZT:RqsPos.LOPR 0
+23o:GS:ZT:RqsPos.DRVH 0
+23o:GS:ZT:RqsPos.DRVL 0
+23o:GS:ZT:RqsBkl 0.0089764944836821
+23o:GS:ZT:RqsBkl.EGU 
+23o:GS:ZT:RqsBkl.DESC 
+23o:GS:ZT:RqsPosInc 0.01
+23o:GS:ZT:MemPos 0.0064624746865102
+23o:GS:ZT:Offset 4.6823
+23o:GS:ZT:Scale 5.833734e-05
+23o:GS:ZB:ActPos.EGU (mm)
+23o:GS:ZB:ActPos.DESC GS Z-bottom 
+23o:GS:ZB:RqsPos -0.057000000000013
+23o:GS:ZB:RqsPos.EGU 
+23o:GS:ZB:RqsPos.DESC 
+23o:GS:ZB:RqsPos.HOPR 0
+23o:GS:ZB:RqsPos.LOPR 0
+23o:GS:ZB:RqsPos.DRVH 0
+23o:GS:ZB:RqsPos.DRVL 0
+23o:GS:ZB:RqsBkl 0.1359
+23o:GS:ZB:RqsBkl.EGU 
+23o:GS:ZB:RqsBkl.DESC 
+23o:GS:ZB:RqsPosInc 0.005
+23o:GS:ZB:MemPos -0.0065375253134898
+23o:GS:ZB:Offset -4.3095
+23o:GS:ZB:Scale 5.833734e-05
+23o:GS:ZC:ActPos.EGU (mm)
+23o:GS:ZC:ActPos.DESC GS Z-center
+23o:GS:ZC:RqsPos -0.007000000000013
+23o:GS:ZC:RqsPos.EGU 
+23o:GS:ZC:RqsPos.DESC 
+23o:GS:ZC:RqsPos.HOPR 0
+23o:GS:ZC:RqsPos.LOPR 0
+23o:GS:ZC:RqsPos.DRVH 5
+23o:GS:ZC:RqsPos.DRVL -2
+23o:GS:ZC:RqsBkl 0.072438247241841
+23o:GS:ZC:RqsBkl.EGU 
+23o:GS:ZC:RqsBkl.DESC 
+23o:GS:ZC:RqsPosInc 0.005
+23o:GS:ZC:MemPos -0.007
+23o:GS:ZS:ActPos.EGU (mm)
+23o:GS:ZS:ActPos.DESC GS Z-size
+23o:GS:ZS:RqsPos 0.1
+23o:GS:ZS:RqsPos.EGU 
+23o:GS:ZS:RqsPos.DESC 
+23o:GS:ZS:RqsPos.HOPR 0
+23o:GS:ZS:RqsPos.LOPR 0
+23o:GS:ZS:RqsPos.DRVH 9.4
+23o:GS:ZS:RqsPos.DRVL 0.013
+23o:GS:ZS:RqsBkl -0.12692350551632
+23o:GS:ZS:RqsBkl.EGU 
+23o:GS:ZS:RqsBkl.DESC 
+23o:GS:ZS:RqsPosInc 0.005
+23o:GS:ZS:MemPos 0.013
+23o:GS:Ah:Start.DESC Horizontal aperture        
+23o:GS:Ah:AccelTime 1000
+23o:GS:Ah:AccelCurve 500
+23o:GS:Ah:Motion 3
+23o:GS:Ah:Invert 1
+23o:GS:mo:ActPos.EGU (cts)
+23o:GS:mo:ActPos.DESC mtr GS out        
+23o:GS:mo:RqsPos -83409.917095246
+23o:GS:mo:RqsPos.EGU 
+23o:GS:mo:RqsPos.DESC 
+23o:GS:mo:RqsPos.HOPR 0
+23o:GS:mo:RqsPos.LOPR 0
+23o:GS:mo:RqsPos.DRVH 0
+23o:GS:mo:RqsPos.DRVL 0
+23o:GS:mo:RqsBkl 782.9995145403
+23o:GS:mo:RqsBkl.EGU 
+23o:GS:mo:RqsBkl.DESC 
+23o:GS:mo:RqsPosInc 0
+23o:GS:mo:MemPos 0
+23o:GS:mi:ActPos.EGU (cts)
+23o:GS:mi:ActPos.DESC mtr GS in         
+23o:GS:mi:RqsPos 104315.64373307
+23o:GS:mi:RqsPos.EGU 
+23o:GS:mi:RqsPos.DESC 
+23o:GS:mi:RqsPos.HOPR 0
+23o:GS:mi:RqsPos.LOPR 0
+23o:GS:mi:RqsPos.DRVH 0
+23o:GS:mi:RqsPos.DRVL 0
+23o:GS:mi:RqsBkl 304.39083783578
+23o:GS:mi:RqsBkl.EGU 
+23o:GS:mi:RqsBkl.DESC 
+23o:GS:mi:RqsPosInc 0
+23o:GS:mi:MemPos 0
+23o:GS:YO:ActPos.EGU (mm)
+23o:GS:YO:ActPos.DESC GS Y-outboard
+23o:GS:YO:RqsPos 0.039999999999911
+23o:GS:YO:RqsPos.EGU 
+23o:GS:YO:RqsPos.DESC 
+23o:GS:YO:RqsPos.HOPR 0
+23o:GS:YO:RqsPos.LOPR 0
+23o:GS:YO:RqsPos.DRVH 0
+23o:GS:YO:RqsPos.DRVL 0
+23o:GS:YO:RqsBkl 0.04029996711402
+23o:GS:YO:RqsBkl.EGU 
+23o:GS:YO:RqsBkl.DESC 
+23o:GS:YO:RqsPosInc 0.005
+23o:GS:YO:MemPos 0.02501272540496
+23o:GS:YO:Offset 4.333
+23o:GS:YO:Scale 5.14687e-05
+23o:GS:YI:ActPos.EGU (mm)
+23o:GS:YI:ActPos.DESC GS Y-inboard
+23o:GS:YI:RqsPos -0.060000000000089
+23o:GS:YI:RqsPos.EGU 
+23o:GS:YI:RqsPos.DESC 
+23o:GS:YI:RqsPos.HOPR 0
+23o:GS:YI:RqsPos.LOPR 0
+23o:GS:YI:RqsPos.DRVH 0
+23o:GS:YI:RqsPos.DRVL 0
+23o:GS:YI:RqsBkl 0.016005113766076
+23o:GS:YI:RqsBkl.EGU 
+23o:GS:YI:RqsBkl.DESC 
+23o:GS:YI:RqsPosInc 0.005
+23o:GS:YI:MemPos -0.02498727459504
+23o:GS:YI:Offset -5.545
+23o:GS:YI:Scale 5.25808e-05
+23o:GS:YC:ActPos.EGU (mm)
+23o:GS:YC:ActPos.DESC GS Y-center
+23o:GS:YC:RqsPos -0.010000000000089
+23o:GS:YC:RqsPos.EGU 
+23o:GS:YC:RqsPos.DESC 
+23o:GS:YC:RqsPos.HOPR 0
+23o:GS:YC:RqsPos.LOPR 0
+23o:GS:YC:RqsPos.DRVH 2
+23o:GS:YC:RqsPos.DRVL -2
+23o:GS:YC:RqsBkl 0.028152540440048
+23o:GS:YC:RqsBkl.EGU 
+23o:GS:YC:RqsBkl.DESC 
+23o:GS:YC:RqsPosInc 0.005
+23o:GS:YC:MemPos -0.00498727459491
+23o:GS:YS:ActPos.EGU (mm)
+23o:GS:YS:ActPos.DESC GS Y-size
+23o:GS:YS:RqsPos 0.1
+23o:GS:YS:RqsPos.EGU 
+23o:GS:YS:RqsPos.DESC 
+23o:GS:YS:RqsPos.HOPR 0
+23o:GS:YS:RqsPos.LOPR 0
+23o:GS:YS:RqsPos.DRVH 9.5
+23o:GS:YS:RqsPos.DRVL 0.013
+23o:GS:YS:RqsBkl 0.024294853347945
+23o:GS:YS:RqsBkl.EGU 
+23o:GS:YS:RqsBkl.DESC 
+23o:GS:YS:RqsPosInc 0.01
+23o:GS:YS:MemPos 0.075
+23o:BS:Ps:Start.DESC Beam Stop Position         
+23o:BS:Ps:AccelTime 1000
+23o:BS:Ps:AccelCurve 500
+23o:BS:Ps:Motion 3
+23o:BS:md:ActPos.EGU (cts)
+23o:BS:md:ActPos.DESC mtr BS distance   
+23o:BS:md:RqsPos 779811.52691808
+23o:BS:md:RqsPos.EGU 
+23o:BS:md:RqsPos.DESC 
+23o:BS:md:RqsPos.HOPR 0
+23o:BS:md:RqsPos.LOPR 0
+23o:BS:md:RqsPos.DRVH 0
+23o:BS:md:RqsPos.DRVL 0
+23o:BS:md:RqsBkl 67.809697992876
+23o:BS:md:RqsBkl.EGU 
+23o:BS:md:RqsBkl.DESC 
+23o:BS:md:RqsPosInc 0
+23o:BS:md:MemPos 0
+23o:BS:mpt:ActPos.EGU (cts)
+23o:BS:mpt:ActPos.DESC mtr BS pitch      
+23o:BS:mpt:RqsPos -2038634.1221138
+23o:BS:mpt:RqsPos.EGU 
+23o:BS:mpt:RqsPos.DESC 
+23o:BS:mpt:RqsPos.HOPR 0
+23o:BS:mpt:RqsPos.LOPR 0
+23o:BS:mpt:RqsPos.DRVH 0
+23o:BS:mpt:RqsPos.DRVL 0
+23o:BS:mpt:RqsBkl 0
+23o:BS:mpt:RqsBkl.EGU 
+23o:BS:mpt:RqsBkl.DESC 
+23o:BS:mpt:RqsPosInc 0
+23o:BS:mpt:MemPos 0
+23o:BS:myw:ActPos.EGU (cts)
+23o:BS:myw:ActPos.DESC mtr BS yaw        
+23o:BS:myw:RqsPos -1765966.9745109
+23o:BS:myw:RqsPos.EGU 
+23o:BS:myw:RqsPos.DESC 
+23o:BS:myw:RqsPos.HOPR 0
+23o:BS:myw:RqsPos.LOPR 0
+23o:BS:myw:RqsPos.DRVH 0
+23o:BS:myw:RqsPos.DRVL 0
+23o:BS:myw:RqsBkl 0
+23o:BS:myw:RqsBkl.EGU 
+23o:BS:myw:RqsBkl.DESC 
+23o:BS:myw:RqsPosInc 0
+23o:BS:myw:MemPos 0
+23o:BS:D:ActPos.EGU (mm)
+23o:BS:D:ActPos.DESC BS distance
+23o:BS:D:RqsPos 35
+23o:BS:D:RqsPos.EGU 
+23o:BS:D:RqsPos.DESC 
+23o:BS:D:RqsPos.HOPR 0
+23o:BS:D:RqsPos.LOPR 0
+23o:BS:D:RqsPos.DRVH 100
+23o:BS:D:RqsPos.DRVL 30
+23o:BS:D:RqsBkl 0.001
+23o:BS:D:RqsBkl.EGU 
+23o:BS:D:RqsBkl.DESC 
+23o:BS:D:RqsPosInc 5
+23o:BS:D:MemPos 30
+23o:BS:D:Offset 23.5
+23o:BS:D:Scale 1.474715313e-05
+23o:BS:PT:ActPos.EGU (mm)
+23o:BS:PT:ActPos.DESC BS pitch
+23o:BS:PT:RqsPos 1.775
+23o:BS:PT:RqsPos.EGU 
+23o:BS:PT:RqsPos.DESC 
+23o:BS:PT:RqsPos.HOPR 0
+23o:BS:PT:RqsPos.LOPR 0
+23o:BS:PT:RqsPos.DRVH 0
+23o:BS:PT:RqsPos.DRVL 0
+23o:BS:PT:RqsBkl 0
+23o:BS:PT:RqsBkl.EGU 
+23o:BS:PT:RqsBkl.DESC 
+23o:BS:PT:RqsPosInc 2
+23o:BS:PT:MemPos 1.775
+23o:BS:PT:Offset 4.113
+23o:BS:PT:Scale 1.1468463e-06
+23o:BS:YW:ActPos.EGU (mm)
+23o:BS:YW:ActPos.DESC BS yaw
+23o:BS:YW:RqsPos 1.78
+23o:BS:YW:RqsPos.EGU 
+23o:BS:YW:RqsPos.DESC 
+23o:BS:YW:RqsPos.HOPR 0
+23o:BS:YW:RqsPos.LOPR 0
+23o:BS:YW:RqsPos.DRVH 0
+23o:BS:YW:RqsPos.DRVL 0
+23o:BS:YW:RqsBkl 0
+23o:BS:YW:RqsBkl.EGU 
+23o:BS:YW:RqsBkl.DESC 
+23o:BS:YW:RqsPosInc 0.1
+23o:BS:YW:MemPos 1.98
+23o:BS:YW:Offset 3.725
+23o:BS:YW:Scale 1.1013796e-06
+23o:TV:V1:Start.DESC HiRes.Camera               
+23o:TV:V1:AccelTime 1000
+23o:TV:V1:AccelCurve 500
+23o:TV:V1:Motion 3
+23o:TV:mz1:ActPos.EGU (cts)
+23o:TV:mz1:ActPos.DESC mtr hi-res zoom   
+23o:TV:mz1:RqsPos -501907.02908363
+23o:TV:mz1:RqsPos.EGU 
+23o:TV:mz1:RqsPos.DESC 
+23o:TV:mz1:RqsPos.HOPR 0
+23o:TV:mz1:RqsPos.LOPR 0
+23o:TV:mz1:RqsPos.DRVH 0
+23o:TV:mz1:RqsPos.DRVL 0
+23o:TV:mz1:RqsBkl 0
+23o:TV:mz1:RqsBkl.EGU 
+23o:TV:mz1:RqsBkl.DESC 
+23o:TV:mz1:RqsPosInc 0
+23o:TV:mz1:MemPos 0
+23o:TV:ZM1:ActPos.EGU (mm)
+23o:TV:ZM1:ActPos.DESC hi-res.TV zoom
+23o:TV:ZM1:RqsPos 1.25
+23o:TV:ZM1:RqsPos.EGU 
+23o:TV:ZM1:RqsPos.DESC 
+23o:TV:ZM1:RqsPos.HOPR 0
+23o:TV:ZM1:RqsPos.LOPR 0
+23o:TV:ZM1:RqsPos.DRVH 2.6
+23o:TV:ZM1:RqsPos.DRVL 0
+23o:TV:ZM1:RqsBkl 0
+23o:TV:ZM1:RqsBkl.EGU 
+23o:TV:ZM1:RqsBkl.DESC 
+23o:TV:ZM1:RqsPosInc 2
+23o:TV:ZM1:MemPos 0
+23o:TV:ZM1:Offset 2.5
+23o:TV:ZM1:Scale 2.490501084e-06
+23o:TV:V2:Start.DESC LoRes.Camera               
+23o:TV:V2:AccelTime 1000
+23o:TV:V2:AccelCurve 500
+23o:TV:V2:Motion 3
+23o:TV:mz2:ActPos.EGU (cts)
+23o:TV:mz2:ActPos.DESC mtr lo-res zoom   
+23o:TV:mz2:RqsPos 401525.6232669
+23o:TV:mz2:RqsPos.EGU 
+23o:TV:mz2:RqsPos.DESC 
+23o:TV:mz2:RqsPos.HOPR 0
+23o:TV:mz2:RqsPos.LOPR 0
+23o:TV:mz2:RqsPos.DRVH 0
+23o:TV:mz2:RqsPos.DRVL 0
+23o:TV:mz2:RqsBkl 0
+23o:TV:mz2:RqsBkl.EGU 
+23o:TV:mz2:RqsBkl.DESC 
+23o:TV:mz2:RqsPosInc 0
+23o:TV:mz2:MemPos 0
+23o:TV:ZM2:ActPos.EGU (mm)
+23o:TV:ZM2:ActPos.DESC Zoom
+23o:TV:ZM2:RqsPos 1
+23o:TV:ZM2:RqsPos.EGU 
+23o:TV:ZM2:RqsPos.DESC 
+23o:TV:ZM2:RqsPos.HOPR 0
+23o:TV:ZM2:RqsPos.LOPR 0
+23o:TV:ZM2:RqsPos.DRVH 2.2
+23o:TV:ZM2:RqsPos.DRVL 0
+23o:TV:ZM2:RqsBkl 0
+23o:TV:ZM2:RqsBkl.EGU 
+23o:TV:ZM2:RqsBkl.DESC 
+23o:TV:ZM2:RqsPosInc 3
+23o:TV:ZM2:MemPos 0
+23o:TV:ZM2:Offset 0
+23o:TV:ZM2:Scale 2.490501084e-06
+23o:SH:mp:ClosePos 45
+23o:SH:mp:OpenPos 0
+23o:SH:Ps:Start.DESC Shutter                    
+23o:SH:Ps:AccelTime 10
+23o:SH:Ps:AccelCurve 5
+23o:SH:Ps:Motion 3
+23o:SH:mp:ActPos.EGU (cts)
+23o:SH:mp:ActPos.DESC mtr shutter       
+23o:SH:mp:RqsPos 44.74988544
+23o:SH:mp:RqsPos.EGU 
+23o:SH:mp:RqsPos.DESC 
+23o:SH:mp:RqsPos.HOPR 0
+23o:SH:mp:RqsPos.LOPR 0
+23o:SH:mp:RqsPos.DRVH 0
+23o:SH:mp:RqsPos.DRVL 0
+23o:SH:mp:RqsBkl 0
+23o:SH:mp:RqsBkl.EGU 
+23o:SH:mp:RqsBkl.DESC 
+23o:SH:mp:RqsPosInc 5
+23o:SH:mp:MemPos 0
+23o:SH:P:ActPos.EGU (degr)
+23o:SH:P:ActPos.DESC shutter pos.   
+23o:SH:P:RqsPos 16.1099587584
+23o:SH:P:RqsPos.EGU 
+23o:SH:P:RqsPos.DESC 
+23o:SH:P:RqsPos.HOPR 0
+23o:SH:P:RqsPos.LOPR 0
+23o:SH:P:RqsPos.DRVH 0
+23o:SH:P:RqsPos.DRVL 0
+23o:SH:P:RqsBkl 0
+23o:SH:P:RqsBkl.EGU 
+23o:SH:P:RqsBkl.DESC 
+23o:SH:P:RqsPosInc 0.2
+23o:SH:P:MemPos 0
+23o:SH:P:Offset 0
+23o:SH:P:Scale 0.36
+23o:COL:St:Start.DESC Collimator Support Assembly
+23o:COL:St:AccelTime 1000
+23o:COL:St:AccelCurve 500
+23o:COL:St:Motion 3
+23o:COL:mh:ActPos.EGU (cts)
+23o:COL:mh:ActPos.DESC mtr horiz.
+23o:COL:mh:RqsPos -14100
+23o:COL:mh:RqsPos.EGU 
+23o:COL:mh:RqsPos.DESC 
+23o:COL:mh:RqsPos.HOPR 0
+23o:COL:mh:RqsPos.LOPR 0
+23o:COL:mh:RqsPos.DRVH 0
+23o:COL:mh:RqsPos.DRVL 0
+23o:COL:mh:RqsBkl 0
+23o:COL:mh:RqsBkl.EGU 
+23o:COL:mh:RqsBkl.DESC 
+23o:COL:mh:RqsPosInc 0
+23o:COL:mh:MemPos 0
+23o:COL:mv:ActPos.EGU (cts)
+23o:COL:mv:ActPos.DESC mtr vert.
+23o:COL:mv:RqsPos -10000
+23o:COL:mv:RqsPos.EGU 
+23o:COL:mv:RqsPos.DESC 
+23o:COL:mv:RqsPos.HOPR 0
+23o:COL:mv:RqsPos.LOPR 0
+23o:COL:mv:RqsPos.DRVH 0
+23o:COL:mv:RqsPos.DRVL 0
+23o:COL:mv:RqsBkl 0
+23o:COL:mv:RqsBkl.EGU 
+23o:COL:mv:RqsBkl.DESC 
+23o:COL:mv:RqsPosInc 0
+23o:COL:mv:MemPos 0
+23o:COL:H:ActPos.EGU (mm)
+23o:COL:H:ActPos.DESC Horiz.
+23o:COL:H:RqsPos -1.41
+23o:COL:H:RqsPos.EGU 
+23o:COL:H:RqsPos.DESC 
+23o:COL:H:RqsPos.HOPR 0
+23o:COL:H:RqsPos.LOPR 0
+23o:COL:H:RqsPos.DRVH 0
+23o:COL:H:RqsPos.DRVL 0
+23o:COL:H:RqsBkl 0
+23o:COL:H:RqsBkl.EGU 
+23o:COL:H:RqsBkl.DESC 
+23o:COL:H:RqsPosInc 0.05
+23o:COL:H:MemPos -1.41
+23o:COL:H:Offset 0
+23o:COL:H:Scale 0.0001
+23o:COL:V:ActPos.EGU (mm)
+23o:COL:V:ActPos.DESC Vert.
+23o:COL:V:RqsPos -1
+23o:COL:V:RqsPos.EGU 
+23o:COL:V:RqsPos.DESC 
+23o:COL:V:RqsPos.HOPR 0
+23o:COL:V:RqsPos.LOPR 0
+23o:COL:V:RqsPos.DRVH 9.9
+23o:COL:V:RqsPos.DRVL -9.9
+23o:COL:V:RqsBkl 0
+23o:COL:V:RqsBkl.EGU 
+23o:COL:V:RqsBkl.DESC 
+23o:COL:V:RqsPosInc 0.025
+23o:COL:V:MemPos -7.355
+23o:COL:V:Offset 0
+23o:COL:V:Scale 0.0001
+23o:COL:V:RqsPosMem1 -7.355
+23o:COL:V:RqsPosMem2 -1
+23o:RB:Rd:Start.DESC Robot XYZ position Assembly
+23o:RB:Rd:AccelTime 100
+23o:RB:Rd:AccelCurve 50
+23o:RB:Rd:Motion 3
+23o:RB:mrx:ActPos.EGU (cts)
+23o:RB:mrx:ActPos.DESC mtr dewar-X
+23o:RB:mrx:RqsPos 55078.203281828
+23o:RB:mrx:RqsPos.EGU 
+23o:RB:mrx:RqsPos.DESC 
+23o:RB:mrx:RqsPos.HOPR 0
+23o:RB:mrx:RqsPos.LOPR 0
+23o:RB:mrx:RqsPos.DRVH 0
+23o:RB:mrx:RqsPos.DRVL 0
+23o:RB:mrx:RqsBkl 1343.3708117519
+23o:RB:mrx:RqsBkl.EGU 
+23o:RB:mrx:RqsBkl.DESC 
+23o:RB:mrx:RqsPosInc 0
+23o:RB:mrx:MemPos 0
+23o:RB:mry:ActPos.EGU (cts)
+23o:RB:mry:ActPos.DESC mtr dewar-Y
+23o:RB:mry:RqsPos 291649.49927872
+23o:RB:mry:RqsPos.EGU 
+23o:RB:mry:RqsPos.DESC 
+23o:RB:mry:RqsPos.HOPR 0
+23o:RB:mry:RqsPos.LOPR 0
+23o:RB:mry:RqsPos.DRVH 0
+23o:RB:mry:RqsPos.DRVL 0
+23o:RB:mry:RqsBkl 844.89438781372
+23o:RB:mry:RqsBkl.EGU 
+23o:RB:mry:RqsBkl.DESC 
+23o:RB:mry:RqsPosInc 0
+23o:RB:mry:MemPos 0
+23o:RB:mrz:ActPos.EGU (cts)
+23o:RB:mrz:ActPos.DESC mtr dewar-Z
+23o:RB:mrz:RqsPos 8889459.904691
+23o:RB:mrz:RqsPos.EGU 
+23o:RB:mrz:RqsPos.DESC 
+23o:RB:mrz:RqsPos.HOPR 0
+23o:RB:mrz:RqsPos.LOPR 0
+23o:RB:mrz:RqsPos.DRVH 0
+23o:RB:mrz:RqsPos.DRVL 0
+23o:RB:mrz:RqsBkl 1869.148174749
+23o:RB:mrz:RqsBkl.EGU 
+23o:RB:mrz:RqsBkl.DESC 
+23o:RB:mrz:RqsPosInc 0
+23o:RB:mrz:MemPos 0
+23o:RB:RX:ActPos.EGU (mm)
+23o:RB:RX:ActPos.DESC Dewar X
+23o:RB:RX:RqsPos 0
+23o:RB:RX:RqsPos.EGU 
+23o:RB:RX:RqsPos.DESC 
+23o:RB:RX:RqsPos.HOPR 0
+23o:RB:RX:RqsPos.LOPR 0
+23o:RB:RX:RqsPos.DRVH 250
+23o:RB:RX:RqsPos.DRVL -3
+23o:RB:RX:RqsBkl 0.05
+23o:RB:RX:RqsBkl.EGU 
+23o:RB:RX:RqsBkl.DESC 
+23o:RB:RX:RqsPosInc 25
+23o:RB:RX:MemPos 250
+23o:RB:RX:Offset -2.05
+23o:RB:RX:Scale 3.7219805256e-05
+23o:RB:RY:ActPos.EGU (mm)
+23o:RB:RY:ActPos.DESC Dewar Y
+23o:RB:RY:RqsPos 4.609524
+23o:RB:RY:RqsPos.EGU 
+23o:RB:RY:RqsPos.DESC 
+23o:RB:RY:RqsPos.HOPR 0
+23o:RB:RY:RqsPos.LOPR 0
+23o:RB:RY:RqsPos.DRVH 28
+23o:RB:RY:RqsPos.DRVL -25
+23o:RB:RY:RqsBkl 0.05
+23o:RB:RY:RqsBkl.EGU 
+23o:RB:RY:RqsBkl.DESC 
+23o:RB:RY:RqsPosInc 0.1
+23o:RB:RY:MemPos -19.15
+23o:RB:RY:Offset -12.65
+23o:RB:RY:Scale 5.917899411e-05
+23o:RB:RZ:ActPos.EGU (mm)
+23o:RB:RZ:ActPos.DESC Dewar Z
+23o:RB:RZ:RqsPos 44.34688283648
+23o:RB:RZ:RqsPos.EGU 
+23o:RB:RZ:RqsPos.DESC 
+23o:RB:RZ:RqsPos.HOPR 0
+23o:RB:RZ:RqsPos.LOPR 0
+23o:RB:RZ:RqsPos.DRVH 66
+23o:RB:RZ:RqsPos.DRVL -7.5
+23o:RB:RZ:RqsBkl 0.0099999999999998
+23o:RB:RZ:RqsBkl.EGU 
+23o:RB:RZ:RqsBkl.DESC 
+23o:RB:RZ:RqsPosInc 0.1
+23o:RB:RZ:MemPos 44.28188300288
+23o:RB:RZ:Offset -3.212
+23o:RB:RZ:Scale 5.350030637e-06
+23o:RB:Rr:Start.DESC Robot rotation Assembly
+23o:RB:Rr:AccelTime 1000
+23o:RB:Rr:AccelCurve 500
+23o:RB:Rr:Motion 3
+23o:RB:mra:ActPos.EGU (cts)
+23o:RB:mra:ActPos.DESC mtr angle
+23o:RB:mra:RqsPos 297204.83770156
+23o:RB:mra:RqsPos.EGU 
+23o:RB:mra:RqsPos.DESC 
+23o:RB:mra:RqsPos.HOPR 0
+23o:RB:mra:RqsPos.LOPR 0
+23o:RB:mra:RqsPos.DRVH 0
+23o:RB:mra:RqsPos.DRVL 0
+23o:RB:mra:RqsBkl 0
+23o:RB:mra:RqsBkl.EGU 
+23o:RB:mra:RqsBkl.DESC 
+23o:RB:mra:RqsPosInc 0
+23o:RB:mra:MemPos 0
+23o:RB:RA:ActPos.EGU (degr)
+23o:RB:RA:ActPos.DESC robot rotation
+23o:RB:RA:RqsPos 8.689042
+23o:RB:RA:RqsPos.EGU 
+23o:RB:RA:RqsPos.DESC 
+23o:RB:RA:RqsPos.HOPR 0
+23o:RB:RA:RqsPos.LOPR 0
+23o:RB:RA:RqsPos.DRVH 0
+23o:RB:RA:RqsPos.DRVL 0
+23o:RB:RA:RqsBkl 0
+23o:RB:RA:RqsBkl.EGU 
+23o:RB:RA:RqsBkl.DESC 
+23o:RB:RA:RqsPosInc 30
+23o:RB:RA:MemPos 260.556045
+23o:RB:RA:Offset -5.16
+23o:RB:RA:Scale 4.6597633158e-05
+23o:FLU:Di:Start.DESC Flu.Detector dist.         
+23o:FLU:Di:AccelTime 100
+23o:FLU:Di:AccelCurve 50
+23o:FLU:Di:Motion 3
+23o:FLU:md:ActPos.EGU (cts)
+23o:FLU:md:ActPos.DESC mtr flu.det.dist. 
+23o:FLU:md:RqsPos -173845.07047462
+23o:FLU:md:RqsPos.EGU 
+23o:FLU:md:RqsPos.DESC 
+23o:FLU:md:RqsPos.HOPR 0
+23o:FLU:md:RqsPos.LOPR 0
+23o:FLU:md:RqsPos.DRVH 0
+23o:FLU:md:RqsPos.DRVL 0
+23o:FLU:md:RqsBkl -434.62009857184
+23o:FLU:md:RqsBkl.EGU 
+23o:FLU:md:RqsBkl.DESC 
+23o:FLU:md:RqsPosInc 0
+23o:FLU:md:MemPos 0
+23o:FLU:D:ActPos.EGU (mm)
+23o:FLU:D:ActPos.DESC Flu.Det.dstnce.
+23o:FLU:D:RqsPos 120.00034155739
+23o:FLU:D:RqsPos.EGU 
+23o:FLU:D:RqsPos.DESC 
+23o:FLU:D:RqsPos.HOPR 0
+23o:FLU:D:RqsPos.LOPR 0
+23o:FLU:D:RqsPos.DRVH 139
+23o:FLU:D:RqsPos.DRVL 36.9
+23o:FLU:D:RqsBkl -0.05
+23o:FLU:D:RqsBkl.EGU 
+23o:FLU:D:RqsBkl.DESC 
+23o:FLU:D:RqsPosInc 10
+23o:FLU:D:MemPos 139
+23o:FLU:D:Offset 140
+23o:FLU:D:Scale 0.000115043
+23o:PIN:St:Start.DESC Pin Diode Support Assembly
+23o:PIN:St:AccelTime 100
+23o:PIN:St:AccelCurve 50
+23o:PIN:St:Motion 3
+23o:PIN:mp:ActPos.EGU (cts)
+23o:PIN:mp:ActPos.DESC mtr positn.
+23o:PIN:mp:RqsPos -51.2
+23o:PIN:mp:RqsPos.EGU 
+23o:PIN:mp:RqsPos.DESC 
+23o:PIN:mp:RqsPos.HOPR 0
+23o:PIN:mp:RqsPos.LOPR 0
+23o:PIN:mp:RqsPos.DRVH 0
+23o:PIN:mp:RqsPos.DRVL 0
+23o:PIN:mp:RqsBkl 1
+23o:PIN:mp:RqsBkl.EGU 
+23o:PIN:mp:RqsBkl.DESC 
+23o:PIN:mp:RqsPosInc 0
+23o:PIN:mp:MemPos 0
+23o:PIN:P:ActPos.EGU (mm)
+23o:PIN:P:ActPos.DESC pin diode suprt
+23o:PIN:P:RqsPos -6
+23o:PIN:P:RqsPos.EGU 
+23o:PIN:P:RqsPos.DESC 
+23o:PIN:P:RqsPos.HOPR 0
+23o:PIN:P:RqsPos.LOPR 0
+23o:PIN:P:RqsPos.DRVH 0
+23o:PIN:P:RqsPos.DRVL 0
+23o:PIN:P:RqsBkl 0.1171875
+23o:PIN:P:RqsBkl.EGU 
+23o:PIN:P:RqsBkl.DESC 
+23o:PIN:P:RqsPosInc 1
+23o:PIN:P:MemPos 116.25
+23o:PIN:P:Offset 0
+23o:PIN:P:Scale 0.1171875
+23o:PIN:P:RqsPosMem1 116.5
+23o:PIN:P:RqsPosMem2 -6
+23o:HS:Av:Start.DESC Huber Slits Vert.Assembly
+23o:HS:Av:AccelTime 1000
+23o:HS:Av:AccelCurve 500
+23o:HS:Av:Motion 3
+23o:HS:Av:Invert 1
+23o:HS:mt:ActPos.EGU (cts)
+23o:HS:mt:ActPos.DESC mtr top
+23o:HS:mt:RqsPos -2836860.2365695
+23o:HS:mt:RqsPos.EGU 
+23o:HS:mt:RqsPos.DESC 
+23o:HS:mt:RqsPos.HOPR 0
+23o:HS:mt:RqsPos.LOPR 0
+23o:HS:mt:RqsPos.DRVH 0
+23o:HS:mt:RqsPos.DRVL 0
+23o:HS:mt:RqsBkl 0
+23o:HS:mt:RqsBkl.EGU 
+23o:HS:mt:RqsBkl.DESC 
+23o:HS:mt:RqsPosInc 0
+23o:HS:mt:MemPos 0
+23o:HS:mb:ActPos.EGU (cts)
+23o:HS:mb:ActPos.DESC mtr btm
+23o:HS:mb:RqsPos 2836860.2365695
+23o:HS:mb:RqsPos.EGU 
+23o:HS:mb:RqsPos.DESC 
+23o:HS:mb:RqsPos.HOPR 0
+23o:HS:mb:RqsPos.LOPR 0
+23o:HS:mb:RqsPos.DRVH 0
+23o:HS:mb:RqsPos.DRVL 0
+23o:HS:mb:RqsBkl 0
+23o:HS:mb:RqsBkl.EGU 
+23o:HS:mb:RqsBkl.DESC 
+23o:HS:mb:RqsPosInc 0
+23o:HS:mb:MemPos 0
+23o:HS:ZT:ActPos.EGU (mm)
+23o:HS:ZT:ActPos.DESC HS Z-top
+23o:HS:ZT:RqsPos -9.7264093521751e-15
+23o:HS:ZT:RqsPos.EGU 
+23o:HS:ZT:RqsPos.DESC 
+23o:HS:ZT:RqsPos.HOPR 0
+23o:HS:ZT:RqsPos.LOPR 0
+23o:HS:ZT:RqsPos.DRVH 0
+23o:HS:ZT:RqsPos.DRVL 0
+23o:HS:ZT:RqsBkl 0
+23o:HS:ZT:RqsBkl.EGU 
+23o:HS:ZT:RqsBkl.DESC 
+23o:HS:ZT:RqsPosInc 0
+23o:HS:ZT:MemPos 0
+23o:HS:ZT:Offset 6.1
+23o:HS:ZT:Scale 2.15026455e-06
+23o:HS:ZB:ActPos.EGU (mm)
+23o:HS:ZB:ActPos.DESC HS Z-bottom
+23o:HS:ZB:RqsPos 9.7264093521751e-15
+23o:HS:ZB:RqsPos.EGU 
+23o:HS:ZB:RqsPos.DESC 
+23o:HS:ZB:RqsPos.HOPR 0
+23o:HS:ZB:RqsPos.LOPR 0
+23o:HS:ZB:RqsPos.DRVH 0
+23o:HS:ZB:RqsPos.DRVL 0
+23o:HS:ZB:RqsBkl 0
+23o:HS:ZB:RqsBkl.EGU 
+23o:HS:ZB:RqsBkl.DESC 
+23o:HS:ZB:RqsPosInc 0
+23o:HS:ZB:MemPos 0
+23o:HS:ZB:Offset -6.1
+23o:HS:ZB:Scale 2.15026455e-06
+23o:HS:ZC:ActPos.EGU (mm)
+23o:HS:ZC:ActPos.DESC HS Z-center
+23o:HS:ZC:RqsPos 0
+23o:HS:ZC:RqsPos.EGU 
+23o:HS:ZC:RqsPos.DESC 
+23o:HS:ZC:RqsPos.HOPR 0
+23o:HS:ZC:RqsPos.LOPR 0
+23o:HS:ZC:RqsPos.DRVH 0
+23o:HS:ZC:RqsPos.DRVL 0
+23o:HS:ZC:RqsBkl 0
+23o:HS:ZC:RqsBkl.EGU 
+23o:HS:ZC:RqsBkl.DESC 
+23o:HS:ZC:RqsPosInc 0
+23o:HS:ZC:MemPos 0
+23o:HS:ZS:ActPos.EGU (mm)
+23o:HS:ZS:ActPos.DESC HS Z-size
+23o:HS:ZS:RqsPos -1.945281870435e-14
+23o:HS:ZS:RqsPos.EGU 
+23o:HS:ZS:RqsPos.DESC 
+23o:HS:ZS:RqsPos.HOPR 0
+23o:HS:ZS:RqsPos.LOPR 0
+23o:HS:ZS:RqsPos.DRVH 0
+23o:HS:ZS:RqsPos.DRVL 0
+23o:HS:ZS:RqsBkl 0
+23o:HS:ZS:RqsBkl.EGU 
+23o:HS:ZS:RqsBkl.DESC 
+23o:HS:ZS:RqsPosInc 0
+23o:HS:ZS:MemPos 0
+23o:HS:Ah:Start.DESC Huber Slits Horz.Assembly
+23o:HS:Ah:AccelTime 1000
+23o:HS:Ah:AccelCurve 500
+23o:HS:Ah:Motion 3
+23o:HS:Ah:Invert 1
+23o:HS:mo:ActPos.EGU (cts)
+23o:HS:mo:ActPos.DESC mtr out
+23o:HS:mo:RqsPos -2836860.2365695
+23o:HS:mo:RqsPos.EGU 
+23o:HS:mo:RqsPos.DESC 
+23o:HS:mo:RqsPos.HOPR 0
+23o:HS:mo:RqsPos.LOPR 0
+23o:HS:mo:RqsPos.DRVH 0
+23o:HS:mo:RqsPos.DRVL 0
+23o:HS:mo:RqsBkl 0
+23o:HS:mo:RqsBkl.EGU 
+23o:HS:mo:RqsBkl.DESC 
+23o:HS:mo:RqsPosInc 0
+23o:HS:mo:MemPos 0
+23o:HS:mi:ActPos.EGU (cts)
+23o:HS:mi:ActPos.DESC mtr in
+23o:HS:mi:RqsPos 2836860.2365695
+23o:HS:mi:RqsPos.EGU 
+23o:HS:mi:RqsPos.DESC 
+23o:HS:mi:RqsPos.HOPR 0
+23o:HS:mi:RqsPos.LOPR 0
+23o:HS:mi:RqsPos.DRVH 0
+23o:HS:mi:RqsPos.DRVL 0
+23o:HS:mi:RqsBkl 0
+23o:HS:mi:RqsBkl.EGU 
+23o:HS:mi:RqsBkl.DESC 
+23o:HS:mi:RqsPosInc 0
+23o:HS:mi:MemPos 0
+23o:HS:YO:ActPos.EGU (mm)
+23o:HS:YO:ActPos.DESC HS Y-outboard
+23o:HS:YO:RqsPos -9.7264093521751e-15
+23o:HS:YO:RqsPos.EGU 
+23o:HS:YO:RqsPos.DESC 
+23o:HS:YO:RqsPos.HOPR 0
+23o:HS:YO:RqsPos.LOPR 0
+23o:HS:YO:RqsPos.DRVH 0
+23o:HS:YO:RqsPos.DRVL 0
+23o:HS:YO:RqsBkl 0
+23o:HS:YO:RqsBkl.EGU 
+23o:HS:YO:RqsBkl.DESC 
+23o:HS:YO:RqsPosInc 0
+23o:HS:YO:MemPos 0
+23o:HS:YO:Offset 6.1
+23o:HS:YO:Scale 2.15026455e-06
+23o:HS:YI:ActPos.EGU (mm)
+23o:HS:YI:ActPos.DESC HS Y-inboard
+23o:HS:YI:RqsPos 9.7264093521751e-15
+23o:HS:YI:RqsPos.EGU 
+23o:HS:YI:RqsPos.DESC 
+23o:HS:YI:RqsPos.HOPR 0
+23o:HS:YI:RqsPos.LOPR 0
+23o:HS:YI:RqsPos.DRVH 0
+23o:HS:YI:RqsPos.DRVL 0
+23o:HS:YI:RqsBkl 0
+23o:HS:YI:RqsBkl.EGU 
+23o:HS:YI:RqsBkl.DESC 
+23o:HS:YI:RqsPosInc 0
+23o:HS:YI:MemPos 0
+23o:HS:YI:Offset -6.1
+23o:HS:YI:Scale 2.15026455e-06
+23o:HS:YC:ActPos.EGU (mm)
+23o:HS:YC:ActPos.DESC HS Y-center
+23o:HS:YC:RqsPos 0
+23o:HS:YC:RqsPos.EGU 
+23o:HS:YC:RqsPos.DESC 
+23o:HS:YC:RqsPos.HOPR 0
+23o:HS:YC:RqsPos.LOPR 0
+23o:HS:YC:RqsPos.DRVH 0
+23o:HS:YC:RqsPos.DRVL 0
+23o:HS:YC:RqsBkl 0
+23o:HS:YC:RqsBkl.EGU 
+23o:HS:YC:RqsBkl.DESC 
+23o:HS:YC:RqsPosInc 0
+23o:HS:YC:MemPos 0
+23o:HS:YS:ActPos.EGU (mm)
+23o:HS:YS:ActPos.DESC HS Y-size
+23o:HS:YS:RqsPos -1.945281870435e-14
+23o:HS:YS:RqsPos.EGU 
+23o:HS:YS:RqsPos.DESC 
+23o:HS:YS:RqsPos.HOPR 0
+23o:HS:YS:RqsPos.LOPR 0
+23o:HS:YS:RqsPos.DRVH 0
+23o:HS:YS:RqsPos.DRVL 0
+23o:HS:YS:RqsBkl 0
+23o:HS:YS:RqsBkl.EGU 
+23o:HS:YS:RqsBkl.DESC 
+23o:HS:YS:RqsPosInc 0
+23o:HS:YS:MemPos 0
+23o:XY:P9:Start.DESC XY Positioner 9 Assembly
+23o:XY:P9:AccelTime 1000
+23o:XY:P9:AccelCurve 500
+23o:XY:P9:Motion 3
+23o:XY:mx9:ActPos.EGU (cts)
+23o:XY:mx9:ActPos.DESC mtr x9
+23o:XY:mx9:RqsPos 3199395.2110988
+23o:XY:mx9:RqsPos.EGU 
+23o:XY:mx9:RqsPos.DESC 
+23o:XY:mx9:RqsPos.HOPR 0
+23o:XY:mx9:RqsPos.LOPR 0
+23o:XY:mx9:RqsPos.DRVH 0
+23o:XY:mx9:RqsPos.DRVL 0
+23o:XY:mx9:RqsBkl 0
+23o:XY:mx9:RqsBkl.EGU 
+23o:XY:mx9:RqsBkl.DESC 
+23o:XY:mx9:RqsPosInc 0
+23o:XY:mx9:MemPos 0
+23o:XY:my9:ActPos.EGU (cts)
+23o:XY:my9:ActPos.DESC mtr y9
+23o:XY:my9:RqsPos 1664201.541257
+23o:XY:my9:RqsPos.EGU 
+23o:XY:my9:RqsPos.DESC 
+23o:XY:my9:RqsPos.HOPR 0
+23o:XY:my9:RqsPos.LOPR 0
+23o:XY:my9:RqsPos.DRVH 0
+23o:XY:my9:RqsPos.DRVL 0
+23o:XY:my9:RqsBkl 0
+23o:XY:my9:RqsBkl.EGU 
+23o:XY:my9:RqsBkl.DESC 
+23o:XY:my9:RqsPosInc 0
+23o:XY:my9:MemPos 0
+23o:XY:X9:ActPos.EGU (mm)
+23o:XY:X9:ActPos.DESC X9
+23o:XY:X9:RqsPos -0.4
+23o:XY:X9:RqsPos.EGU 
+23o:XY:X9:RqsPos.DESC 
+23o:XY:X9:RqsPos.HOPR 0
+23o:XY:X9:RqsPos.LOPR 0
+23o:XY:X9:RqsPos.DRVH 0
+23o:XY:X9:RqsPos.DRVL 0
+23o:XY:X9:RqsBkl 0
+23o:XY:X9:RqsBkl.EGU 
+23o:XY:X9:RqsBkl.DESC 
+23o:XY:X9:RqsPosInc 5
+23o:XY:X9:MemPos 0.45
+23o:XY:X9:Offset -50
+23o:XY:X9:Scale 1.550293e-05
+23o:XY:Y9:ActPos.EGU (mm)
+23o:XY:Y9:ActPos.DESC Y9
+23o:XY:Y9:RqsPos 24.2
+23o:XY:Y9:RqsPos.EGU 
+23o:XY:Y9:RqsPos.DESC 
+23o:XY:Y9:RqsPos.HOPR 0
+23o:XY:Y9:RqsPos.LOPR 0
+23o:XY:Y9:RqsPos.DRVH 0
+23o:XY:Y9:RqsPos.DRVL 0
+23o:XY:Y9:RqsBkl 0
+23o:XY:Y9:RqsBkl.EGU 
+23o:XY:Y9:RqsBkl.DESC 
+23o:XY:Y9:RqsPosInc 5
+23o:XY:Y9:MemPos 16
+23o:XY:Y9:Offset 50
+23o:XY:Y9:Scale -1.550293e-05
+23o:aim_adc1.CALO 80.196763
+23o:aim_adc1.CALS 10.716381
+23o:aim_adc1.CALQ 0
+23o:aim_adc1.EGU 
+23o:aim_adc1.TTH 10
+23o:aim_adc1.PRTM 2
+23o:aim_adc1.PLTM 2
+23o:aim_adc1.PCT 0
+23o:aim_adc1.PCTL 0
+23o:aim_adc1.PCTH 2047
+23o:aim_adc1.DWEL 0
+23o:aim_adc1.PSCL 1
+23o:aim_adc1.CHAS 0
+23o:aim_adc1.MODE 0
+23o:aim_adc1.R0LO 439
+23o:aim_adc1.R0HI 1767
+23o:aim_adc1.R0IP 0
+23o:aim_adc1.R0NM 
+23o:aim_adc1.R1LO -1
+23o:aim_adc1.R1HI -1
+23o:aim_adc1.R1IP 0
+23o:aim_adc1.R1NM 
+23o:aim_adc1.R2LO -1
+23o:aim_adc1.R2HI -1
+23o:aim_adc1.R2IP 0
+23o:aim_adc1.R2NM 
+23o:aim_adc1.R3LO -1
+23o:aim_adc1.R3HI -1
+23o:aim_adc1.R3IP 0
+23o:aim_adc1.R3NM 
+23o:aim_adc1.R4LO -1
+23o:aim_adc1.R4HI -1
+23o:aim_adc1.R4IP 0
+23o:aim_adc1.R4NM 
+23o:aim_adc1.R5LO -1
+23o:aim_adc1.R5HI -1
+23o:aim_adc1.R5IP 0
+23o:aim_adc1.R5NM 
+23o:aim_adc1.R6LO -1
+23o:aim_adc1.R6HI -1
+23o:aim_adc1.R6IP 0
+23o:aim_adc1.R6NM 
+23o:aim_adc1.R7LO -1
+23o:aim_adc1.R7HI -1
+23o:aim_adc1.R7IP 0
+23o:aim_adc1.R7NM 
+23o:aim_adc1.R8LO -1
+23o:aim_adc1.R8HI -1
+23o:aim_adc1.R8IP 0
+23o:aim_adc1.R8NM 
+23o:aim_adc1.R9LO -1
+23o:aim_adc1.R9HI -1
+23o:aim_adc1.R9IP 0
+23o:aim_adc1.R9NM 
+23o:aim_adc1.R10LO -1
+23o:aim_adc1.R10HI -1
+23o:aim_adc1.R10IP 0
+23o:aim_adc1.R10NM 
+23o:aim_adc1.R11LO -1
+23o:aim_adc1.R11HI -1
+23o:aim_adc1.R11IP 0
+23o:aim_adc1.R11NM 
+23o:aim_adc1.R12LO -1
+23o:aim_adc1.R12HI -1
+23o:aim_adc1.R12IP 0
+23o:aim_adc1.R12NM 
+23o:aim_adc1.R13LO -1
+23o:aim_adc1.R13HI -1
+23o:aim_adc1.R13IP 0
+23o:aim_adc1.R13NM 
+23o:aim_adc1.R14LO -1
+23o:aim_adc1.R14HI -1
+23o:aim_adc1.R14IP 0
+23o:aim_adc1.R14NM 
+23o:aim_adc1.R15LO -1
+23o:aim_adc1.R15HI -1
+23o:aim_adc1.R15IP 0
+23o:aim_adc1.R15NM 
+23o:aim_adc1.R16LO -1
+23o:aim_adc1.R16HI -1
+23o:aim_adc1.R16IP 0
+23o:aim_adc1.R16NM 
+23o:aim_adc1.R17LO -1
+23o:aim_adc1.R17HI -1
+23o:aim_adc1.R17IP 0
+23o:aim_adc1.R17NM 
+23o:aim_adc1.R18LO -1
+23o:aim_adc1.R18HI -1
+23o:aim_adc1.R18IP 0
+23o:aim_adc1.R18NM 
+23o:aim_adc1.R19LO -1
+23o:aim_adc1.R19HI -1
+23o:aim_adc1.R19IP 0
+23o:aim_adc1.R19NM 
+23o:aim_adc1.R20LO -1
+23o:aim_adc1.R20HI -1
+23o:aim_adc1.R20IP 0
+23o:aim_adc1.R20NM 
+23o:aim_adc1.R21LO -1
+23o:aim_adc1.R21HI -1
+23o:aim_adc1.R21IP 0
+23o:aim_adc1.R21NM 
+23o:aim_adc1.R22LO -1
+23o:aim_adc1.R22HI -1
+23o:aim_adc1.R22IP 0
+23o:aim_adc1.R22NM 
+23o:aim_adc1.R23LO -1
+23o:aim_adc1.R23HI -1
+23o:aim_adc1.R23IP 0
+23o:aim_adc1.R23NM 
+23o:aim_adc1.R24LO -1
+23o:aim_adc1.R24HI -1
+23o:aim_adc1.R24IP 0
+23o:aim_adc1.R24NM 
+23o:aim_adc1.R25LO -1
+23o:aim_adc1.R25HI -1
+23o:aim_adc1.R25IP 0
+23o:aim_adc1.R25NM 
+23o:aim_adc1.R26LO -1
+23o:aim_adc1.R26HI -1
+23o:aim_adc1.R26IP 0
+23o:aim_adc1.R26NM 
+23o:aim_adc1.R27LO -1
+23o:aim_adc1.R27HI -1
+23o:aim_adc1.R27IP 0
+23o:aim_adc1.R27NM 
+23o:aim_adc1.R28LO -1
+23o:aim_adc1.R28HI -1
+23o:aim_adc1.R28IP 0
+23o:aim_adc1.R28NM 
+23o:aim_adc1.R29LO -1
+23o:aim_adc1.R29HI -1
+23o:aim_adc1.R29IP 0
+23o:aim_adc1.R29NM 
+23o:aim_adc1.R30LO -1
+23o:aim_adc1.R30HI -1
+23o:aim_adc1.R30IP 0
+23o:aim_adc1.R30NM 
+23o:aim_adc1.R31LO -1
+23o:aim_adc1.R31HI -1
+23o:aim_adc1.R31IP 0
+23o:aim_adc1.R31NM 
+23o:aim_adc1GAIN 6
+23o:aim_adc1OFFSET 4736
+23o:aim_adc1ULD 100
+23o:aim_adc1LLD 5
+23o:aim_adc1ZERO 0
+23o:aim_adc1PMOD 0
+23o:aim_adc1GMOD 0
+23o:aim_adc1TMOD 0
+23o:aim_adc1CMOD 0
+23o:aim_adc1AMOD 0
+23o:aim_tca1POLARITY 0
+23o:aim_tca1THRESHOLD 0
+23o:aim_tca1SCA_ENABLE 1
+23o:aim_tca1SCA1_GATE 1
+23o:aim_tca1SCA2_GATE 0
+23o:aim_tca1SCA3_GATE 0
+23o:aim_tca1TCA_SELECT 1
+23o:aim_tca1PUR_ENABLE 0
+23o:aim_tca1SCA1_PUR 0
+23o:aim_tca1SCA2_PUR 0
+23o:aim_tca1SCA3_PUR 0
+23o:aim_tca1PUR_AMP 0
+23o:aim_tca1SCA1_LOW 5
+23o:aim_tca1SCA1_HI 100
+23o:aim_tca1SCA2_LOW 0
+23o:aim_tca1SCA2_HI 0
+23o:aim_tca1SCA3_LOW 0
+23o:aim_tca1SCA3_HI 0
+23o:aim_tca1ROI_SCA_ENABLE 0
+23o:aim_tca1SCA_CAL 1
+23o:DAC1_1.VAL 3.6534825530289
+23o:DAC1_1_pulse.VAL 0
+23o:DAC1_1_tweakVal.VAL 0.25
+23o:DAC1_1.EGUL -10
+23o:DAC1_1.DRVL 0
+23o:DAC1_1.LOPR 0
+23o:DAC1_1.EGUF 10
+23o:DAC1_1.DRVH 10
+23o:DAC1_1.HOPR 10
+23o:DAC1_2.VAL 5.40585
+23o:DAC1_2_pulse.VAL 0
+23o:DAC1_2_tweakVal.VAL 0.02
+23o:DAC1_2.EGUL -10
+23o:DAC1_2.DRVL 0
+23o:DAC1_2.LOPR 0
+23o:DAC1_2.EGUF 10
+23o:DAC1_2.DRVH 10
+23o:DAC1_2.HOPR 10
+23o:DAC1_3.VAL 5.44488
+23o:DAC1_3_pulse.VAL 0
+23o:DAC1_3_tweakVal.VAL 0.02
+23o:DAC1_3.EGUL -10
+23o:DAC1_3.DRVL 0
+23o:DAC1_3.LOPR 0
+23o:DAC1_3.EGUF 10
+23o:DAC1_3.DRVH 10
+23o:DAC1_3.HOPR 10
+23o:DAC1_4.VAL 0
+23o:DAC1_4_pulse.VAL 0
+23o:DAC1_4_tweakVal.VAL 1
+23o:DAC1_4.EGUL -10
+23o:DAC1_4.DRVL 0
+23o:DAC1_4.LOPR 0
+23o:DAC1_4.EGUF 10
+23o:DAC1_4.DRVH 5
+23o:DAC1_4.HOPR 5
+23o:DAC1_5.VAL 1.354165
+23o:DAC1_5_pulse.VAL 0
+23o:DAC1_5_tweakVal.VAL 0.5
+23o:DAC1_5.EGUL -10
+23o:DAC1_5.DRVL 0
+23o:DAC1_5.LOPR 0
+23o:DAC1_5.EGUF 10
+23o:DAC1_5.DRVH 5
+23o:DAC1_5.HOPR 5
+23o:DAC1_6.VAL 3.47222
+23o:DAC1_6_pulse.VAL 0
+23o:DAC1_6_tweakVal.VAL 1
+23o:DAC1_6.EGUL -10
+23o:DAC1_6.DRVL 0
+23o:DAC1_6.LOPR 0
+23o:DAC1_6.EGUF 10
+23o:DAC1_6.DRVH 5
+23o:DAC1_6.HOPR 5
+23o:DAC1_7.VAL 0
+23o:DAC1_7_pulse.VAL 0
+23o:DAC1_7_tweakVal.VAL 0
+23o:DAC1_7.EGUL -10
+23o:DAC1_7.DRVL 0
+23o:DAC1_7.LOPR 0
+23o:DAC1_7.EGUF 10
+23o:DAC1_7.DRVH 2
+23o:DAC1_7.HOPR 2
+23o:DAC1_8.VAL 2.569445
+23o:DAC1_8_pulse.VAL 0
+23o:DAC1_8_tweakVal.VAL 1
+23o:DAC1_8.EGUL -10
+23o:DAC1_8.DRVL 0
+23o:DAC1_8.LOPR 0
+23o:DAC1_8.EGUF 10
+23o:DAC1_8.DRVH 5
+23o:DAC1_8.HOPR 5
+23o:bi:runs:runCount 13
+23o:bi:runs:currentRun 0
+23o:bi:runs:isActive 0
+23o:bi:runs:doseMode 0
+23o:bi:runs:updated 0
+23o:bi:SCAN:edgeEnergy 7709
+23o:bi:SCAN:edgeCutoff 6930.3
+23o:bi:SCAN:time 2
+23o:bi:SCAN:roiLow 440
+23o:bi:SCAN:roiHigh 1768
+23o:bi:SCAN:adcGain 16384
+23o:bi:SCAN:adcOffset 4736
+23o:bi:SCAN:optADCGain 16384
+23o:bi:SCAN:optADCOffset 4736
+23o:bi:SCAN:startScan 1
+23o:bi:SCAN:stopScan 1
+23o:bi:SCAN:endScan 1
+23o:bi:attenuation 49.987670547
+23o:bi:r0:runStatus complete
+23o:bi:r0:nextFrame 1
+23o:bi:r0:runLabel 0
+23o:bi:r0:fileroot rph8test
+23o:bi:r0:directory /mnt/evagfs/zxu/lei1/rph1test
+23o:bi:r0:startFrameLabel 3
+23o:bi:r0:axisMotor gonio_phi
+23o:bi:r0:startAngle 90
+23o:bi:r0:endAngle 91
+23o:bi:r0:delta 1
+23o:bi:r0:wedgeSize 180
+23o:bi:r0:exposureTime 3
+23o:bi:r0:distance 350
+23o:bi:r0:numEnergy 1
+23o:bi:r0:energy1 12
+23o:bi:r0:energy2 0
+23o:bi:r0:energy3 0
+23o:bi:r0:energy4 0
+23o:bi:r0:energy5 0
+23o:bi:r0:modeIndex 0
+23o:bi:r0:inverseOn 0
+23o:bi:r0:updated 0
+23o:bi:r1:runStatus complete
+23o:bi:r1:nextFrame 180
+23o:bi:r1:runLabel 1
+23o:bi:r1:fileroot pf50
+23o:bi:r1:directory /mnt/evagfs/zxu/lei/pf50
+23o:bi:r1:startFrameLabel 1
+23o:bi:r1:axisMotor gonio_phi
+23o:bi:r1:startAngle 0
+23o:bi:r1:endAngle 180
+23o:bi:r1:delta 1
+23o:bi:r1:wedgeSize 180
+23o:bi:r1:exposureTime 3
+23o:bi:r1:distance 300
+23o:bi:r1:numEnergy 1
+23o:bi:r1:energy1 12
+23o:bi:r1:energy2 0
+23o:bi:r1:energy3 0
+23o:bi:r1:energy4 0
+23o:bi:r1:energy5 0
+23o:bi:r1:modeIndex 0
+23o:bi:r1:inverseOn 0
+23o:bi:r1:updated 0
+23o:bi:r2:runStatus complete
+23o:bi:r2:nextFrame 180
+23o:bi:r2:runLabel 2
+23o:bi:r2:fileroot pf23
+23o:bi:r2:directory /mnt/evagfs/zxu/lei/pf23
+23o:bi:r2:startFrameLabel 1
+23o:bi:r2:axisMotor gonio_phi
+23o:bi:r2:startAngle -45
+23o:bi:r2:endAngle 135
+23o:bi:r2:delta 1
+23o:bi:r2:wedgeSize 180
+23o:bi:r2:exposureTime 2
+23o:bi:r2:distance 300
+23o:bi:r2:numEnergy 1
+23o:bi:r2:energy1 12
+23o:bi:r2:energy2 0
+23o:bi:r2:energy3 0
+23o:bi:r2:energy4 0
+23o:bi:r2:energy5 0
+23o:bi:r2:modeIndex 0
+23o:bi:r2:inverseOn 0
+23o:bi:r2:updated 0
+23o:bi:r3:runStatus complete
+23o:bi:r3:nextFrame 180
+23o:bi:r3:runLabel 3
+23o:bi:r3:fileroot pf47
+23o:bi:r3:directory /mnt/evagfs/zxu/lei/pf47
+23o:bi:r3:startFrameLabel 1
+23o:bi:r3:axisMotor gonio_phi
+23o:bi:r3:startAngle 0
+23o:bi:r3:endAngle 180
+23o:bi:r3:delta 1
+23o:bi:r3:wedgeSize 180
+23o:bi:r3:exposureTime 3
+23o:bi:r3:distance 300
+23o:bi:r3:numEnergy 1
+23o:bi:r3:energy1 12
+23o:bi:r3:energy2 0
+23o:bi:r3:energy3 0
+23o:bi:r3:energy4 0
+23o:bi:r3:energy5 0
+23o:bi:r3:modeIndex 0
+23o:bi:r3:inverseOn 0
+23o:bi:r3:updated 0
+23o:bi:r4:runStatus complete
+23o:bi:r4:nextFrame 180
+23o:bi:r4:runLabel 4
+23o:bi:r4:fileroot pf24
+23o:bi:r4:directory /mnt/evagfs/zxu/lei/pf24
+23o:bi:r4:startFrameLabel 1
+23o:bi:r4:axisMotor gonio_phi
+23o:bi:r4:startAngle 0
+23o:bi:r4:endAngle 180
+23o:bi:r4:delta 1
+23o:bi:r4:wedgeSize 180
+23o:bi:r4:exposureTime 3
+23o:bi:r4:distance 275
+23o:bi:r4:numEnergy 1
+23o:bi:r4:energy1 12
+23o:bi:r4:energy2 0
+23o:bi:r4:energy3 0
+23o:bi:r4:energy4 0
+23o:bi:r4:energy5 0
+23o:bi:r4:modeIndex 0
+23o:bi:r4:inverseOn 0
+23o:bi:r4:updated 0
+23o:bi:r5:runStatus complete
+23o:bi:r5:nextFrame 180
+23o:bi:r5:runLabel 5
+23o:bi:r5:fileroot pf25
+23o:bi:r5:directory /mnt/evagfs/zxu/lei/pf25
+23o:bi:r5:startFrameLabel 1
+23o:bi:r5:axisMotor gonio_phi
+23o:bi:r5:startAngle 0
+23o:bi:r5:endAngle 180
+23o:bi:r5:delta 1
+23o:bi:r5:wedgeSize 180
+23o:bi:r5:exposureTime 2
+23o:bi:r5:distance 250
+23o:bi:r5:numEnergy 1
+23o:bi:r5:energy1 12
+23o:bi:r5:energy2 0
+23o:bi:r5:energy3 0
+23o:bi:r5:energy4 0
+23o:bi:r5:energy5 0
+23o:bi:r5:modeIndex 0
+23o:bi:r5:inverseOn 0
+23o:bi:r5:updated 0
+23o:bi:r6:runStatus complete
+23o:bi:r6:nextFrame 180
+23o:bi:r6:runLabel 6
+23o:bi:r6:fileroot p8ap4
+23o:bi:r6:directory /mnt/evagfs/zxu/lei/p8ap4
+23o:bi:r6:startFrameLabel 1
+23o:bi:r6:axisMotor gonio_phi
+23o:bi:r6:startAngle 0
+23o:bi:r6:endAngle 180
+23o:bi:r6:delta 1
+23o:bi:r6:wedgeSize 180
+23o:bi:r6:exposureTime 5
+23o:bi:r6:distance 300
+23o:bi:r6:numEnergy 1
+23o:bi:r6:energy1 12
+23o:bi:r6:energy2 0
+23o:bi:r6:energy3 0
+23o:bi:r6:energy4 0
+23o:bi:r6:energy5 0
+23o:bi:r6:modeIndex 0
+23o:bi:r6:inverseOn 0
+23o:bi:r6:updated 0
+23o:bi:r7:runStatus inactive
+23o:bi:r7:nextFrame 0
+23o:bi:r7:runLabel 7
+23o:bi:r7:fileroot p8ap3
+23o:bi:r7:directory /mnt/evagfs/zxu/lei/p8ap3
+23o:bi:r7:startFrameLabel 1
+23o:bi:r7:axisMotor gonio_phi
+23o:bi:r7:startAngle 0
+23o:bi:r7:endAngle 180
+23o:bi:r7:delta 1
+23o:bi:r7:wedgeSize 180
+23o:bi:r7:exposureTime 5
+23o:bi:r7:distance 300
+23o:bi:r7:numEnergy 1
+23o:bi:r7:energy1 12
+23o:bi:r7:energy2 0
+23o:bi:r7:energy3 0
+23o:bi:r7:energy4 0
+23o:bi:r7:energy5 0
+23o:bi:r7:modeIndex 0
+23o:bi:r7:inverseOn 0
+23o:bi:r7:updated 0
+23o:bi:r8:runStatus complete
+23o:bi:r8:nextFrame 180
+23o:bi:r8:runLabel 8
+23o:bi:r8:fileroot p8ap3
+23o:bi:r8:directory /mnt/evagfs/zxu/lei/p8ap3
+23o:bi:r8:startFrameLabel 1
+23o:bi:r8:axisMotor gonio_phi
+23o:bi:r8:startAngle -90
+23o:bi:r8:endAngle 90
+23o:bi:r8:delta 1
+23o:bi:r8:wedgeSize 180
+23o:bi:r8:exposureTime 3
+23o:bi:r8:distance 325
+23o:bi:r8:numEnergy 1
+23o:bi:r8:energy1 12
+23o:bi:r8:energy2 0
+23o:bi:r8:energy3 0
+23o:bi:r8:energy4 0
+23o:bi:r8:energy5 0
+23o:bi:r8:modeIndex 0
+23o:bi:r8:inverseOn 0
+23o:bi:r8:updated 0
+23o:bi:r9:runStatus complete
+23o:bi:r9:nextFrame 360
+23o:bi:r9:runLabel 9
+23o:bi:r9:fileroot p8ap2
+23o:bi:r9:directory /mnt/evagfs/zxu/lei/p8ap2
+23o:bi:r9:startFrameLabel 1
+23o:bi:r9:axisMotor gonio_phi
+23o:bi:r9:startAngle 0
+23o:bi:r9:endAngle 360
+23o:bi:r9:delta 1
+23o:bi:r9:wedgeSize 180
+23o:bi:r9:exposureTime 3
+23o:bi:r9:distance 350
+23o:bi:r9:numEnergy 1
+23o:bi:r9:energy1 12
+23o:bi:r9:energy2 0
+23o:bi:r9:energy3 0
+23o:bi:r9:energy4 0
+23o:bi:r9:energy5 0
+23o:bi:r9:modeIndex 0
+23o:bi:r9:inverseOn 0
+23o:bi:r9:updated 0
+23o:bi:r10:runStatus complete
+23o:bi:r10:nextFrame 5
+23o:bi:r10:runLabel 10
+23o:bi:r10:fileroot JX12
+23o:bi:r10:directory /mnt/evagfs/zxu/skd/JX12
+23o:bi:r10:startFrameLabel 1
+23o:bi:r10:axisMotor gonio_phi
+23o:bi:r10:startAngle 0
+23o:bi:r10:endAngle 5
+23o:bi:r10:delta 1
+23o:bi:r10:wedgeSize 180
+23o:bi:r10:exposureTime 5
+23o:bi:r10:distance 650
+23o:bi:r10:numEnergy 1
+23o:bi:r10:energy1 12
+23o:bi:r10:energy2 0
+23o:bi:r10:energy3 0
+23o:bi:r10:energy4 0
+23o:bi:r10:energy5 0
+23o:bi:r10:modeIndex 0
+23o:bi:r10:inverseOn 0
+23o:bi:r10:updated 0
+23o:bi:r11:runStatus inactive
+23o:bi:r11:nextFrame 0
+23o:bi:r11:runLabel 11
+23o:bi:r11:fileroot JX12
+23o:bi:r11:directory /mnt/evagfs/zxu/skd/JX12
+23o:bi:r11:startFrameLabel 1
+23o:bi:r11:axisMotor gonio_phi
+23o:bi:r11:startAngle 0
+23o:bi:r11:endAngle 5
+23o:bi:r11:delta 1
+23o:bi:r11:wedgeSize 180
+23o:bi:r11:exposureTime 5
+23o:bi:r11:distance 650
+23o:bi:r11:numEnergy 1
+23o:bi:r11:energy1 12
+23o:bi:r11:energy2 0
+23o:bi:r11:energy3 0
+23o:bi:r11:energy4 0
+23o:bi:r11:energy5 0
+23o:bi:r11:modeIndex 0
+23o:bi:r11:inverseOn 0
+23o:bi:r11:updated 0
+23o:bi:r12:runStatus complete
+23o:bi:r12:nextFrame 360
+23o:bi:r12:runLabel 12
+23o:bi:r12:fileroot p8ap1
+23o:bi:r12:directory /mnt/evagfs/zxu/lei1/p8ap1/
+23o:bi:r12:startFrameLabel 1
+23o:bi:r12:axisMotor gonio_phi
+23o:bi:r12:startAngle 0
+23o:bi:r12:endAngle 360
+23o:bi:r12:delta 1
+23o:bi:r12:wedgeSize 180
+23o:bi:r12:exposureTime 3
+23o:bi:r12:distance 350
+23o:bi:r12:numEnergy 1
+23o:bi:r12:energy1 12
+23o:bi:r12:energy2 0
+23o:bi:r12:energy3 0
+23o:bi:r12:energy4 0
+23o:bi:r12:energy5 0
+23o:bi:r12:modeIndex 0
+23o:bi:r12:inverseOn 0
+23o:bi:r12:updated 0
+23o:bi:r13:runStatus complete
+23o:bi:r13:nextFrame 360
+23o:bi:r13:runLabel 13
+23o:bi:r13:fileroot p8ap5
+23o:bi:r13:directory /mnt/evagfs/zxu/lei1/p8ap5
+23o:bi:r13:startFrameLabel 1
+23o:bi:r13:axisMotor gonio_phi
+23o:bi:r13:startAngle 0
+23o:bi:r13:endAngle 360
+23o:bi:r13:delta 1
+23o:bi:r13:wedgeSize 180
+23o:bi:r13:exposureTime 3
+23o:bi:r13:distance 350
+23o:bi:r13:numEnergy 1
+23o:bi:r13:energy1 12
+23o:bi:r13:energy2 0
+23o:bi:r13:energy3 0
+23o:bi:r13:energy4 0
+23o:bi:r13:energy5 0
+23o:bi:r13:modeIndex 0
+23o:bi:r13:inverseOn 0
+23o:bi:r13:updated 0
+23o:bi:r14:runStatus inactive
+23o:bi:r14:nextFrame 1
+23o:bi:r14:runLabel 14
+23o:bi:r14:fileroot test
+23o:bi:r14:directory /mnt/evagfs/user0
+23o:bi:r14:startFrameLabel 1
+23o:bi:r14:axisMotor gonio_omega
+23o:bi:r14:startAngle 0
+23o:bi:r14:endAngle 1
+23o:bi:r14:delta 1
+23o:bi:r14:wedgeSize 180
+23o:bi:r14:exposureTime 1
+23o:bi:r14:distance 800.001
+23o:bi:r14:numEnergy 1
+23o:bi:r14:energy1 -19767181.559202
+23o:bi:r14:energy2 0
+23o:bi:r14:energy3 0
+23o:bi:r14:energy4 0
+23o:bi:r14:energy5 0
+23o:bi:r14:modeIndex 0
+23o:bi:r14:inverseOn 0
+23o:bi:r14:updated 0
+23o:bi:r15:runStatus inactive
+23o:bi:r15:nextFrame 1
+23o:bi:r15:runLabel 15
+23o:bi:r15:fileroot test
+23o:bi:r15:directory /mnt/evagfs/user0
+23o:bi:r15:startFrameLabel 1
+23o:bi:r15:axisMotor gonio_omega
+23o:bi:r15:startAngle 0
+23o:bi:r15:endAngle 1
+23o:bi:r15:delta 1
+23o:bi:r15:wedgeSize 180
+23o:bi:r15:exposureTime 1
+23o:bi:r15:distance 800.001
+23o:bi:r15:numEnergy 1
+23o:bi:r15:energy1 -19767181.559202
+23o:bi:r15:energy2 0
+23o:bi:r15:energy3 0
+23o:bi:r15:energy4 0
+23o:bi:r15:energy5 0
+23o:bi:r15:modeIndex 0
+23o:bi:r15:inverseOn 0
+23o:bi:r15:updated 0
+23o:bi:r16:runStatus 
+23o:bi:r16:nextFrame 1
+23o:bi:r16:runLabel 0
+23o:bi:r16:fileroot 
+23o:bi:r16:directory 
+23o:bi:r16:startFrameLabel 0
+23o:bi:r16:axisMotor 
+23o:bi:r16:startAngle 0
+23o:bi:r16:endAngle 0
+23o:bi:r16:delta 0
+23o:bi:r16:wedgeSize 0
+23o:bi:r16:exposureTime 0
+23o:bi:r16:distance 0
+23o:bi:r16:numEnergy 0
+23o:bi:r16:energy1 0
+23o:bi:r16:energy2 0
+23o:bi:r16:energy3 0
+23o:bi:r16:energy4 0
+23o:bi:r16:energy5 0
+23o:bi:r16:modeIndex 0
+23o:bi:r16:inverseOn 0
+23o:bi:r16:updated 0
+23o:bi:r17:runStatus 
+23o:bi:r17:nextFrame 1
+23o:bi:r17:runLabel 0
+23o:bi:r17:fileroot 
+23o:bi:r17:directory 
+23o:bi:r17:startFrameLabel 0
+23o:bi:r17:axisMotor 
+23o:bi:r17:startAngle 0
+23o:bi:r17:endAngle 0
+23o:bi:r17:delta 0
+23o:bi:r17:wedgeSize 0
+23o:bi:r17:exposureTime 0
+23o:bi:r17:distance 0
+23o:bi:r17:numEnergy 0
+23o:bi:r17:energy1 0
+23o:bi:r17:energy2 0
+23o:bi:r17:energy3 0
+23o:bi:r17:energy4 0
+23o:bi:r17:energy5 0
+23o:bi:r17:modeIndex 0
+23o:bi:r17:inverseOn 0
+23o:bi:r17:updated 0
+23o:bi:r18:runStatus 
+23o:bi:r18:nextFrame 1
+23o:bi:r18:runLabel 0
+23o:bi:r18:fileroot 
+23o:bi:r18:directory 
+23o:bi:r18:startFrameLabel 0
+23o:bi:r18:axisMotor 
+23o:bi:r18:startAngle 0
+23o:bi:r18:endAngle 0
+23o:bi:r18:delta 0
+23o:bi:r18:wedgeSize 0
+23o:bi:r18:exposureTime 0
+23o:bi:r18:distance 0
+23o:bi:r18:numEnergy 0
+23o:bi:r18:energy1 0
+23o:bi:r18:energy2 0
+23o:bi:r18:energy3 0
+23o:bi:r18:energy4 0
+23o:bi:r18:energy5 0
+23o:bi:r18:modeIndex 0
+23o:bi:r18:inverseOn 0
+23o:bi:r18:updated 0
+23o:bi:r19:runStatus 
+23o:bi:r19:nextFrame 1
+23o:bi:r19:runLabel 0
+23o:bi:r19:fileroot 
+23o:bi:r19:directory 
+23o:bi:r19:startFrameLabel 0
+23o:bi:r19:axisMotor 
+23o:bi:r19:startAngle 0
+23o:bi:r19:endAngle 0
+23o:bi:r19:delta 0
+23o:bi:r19:wedgeSize 0
+23o:bi:r19:exposureTime 0
+23o:bi:r19:distance 0
+23o:bi:r19:numEnergy 0
+23o:bi:r19:energy1 0
+23o:bi:r19:energy2 0
+23o:bi:r19:energy3 0
+23o:bi:r19:energy4 0
+23o:bi:r19:energy5 0
+23o:bi:r19:modeIndex 0
+23o:bi:r19:inverseOn 0
+23o:bi:r19:updated 0
+23o:bi:r20:runStatus 
+23o:bi:r20:nextFrame 1
+23o:bi:r20:runLabel 0
+23o:bi:r20:fileroot 
+23o:bi:r20:directory 
+23o:bi:r20:startFrameLabel 0
+23o:bi:r20:axisMotor 
+23o:bi:r20:startAngle 0
+23o:bi:r20:endAngle 0
+23o:bi:r20:delta 0
+23o:bi:r20:wedgeSize 0
+23o:bi:r20:exposureTime 0
+23o:bi:r20:distance 0
+23o:bi:r20:numEnergy 0
+23o:bi:r20:energy1 0
+23o:bi:r20:energy2 0
+23o:bi:r20:energy3 0
+23o:bi:r20:energy4 0
+23o:bi:r20:energy5 0
+23o:bi:r20:modeIndex 0
+23o:bi:r20:inverseOn 0
+23o:bi:r20:updated 0
+23o:bi:r21:runStatus 
+23o:bi:r21:nextFrame 1
+23o:bi:r21:runLabel 0
+23o:bi:r21:fileroot 
+23o:bi:r21:directory 
+23o:bi:r21:startFrameLabel 0
+23o:bi:r21:axisMotor 
+23o:bi:r21:startAngle 0
+23o:bi:r21:endAngle 0
+23o:bi:r21:delta 0
+23o:bi:r21:wedgeSize 0
+23o:bi:r21:exposureTime 0
+23o:bi:r21:distance 0
+23o:bi:r21:numEnergy 0
+23o:bi:r21:energy1 0
+23o:bi:r21:energy2 0
+23o:bi:r21:energy3 0
+23o:bi:r21:energy4 0
+23o:bi:r21:energy5 0
+23o:bi:r21:modeIndex 0
+23o:bi:r21:inverseOn 0
+23o:bi:r21:updated 0
+23o:bi:r22:runStatus 
+23o:bi:r22:nextFrame 1
+23o:bi:r22:runLabel 0
+23o:bi:r22:fileroot 
+23o:bi:r22:directory 
+23o:bi:r22:startFrameLabel 0
+23o:bi:r22:axisMotor 
+23o:bi:r22:startAngle 0
+23o:bi:r22:endAngle 0
+23o:bi:r22:delta 0
+23o:bi:r22:wedgeSize 0
+23o:bi:r22:exposureTime 0
+23o:bi:r22:distance 0
+23o:bi:r22:numEnergy 0
+23o:bi:r22:energy1 0
+23o:bi:r22:energy2 0
+23o:bi:r22:energy3 0
+23o:bi:r22:energy4 0
+23o:bi:r22:energy5 0
+23o:bi:r22:modeIndex 0
+23o:bi:r22:inverseOn 0
+23o:bi:r22:updated 0
+23o:bi:r23:runStatus 
+23o:bi:r23:nextFrame 1
+23o:bi:r23:runLabel 0
+23o:bi:r23:fileroot 
+23o:bi:r23:directory 
+23o:bi:r23:startFrameLabel 0
+23o:bi:r23:axisMotor 
+23o:bi:r23:startAngle 0
+23o:bi:r23:endAngle 0
+23o:bi:r23:delta 0
+23o:bi:r23:wedgeSize 0
+23o:bi:r23:exposureTime 0
+23o:bi:r23:distance 0
+23o:bi:r23:numEnergy 0
+23o:bi:r23:energy1 0
+23o:bi:r23:energy2 0
+23o:bi:r23:energy3 0
+23o:bi:r23:energy4 0
+23o:bi:r23:energy5 0
+23o:bi:r23:modeIndex 0
+23o:bi:r23:inverseOn 0
+23o:bi:r23:updated 0
+23o:bi:r24:runStatus 
+23o:bi:r24:nextFrame 1
+23o:bi:r24:runLabel 0
+23o:bi:r24:fileroot 
+23o:bi:r24:directory 
+23o:bi:r24:startFrameLabel 0
+23o:bi:r24:axisMotor 
+23o:bi:r24:startAngle 0
+23o:bi:r24:endAngle 0
+23o:bi:r24:delta 0
+23o:bi:r24:wedgeSize 0
+23o:bi:r24:exposureTime 0
+23o:bi:r24:distance 0
+23o:bi:r24:numEnergy 0
+23o:bi:r24:energy1 0
+23o:bi:r24:energy2 0
+23o:bi:r24:energy3 0
+23o:bi:r24:energy4 0
+23o:bi:r24:energy5 0
+23o:bi:r24:modeIndex 0
+23o:bi:r24:inverseOn 0
+23o:bi:r24:updated 0
+23o:bi:r25:runStatus 
+23o:bi:r25:nextFrame 1
+23o:bi:r25:runLabel 0
+23o:bi:r25:fileroot 
+23o:bi:r25:directory 
+23o:bi:r25:startFrameLabel 0
+23o:bi:r25:axisMotor 
+23o:bi:r25:startAngle 0
+23o:bi:r25:endAngle 0
+23o:bi:r25:delta 0
+23o:bi:r25:wedgeSize 0
+23o:bi:r25:exposureTime 0
+23o:bi:r25:distance 0
+23o:bi:r25:numEnergy 0
+23o:bi:r25:energy1 0
+23o:bi:r25:energy2 0
+23o:bi:r25:energy3 0
+23o:bi:r25:energy4 0
+23o:bi:r25:energy5 0
+23o:bi:r25:modeIndex 0
+23o:bi:r25:inverseOn 0
+23o:bi:r25:updated 0
+23o:bi:r26:runStatus 
+23o:bi:r26:nextFrame 1
+23o:bi:r26:runLabel 0
+23o:bi:r26:fileroot 
+23o:bi:r26:directory 
+23o:bi:r26:startFrameLabel 0
+23o:bi:r26:axisMotor 
+23o:bi:r26:startAngle 0
+23o:bi:r26:endAngle 0
+23o:bi:r26:delta 0
+23o:bi:r26:wedgeSize 0
+23o:bi:r26:exposureTime 0
+23o:bi:r26:distance 0
+23o:bi:r26:numEnergy 0
+23o:bi:r26:energy1 0
+23o:bi:r26:energy2 0
+23o:bi:r26:energy3 0
+23o:bi:r26:energy4 0
+23o:bi:r26:energy5 0
+23o:bi:r26:modeIndex 0
+23o:bi:r26:inverseOn 0
+23o:bi:r26:updated 0
+23o:bi:r27:runStatus 
+23o:bi:r27:nextFrame 1
+23o:bi:r27:runLabel 0
+23o:bi:r27:fileroot 
+23o:bi:r27:directory 
+23o:bi:r27:startFrameLabel 0
+23o:bi:r27:axisMotor 
+23o:bi:r27:startAngle 0
+23o:bi:r27:endAngle 0
+23o:bi:r27:delta 0
+23o:bi:r27:wedgeSize 0
+23o:bi:r27:exposureTime 0
+23o:bi:r27:distance 0
+23o:bi:r27:numEnergy 0
+23o:bi:r27:energy1 0
+23o:bi:r27:energy2 0
+23o:bi:r27:energy3 0
+23o:bi:r27:energy4 0
+23o:bi:r27:energy5 0
+23o:bi:r27:modeIndex 0
+23o:bi:r27:inverseOn 0
+23o:bi:r27:updated 0
+23o:bi:r28:runStatus 
+23o:bi:r28:nextFrame 1
+23o:bi:r28:runLabel 0
+23o:bi:r28:fileroot 
+23o:bi:r28:directory 
+23o:bi:r28:startFrameLabel 0
+23o:bi:r28:axisMotor 
+23o:bi:r28:startAngle 0
+23o:bi:r28:endAngle 0
+23o:bi:r28:delta 0
+23o:bi:r28:wedgeSize 0
+23o:bi:r28:exposureTime 0
+23o:bi:r28:distance 0
+23o:bi:r28:numEnergy 0
+23o:bi:r28:energy1 0
+23o:bi:r28:energy2 0
+23o:bi:r28:energy3 0
+23o:bi:r28:energy4 0
+23o:bi:r28:energy5 0
+23o:bi:r28:modeIndex 0
+23o:bi:r28:inverseOn 0
+23o:bi:r28:updated 0
+23o:bi:r29:runStatus 
+23o:bi:r29:nextFrame 1
+23o:bi:r29:runLabel 0
+23o:bi:r29:fileroot 
+23o:bi:r29:directory 
+23o:bi:r29:startFrameLabel 0
+23o:bi:r29:axisMotor 
+23o:bi:r29:startAngle 0
+23o:bi:r29:endAngle 0
+23o:bi:r29:delta 0
+23o:bi:r29:wedgeSize 0
+23o:bi:r29:exposureTime 0
+23o:bi:r29:distance 0
+23o:bi:r29:numEnergy 0
+23o:bi:r29:energy1 0
+23o:bi:r29:energy2 0
+23o:bi:r29:energy3 0
+23o:bi:r29:energy4 0
+23o:bi:r29:energy5 0
+23o:bi:r29:modeIndex 0
+23o:bi:r29:inverseOn 0
+23o:bi:r29:updated 0
+23o:bi:r30:runStatus 
+23o:bi:r30:nextFrame 1
+23o:bi:r30:runLabel 0
+23o:bi:r30:fileroot 
+23o:bi:r30:directory 
+23o:bi:r30:startFrameLabel 0
+23o:bi:r30:axisMotor 
+23o:bi:r30:startAngle 0
+23o:bi:r30:endAngle 0
+23o:bi:r30:delta 0
+23o:bi:r30:wedgeSize 0
+23o:bi:r30:exposureTime 0
+23o:bi:r30:distance 0
+23o:bi:r30:numEnergy 0
+23o:bi:r30:energy1 0
+23o:bi:r30:energy2 0
+23o:bi:r30:energy3 0
+23o:bi:r30:energy4 0
+23o:bi:r30:energy5 0
+23o:bi:r30:modeIndex 0
+23o:bi:r30:inverseOn 0
+23o:bi:r30:updated 0
+23o:bi:r31:runStatus 
+23o:bi:r31:nextFrame 1
+23o:bi:r31:runLabel 0
+23o:bi:r31:fileroot 
+23o:bi:r31:directory 
+23o:bi:r31:startFrameLabel 0
+23o:bi:r31:axisMotor 
+23o:bi:r31:startAngle 0
+23o:bi:r31:endAngle 0
+23o:bi:r31:delta 0
+23o:bi:r31:wedgeSize 0
+23o:bi:r31:exposureTime 0
+23o:bi:r31:distance 0
+23o:bi:r31:numEnergy 0
+23o:bi:r31:energy1 0
+23o:bi:r31:energy2 0
+23o:bi:r31:energy3 0
+23o:bi:r31:energy4 0
+23o:bi:r31:energy5 0
+23o:bi:r31:modeIndex 0
+23o:bi:r31:inverseOn 0
+23o:bi:r31:updated 0
+23o:bi:c0:mode 1
+23o:bi:c0:pid 3659
+23o:bi:c0:host bl2ws3
+23o:bi:c0:user zxu
+23o:bi:c0:state 0
+23o:bi:c1:mode 0
+23o:bi:c1:pid 12698
+23o:bi:c1:host keithley2.gmca.aps.anl.gov
+23o:bi:c1:user zxu
+23o:bi:c1:state 0
+23o:bi:c2:mode 0
+23o:bi:c2:pid 0
+23o:bi:c2:host 
+23o:bi:c2:user 
+23o:bi:c2:state 0
+23o:bi:c3:mode 0
+23o:bi:c3:pid 0
+23o:bi:c3:host 
+23o:bi:c3:user 
+23o:bi:c3:state 0
+23o:bi:c4:mode 0
+23o:bi:c4:pid 0
+23o:bi:c4:host 
+23o:bi:c4:user 
+23o:bi:c4:state 0
+23o:bi:c5:mode 0
+23o:bi:c5:pid 0
+23o:bi:c5:host 
+23o:bi:c5:user 
+23o:bi:c5:state 0
+23o:bi:c6:mode 0
+23o:bi:c6:pid 0
+23o:bi:c6:host 
+23o:bi:c6:user 
+23o:bi:c6:state 0
+23o:bi:c7:mode 0
+23o:bi:c7:pid 0
+23o:bi:c7:host 
+23o:bi:c7:user 
+23o:bi:c7:state 0
+23o:bi:c8:mode 0
+23o:bi:c8:pid 0
+23o:bi:c8:host 
+23o:bi:c8:user 
+23o:bi:c8:state 0
+23o:bi:c9:mode 0
+23o:bi:c9:pid 0
+23o:bi:c9:host 
+23o:bi:c9:user 
+23o:bi:c9:state 0
+23o:R:gh_pos 10.923
+23o:R:gy_pos 0
+23o:R:tmoh 600
+23o:R:tmoc 600
+23o:R:senh 9.2
+23o:R:senc 2.2
+<END>

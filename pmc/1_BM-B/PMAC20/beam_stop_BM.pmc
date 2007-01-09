@@ -1,0 +1,147 @@
+//beam stop
+// distance encoder 2048 counts/turn
+// gear box 66.2204082:1 or 135619.3959936 counts/turn
+// precision screw 2 mm per turn// 67809.6979968 counts/mm or 1.4747153129146672943643980738856e-5 mm/count
+
+// pitch & yaw encoder 2048 counts/turn
+//gear box 1:140.759183 or 288274.806784 counts/turn
+// precision screw 80 turns per inch
+//  counts/mm @ screw
+
+ms44,i910=3		// #23 (distance)  CW
+ms44,i916=1
+ms45,i910=7		// #24 (pitch) CCW
+ms45,i916=1
+ms48,i910=7		// #25 (yaw)  CCW
+ms48,i916=1
+
+MS 44,I912=11		//capture on flag LOW anf index HIGH
+MS 44,I913=2		//homing on MLIM
+MS 45,I912=10		//capture on flag LOW
+MS 45,I913=1		//homing on PLIM
+MS 48,I912=10		//capture on flag LOW
+MS 48,I913=1		//homing on PLIM
+
+I2301=0
+I2300=1
+
+I2401=0
+I2400=1
+
+I2501=0
+I2500=1
+
+I2302=$7A438
+I2402=$7A43C
+I2502=$7B420
+
+I2303=$352E
+I2403=$3530
+I2503=$3532
+
+I2304=$352E
+I2404=$3530
+I2504=$3532
+
+I2325=$346C
+I2425=$346D
+I2525=$3470
+
+I2324=$240001
+I2424=$240001
+I2524=$240001
+
+I2308=96
+I2408=96
+I2508=96
+
+I2309=96
+I2409=96
+I2509=96
+
+//tuning parameters
+I2316=200				// max. velocity
+I2416=270				// max. velocity
+I2516=270				// max. velocity
+
+I2322=200				// jog speed
+I2422=270				// jog speed
+I2522=270				// jog speed
+
+I2323=100		// homing speed and direction
+I2423=-135		// homing speed and direction
+I2523=-135		// homing speed and direction
+
+I2315=2.5		// abort/lim decel. rate
+I2415=2.5		// abort/lim decel. rate
+I2515=2.5		// abort/lim decel. rate
+
+I2317=2.5// max. acceleration
+I2417=2.5// max. acceleration
+I2517=2.5// max. acceleration
+
+I2319=2.5// max. jog acceleration
+I2419=2.5// max. jog acceleration
+I2519=2.5// max. jog acceleration
+
+I2330=1000000 //Kp
+I2430=1000000 //Kp
+I2530=1000000 //Kp
+
+I2331=1000		//Kd
+I2431=500		//Kd
+I2531=500		//Kd
+
+I2332=1198		//Kvff
+I2432=646		//Kvff
+I2532=640		//Kvff
+
+I2333=400000	//Ki
+I2433=400000	//Ki
+I2533=400000	//Ki
+
+I2334=1				//integration mode
+I2434=1				//integration mode
+I2534=1				//integration mode
+
+I2335=8000		//Kaff
+I2435=3000		//Kaff
+I2535=4200		//Kaff
+
+I2369=32767		//output command limit/scale
+I2469=32767		//output command limit/scale
+I2569=32767		//output command limit/scale
+
+I2368=2500 	//friction feedforward
+I2468=4200 	//friction feedforward
+I2568=3000 	//friction feedforward
+
+I2311=32000 //fatal flw error limit
+I2411=32000 //fatal flw error limit
+I2511=32000 //fatal flw error limit
+
+I2312=16000 //warning flw error limit
+I2412=16000 //warning flw error limit
+I2512=16000 //warning flw error limit
+
+I2364=-16 //deadband gain
+I2464=-16 //deadband gain
+I2564=-16 //deadband gain
+
+I2365=12 //deadband size
+I2465=12 //deadband size
+I2565=12 //deadband size
+
+
+
+
+
+
+
+
+
+
+
+
+
+

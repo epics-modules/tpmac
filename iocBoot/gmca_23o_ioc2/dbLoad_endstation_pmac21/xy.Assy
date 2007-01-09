@@ -1,0 +1,92 @@
+file "$(TPMAC)/xyDb/XY_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+# pmac21:
+	{ 23o:COL:St:, 23o:COL:H:, 23o:COL:V: }
+	{ 23o:XY:P1:,  23o:XY:X1:, 23o:XY:Y1: }
+	{ 23o:XY:P2:,  23o:XY:X2:, 23o:XY:Y2: }
+	{ 23o:XY:P3:,  23o:XY:X3:, 23o:XY:Y3: }
+	{ 23o:XY:P4:,  23o:XY:X4:, 23o:XY:Y4: }
+	{ 23o:XY:P5:,  23o:XY:X5:, 23o:XY:Y5: }
+	{ 23o:XY:P6:,  23o:XY:X6:, 23o:XY:Y6: }
+	{ 23o:XY:P7:,  23o:XY:X7:, 23o:XY:Y7: }
+	{ 23o:XY:P8:,  23o:XY:X8:, 23o:XY:Y8: }
+	{ 23o:XY:P9:,  23o:XY:X9:, 23o:XY:Y9: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_LimAmp.db"
+{
+ 	pattern { assy, d1, d2 }
+# pmac21:
+	{ 23o:COL:St:, 23o:COL:H:, 23o:COL:V: }
+ 	{ 23o:XY:P1:,  23o:XY:X1:, 23o:XY:Y1: }
+ 	{ 23o:XY:P2:,  23o:XY:X2:, 23o:XY:Y2: }
+ 	{ 23o:XY:P3:,  23o:XY:X3:, 23o:XY:Y3: }
+ 	{ 23o:XY:P4:,  23o:XY:X4:, 23o:XY:Y4: }
+ 	{ 23o:XY:P5:,  23o:XY:X5:, 23o:XY:Y5: }
+  	{ 23o:XY:P6:,  23o:XY:X6:, 23o:XY:Y6: }
+  	{ 23o:XY:P7:,  23o:XY:X7:, 23o:XY:Y7: }
+  	{ 23o:XY:P8:,  23o:XY:X8:, 23o:XY:Y8: }
+        { 23o:XY:P9:,  23o:XY:X9:, 23o:XY:Y9: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_Tsub.db"
+{
+ 	pattern { assy, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac21:
+	{ 23o:COL:St:, 23o:COL:H:, 23o:COL:V:, 23o:COL:mh:, 23o:COL:mv:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P1:,  23o:XY:X1:, 23o:XY:Y1:, 23o:XY:mx1:, 23o:XY:my1:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P2:,  23o:XY:X2:, 23o:XY:Y2:, 23o:XY:mx2:, 23o:XY:my2:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P3:,  23o:XY:X3:, 23o:XY:Y3:, 23o:XY:mx3:, 23o:XY:my3:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P4:,  23o:XY:X4:, 23o:XY:Y4:, 23o:XY:mx4:, 23o:XY:my4:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P5:,  23o:XY:X5:, 23o:XY:Y5:, 23o:XY:mx5:, 23o:XY:my5:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P6:,  23o:XY:X6:, 23o:XY:Y6:, 23o:XY:mx6:, 23o:XY:my6:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P7:,  23o:XY:X7:, 23o:XY:Y7:, 23o:XY:mx7:, 23o:XY:my7:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P8:,  23o:XY:X8:, 23o:XY:Y8:, 23o:XY:mx8:, 23o:XY:my8:, RqsPos, 0, tsubXYPs }
+        { 23o:XY:P9:,  23o:XY:X9:, 23o:XY:Y9:, 23o:XY:mx9:, 23o:XY:my9:, RqsPos, 0, tsubXYPs }
+#
+	{ 23o:COL:St:, 23o:COL:H:, 23o:COL:V:, 23o:COL:mh:, 23o:COL:mv:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P1:,  23o:XY:X1:, 23o:XY:Y1:, 23o:XY:mx1:, 23o:XY:my1:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P2:,  23o:XY:X2:, 23o:XY:Y2:, 23o:XY:mx2:, 23o:XY:my2:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P3:,  23o:XY:X3:, 23o:XY:Y3:, 23o:XY:mx3:, 23o:XY:my3:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P4:,  23o:XY:X4:, 23o:XY:Y4:, 23o:XY:mx4:, 23o:XY:my4:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P5:,  23o:XY:X5:, 23o:XY:Y5:, 23o:XY:mx5:, 23o:XY:my5:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P6:,  23o:XY:X6:, 23o:XY:Y6:, 23o:XY:mx6:, 23o:XY:my6:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P7:,  23o:XY:X7:, 23o:XY:Y7:, 23o:XY:mx7:, 23o:XY:my7:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P8:,  23o:XY:X8:, 23o:XY:Y8:, 23o:XY:mx8:, 23o:XY:my8:, RqsBkl, 1, tsubXYPs }
+        { 23o:XY:P9:,  23o:XY:X9:, 23o:XY:Y9:, 23o:XY:mx9:, 23o:XY:my9:, RqsBkl, 1, tsubXYPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_TsubRbk.db"
+{
+ 	pattern { assy, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac21:
+	{ 23o:COL:St:, 23o:COL:H:, "Horiz.", "(mm)", 23o:COL:V:, "Vert.", "(mm)", 23o:COL:mh:,  23o:COL:mv:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P1:,  23o:XY:X1:,  "X1",    "(mm)", 23o:XY:Y1:,  "Y1",   "(mm)", 23o:XY:mx1:,  23o:XY:my1:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P2:,  23o:XY:X2:,  "X2",    "(mm)", 23o:XY:Y2:,  "Y2",   "(mm)", 23o:XY:mx2:,  23o:XY:my2:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P3:,  23o:XY:X3:,  "X3",    "(mm)", 23o:XY:Y3:,  "Y3",   "(mm)", 23o:XY:mx3:,  23o:XY:my3:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P4:,  23o:XY:X4:,  "X4",    "(mm)", 23o:XY:Y4:,  "Y4",   "(mm)", 23o:XY:mx4:,  23o:XY:my4:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P5:,  23o:XY:X5:,  "X5",    "(mm)", 23o:XY:Y5:,  "Y5",   "(mm)", 23o:XY:mx5:,  23o:XY:my5:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P6:,  23o:XY:X6:,  "X6",    "(mm)", 23o:XY:Y6:,  "Y6",   "(mm)", 23o:XY:mx6:,  23o:XY:my6:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P7:,  23o:XY:X7:,  "X7",    "(mm)", 23o:XY:Y7:,  "Y7",   "(mm)", 23o:XY:mx7:,  23o:XY:my7:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P8:,  23o:XY:X8:,  "X8",    "(mm)", 23o:XY:Y8:,  "Y8",   "(mm)", 23o:XY:mx8:,  23o:XY:my8:,  ActPos, 0, tsubXYPs }
+        { 23o:XY:P9:,  23o:XY:X9:,  "X9",    "(mm)", 23o:XY:Y9:,  "Y9",   "(mm)", 23o:XY:mx9:,  23o:XY:my9:,  ActPos, 0, tsubXYPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+#pmac21:
+	{ 23o:COL:St:, 23o:COL:H:, "(mm/s)", 23o:COL:V:, "(mm/s)", 23o:COL:mh:, 23o:COL:mv:, tsubXYPs }
+        { 23o:XY:P1:,  23o:XY:X1:, "(mm/s)", 23o:XY:Y1:, "(mm/s)", 23o:XY:mx1:, 23o:XY:my1:, tsubXYPs }
+        { 23o:XY:P2:,  23o:XY:X2:, "(mm/s)", 23o:XY:Y2:, "(mm/s)", 23o:XY:mx2:, 23o:XY:my2:, tsubXYPs }
+        { 23o:XY:P3:,  23o:XY:X3:, "(mm/s)", 23o:XY:Y3:, "(mm/s)", 23o:XY:mx3:, 23o:XY:my3:, tsubXYPs }
+        { 23o:XY:P4:,  23o:XY:X4:, "(mm/s)", 23o:XY:Y4:, "(mm/s)", 23o:XY:mx4:, 23o:XY:my4:, tsubXYPs }
+        { 23o:XY:P5:,  23o:XY:X5:, "(mm/s)", 23o:XY:Y5:, "(mm/s)", 23o:XY:mx5:, 23o:XY:my5:, tsubXYPs }
+        { 23o:XY:P6:,  23o:XY:X6:, "(mm/s)", 23o:XY:Y6:, "(mm/s)", 23o:XY:mx6:, 23o:XY:my6:, tsubXYPs }
+        { 23o:XY:P7:,  23o:XY:X7:, "(mm/s)", 23o:XY:Y7:, "(mm/s)", 23o:XY:mx7:, 23o:XY:my7:, tsubXYPs }
+        { 23o:XY:P8:,  23o:XY:X8:, "(mm/s)", 23o:XY:Y8:, "(mm/s)", 23o:XY:mx8:, 23o:XY:my8:, tsubXYPs }
+        { 23o:XY:P9:,  23o:XY:X9:, "(mm/s)", 23o:XY:Y9:, "(mm/s)", 23o:XY:mx9:, 23o:XY:my9:, tsubXYPs }
+}

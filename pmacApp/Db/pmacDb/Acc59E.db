@@ -1,0 +1,28 @@
+record(ao, "$(P)ao$(CH)") {
+  field(DESC, "ACC-59E analog out")
+  field(DTYP, "PMAC-VME ASCII")
+  field(OUT, "#C$(C) S4095 @M101$(CH)=")
+  field(VAL, "0")
+  field(PINI, "YES")
+  field(PREC, "3")
+  field(HOPR, "10.0")
+  field(LOPR, "-10.0")
+  field(DRVH, "10.0")
+  field(DRVL, "-10.0")
+  field(EGUF, "10.0")
+  field(EGUL, "-10.0")
+  field(EGU, "V")
+}
+
+record(ai, "$(P)ai$(CH)") {
+  field(DESC, "ACC-59E analog in")
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S4095 @M100$(CH)")
+  field(SCAN, ".1 second")
+  field(PREC, "3")
+  field(HOPR, "10.0")
+  field(LOPR, "-10.0")
+  field(EGUF, "10.0")
+  field(EGUL, "-10.0")
+  field(EGU, "V")
+}

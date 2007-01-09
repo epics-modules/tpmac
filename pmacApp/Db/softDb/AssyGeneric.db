@@ -16,6 +16,7 @@ record(bi, "$(assy)Ready") {
   field(ZSV, "MAJOR")
   field(ZNAM, "NotReady")
   field(ONAM, "Ready")
+  field(PINI, "YES")
 }
 
 # A: RunPrg: 0=Idle, 1=Running                       (bkgfix1pcs.db)
@@ -51,17 +52,18 @@ record(fanout, "$(assy)ScaleFanD") {
 }
 
 #---------------------------------------------------------------
-# Added by Sergey on 2005/12/21. This is a timout trigger.
-# The timout value has to be calculated externally and loaded
-# into TmoTrigger.LNK1 before pushing "Start" (or entering the
-# RqsPos if Autostart=On). After the timeout interval, the TmoTrigger 
-# copies DOL1 (==1) into TimeOut.VAL. In order to catch that even one
-# has to either monitor TimeOut.PROC or reset TimeOut.VAL to 0 before
-# the start. 
+# Added by Sergey on 2005/12/21 for BluIce. This is a timeout trigger.
+# The timout value has to be calculated externally and loaded into
+# TmoTrigger.DLY1 before pushing "Start" (or before entering RqsPos if
+# Autostart=On). One also has to set TimeOut.VAL to 0 before starting
+# motion.
+# After the timeout interval, the TmoTrigger copies DOL1 (==1) into
+# LNK1 (==TimeOut.VAL). In order to catch that event one has to
+# monitor either TimeOut.PROC or the change of TimeOut.VAL from 0 to 1.
 #
 # The seq record fields (the record can work with up to 10 imput-output pairs).
 # SELM=Select Mechanism (All, Specified, Mask),
-# SELN=Link Selection (for Specified or Mask), 
+# SELN=Link Selection (for Specified or Mask),
 # DOL1=Input Link-1,
 # DLY1=Delay-1,
 # LNK1=Output Link-1
@@ -69,16 +71,17 @@ record(fanout, "$(assy)ScaleFanD") {
 # For more info on Sequence Record (seq) see:
 # http://www.aps.anl.gov/asd/controls/epics/EpicsDocumentation/AppDevManuals/RecordRef/Recordref-34.html
 #
-record(seq, "$(assy)TmoTrigger") {
-  field(SELM, "Specified")
-  field(SELN, "1")
-  field(DOL1, "1")
-  field(DLY1, "0")
-  field(LNK1, "$(assy)TimeOut PP MS")
-}
-
-record(ao, "$(assy)TimeOut") {
-  field(PINI, "YES")
-  field(DOL, "0.0")
-}
-
+# Removed by Sergey on 2006/05/08 (not implemented in BluIce)
+#
+# record(seq, "$(assy)TmoTrigger") {
+#   field(SELM, "Specified")
+#   field(SELN, "1")
+#   field(DOL1, "1")
+#   field(DLY1, "0")
+#   field(LNK1, "$(assy)TimeOut PP MS")
+# }
+#
+# record(ao, "$(assy)TimeOut") {
+#   field(PINI, "YES")
+#   field(DOL, "0.0")
+# }

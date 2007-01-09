@@ -1,0 +1,116 @@
+//lab test setup for shutter motor with encoder
+
+ms60,i916=3
+ms60,i917=2
+ms60,i910=7;3;8
+ms60,i912=9
+ms60,i904=$7f							;PFM pulse width
+
+I3100=1                   ;Motor 32 Activate
+I3101=0                   ;Motor 32 Commutation Enable
+I3102=$7B438+2              ;Motor 32 Command Output Address
+I3103=$353E               ;Motor 32 Position Address
+I3104=$353E               ;Motor 32 'Velocity' Address
+I3105=$35C0               ;Motor 32 Master Position Address
+I3106=0                   ;Motor 32 Master Follow Enable
+I3107=96                  ;Motor 32 Master Scale Factor
+I3108=96                  ;Motor 32 Position Scale Factor
+I3109=96                  ;Motor 32 Velocity Scale Factor
+I3110=$0                  ;Motor 32 Power-on Servo Position Address
+I3111=32000               ;Motor 32 Fatal Following Error Limit
+I3112=16000               ;Motor 32 Warning Following Error Limit
+I3113=0                   ;Motor 32 + Software Position Limit
+I3114=0                   ;Motor 32 - Software Position Limit
+I3115=2.0                 ;Motor 32 Abort/Lim Decel Rate
+I3116=60                  ;Motor 32 Maximum Velocity
+I3117=2.0                 ;Motor 32 Maximum Acceleration
+I3118=0                   ;(Reserved)
+I3119=2.0                 ;Motor 32 Maximum Jog Acceleration
+I3120=0                   ;Motor 32 Jog/Home Acceleration Time
+I3121=10                  ;Motor 32 Jog/Home S-Curve Time
+I3122=60                  ;Motor 32 Jog Speed
+I3123=30                  ;Motor 32 Homing Speed And Direction
+I3124=$60001              ;Motor 32 Flag Mode Control
+I3125=$347C               ;Motor 32 Flag Address
+I3126=0                   ;Motor 32 Home Offset
+I3127=0                   ;Motor 32 Position Rollover Range
+I3128=160                 ;Motor 32 In-Position Band
+I3129=0                   ;Motor 32 Output/1st Phase Offset
+I3130=2000                ; PID Proportional Gain
+I3131=0                   ; PID Derivative Gain
+I3132=2330                ; PID Velocity Feed Forward Gain
+I3133=2000                ; PID Integral Gain
+I3134=0                   ; PID Integration Mode
+I3135=7000                ; PID Acceleration Feed Forward Gain
+I3136=0                   ;Motor 32 PID Notch Filter Coefficient N1
+I3137=0                   ;Motor 32 PID Notch Filter Coefficient N2
+I3138=0                   ;Motor 32 PID Notch Filter Coefficient D1
+I3139=0                   ;Motor 32 PID Notch Filter Coefficient D2
+I3140=0                   ;Motor 32 Trajectory Filter Constant
+I3141=0                   ;Motor 32 Desired Position Limit Band
+I3142=$0                  ;(Reserved)
+I3143=$0                  ;(Reserved)
+I3144=0                   ;(Reserved)
+I3145=0                   ;(Reserved)
+I3146=0                   ;(Reserved)
+I3147=0                   ;(Reserved)
+I3148=0                   ;(Reserved)
+I3149=0                   ;(Reserved)
+I3150=0                   ;(Reserved)
+I3151=0                   ;(Reserved)
+I3152=0                   ;(Reserved)
+I3153=0                   ;(Reserved)
+I3154=0                   ;(Reserved)
+I3155=$0                  ;Motor 32 Commutation Table Address Offset
+I3156=0                   ;Motor 32 Commutation Delay Compensation
+I3157=0                   ;Motor 32 Continuous Current Limit
+I3158=0                   ;Motor 32 Integrated Current Limit
+I3159=0                   ;Motor 32 User Written Servo Enable
+I3160=0                   ;Motor 32 Servo Cycle Period Extension
+I3161=0                   ;Motor 32 Current Loop Integral Gain
+I3162=0                   ;Motor 32 Current Loop Prop. Gain (Forward Path)
+I3163=4194304             ;Motor 32 Integration Limit
+I3164=-16                 ;Motor 32 'Deadband Gain'
+I3165=16                  ;Motor 32 Deadband Size
+I3166=6527                ;Motor 32 PWM Scale Factor (PMAC2 Only)
+I3167=4194304             ;Motor 32 Position Error Limit
+I3168=0                   ;Motor 32 Friction Feedforward
+I3169=400                 ;Motor 32 Output Command Limit/Scale
+I3170=0                   ;Motor 32 Number of Commutation Cycles (N)
+I3171=1000                ;Motor 32 Counts Per N Commutation Cycles
+I3172=1365                ;Motor 32 Commutation Phase Angle
+I3173=0                   ;Motor 32 Phase Finding Output Value
+I3174=0                   ;Motor 32 Phase Finding Time
+I3175=0                   ;Motor 32 Phase Position Offset
+I3176=0                   ;Motor 32 Current Loop Proportional Gain (Back Path)
+I3177=0                   ;Motor 32 Induction Motor Magnetization Current
+I3178=0                   ;Motor 32 Induction Motor Slip Gain
+I3179=0                   ;Motor 32 2nd Phase Output (DAC) Bias
+I3180=0                   ;Motor 32 Power-Up Mode
+I3181=$0                  ;Motor 32 Power-On Phase Position Address
+I3182=$0                  ;Motor 32 Current loop Feedback Address
+I3183=$7B438              ;Motor 32 Commutation Position Address
+I3184=$0                  ;Motor 32 Current-Loop Feedback Mask Word
+I3185=0                   ;Motor 32 Backlash Take-up Rate
+I3186=0                   ;Motor 32 Backlash Size
+I3187=64                  ;Motor 32 Backlash Hysteresis
+I3188=0                   ;Motor 32 In-Position Number of Cycles
+I3189=0                   ;(Reserved)
+I3190=0                   ;Motor 32 Rapid Speed Select
+I3191=$0                  ;Motor 32 Power-on Phase Position Format
+I3192=10                  ;Motor 32 Jog-To-Position Calculation Time
+I3193=0                   ;(Reserved)
+I3194=0                   ;(Reserved)
+I3195=$0                  ;Motor 32 Power-On Servo Position Format
+I3196=0                   ;Motor 32 Output Mode Control
+I3197=0                   ;Motor 32 Position Capture/Trigger Mode Control
+I3198=0                   ;Motor 32 Third-Resolver Gear Ratio
+I3199=0                   ;Motor 32 Second-Resolver Gear Ratio
+
+
+
+
+
+
+
+

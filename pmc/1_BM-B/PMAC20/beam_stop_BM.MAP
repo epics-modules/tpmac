@@ -1,0 +1,22 @@
+;Map created by PMAC Win32 Driver from file: Z:\pmc\1_BM-B\PMAC20\beam_stop_BM.pmc
+;
+
+
+; DEFINES sorted by KEY --------------------------
+_DPRAMBASE_                      $0
+_DPRAMMAX_                       $450
+_DPRAMSIZE_                      $0
+_DPRAMUSERBASE_                  $450
+_PMAC2_                          
+_PMACUT_                         
+_TURBO_                          
+
+
+; DEFINES sorted by VALUE ------------------------
+                                 _PMAC2_
+                                 _PMACUT_
+                                 _TURBO_
+$0                               _DPRAMBASE_
+$0                               _DPRAMSIZE_
+$450                             _DPRAMMAX_
+$450                             _DPRAMUSERBASE_

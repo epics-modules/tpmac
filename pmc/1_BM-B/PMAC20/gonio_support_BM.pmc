@@ -1,0 +1,126 @@
+//Goniometer support
+// horiz encoder 2000 counts/turn
+// gear box 66.2204082:1 or 132440.8164 counts/turn
+// screw 16 turns per inch or 83427.28592 counts/mm or 11.98648606 nm/count
+
+//vertical  encoder 2048 counts/turn
+// gear box1 15:1 or 30720 counts/turn
+// gear box2 34:22
+// gear box3 100 turns/inch or 186914.81746 counts/mm or 5.3500306 nm/count
+// linear encoder 100 nm/count
+
+ms 20,i910=3		// #11 (horiz)  CCW
+ms 20,i916=1
+MS 20,I912=11		//capture on flag LOW
+MS 20,I913=2		//homing on MLIM
+
+ms 21,i910=3		// #12 (vert)  CCW
+ms 21,i916=1
+MS 21,I912=10		//capture on flag LOW
+MS 21,I913=2		//homing on MLIM
+
+I1101=0
+I1100=1
+
+I1201=0
+I1200=1
+
+I1102=$79428
+I1202=$7942C
+
+I1103=$3516
+I1203=$3518
+
+I1104=$3516
+I1204=$3518
+
+I1125=$3454
+I1225=$3455
+
+I1124=$240001
+I1224=$240001
+
+I1108=96
+I1208=96
+
+I1109=96
+I1209=96
+
+//tuning parameters
+I1116=200				// max. velocity
+I1216=5.2				// max. velocity
+
+I1122=200				// jog speed
+I1222=5.2				// jog speed
+
+I1123=100		// homing speed and direction
+I1223=2		// homing speed and direction
+
+I1115=2		// abort/lim decel. rate
+I1215=.02		// abort/lim decel. rate
+
+I1117=2// max. acceleration
+I1217=.02// max. acceleration
+
+I1119=2// max. jog acceleration
+I1219=.02// max. jog acceleration
+
+I1228=80 //In-Position band
+
+I1130=2000000 //Kp
+I1230=4000000  //Kp
+
+I1131=600		  //Kd
+I1231=1400		//Kd
+
+I1132=693	  	//Kvff
+I1232=3400		//Kvff
+
+I1133=100000	//Ki
+I1233=100000	//Ki
+
+I1134=1				//integration mode
+I1234=1				//integration mode
+
+I1135=4400		//Kaff
+I1235=70000		//Kaff
+
+I1169=32767		//output command limit/scale
+I1269=32767		//output command limit/scale
+
+I1168=2700 	//friction feedforward
+I1268=1000   	//friction feedforward
+
+I1111=32000 //fatal flw error limit
+I1211=32000 //fatal flw error limit
+
+I1112=16000 //warning flw error limit
+I1212=16000 //warning flw error limit
+
+I1164=-16 //deadband gain
+I1264=-16 //deadband gain
+
+I1165=12 //deadband size
+I1265=12 //deadband size
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

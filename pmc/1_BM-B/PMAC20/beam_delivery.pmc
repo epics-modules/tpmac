@@ -1,0 +1,153 @@
+//beamline support
+//encoder 2048 counts/turn
+//horiz. gear box  66.2204082:1 or 135619.3959936 counts/turn
+//screw 16 turns/inch or 85429.54078337 counts/mm
+
+//vert. gear box1  15:1 or 30720 counts/turn
+//vert. gear box2  34:22 or 47476.363636 counts/turn
+//vert. gear box3  100 turns/inch
+//     	186914.817466 counts/mm
+// vert. DS linear encoder 100 nm/count
+
+ms1,i910=3		// #2 (horiz DS)  CW
+ms1,i916=1
+ms4,i910=7		// #3 (vert DS)  CCW
+ms4,i916=1
+ms5,i910=7		// #4 (vert US) CCW
+ms5,i916=1
+
+MS1,I912=11 //homing on flag low & Index high
+MS1,I913=1	// capture on PLIM
+MS4,I912=10		//capture on flag LOW
+MS4,I913=2	// capture on MLIM
+MS5,I912=11 //homing on flag low & Index high
+MS5,I913=2	// capture on MLIM
+
+I201=0
+I200=1
+
+I301=0
+I300=1
+
+I401=0
+I400=1
+
+I202=$78424
+I302=$78428
+I402=$7842C
+
+I203=$3504
+I303=$3506
+I403=$3508
+
+I204=$3504
+I304=$3506
+I404=$3508
+
+I225=$3441
+I325=$3444
+I425=$3445
+
+I224=$240001
+I324=$240001
+I424=$240001
+
+I208=96
+I308=96
+I408=96
+
+I209=96
+I309=96
+I409=96
+
+//tuning parameters
+I216=200				// max. velocity
+I316=4				// max. velocity
+I416=100				// max. velocity
+
+I222=200				// jog speed
+I322=4				// jog speed
+I422=100				// jog speed
+
+I223=-100		// homing speed and direction
+I323=2		// homing speed and direction
+I423=50		// homing speed and direction
+
+I215=4		// abort/lim decel. rate
+I315=.02		// abort/lim decel. rate
+I415=2		// abort/lim decel. rate
+
+I217=4// max. acceleration
+I317=.02// max. acceleration
+I417=2// max. acceleration
+
+I219=4// max. jog acceleration
+I319=.02// max. jog acceleration
+I419=2// max. jog acceleration
+
+I230=1000000 //Kp
+I330=4000000 //Kp
+I430=1000000 //Kp
+I231=2000		//Kd
+I331=200 		//Kd
+I431=2000		//Kd
+
+I232=2210		//Kvff
+I332=2100		//Kvff
+I432=2463		//Kvff
+
+I233=400000	//Ki
+I333=50000 	//Ki
+I433=400000	//Ki
+
+I234=1				//integration mode
+I334=1				//integration mode
+I434=1				//integration mode
+
+I235=10000		//Kaff
+I335=70000		//Kaff
+I435=14000		//Kaff
+
+I269=32767		//output command limit/scale
+I369=32767		//output command limit/scale
+I469=32767		//output command limit/scale
+
+I268=3000 	//friction feedfoeward
+I368=1100 	//friction feedfoeward
+I468=1400 	//friction feedfoeward
+
+I211=32000 //fatal flw error limit
+I311=32000 //fatal flw error limit
+I411=32000 //fatal flw error limit
+
+I212=16000 //warning flw error limit
+I312=16000 //warning flw error limit
+I412=16000 //warning flw error limit
+
+I264=-16 //deadband gain
+I364=-16 //deadband gain
+I464=-16 //deadband gain
+
+I265=12 //deadband size
+I365=12 //deadband size
+I465=12 //deadband size
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

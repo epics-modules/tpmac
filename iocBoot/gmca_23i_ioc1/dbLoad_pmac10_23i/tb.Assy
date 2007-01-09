@@ -1,0 +1,43 @@
+file "$(TPMAC)/tbDb/TB_Calibrate.db"
+{
+	pattern { assy, d1, d2, d3 }
+# pmac10:
+        { 23i:KB:Hz:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3: }
+        { 23i:KB:Vz:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3: }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/tbDb/TB_LimAmp.db"
+{
+ 	pattern { assy, x1, x2, x3, d1, d2, d3 }
+# pmac10:
+        { 23i:KB:Hz:, 23i:KB:HL:, 23i:KB:HW:, 23i:KB:HR:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3: }
+        { 23i:KB:Vz:, 23i:KB:VZ:, 23i:KB:VA:, 23i:KB:VR:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3: }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/tbDb/TB_Tsub.db"
+{
+ 	pattern { assy, x1, x2, x3, d1, d2, d3, m1, m2, m3, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac10:
+  { 23i:KB:Hz:, 23i:KB:HL:, 23i:KB:HW:, 23i:KB:HR:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3:, 23i:KB:mhz1:, 23i:KB:mhz2:, 23i:KB:mhz3:, RqsPos, 0, tsubTBSt }
+  { 23i:KB:Hz:, 23i:KB:HL:, 23i:KB:HW:, 23i:KB:HR:, 23i:KB:HZ1:, 23i:KB:HZ2:, 23i:KB:HZ3:, 23i:KB:mhz1:, 23i:KB:mhz2:, 23i:KB:mhz3:, RqsBkl, 1, tsubTBSt }
+  { 23i:KB:Vz:, 23i:KB:VZ:, 23i:KB:VA:, 23i:KB:VR:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3:, 23i:KB:mvz1:, 23i:KB:mvz2:, 23i:KB:mvz3:, RqsPos, 0, tsubTBSt }
+  { 23i:KB:Vz:, 23i:KB:VZ:, 23i:KB:VA:, 23i:KB:VR:, 23i:KB:VZ1:, 23i:KB:VZ2:, 23i:KB:VZ3:, 23i:KB:mvz1:, 23i:KB:mvz2:, 23i:KB:mvz3:, RqsBkl, 1, tsubTBSt }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/tbDb/TB_TsubRbk.db"
+{
+  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, x3, desc_x3, egu_x3, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, d3, desc_d3, egu_d3, m1, m2, m3, val, nla, tsub }
+# pmac10:
+  { 23i:KB:Hz:, 23i:KB:HL:, "H-mirror lane", "(mm)", 23i:KB:HW:, "H-mirror Yaw",   "(mrad)", 23i:KB:HR:, "H-mirror Roll", "(mrad)", 23i:KB:HZ1:, "H-mirror Z1", "(mm)", 23i:KB:HZ2:, "H-mirror Z2", "(mm)", 23i:KB:HZ3:, "H-mirror Z3", "(mm)", 23i:KB:mhz1:, 23i:KB:mhz2:, 23i:KB:mhz3:, ActPos, 0, tsubTBSt }
+  { 23i:KB:Vz:, 23i:KB:VZ:, "V-mirror Z",    "(mm)", 23i:KB:VA:, "V-mirror Angle", "(mrad)", 23i:KB:VR:, "V-mirror Roll", "(mrad)", 23i:KB:VZ1:, "V-mirror Z1", "(mm)", 23i:KB:VZ2:, "V-mirror Z2", "(mm)", 23i:KB:VZ3:, "V-mirror Z3", "(mm)", 23i:KB:mvz1:, 23i:KB:mvz2:, 23i:KB:mvz3:, ActPos, 0, tsubTBSt }
+}
+#---------------------------------------------------------------------------- 
+file "$(TPMAC)/tbDb/TB_TsubSpeed.db"
+{
+  pattern { assy, x1, egu_x1, x2, egu_x2, x3, egu_x3, d1, egu_d1, d2, egu_d2, d3, egu_d3, m1, m2, m3, tsub }
+# pmac10:
+  { 23i:KB:Hz:, 23i:KB:HL:, "(mm/s)", 23i:KB:HW:, "(mrad/s)", 23i:KB:HR:, "(mrad/s)", 23i:KB:HZ1:, "(mm/s)", 23i:KB:HZ2:, "(mm/s)", 23i:KB:HZ3:, "(mm/s)", 23i:KB:mhz1:, 23i:KB:mhz2:, 23i:KB:mhz3:, tsubTBSt }
+  { 23i:KB:Vz:, 23i:KB:VZ:, "(mm/s)", 23i:KB:VA:, "(mrad/s)", 23i:KB:VR:, "(mrad/s)", 23i:KB:VZ1:, "(mm/s)", 23i:KB:VZ2:, "(mm/s)", 23i:KB:VZ3:, "(mm/s)", 23i:KB:mvz1:, 23i:KB:mvz2:, 23i:KB:mvz3:, tsubTBSt }
+}

@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Move6_speed.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
@@ -153,95 +153,6 @@ text {
 		bclr=56
 	}
 	limits {
-	}
-}
-composite {
-	object {
-		x=285
-		y=65
-		width=41
-		height=10
-	}
-	"composite name"=""
-	children {
-		oval {
-			object {
-				x=285
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=301
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=316
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=285
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)NgLimSet"
-			}
-		}
-		oval {
-			object {
-				x=301
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax1)PsLimSet"
-			}
-		}
-		oval {
-			object {
-				x=316
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=30
-			}
-			"dynamic attribute" {
-				vis="if zero"
-				chan="$(ax1)AmpEna"
-			}
-		}
 	}
 }
 "text entry" {
@@ -621,95 +532,6 @@ composite {
 	label="store"
 	press_msg="1"
 }
-composite {
-	object {
-		x=371
-		y=65
-		width=41
-		height=10
-	}
-	"composite name"=""
-	children {
-		oval {
-			object {
-				x=371
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=387
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=402
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=7
-			}
-		}
-		oval {
-			object {
-				x=371
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax2)NgLimSet"
-			}
-		}
-		oval {
-			object {
-				x=387
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=21
-			}
-			"dynamic attribute" {
-				vis="if not zero"
-				chan="$(ax2)PsLimSet"
-			}
-		}
-		oval {
-			object {
-				x=402
-				y=65
-				width=10
-				height=10
-			}
-			"basic attribute" {
-				clr=30
-			}
-			"dynamic attribute" {
-				vis="if zero"
-				chan="$(ax2)AmpEna"
-			}
-		}
-	}
-}
 "text entry" {
 	object {
 		x=368
@@ -843,84 +665,6 @@ text {
 		bclr=2
 	}
 	limits {
-	}
-}
-oval {
-	object {
-		x=461
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=477
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=492
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=461
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax3)NgLimSet"
-	}
-}
-oval {
-	object {
-		x=477
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax3)PsLimSet"
-	}
-}
-oval {
-	object {
-		x=492
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=30
-	}
-	"dynamic attribute" {
-		vis="if zero"
-		chan="$(ax3)AmpEna"
 	}
 }
 "text entry" {
@@ -1058,84 +802,6 @@ text {
 	limits {
 	}
 }
-oval {
-	object {
-		x=551
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=567
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=582
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=551
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax4)NgLimSet"
-	}
-}
-oval {
-	object {
-		x=567
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax4)PsLimSet"
-	}
-}
-oval {
-	object {
-		x=582
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=30
-	}
-	"dynamic attribute" {
-		vis="if zero"
-		chan="$(ax4)AmpEna"
-	}
-}
 "text entry" {
 	object {
 		x=548
@@ -1271,84 +937,6 @@ text {
 	limits {
 	}
 }
-oval {
-	object {
-		x=642
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=658
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=673
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=642
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax5)NgLimSet"
-	}
-}
-oval {
-	object {
-		x=658
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax5)PsLimSet"
-	}
-}
-oval {
-	object {
-		x=673
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=30
-	}
-	"dynamic attribute" {
-		vis="if zero"
-		chan="$(ax5)AmpEna"
-	}
-}
 "text entry" {
 	object {
 		x=639
@@ -1482,84 +1070,6 @@ text {
 		bclr=2
 	}
 	limits {
-	}
-}
-oval {
-	object {
-		x=731
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=747
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=762
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=7
-	}
-}
-oval {
-	object {
-		x=731
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax6)NgLimSet"
-	}
-}
-oval {
-	object {
-		x=747
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=21
-	}
-	"dynamic attribute" {
-		vis="if not zero"
-		chan="$(ax6)PsLimSet"
-	}
-}
-oval {
-	object {
-		x=762
-		y=65
-		width=10
-		height=10
-	}
-	"basic attribute" {
-		clr=30
-	}
-	"dynamic attribute" {
-		vis="if zero"
-		chan="$(ax6)AmpEna"
 	}
 }
 "text entry" {
@@ -2340,4 +1850,590 @@ text {
 	}
 	textix="Limits"
 	align="horiz. right"
+}
+composite {
+	object {
+		x=28
+		y=152
+		width=152
+		height=14
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=28
+				y=152
+				width=62
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="homed"
+			align="horiz. right"
+		}
+		"text update" {
+			object {
+				x=100
+				y=152
+				width=80
+				height=14
+			}
+			monitor {
+				chan="$(assy)Homed"
+				clr=32
+				bclr=14
+			}
+			clrmod="alarm"
+			align="horiz. centered"
+			limits {
+			}
+		}
+	}
+}
+composite {
+	object {
+		x=285
+		y=65
+		width=487
+		height=10
+	}
+	"composite name"=""
+	children {
+		composite {
+			object {
+				x=285
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=285
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=285
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax1)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=316
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=316
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax1)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=301
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=301
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax1)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=371
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=371
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=371
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax2)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=402
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=402
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax2)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=387
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=387
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax2)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=461
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=461
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=461
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax3)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=492
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=492
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax3)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=477
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=477
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax3)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=551
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=551
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=551
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax4)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=582
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=582
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax4)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=567
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=567
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax4)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=642
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=642
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=642
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax5)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=673
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=673
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax5)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=658
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=658
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax5)AmpEna"
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=731
+				y=65
+				width=41
+				height=10
+			}
+			"composite name"=""
+			children {
+				oval {
+					object {
+						x=731
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=731
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax6)NgLimSet"
+					}
+				}
+				oval {
+					object {
+						x=762
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=762
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=21
+					}
+					"dynamic attribute" {
+						vis="if not zero"
+						chan="$(ax6)PsLimSet"
+					}
+				}
+				oval {
+					object {
+						x=747
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=7
+					}
+				}
+				oval {
+					object {
+						x=747
+						y=65
+						width=10
+						height=10
+					}
+					"basic attribute" {
+						clr=30
+					}
+					"dynamic attribute" {
+						vis="if zero"
+						chan="$(ax6)AmpEna"
+					}
+				}
+			}
+		}
+	}
 }

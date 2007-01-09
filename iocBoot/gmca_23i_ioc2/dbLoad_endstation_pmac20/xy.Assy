@@ -1,0 +1,38 @@
+file "$(TPMAC)/xyDb/XY_Calibrate.db"
+{
+	pattern { assy, d1, d2 }
+
+# pmac20:
+  { 23i:GO:Cr:, 23i:GO:CX:, 23i:GO:CY: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_LimAmp.db"
+{
+ 	pattern { assy, d1, d2 }
+# pmac20:
+  { 23i:GO:Cr:, 23i:GO:CX:, 23i:GO:CY: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_Tsub.db"
+{
+ 	pattern { assy, d1, d2, m1, m2, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac20:
+  { 23i:GO:Cr:, 23i:GO:CX:, 23i:GO:CY:, 23i:GO:mcx:, 23i:GO:mcy:, RqsPos, 0, tsubXYPs }
+  { 23i:GO:Cr:, 23i:GO:CX:, 23i:GO:CY:, 23i:GO:mcx:, 23i:GO:mcy:, RqsBkl, 1, tsubXYPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_TsubRbk.db"
+{
+ 	pattern { assy, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+# pmac20:
+  { 23i:GO:Cr:, 23i:GO:CX:, "Xtal-X", "(mm)", 23i:GO:CY:, "Xtal-Y", "(mm)", 23i:GO:mcx:, 23i:GO:mcy:,  ActPos, 0, tsubXYPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyDb/XY_TsubSpeed.db"
+{
+  pattern { assy, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+#pmac20:
+  { 23i:GO:Cr:, 23i:GO:CX:, "(mm/s)",   23i:GO:CY:, "(mm/s)", 23i:GO:mcx:, 23i:GO:mcy:, tsubXYPs }
+}

@@ -1,0 +1,64 @@
+file $(TPMAC)/softDb/RqsTwkMem.db
+{
+	pattern { pref, prec }
+# "prec" is "precision": the number of digits after comma
+# (usually 3 for real numbers and zero for integers).
+#---------------------------
+# pmac10:
+#mtr
+        { 23o:WS:mt:,   0 }
+        { 23o:WS:mb:,   0 }
+        { 23o:WS:mo:,   0 }
+        { 23o:WS:mi:,   0 }
+        { 23o:MO:mz:,   0 }
+        { 23o:MO:my:,   0 }
+        { 23o:MO:mr:,   3 }
+        { 23o:MO:mt2:,  0 }  
+        { 23o:MO:mr1:,  0 }
+        { 23o:MO:mp2:,  0 }
+        { 23o:MO:mr2:,  0 }
+        { 23o:BP:mmo:,  0 }
+        { 23o:HD:mz1:,  0 }
+        { 23o:HD:mz2:,  0 }
+        { 23o:HD:mz3:,  0 }
+        { 23o:HD:muy1:, 0 }
+        { 23o:HD:muy2:, 0 }
+        { 23o:HD:mdy1:, 0 }
+        { 23o:HD:mdy2:, 0 }
+        { 23o:BP:mh1z:, 0 }
+#drv
+        { 23o:WS:ZT:,   3 }
+        { 23o:WS:ZB:,   3 }
+        { 23o:WS:YO:,   3 }
+        { 23o:WS:YI:,   3 }
+        { 23o:MO:Z:,    3 }
+        { 23o:MO:Y:,    3 }
+        { 23o:MO:QB:,   5 }
+        { 23o:MO:T2:,   3 }
+        { 23o:MO:R1:,   3 }
+        { 23o:MO:P2:,   3 }
+        { 23o:MO:R2:,   3 }
+        { 23o:BP:MOZ:,  3 }
+        { 23o:HD:SZ1:,  3 }
+        { 23o:HD:SZ2:,  3 }
+        { 23o:HD:SZ3:,  3 }
+        { 23o:HD:UY1:,  3 }
+        { 23o:HD:UY2:,  3 }
+        { 23o:HD:DY1:,  3 }
+        { 23o:HD:DY2:,  3 }
+        { 23o:BP:H1Z:,  3 }
+#axs
+        { 23o:WS:ZC:,   3 }
+        { 23o:WS:ZS:,   3 }
+        { 23o:WS:YC:,   3 }
+        { 23o:WS:YS:,   3 }
+        { 23o:MO:E:,    5 }
+        { 23o:MO:L:,    5 }
+        { 23o:HD:SL:,   3 }
+        { 23o:HD:HT:,   3 }
+        { 23o:HD:HR:,   3 }
+        { 23o:HD:UY:,   3 }
+        { 23o:HD:UA:,   3 }
+        { 23o:HD:DY:,   3 }
+        { 23o:HD:DA:,   3 }
+}

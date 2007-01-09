@@ -143,7 +143,7 @@ STATUS pmacDrv(void)
         pmacAscDev[i].ioReceivedId = 0;
         pmacAscDev[i].readMeISR    = (void *)pmacAscReadMeISR;
 
-        status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector + 1,
+        status = devConnectInterruptVME( pmacVmeCtlr[i].irqVector + 1,
                                       (void *)pmacAscReadMeISR, (void *) &(pmacAscDev[i]) );
         if(!RTN_SUCCESS(status))
           cantProceed("pmacDrv: Failed to connect to DPRAM ASCII readme interrupt");
@@ -190,13 +190,13 @@ STATUS pmacDrv(void)
         pmacMbxDev[i].ioReceivedId = epicsEventMustCreate( epicsEventEmpty );
         pmacMbxDev[i].readMeISR    = (void *)pmacMbxReadMeISR;
 
-        status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector,
+        status = devConnectInterruptVME( pmacVmeCtlr[i].irqVector,
                                       (void *)pmacMbxReadMeISR, (void *) &(pmacMbxDev[i]) );
 
         if( !RTN_SUCCESS(status) )
           cantProceed("pmacDrv: Failed to connect to Mailbox ASCII readme interrupt");
 
-        status = devConnectInterrupt( intVME, pmacVmeCtlr[i].irqVector - 1,
+        status = devConnectInterruptVME( pmacVmeCtlr[i].irqVector - 1,
                                       (void *)pmacMbxReceivedISR, (void *) &(pmacMbxDev[i]) );
 
         /* Pre-enable responses to commands */
@@ -314,7 +314,7 @@ static int pmacIoctl( PMAC_DEV *pPmacDev, int request, int *arg )
 /* The write and ISR routines are specific to the */
 /* DPRAM ASCII and Mailbox ASCII interfaces       */
 
-static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
+static int pmacWriteAsc( PMAC_DEV *pDev, char *buffer, int nBytes )
 {
   int        i;
   int        ctlr;
@@ -323,7 +323,7 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
   PMAC_DPRAM *dpramAsciiOut;
   PMAC_DPRAM *dpramAsciiOutControl;
 
-  ctlr                 = pPmacAscDev->ctlr;
+  ctlr                 = pDev->ctlr;
   dpramAsciiOut        = pmacRamAddr(ctlr,0x0EA0);
   dpramAsciiOutControl = pmacRamAddr(ctlr,0x0E9C);
   i                    = 0;
@@ -373,39 +373,36 @@ static int pmacWriteAsc( PMAC_DEV *pPmacAscDev, char *buffer, int nBytes )
                       Note: There is 1 interrupt per line of the response and
                       1 interrupt for the ACK at the end. */
 
-static void pmacAscReadMeISR( PMAC_DEV *pPmacAscDev )
+static void pmacAscReadMeISR( PMAC_DEV *pDev )
 {
   int         i;
   int         ctlr;
   int         pushOK;
   int         length;
-  PMAC_DPRAM  *dpramAsciiInControl;
+  volatile epicsUInt16 *dpramAsciiInControl;
   PMAC_DPRAM  *dpramAsciiIn;
-  epicsUInt16 control;
-  char        terminator;
-
-  ctlr                = pPmacAscDev->ctlr;
-  dpramAsciiInControl = pmacRamAddr(ctlr, 0x0F40);
+  union {epicsUInt16 S; char C[2];} control;
+  ctlr                = pDev->ctlr;
+  dpramAsciiInControl = (volatile epicsUInt16 *) pmacRamAddr(ctlr, 0x0F40);
   dpramAsciiIn        = pmacRamAddr(ctlr, 0x0F44);
-  length              = getReg( *pmacRamAddr(ctlr, 0x0F42) ) - 1;
-  terminator          = getReg( *(dpramAsciiInControl) );
-  control             = getReg( *(dpramAsciiInControl+1) );
+  control.S           = getReg (*dpramAsciiInControl);
 
-  if (control == 0 && terminator == 0)
+  if (control.S == 0)
   {
       logMsg( "No response from PMAC in pmacAscInISR\n", 0,0,0,0,0,0 );
       return;
   }
-  else if (control == 0 )
+  if (control.C[1] == 0 )
   {
+    length = getReg( *pmacRamAddr(ctlr, 0x0F42) ) - 1;
     for( i=0; i<length; i++ )
     {
         char c = getReg(*dpramAsciiIn);
-        pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &c, 1);
+        pushOK = epicsRingBytesPut( pDev->replyQ, &c, 1);
         if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0,0,0,0,0,0);
         dpramAsciiIn++;
     }
-    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, &terminator, 1);
+    pushOK = epicsRingBytesPut( pDev->replyQ, &(control.C[0]), 1);
     if( !pushOK ) logMsg("PMAC reply ring buffer full\n", 0,0,0,0,0,0);
   }
   else
@@ -414,22 +411,22 @@ static void pmacAscReadMeISR( PMAC_DEV *pPmacAscDev )
     char response[]={PMAC_TERM_BELL,'E','R','R','0','0','0',PMAC_TERM_CR,PMAC_TERM_ACK};
 
     /* Convert the BCD encoded error number to its ASCII equivalent */
-    response[4] += ((control )         & 0xF );
-    response[5] += ((terminator >> 4 ) & 0xF );
-    response[6] += ((terminator )      & 0xF );
+    response[4] += ((control.C[1])       & 0xF );
+    response[5] += ((control.C[0] >> 4 ) & 0xF );
+    response[6] += ((control.C[0] )      & 0xF );
 
     /* Push the data the onto the ring buffer */
-    pushOK = epicsRingBytesPut( pPmacAscDev->replyQ, response, sizeof(response) );
+    pushOK = epicsRingBytesPut( pDev->replyQ, response, sizeof(response) );
     if( !pushOK )
       logMsg("PMAC reply ring buffer full\n", 0, 0, 0, 0, 0, 0);
   }
 
-  setReg( *((volatile epicsUInt16 *) dpramAsciiInControl), (epicsUInt16) 0 );
-  control = getReg( *((volatile epicsUInt16 *) dpramAsciiInControl) );
-  epicsEventSignal( pPmacAscDev->ioReadmeId );
+  setReg( *dpramAsciiInControl, (epicsUInt16) 0 );
+  control.S = getReg( *((volatile epicsUInt16 *) dpramAsciiInControl) );
+  epicsEventSignal( pDev->ioReadmeId );
 
 #ifdef TRANSACTION_LOCK
-  if ( terminator == PMAC_TERM_ACK ) epicsEventSignal( transactionLock );
+  if ( control.C[0] == PMAC_TERM_ACK ) epicsEventSignal( transactionLock );
 #endif
 
   return;

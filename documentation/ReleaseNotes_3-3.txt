@@ -1,0 +1,30 @@
+New features introduced in the 3-3 release:
+
+1) added get_enum_str() function to the statusRecord.c.
+this allows to query BI00-BI31 fields of the status record for debugging.
+examples:
+
+ioc1>dbgf "23d:CCD:ml:SvoSts.BI16"
+DBR_STRING:          ON
+value = 0 = 0x0
+ioc1>
+
+gmca@px0:/home/gmca 1 > caget 23d:CCD:ml:SvoSts.BI16
+23d:CCD:ml:SvoSts.BI16         ON
+gmca@px0:/home/gmca 2 >
+
+
+
+2) improved DPRAM-ASCII part of the PMAC driver by removing
+unnecessary queue from drvPmacMbxTask() in the drvPmac.c.
+Epics record get processed by the drvPmacMbxTask(), this eliminated
+errors with intermixing PMAC responses under higher IOC load.
+
+
+3) improved efficiency of pmacAscReadMeISR() in the pmacDriver.c
+- replaced two VME bus reads of byte size by one of uint16 size,
+- removed useless line at the end of pmacAscReadMeISR:
+  control = getReg( *dpramAsciiInControl );
+
+4) added support for ACC-59E in the file devPmacMbx.c. Currently the supoort
+corresponds to the bipolar configuration of DAC only.
