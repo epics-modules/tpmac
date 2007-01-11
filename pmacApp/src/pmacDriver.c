@@ -422,7 +422,6 @@ static void pmacAscReadMeISR( PMAC_DEV *pDev )
   }
 
   setReg( *dpramAsciiInControl, (epicsUInt16) 0 );
-  control.S = getReg( *((volatile epicsUInt16 *) dpramAsciiInControl) );
   epicsEventSignal( pDev->ioReadmeId );
 
 #ifdef TRANSACTION_LOCK
