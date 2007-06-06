@@ -17,6 +17,7 @@ pmacAsynMotorExample_DBD += motorSupport.dbd
 pmacAsynMotorExample_DBD += drvAsynIPPort.dbd
 pmacAsynMotorExample_DBD += drvAsynSerialPort.dbd
 pmacAsynMotorExample_DBD += pmacAsynMotor.dbd
+pmacAsynMotorExample_DBD += pmacAsynIPPort.dbd
 
 pmacAsynMotorVx_DBD += $(pmacAsynMotorExample_DBD) pmacInclude.dbd
 
@@ -30,7 +31,9 @@ pmacAsynMotor_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 # xxx Support Module
 pmacAsynMotor_LIBS_vxWorks += pmacIoc $(EPICS_BASE_IOC_LIBS)
 pmacAsynMotor_LIBS += pmacAsynMotor
+pmacAsynMotor_LIBS += pmacAsynIPPort
 pmacAsynMotor_LIBS += motor
+pmacAsynMotor_LIBS += asyn
 pmacAsynMotor_LIBS += asyn
 #pmacAsynMotor_LIBS += stream
 
