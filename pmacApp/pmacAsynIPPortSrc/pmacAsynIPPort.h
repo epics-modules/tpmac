@@ -8,7 +8,7 @@
 extern "C" {
 #endif  /* __cplusplus */
 
-epicsShareFunc int pmacAsynIPPortConfig(const char *portName,int addr);
+epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr);
 
 #ifdef __cplusplus
 }

@@ -25,32 +25,37 @@ $(LINUX_ONLY)pmacAsynMotorExample_registerRecordDeviceDriver(pdbbase)
 #
 pmacVmeDebug = 0
 drvPmacDebug = 0
-$(VXWORKS_ONLY)pmacVmeConfig (0, 0x7FA000, 0x700000, 0xc1, 2)
-$(VXWORKS_ONLY)pmacDrv()
-$(VXWORKS_ONLY)drvAsynSerialPortConfigure( "TEST", "/dev/pmac/0/asc", 0, 0, 0 )
 
+#### VME pmac - start ####
+#$(VXWORKS_ONLY)pmacVmeConfig (0, 0x7FA000, 0x700000, 0xc1, 2)
+#$(VXWORKS_ONLY)pmacDrv()
+#$(VXWORKS_ONLY)drvAsynSerialPortConfigure( "TEST", "/dev/pmac/0/asc", 0, 0, 0 )
+#### VME pmac - end ####
+
+#### ???? - start ####
 ##$(LINUX_ONLY)drvAsynIPPortConfigure("TEST","ts0002.cs.diamond.ac.uk:7003",0,0,0)
 ##asynSetTraceMask("TEST",-1,0xF)
 ##asynSetTraceIOMask("TEST",-1,0x1)
 ##asynSetTraceMask("TEST",-1,0x1)
 ##asynSetTraceIOMask("TEST",-1,0x0)
+#### ???? - end ####
 
-##pmacAsynMotorCreate("TEST", 0, 0, 6 );
+#### IP pmac - start ####
+drvAsynIPPortConfigure("TEST","172.23.243.143:1025",0,0,0)
+#asynSetTraceMask -> 0=none,1=err,2=IO_device,4=IO_filter,8=IO_driver,0x10=flow
+#asynSetTraceMask("TEST",-1,0x1F)
+asynSetTraceMask("TEST",-1,0x13)
+asynSetTraceMask("TEST",-1,0x3)
+# asynSetTraceIOMask -> 0=none,1=ascii,2=esc,4=hex
+asynSetTraceIOMask("TEST",-1,0x2)
+pmacAsynIPPortConfigure("TEST",0)
+#### IP pmac - end ####
+
+pmacAsynMotorCreate("TEST", 0, 0, 6 );
 
 # Setup the motor Asyn layer (portname, low-level driver drvet name, card, number of axes on card)
-##drvAsynMotorConfigure("pmac1", "pmacAsynMotor", 0, 6)
+drvAsynMotorConfigure("pmac1", "pmacAsynMotor", 0, 6)
 
-###########################################################
-# Configure asynInterposeIP
-#
-##$(LINUX_ONLY)drvAsynIPPortConfigure("TESTIP","172.23.24.5:5000",0,0,0)
-$(LINUX_ONLY)drvAsynIPPortConfigure("TESTIP","172.23.243.143:5000",0,0,0)
-asynSetTraceMask("TESTIP",-1,0xF)
-asynSetTraceIOMask("TESTIP",-1,0x1)
-asynSetTraceMask("TESTIP",-1,0x1)
-asynSetTraceIOMask("TESTIP",-1,0x0)
-
-#pmacAsynIPPortConfig("TESTIP",0)
 
 ###########################################################
 # Configure stream device
@@ -60,6 +65,6 @@ asynSetTraceIOMask("TESTIP",-1,0x0)
 ###########################################################
 
 ## Load record instances
-##dbLoadRecords("db/pmacAsynMotor.db","DEVICE=npr78")
+dbLoadRecords("db/pmacAsynMotor.db","DEVICE=pjl45")
 
 iocInit()

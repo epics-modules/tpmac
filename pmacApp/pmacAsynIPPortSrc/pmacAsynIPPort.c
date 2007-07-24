@@ -84,7 +84,8 @@ typedef struct pmacPvt {
 
 /* NOTES
    use asynUser.timeout to specify I/O request timeouts in seconds
-   asynStatus may return asynSuccess,asynTimeout,asynOverflow or asynError
+   asynStatus may return asynSuccess(0),asynTimeout(1),asynOverflow(2) or asynError(3)
+   eomReason may return ASYN_EOM_CNT (1:Request count reached), ASYN_EOM_EOS (2:End of String detected), ASYN_EOM_END (4:End indicator detected)
    asynError indicates that asynUser.errorMessage has been populated by epicsSnprintf(). 
 */  
 
@@ -119,11 +120,11 @@ static asynOctet octet = {
     setInputEos,getInputEos,setOutputEos,getOutputEos
 };
 
-static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t *nbytesTransfered, int *eomReason );
+static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars, size_t *nbytesTransfered, int *eomReason );
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 
-epicsShareFunc int pmacAsynIPPortConfig(const char *portName,int addr)
+epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr)
 {
     pmacPvt       *pPmacPvt;
     asynInterface *plowerLevelInterface;
@@ -132,7 +133,7 @@ epicsShareFunc int pmacAsynIPPortConfig(const char *portName,int addr)
     size_t        len;
 
     len = sizeof(pmacPvt) + strlen(portName) + 1;
-    pPmacPvt = callocMustSucceed(1,len,"asynInterposePmacConfig");
+    pPmacPvt = callocMustSucceed(1,len,"pmacAsynIPPortConfig");
     pPmacPvt->portName = (char *)(pPmacPvt+1);
     strcpy(pPmacPvt->portName,portName);
     pPmacPvt->addr = addr;
@@ -168,15 +169,16 @@ epicsShareFunc int pmacAsynIPPortConfig(const char *portName,int addr)
     pPmacPvt->poctet = (asynOctet *)plowerLevelInterface->pinterface;
     pPmacPvt->octetPvt = plowerLevelInterface->drvPvt;
 
-    pPmacPvt->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"asynInterposePmacConfig");
-    pPmacPvt->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"asynInterposePmacConfig");
+    pPmacPvt->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
+    pPmacPvt->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
     
-    pPmacPvt->inBuf = callocMustSucceed(1,INPUT_SIZE,"asynInterposePmacConfig");
+    pPmacPvt->inBuf = callocMustSucceed(1,INPUT_SIZE,"pmacAsynIPPortConfig");
     
     pPmacPvt->inBufHead = 0;
     pPmacPvt->inBufTail = 0;
 
-    return(0);
+    asynPrint(pasynUser,ASYN_TRACE_FLOW, "Done pmacAsynIPPortConfig OK\n");
+   return(0);
 }
 
 static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception)
@@ -194,55 +196,59 @@ static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception)
     Read reponse data from PMAC into cyclic pmacPvt.inBuf. If there is no data in the asyn buffer then issue
     GETBUFFER command to get any outstanding data still on the PMAC.
 */
-static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t *nbytesTransfered, int *eomReason )
+static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars, size_t *nbytesTransfered, int *eomReason )
 {
     ethernetCmd* inCmd;
     asynStatus status = asynSuccess;
     size_t thisRead;
     *nbytesTransfered = 0;
+    if (maxchars>INPUT_SIZE) maxchars = INPUT_SIZE;
 
-    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-         pasynUser,pPmacPvt->inBuf,INPUT_SIZE,&thisRead,eomReason);
+    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+         pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+    asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);
          
-    if(status==asynSuccess) {
-        asynPrintIO(pasynUser,ASYN_TRACE_FLOW,pPmacPvt->inBuf,thisRead,
-             "%s read\n",pPmacPvt->portName);
-             
-        if (thisRead == 0 && *eomReason == ASYN_EOM_END) {
-            /* failed to read any characters into the input buffer, 
-               check for more response data on the PMAC */
-            if ( pmacReadReady(pPmacPvt,pasynUser )) { 
-                /* response data is available on the PMAC */
-                /* issue a getbuffer command */
-                inCmd = pPmacPvt->pinCmd;
-                inCmd->RequestType = VR_UPLOAD;
-                inCmd->Request = VR_PMAC_GETBUFFER;
-                inCmd->wValue = 0;
-                inCmd->wIndex = 0;
-                inCmd->wLength = htons(0);
-                status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-                    pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
-                    
-                asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,
-                    "%s write GETBUFFER\n",pPmacPvt->portName);
+    if (status == asynTimeout) {
+         /* failed to read as many characters as required into the input buffer, 
+            check for more response data on the PMAC */
+         if ( pmacReadReady(pPmacPvt,pasynUser )) { 
+            /* response data is available on the PMAC */
+            /* issue a getbuffer command */
+            inCmd = pPmacPvt->pinCmd;
+            inCmd->RequestType = VR_UPLOAD;
+            inCmd->Request = VR_PMAC_GETBUFFER;
+            inCmd->wValue = 0;
+            inCmd->wIndex = 0;
+            inCmd->wLength = htons(0);
+            status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
+               pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
+               
+            asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,
+                "%s write GETBUFFER\n",pPmacPvt->portName);
                 
-                status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-                    pasynUser,pPmacPvt->inBuf,INPUT_SIZE,&thisRead,eomReason);
-                    
-                if(status==asynSuccess) {
-                    asynPrintIO(pasynUser,ASYN_TRACE_FLOW,pPmacPvt->inBuf,thisRead,
-                       "%s read\n",pPmacPvt->portName);
-                }
+            if (thisRead == 0) {
+                /* We have nothing to return at the moment so read again */
+                status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+                    pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+               
+                asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse2 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);                    
+            } else {  
+                 /* we have data to return from the first poctet->read() call and there is more now available having sent a GETBUFFER command */
+                 status = asynSuccess; /* clear the timeout status */
+                 /* TODO do we need eomReason = 0 here ??? */
             }
-        }
-    }    
-         
-    if(status==asynSuccess) {
+        } 
+    } 
+          
+    if (thisRead>0) {
         *nbytesTransfered = thisRead;   
         pPmacPvt->inBufTail = 0;
         pPmacPvt->inBufHead = thisRead;
     }
-    
+/*    else
+        asynPrintIO(pasynUser,ASYN_TRACE_FLOW,pPmacPvt->inBuf,thisRead,
+             "%s readResponse failed status=%d\n",pPmacPvt->portName, status);
+*/    
     return status; 
 }
 
@@ -270,8 +276,10 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
     status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
         pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
     
-    asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)&cmd,ETHERNET_CMD_HEADER,
-        "%s write pmacReadReady\n",pPmacPvt->portName);
+    if(status!=asynSuccess) { 
+        asynPrintIO(pasynUser,ASYN_TRACE_ERROR,(char*)&cmd,ETHERNET_CMD_HEADER,
+            "%s write pmacReadReady fail\n",pPmacPvt->portName);
+    }
      
     status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
          pasynUser,data,2,&thisRead,&eomReason);
@@ -281,9 +289,9 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
              retval = 1;
          }    
          asynPrintIO(pasynUser,ASYN_TRACE_FLOW,data,thisRead,
-             "%s read pmacReadReady OK\n",pPmacPvt->portName);
+             "%s read pmacReadReady OK thisRead=%d\n",pPmacPvt->portName,thisRead);
     } else {
-        asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s pmacReadReady failed",pPmacPvt->portName);
+        asynPrint(pasynUser,ASYN_TRACE_ERROR, "%s read pmacReadReady failed status=%d,retval=%d",pPmacPvt->portName,status,retval);
     }
     return retval;            
 }
@@ -311,20 +319,21 @@ static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
     status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
         pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
     
-    asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)&cmd,ETHERNET_CMD_HEADER,
-        "%s write FLUSH\n",pPmacPvt->portName);
-    
-    do { 
-        status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
+    if(status!=asynSuccess) { 
+        asynPrintIO(pasynUser,ASYN_TRACE_ERROR,(char*)&cmd,ETHERNET_CMD_HEADER,
+            "%s write pmacFlush fail\n",pPmacPvt->portName);
+    }
+        
+    /* read flush acknowledgement character */
+    /* NB we don't check what the character is (manual sais ctrlX, we get 0x40 i.e.VR_DOWNLOAD) */
+    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
          pasynUser,data,1,&thisRead,&eomReason);
-    } while (status==asynSuccess && data[0] != CTRLX); 
 
     if(status==asynSuccess) {
-         asynPrintIO(pasynUser,ASYN_TRACE_FLOW,data,thisRead,
-             "%s read pmacFlush OK\n",pPmacPvt->portName);
+         asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s read pmacFlush OK\n",pPmacPvt->portName);
          retval = 1;    
     } else {
-        asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s read pmacFlush failed\n",pPmacPvt->portName);
+        asynPrint(pasynUser,ASYN_TRACE_ERROR, "%s read pmacFlush failed - thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, thisRead, eomReason, status);
     }
 
     pPmacPvt->inBufTail = 0;
@@ -343,7 +352,7 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
     ethernetCmd* outCmd;
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     size_t nbytesActual = 0;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::writeIt\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::writeIt\n" );
     assert(pPmacPvt);
     
     /* TODO need to scan the data buffer for control commands and do PMAC_GETRESPONSE and CTRL_RESPONSE commands
@@ -362,7 +371,7 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
         if (numchars > ETHERNET_DATA_SIZE) {
             /* TODO call write multiple times for large data blocks */
             numchars = ETHERNET_DATA_SIZE;
-            asynPrint( pasynUser, ASYN_TRACE_FLOW, "writeIt - ERROR TRUNCATED\n" );
+            asynPrint( pasynUser, ASYN_TRACE_ERROR, "writeIt - ERROR TRUNCATED\n" );
         }
         outCmd->RequestType = VR_DOWNLOAD;
         outCmd->Request = VR_PMAC_GETRESPONSE;
@@ -376,7 +385,7 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
     }
         
     asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->poutCmd,numchars+ETHERNET_CMD_HEADER,
-            "%s write\n",pPmacPvt->portName);
+            "%s writeIt\n",pPmacPvt->portName);
                     
     return status;
 }
@@ -387,7 +396,7 @@ static asynStatus writeRaw(void *ppvt,asynUser *pasynUser,
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     asynStatus status = asynSuccess;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::writeRaw\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::writeRaw\n" );
     assert(pPmacPvt);
 
     status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
@@ -402,31 +411,35 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     asynStatus status = asynSuccess;
     size_t thisRead;
-    int nRead = 0;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::readIt\n" );
+    size_t nRead = 0;
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt\n" );
     assert(pPmacPvt);
     
-    if(eomReason) *eomReason = 0;
-    for (;;) {
-        if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
-            *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
-            nRead++;
-            if (nRead >= maxchars) break;
-            continue;
+    if (eomReason) *eomReason = 0;
+    if (maxchars > 0) {
+        for (;;) {
+            if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
+                *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
+                nRead++;
+                if (nRead >= maxchars) break;
+                continue;
+            }
+            if(eomReason && *eomReason) break;
+            status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
+        
+            /* append <ACK> terminator i */
+/*            if (*eomReason == ASYN_EOM_END){
+                assert(pPmacPvt->inBufHead < INPUT_SIZE);
+                pPmacPvt->inBuf[pPmacPvt->inBufHead++] = ACK;
+            }
+*/            
+            if(status!=asynSuccess || thisRead==0) break;       
         }
-        if(eomReason && *eomReason) break;
-        status = readResponse(pPmacPvt, pasynUser, &thisRead, eomReason);
-        
-        if (*eomReason == ASYN_EOM_END){
-            /* append <ACK> terminator */
-            assert(pPmacPvt->inBufHead < INPUT_SIZE);
-            pPmacPvt->inBuf[pPmacPvt->inBufHead++] = ACK;
-            
-        if(status!=asynSuccess || thisRead==0) break;
-        }        
-    }
+    } else if (eomReason) *eomReason = ASYN_EOM_CNT;
     *nbytesTransfered = nRead;
-        
+
+/*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
+*/        
     return status;
 }
 
@@ -437,25 +450,29 @@ static asynStatus readRaw(void *ppvt,asynUser *pasynUser,
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     asynStatus status = asynSuccess;
     size_t thisRead;
-    int nRead = 0;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::writeRaw\n" );
+    size_t nRead = 0;
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readRaw\n" );
     assert(pPmacPvt);
 
     if(eomReason) *eomReason = 0;
-    for (;;) {
-        if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
-            *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
-            nRead++;
-            if (nRead >= maxchars) break;
-            continue;
+    if (maxchars > 0) {
+        for (;;) {
+            if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
+                *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
+                nRead++;
+                if (nRead >= maxchars) break;
+                continue;
+            }
+            if(eomReason && *eomReason) break;
+            status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
+        
+            if(status!=asynSuccess || thisRead==0) break;
         }
-        if(eomReason && *eomReason) break;
-        status = readResponse(pPmacPvt, pasynUser, &thisRead, eomReason);
-        
-        if(status!=asynSuccess || thisRead==0) break;
-    }
+    } else if (eomReason) *eomReason = ASYN_EOM_CNT;
     *nbytesTransfered = nRead;
-        
+
+/*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readRaw nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
+*/        
     return status;
 }
 
@@ -464,7 +481,7 @@ static asynStatus flushIt(void *ppvt,asynUser *pasynUser)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     asynStatus status = asynSuccess;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::flushIt\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::flushIt\n" );
     assert(pPmacPvt);
 
     pmacFlush (pPmacPvt, pasynUser);
@@ -476,7 +493,7 @@ static asynStatus registerInterruptUser(void *ppvt,asynUser *pasynUser,
     interruptCallbackOctet callback, void *userPvt,void **registrarPvt)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::registerInterruptUser\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::registerInterruptUser\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->registerInterruptUser(pPmacPvt->octetPvt,
@@ -487,7 +504,7 @@ static asynStatus cancelInterruptUser(void *drvPvt,asynUser *pasynUser,
      void *registrarPvt)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)drvPvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::cancelInterruptUser\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::cancelInterruptUser\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->cancelInterruptUser(pPmacPvt->octetPvt,
@@ -498,18 +515,18 @@ static asynStatus setInputEos(void *ppvt,asynUser *pasynUser,
     const char *eos,int eoslen)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::setInputEos\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::setInputEos\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt,pasynUser,
-       eos,eoslen);
+      eos,eoslen); 
 }
 
 static asynStatus getInputEos(void *ppvt,asynUser *pasynUser,
     char *eos,int eossize,int *eoslen)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::getInputEos\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::getInputEos\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->getInputEos(pPmacPvt->octetPvt,pasynUser,
@@ -520,24 +537,22 @@ static asynStatus setOutputEos(void *ppvt,asynUser *pasynUser,
     const char *eos, int eoslen)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::setOutputEos\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::setOutputEos\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->setOutputEos(pPmacPvt->octetPvt,
-        pasynUser,eos,eoslen);
-
+        pasynUser,eos,eoslen); 
 }
 
 static asynStatus getOutputEos(void *ppvt,asynUser *pasynUser,
     char *eos,int eossize,int *eoslen)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "interposePmac::getOutputEos\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::getOutputEos\n" );
     assert(pPmacPvt);
 
     return pPmacPvt->poctet->getOutputEos(pPmacPvt->octetPvt,
         pasynUser,eos,eossize,eoslen);
-
 }
 
 
@@ -549,10 +564,10 @@ static const iocshArg pmacAsynIPPortConfigArg1 =
 static const iocshArg *pmacAsynIPPortConfigArgs[] = 
     {&pmacAsynIPPortConfigArg0,&pmacAsynIPPortConfigArg1};
 static const iocshFuncDef pmacAsynIPPortConfigFuncDef =
-    {"pmacAsynIPPortConfig", 2, pmacAsynIPPortConfigArgs};
+    {"pmacAsynIPPortConfigure", 2, pmacAsynIPPortConfigArgs};
 static void pmacAsynIPPortConfigCallFunc(const iocshArgBuf *args)
 {
-    pmacAsynIPPortConfig(args[0].sval,args[1].ival);
+    pmacAsynIPPortConfigure(args[0].sval,args[1].ival);
 }
 
 static void pmacAsynIPPortRegister(void)
