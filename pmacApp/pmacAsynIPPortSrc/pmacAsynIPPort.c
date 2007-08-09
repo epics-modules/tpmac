@@ -87,6 +87,16 @@ typedef struct pmacPvt {
    asynStatus may return asynSuccess(0),asynTimeout(1),asynOverflow(2) or asynError(3)
    eomReason may return ASYN_EOM_CNT (1:Request count reached), ASYN_EOM_EOS (2:End of String detected), ASYN_EOM_END (4:End indicator detected)
    asynError indicates that asynUser.errorMessage has been populated by epicsSnprintf(). 
+
+   PMAC ascii command responses for single/multiple commands (e.g. I113 I114 I130 I131 I133) are in an ACK terminated form as follows (CR seperates the cmd responses):
+       data<CR(13)>data<CR(13)>data<CR(13)><ACK(6)>
+   PMAC error responses to ascii commands ARE NOT ACK terminated as follows:
+       <BELL(7)>ERRxxx<CR(13)>
+   Currently this driver uses ACK as the asyn eos input terminator - it therefore times out when the PMAC returns an error and does not return 
+   the error value (readRaw could be used to get it). (Since this driver is intended for use with the pmacAsynMotor which sends valid PMAC
+   commands this is not a big deal at time of writing)  
+   This driver can send ctrl commands (ctrl B/C/F/G/P/V) to the pmac however the resulting pmac data is not ack terminated so it would be necessary 
+   to use readRaw to pick up the resulting data.    
 */  
 
 /* Connect/disconnect handling */
@@ -145,14 +155,14 @@ epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr)
     pPmacPvt->pasynUser->userPvt = pPmacPvt;
     status = pasynManager->connectDevice(pasynUser,portName,addr);
     if(status!=asynSuccess) {
-        printf("%s connectDevice failed\n",portName);
+        printf("pmacAsynIPPortConfigure: %s connectDevice failed\n",portName);
         pasynManager->freeAsynUser(pasynUser);
         free(pPmacPvt);
         return -1;
     }
     status = pasynManager->exceptionCallbackAdd(pasynUser,pmacInExceptionHandler);
     if(status!=asynSuccess) {
-        printf("%s exceptionCallbackAdd failed\n",portName);
+        printf("pmacAsynIPPortConfigure: %s exceptionCallbackAdd failed\n",portName);
         pasynManager->freeAsynUser(pasynUser);
         free(pPmacPvt);
         return -1;
@@ -160,7 +170,7 @@ epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr)
     status = pasynManager->interposeInterface(portName,addr,
        &pPmacPvt->pmacInterface,&plowerLevelInterface);
     if(status!=asynSuccess) {
-        printf("%s interposeInterface failed\n",portName);
+        printf("pmacAsynIPPortConfigure: %s interposeInterface failed\n",portName);
         pasynManager->exceptionCallbackRemove(pasynUser);
         pasynManager->freeAsynUser(pasynUser);
         free(pPmacPvt);
@@ -168,6 +178,22 @@ epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr)
     }
     pPmacPvt->poctet = (asynOctet *)plowerLevelInterface->pinterface;
     pPmacPvt->octetPvt = plowerLevelInterface->drvPvt;
+
+    status = pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt, pasynUser, "\6", 1);
+    if (status) {
+        asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                  "pmacAsynIPPortConfigure: unable to set input EOS on %s: %s\n", 
+                  portName, pasynUser->errorMessage);
+        return -1;
+    }
+    status = pPmacPvt->poctet->setOutputEos(pPmacPvt->octetPvt, pasynUser, "\r", 1);
+    if (status) {
+        asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                  "pmacAsynIPPortConfigure: unable to set output EOS on %s: %s\n", 
+                  portName, pasynUser->errorMessage);
+        return -1;
+    }
+
 
     pPmacPvt->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
     pPmacPvt->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
@@ -365,7 +391,7 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
         outCmd->wIndex = 0;
         outCmd->wLength = htons(0);
         status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-        pasynUser,(char*)pPmacPvt->poutCmd,ETHERNET_CMD_HEADER,&nbytesActual);
+            pasynUser,(char*)pPmacPvt->poutCmd,ETHERNET_CMD_HEADER,&nbytesActual);
         *nbytesTransfered = (nbytesActual==ETHERNET_CMD_HEADER) ? numchars : 0;
     } else {
         if (numchars > ETHERNET_DATA_SIZE) {

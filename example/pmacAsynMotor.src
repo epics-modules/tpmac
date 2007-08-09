@@ -45,7 +45,7 @@ drvAsynIPPortConfigure("TEST","172.23.243.143:1025",0,0,0)
 #asynSetTraceMask -> 0=none,1=err,2=IO_device,4=IO_filter,8=IO_driver,0x10=flow
 #asynSetTraceMask("TEST",-1,0x1F)
 asynSetTraceMask("TEST",-1,0x13)
-asynSetTraceMask("TEST",-1,0x3)
+#asynSetTraceMask("TEST",-1,0x3)
 # asynSetTraceIOMask -> 0=none,1=ascii,2=esc,4=hex
 asynSetTraceIOMask("TEST",-1,0x2)
 pmacAsynIPPortConfigure("TEST",0)

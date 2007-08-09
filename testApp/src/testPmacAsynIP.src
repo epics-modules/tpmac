@@ -1,0 +1,44 @@
+#!$(INSTALL)/bin/$(ARCH)/testPmacAsynIP
+
+cd "$(INSTALL)"
+
+# Load binaries on architectures that need to do so.
+# VXWORKS_ONLY, LINUX_ONLY and RTEMS_ONLY are macros that resolve
+# to a comment symbol on architectures that are not the current
+# build architecture, so they can be used liberally to do architecture
+# specific things. Alternatively, you can include an architecture
+# specific file.
+$(VXWORKS_ONLY)ld < bin/$(ARCH)/testPmacAsynIP.munch
+
+## This drvTS initializer is needed if the IOC has a hardware event system
+#TSinit
+
+## Register all support components
+$(VXWORKS_ONLY)dbLoadDatabase("dbd/testPmacAsynIPPortVx.dbd")
+$(VXWORKS_ONLY)testPmacAsynIPPortVx_registerRecordDeviceDriver(pdbbase)
+
+$(LINUX_ONLY)dbLoadDatabase("dbd/testPmacAsynIPPort.dbd")
+$(LINUX_ONLY)testPmacAsynIPPort_registerRecordDeviceDriver(pdbbase)
+
+###########################################################
+# Configure asyn device
+#
+pmacVmeDebug = 0
+drvPmacDebug = 0
+
+
+#### IP pmac - start ####
+drvAsynIPPortConfigure("TEST","172.23.243.143:1025",0,0,0)
+#asynSetTraceMask -> 0=none,1=err,2=IO_device,4=IO_filter,8=IO_driver,0x10=flow
+#asynSetTraceMask("TEST",-1,0x1F)
+asynSetTraceMask("TEST",-1,0x13)
+asynSetTraceMask("TEST",-1,0x3)
+# asynSetTraceIOMask -> 0=none,1=ascii,2=esc,4=hex
+asynSetTraceIOMask("TEST",-1,0x2)
+pmacAsynIPPortConfigure("TEST",0)
+#### IP pmac - end ####
+
+testPmacAsynIPPort("TEST",0)
+
+
+iocInit()
