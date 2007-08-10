@@ -87,6 +87,8 @@ char* cmdCTRLG="\7";
 char* cmdCTRLP="\16";
 /* Report velocity of all motors */
 char* cmdCTRLV="\22";
+/* Get comms setup */
+char* cmdCommsStatus="I3 I6";
 
 asynStatus sendCmd(asynUser *pasynUser, myData *pPvt, char* cmd )
 {
@@ -139,7 +141,6 @@ void testHandler(myData *pPvt)
 
     asynPrint(pasynUser, ASYN_TRACE_FLOW, 
               "testPmacAsynIPPort: testHandler, portName=%s\n", pPvt->portName);
-            epicsThreadSleep(0.01); /* Let the writer thread get time to run */
     
 /***  EOS setup is not required - its already done by pmacAsynIPPort interpose interface
     status = pasynOctetSyncIO->setInputEos(pasynUser, "\6", 1);
@@ -158,28 +159,33 @@ void testHandler(myData *pPvt)
     }
 ***/
 
+    printf("*****************************************************************\n");
+    printf("********** Ensure I3=2 and I6=1 on PMAC before testing **********\n");
+    printf("*****************************************************************\n");
+
     /*** send the test commands ***/
     status = asynSuccess;
-    pPvt->cmd[0]=cmdPollStatus; 
-    pPvt->cmd[1]=cmdPosStatus;
-    pPvt->cmd[2]=cmdEnable;
-    pPvt->cmd[3]=cmdEnLim;
-    pPvt->cmd[4]=cmdMoveA;
-    pPvt->cmd[5]=cmdStop;
-    pPvt->cmd[6]=cmdMoveR;
-    pPvt->cmd[7]=cmdStop;
-    pPvt->cmd[8]=cmdJF;
-    pPvt->cmd[9]=cmdStop;
-    pPvt->cmd[10]=cmdHomeNL;
-    pPvt->cmd[11]=cmdStop;
-    pPvt->cmd[12]=cmdSetLoLim;
-    pPvt->cmd[13]=cmdSetHiLim;
-    pPvt->cmd[14]=cmdHLStatus;
-    pPvt->cmd[15]=NULL;
+    pPvt->cmd[0]=cmdCommsStatus;
+    pPvt->cmd[1]=cmdPollStatus; 
+    pPvt->cmd[2]=cmdPosStatus;
+    pPvt->cmd[3]=cmdEnable;
+    pPvt->cmd[4]=cmdEnLim;
+    pPvt->cmd[5]=cmdMoveA;
+    pPvt->cmd[6]=cmdStop;
+    pPvt->cmd[7]=cmdMoveR;
+    pPvt->cmd[8]=cmdStop;
+    pPvt->cmd[9]=cmdJF;
+    pPvt->cmd[10]=cmdStop;
+    pPvt->cmd[11]=cmdHomeNL;
+    pPvt->cmd[12]=cmdStop;
+    pPvt->cmd[13]=cmdSetLoLim;
+    pPvt->cmd[14]=cmdSetHiLim;
+    pPvt->cmd[15]=cmdHLStatus;
+/*    pPvt->cmd[??]=cmdCTRLP;*/
+    pPvt->cmd[16]=NULL; /* end of command list */
 
     for(i=0; i<MAX_CMD && pPvt->cmd[i] && status==asynSuccess; i++) {
         status = sendCmd(pasynUser, pPvt, pPvt->cmd[i] );
-    /*   epicsThreadSleep(1); */
     }
     
     if (status==asynSuccess)

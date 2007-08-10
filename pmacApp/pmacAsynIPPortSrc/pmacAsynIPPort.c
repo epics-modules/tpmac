@@ -1,3 +1,40 @@
+/*
+   NOTES
+   
+   This driver is an asyn interpose driver intended for use with pmacAsynMotor to allow communication over ethernet to a PMAC.
+
+   *** Ensure I3=2 and I6=1 on the PMAC before using this driver. ***
+   
+   This driver supports sending ascii commands to the PMAC over asyn IP and obtaining the response. The driver uses the PMAC ethernet 
+   packets VR_PMAC_GETRESPONSE, VR_PMAC_READREADY and VR_PMAC_GETBUFFER to send commands and get responses. The PMAC may send responses 
+   in several different formats.  
+   1) PMAC ascii command responses for single/multiple commands (e.g. I113 I114 I130 I131 I133) are in an ACK terminated 
+      form as follows (CR seperates the cmd responses):
+         data<CR(13)>data<CR(13)>data<CR(13)><ACK(6)>
+   2) PMAC error responses to ascii commands ARE NOT ACK terminated as follows:
+         <BELL(7)>ERRxxx<CR(13)>
+   3) PMAC may also return the following:
+         <STX(2)>data<CR(13)> 
+   
+   This driver can send ctrl commands (ctrl B/C/F/G/P/V) to the pmac (using VR_CTRL_REPONSE packet) however because the resulting  response 
+   data is not terminated as above the driver does not know when all the response data has been received. The response data will therefore 
+   only be returned after the asynUser.timeout has expired.
+   
+   This driver supports the octet flush method and issues a VR_PMAC_FLUSH to the PMAC.
+   
+   This driver does NOT support large buffer transfers (VR_PMAC_WRITEBUFFER, VR_FWDOWNLOAD) or set/get of DPRAM (VR_PMAC_SETMEM etc) or changing
+   comms setup (VR_IPADDRESS, VR_PMAC_PORT)
+
+
+   REVISION HISTORY
+   
+   10 Aug 07 - Pete Leicester - Diamond Light Source
+   Modified to handle responses other than those ending in <ACK> (e.g. errors) - No longer used asyn EOS.
+   
+   9 Aug 07 - Pete Leicester - Diamond Light Source
+   Initial version reliant on asyn EOS to return <ACK> terminated responses.            
+*/  
+
 
 #include <stddef.h>
 #include <string.h>
@@ -19,10 +56,12 @@
 
 #define ETHERNET_DATA_SIZE 1492
 #define INPUT_SIZE        (ETHERNET_DATA_SIZE+1)  /* +1 to allow space to add terminating ACK */
-#define ACK '\6'
+#define STX   '\2'
 #define CTRLB '\2'
 #define CTRLC '\3'
+#define ACK   '\6'
 #define CTRLF '\6'
+#define BELL  '\7'
 #define CTRLG '\7'
 #define CTRLP '\16'
 #define CTRLV '\22'
@@ -82,22 +121,13 @@ typedef struct pmacPvt {
     unsigned int  inBufTail;
     } pmacPvt;
 
-/* NOTES
+/*
+   Notes on asyn
    use asynUser.timeout to specify I/O request timeouts in seconds
    asynStatus may return asynSuccess(0),asynTimeout(1),asynOverflow(2) or asynError(3)
    eomReason may return ASYN_EOM_CNT (1:Request count reached), ASYN_EOM_EOS (2:End of String detected), ASYN_EOM_END (4:End indicator detected)
    asynError indicates that asynUser.errorMessage has been populated by epicsSnprintf(). 
-
-   PMAC ascii command responses for single/multiple commands (e.g. I113 I114 I130 I131 I133) are in an ACK terminated form as follows (CR seperates the cmd responses):
-       data<CR(13)>data<CR(13)>data<CR(13)><ACK(6)>
-   PMAC error responses to ascii commands ARE NOT ACK terminated as follows:
-       <BELL(7)>ERRxxx<CR(13)>
-   Currently this driver uses ACK as the asyn eos input terminator - it therefore times out when the PMAC returns an error and does not return 
-   the error value (readRaw could be used to get it). (Since this driver is intended for use with the pmacAsynMotor which sends valid PMAC
-   commands this is not a big deal at time of writing)  
-   This driver can send ctrl commands (ctrl B/C/F/G/P/V) to the pmac however the resulting pmac data is not ack terminated so it would be necessary 
-   to use readRaw to pick up the resulting data.    
-*/  
+*/
 
 /* Connect/disconnect handling */
 static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception);
@@ -219,8 +249,8 @@ static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception)
 }
 
 /*
-    Read reponse data from PMAC into cyclic pmacPvt.inBuf. If there is no data in the asyn buffer then issue
-    GETBUFFER command to get any outstanding data still on the PMAC.
+    Read reponse data from PMAC into buffer pmacPvt.inBuf. If there is no data in the asyn buffer then issue
+    pmac GETBUFFER command to get any outstanding data still on the PMAC.
 */
 static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars, size_t *nbytesTransfered, int *eomReason )
 {
@@ -230,11 +260,11 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
     *nbytesTransfered = 0;
     if (maxchars>INPUT_SIZE) maxchars = INPUT_SIZE;
 
-    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
          pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
     asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);
          
-    if (status == asynTimeout) {
+    if (status == asynTimeout && thisRead == 0 && pasynUser->timeout>0) {
          /* failed to read as many characters as required into the input buffer, 
             check for more response data on the PMAC */
          if ( pmacReadReady(pPmacPvt,pasynUser )) { 
@@ -252,29 +282,22 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
             asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,
                 "%s write GETBUFFER\n",pPmacPvt->portName);
                 
-            if (thisRead == 0) {
-                /* We have nothing to return at the moment so read again */
-                status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
-                    pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+            /* We have nothing to return at the moment so read again */
+            status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
+                pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
                
-                asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse2 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);                    
-            } else {  
-                 /* we have data to return from the first poctet->read() call and there is more now available having sent a GETBUFFER command */
-                 status = asynSuccess; /* clear the timeout status */
-                 /* TODO do we need eomReason = 0 here ??? */
-            }
+            asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse2 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);                    
         } 
     } 
           
     if (thisRead>0) {
+        if (status == asynTimeout) status = asynSuccess;
+        /* TODO do we need eomReason = 0 here ??? */
         *nbytesTransfered = thisRead;   
         pPmacPvt->inBufTail = 0;
         pPmacPvt->inBufHead = thisRead;
     }
-/*    else
-        asynPrintIO(pasynUser,ASYN_TRACE_FLOW,pPmacPvt->inBuf,thisRead,
-             "%s readResponse failed status=%d\n",pPmacPvt->portName, status);
-*/    
+
     return status; 
 }
 
@@ -371,6 +394,10 @@ static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
 
 /* asynOctet methods */
 
+
+/* This function sends either a ascii string command to the PMAC using VR_PMAC_GETRESPONSE or a single control 
+   character (ctrl B/C/F/G/P/V) using VR_CTRL_RESPONSE
+*/
 static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
     const char *data,size_t numchars,size_t *nbytesTransfered)
 {
@@ -381,8 +408,8 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
     asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::writeIt\n" );
     assert(pPmacPvt);
     
-    /* TODO need to scan the data buffer for control commands and do PMAC_GETRESPONSE and CTRL_RESPONSE commands
-       as necessary, currently we assume control characters arrive as individual calls to this routine */
+    /* NB currently we assume control characters arrive as individual characters/calls to this routine. Idealy we should probably
+       scan the data buffer for control commands and do PMAC_GETRESPONSE and CTRL_RESPONSE commands as necessary,  */
     outCmd = pPmacPvt->poutCmd;
     if (numchars==1 && strchr(ctrlCommands,data[0])){
         outCmd->RequestType = VR_UPLOAD;
@@ -395,7 +422,7 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
         *nbytesTransfered = (nbytesActual==ETHERNET_CMD_HEADER) ? numchars : 0;
     } else {
         if (numchars > ETHERNET_DATA_SIZE) {
-            /* TODO call write multiple times for large data blocks */
+            /* NB large data should probably be sent using PMAC_WRITEBUFFER which isnt implemented yet - for the moment just truncate */
             numchars = ETHERNET_DATA_SIZE;
             asynPrint( pasynUser, ASYN_TRACE_ERROR, "writeIt - ERROR TRUNCATED\n" );
         }
@@ -431,13 +458,27 @@ static asynStatus writeRaw(void *ppvt,asynUser *pasynUser,
     return status;    
 }
 
+
+/* This function reads data using readRaw into a local buffer and then look for message terminating characters and returns a complete 
+   response (or times out). Note that <ACK> is stripped from the end of the response, other responses are returned as is. 
+   The PMAC command response may be any of the following:-
+       data<CR>data<CR>....data<CR><ACK>
+       <BELL>data<CR> e.g. an error <BELL>ERRxxx<CR>
+       <STX>data<CR>
+   (NB asyn EOS only allows one message terminator to be specified so cannot be used here)    
+*/             
 static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason)
 {
     pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
     asynStatus status = asynSuccess;
-    size_t thisRead;
+    size_t thisRead = 0;
     size_t nRead = 0;
+    double timeout = pasynUser->timeout;
+    double timeleft;
+    float delay;
+    int bell = 0;
+ 
     asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt\n" );
     assert(pPmacPvt);
     
@@ -445,25 +486,43 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     if (maxchars > 0) {
         for (;;) {
             if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
-                *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
+                *data = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
+                if (*data == BELL || *data == STX) bell = 1;
+                if (*data == '\r' && bell) {  
+                    /* <BELL>xxxxxx<CR> or <STX>xxxxx<CR> received - its probably an error response (<BELL>ERRxxx<CR>) - assume there is no more response data to come */
+                    nRead++; /* make sure the <CR> is passed to the client app */
+                    if (eomReason) *eomReason = ASYN_EOM_EOS;
+                    break;
+                }
+                if (*data == ACK || *data == '\n') {
+                    /* <ACK> or <LF> received - assume there is no more response data to come */
+                    if (eomReason) *eomReason = ASYN_EOM_EOS;
+                    break;
+                }
+                data++;
                 nRead++;
                 if (nRead >= maxchars) break;
                 continue;
             }
             if(eomReason && *eomReason) break;
-            status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
-        
-            /* append <ACK> terminator i */
-/*            if (*eomReason == ASYN_EOM_END){
-                assert(pPmacPvt->inBufHead < INPUT_SIZE);
-                pPmacPvt->inBuf[pPmacPvt->inBufHead++] = ACK;
-            }
-*/            
+            
+            /* read data with zero timeout - i.e. get whats already available in the asyn buffer without waiting */
+            if (timeout > 0) pasynUser->timeout = 0;
+            timeleft = timeout;
+            delay = 0;
+            do {
+                if (delay>0) epicsThreadSleep(delay);
+                status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
+                timeleft -= delay;
+                if (delay < 0.5) delay += 0.05; /* lengthen delay up to a maximum of 0.5 sec */
+            } while (thisRead==0 && timeleft > 0);
+            
             if(status!=asynSuccess || thisRead==0) break;       
         }
     } else if (eomReason) *eomReason = ASYN_EOM_CNT;
     *nbytesTransfered = nRead;
-
+    pasynUser->timeout = timeout; /* restore users timeout */
+    
 /*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
 */        
     return status;
