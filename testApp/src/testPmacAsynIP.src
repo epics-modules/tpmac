@@ -15,7 +15,7 @@ $(VXWORKS_ONLY)ld < bin/$(ARCH)/testPmacAsynIP.munch
 
 ## Register all support components
 $(VXWORKS_ONLY)dbLoadDatabase("dbd/testPmacAsynIPPortVx.dbd")
-$(VXWORKS_ONLY)testPmacAsynIPPortVx_registerRecordDeviceDriver(pdbbase)
+$(VXWORKS_ONLY)testPmacAsynIPPort_registerRecordDeviceDriver(pdbbase)
 
 $(LINUX_ONLY)dbLoadDatabase("dbd/testPmacAsynIPPort.dbd")
 $(LINUX_ONLY)testPmacAsynIPPort_registerRecordDeviceDriver(pdbbase)
