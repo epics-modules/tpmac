@@ -34,7 +34,7 @@ include ../tsubLIBOBJS		#defines TSUBLIBOBJS
 PROD += $(TSUBLIBOBJS)
 
 
-include $(TOP)/config/RULES.V
+include $(TOP)/config/RULES.Vx
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
