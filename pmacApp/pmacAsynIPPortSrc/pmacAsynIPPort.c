@@ -507,11 +507,10 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
             if(eomReason && *eomReason) break;
             
             /* read data with zero timeout - i.e. get whats already available in the asyn buffer without waiting */
-            if (timeout > 0) pasynUser->timeout = 0;
             timeleft = timeout;
             delay = 0;
             do {
-                if (delay>0) epicsThreadSleep(delay);
+                pasynUser->timeout = delay;
                 status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
                 timeleft -= delay;
                 if (delay < 0.5) delay += 0.05; /* lengthen delay up to a maximum of 0.5 sec */
