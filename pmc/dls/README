@@ -1,0 +1,6 @@
+Put any commonly used pmc files here.
+Please follow this convention for usage of P variables:
+
+PLCxx should use Pxx00-Pxx99
+Coordinate systems should use Q variables instead,
+Please note that PLC16-PLC31 are reserved for position reporting for CS1-16

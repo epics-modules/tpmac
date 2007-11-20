@@ -1,0 +1,68 @@
+CLOSE
+
+;################################################
+; Define motion for 2 slit Apertures
+; Original Author: Tom Cobb
+; Used variables: Q71..Q79, Q81..Q89
+; Macros (and example values): 
+; COORD = 1       ;CS number
+; PLC = 16        ;PLC number, should be CS number+15
+; AP = 1          ;Axisnum for Aperture+
+; AM = 3          ;Axisnum for Aperture-
+; APMRES = 0.001  ;Mres for Aperture+
+; APOFF = 0.982   ;Offset for Aperture+
+; AMMRES = -0.001 ;Mres for Aperture-
+; AMOFF = -0.65   ;Offset for Aperture-
+; ASIZE = 5.6     ;Aperture size
+; DEFCENTRE = 0   ;Default Centre
+; DEFGAP = 1000   ;Default Gap
+;################################################
+
+; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same
+; as the underlying axes
+; This is needed as the motor record will only move in full steps
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(AP)->I ; +ve Aperture
+#$(AM)->I ; -ve Aperture
+
+; Setup reserved Q variables
+Q71..79=0   ; A,B,C,U,V,W,X,Y,Z demand position
+Q81..89=0   ; A,B,C,U,V,W,X,Y,Z readback position
+
+; Setup default positions
+Q77=$(DEFCENTRE)
+Q88=$(DEFGAP)
+
+OPEN FORWARD
+; Calculate Gap and Centre
+; X = Q7 = centre in mm = ({A+}+{A-})/2
+; Y = Q8 = gap in mm = {ASIZE}-{A+}+{A-} 
+; Note that we divide by 1000 to give CS mres of 0.001
+; Also note the use of mres and offset in the calculation
+CLEAR
+Q7=($(APMRES)*P$(AP)+$(APOFF)+$(AMMRES)*P$(AM)+$(AMOFF))/2000
+Q8=($(ASIZE)-$(APMRES)*P$(AP)-$(APOFF)+$(AMMRES)*P$(AM)+$(AMOFF))/1000
+CLOSE
+
+OPEN INVERSE
+; P$(AP) = A+ = {centre}+(({ASIZE}-{gap})/2)
+; P$(AM) = A- = {centre}-(({ASIZE}-{gap})/2)
+CLEAR
+P$(AP)=(1000*Q7+500*($(ASIZE)-Q8)-$(APOFF))/$(APMRES)
+P$(AM)=(1000*Q7-500*($(ASIZE)-Q8)-$(AMOFF))/$(AMMRES)
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89 
+OPEN PLC$(PLC)
+CLEAR
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+ADDRESS$(COORD)
+Q87=($(APMRES)*m$(AP)62/(I$(AP)08*32)+$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/2000
+Q88=($(ASIZE)-$(APMRES)*m$(AP)62/(I$(AP)08*32)-$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/1000
+CLOSE
+ENABLE PLC$(PLC)

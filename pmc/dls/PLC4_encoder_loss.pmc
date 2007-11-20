@@ -1,0 +1,244 @@
+CLOSE
+
+;###############################################################################
+; Define encoder loss protection
+; Original Author: Alan Greer
+; Used variables: P364..396 (borrowed from PLC3),P400..497,mxx84 defined
+; Macros (and example values): 
+; M1ON = 1       ;Turn encoder loss protection for axis 1 on
+; ...
+; M32ON = 0      ;Turn encoder loss protection for axis 1 off
+; M1CS = 0       ;CS number that M1 is in (0 for none)
+; ...
+; M32CS = 4      ;CS number that M32 is in (0 for none)
+;---------------------------------------------------------; 
+; The following must be uncommented in your main pmc file ;
+;---------------------------------------------------------;
+;; These addresses work for micromech racks, OD racks need different ones
+;ms0,i21 = $6488C8DCC0A1
+;ms0,i22 = $6488C9DCC0A2
+;ms0,i23 = $6488CADCC0A3
+;ms0,i24 = $6488CBDCC0A5
+;ms0,i25 = $6488CCDCC0A6
+;ms0,i26 = $6488CDDCC0A7
+;ms0,i27 = $6488CEDCC0A9
+;ms0,i28 = $6488CFDCC0AA
+;ms0,i29 = $6498C8DCC0AB
+;ms0,i30 = $6498C9DCC0AD
+;ms0,i31 = $6498CADCC0AE
+;ms0,i32 = $6498CBDCC0AF
+;ms32,i21 = $6488C8DCC0A1
+;ms32,i22 = $6488C9DCC0A2
+;ms32,i23 = $6488CADCC0A3
+;ms32,i24 = $6488CBDCC0A5
+;ms32,i25 = $6488CCDCC0A6
+;ms32,i26 = $6488CDDCC0A7
+;ms32,i27 = $6488CEDCC0A9
+;ms32,i28 = $6488CFDCC0AA
+;ms32,i29 = $6498C8DCC0AB
+;ms32,i30 = $6498C9DCC0AD
+;ms32,i31 = $6498CADCC0AE
+;ms32,i32 = $6498CBDCC0AF
+;; Configure MACRO station node enable i variables
+;ms0,i996 = $FB3FF
+;ms32,i996 = $2FB3FF
+;; Configure IO
+;ms0,i975 = $CC
+;ms32,i975 = $CC
+;; Macro IC0 and IC2 Node Activate Control
+;i6841 = $FF3FF
+;i6941 = $2FB3FF
+;###############################################################################
+
+; Turn encoder loss protection on or off
+P401 = $(M1ON)
+P402 = $(M2ON)
+P403 = $(M3ON)
+P404 = $(M4ON)
+P405 = $(M5ON)
+P406 = $(M6ON)
+P407 = $(M7ON)
+P408 = $(M8ON)
+P409 = $(M9ON)
+P410 = $(M10ON)
+P411 = $(M11ON)
+P412 = $(M12ON)
+P413 = $(M13ON)
+P414 = $(M14ON)
+P415 = $(M15ON)
+P416 = $(M16ON)
+P417 = $(M17ON)
+P418 = $(M18ON)
+P419 = $(M19ON)
+P420 = $(M20ON)
+P421 = $(M21ON)
+P422 = $(M22ON)
+P423 = $(M23ON)
+P424 = $(M24ON)
+P425 = $(M25ON)
+P426 = $(M26ON)
+P427 = $(M27ON)
+P428 = $(M28ON)
+P429 = $(M29ON)
+P430 = $(M30ON)
+P431 = $(M31ON)
+P432 = $(M32ON)
+
+; Associate motor with CS
+P433 = $(M1CS)
+P434 = $(M2CS)
+P435 = $(M3CS)
+P436 = $(M4CS)
+P437 = $(M5CS)
+P438 = $(M6CS)
+P439 = $(M7CS)
+P440 = $(M8CS)
+P441 = $(M9CS)
+P442 = $(M10CS)
+P443 = $(M11CS)
+P444 = $(M12CS)
+P445 = $(M13CS)
+P446 = $(M14CS)
+P447 = $(M15CS)
+P448 = $(M16CS)
+P449 = $(M17CS)
+P450 = $(M18CS)
+P451 = $(M19CS)
+P452 = $(M20CS)
+P453 = $(M21CS)
+P454 = $(M22CS)
+P455 = $(M23CS)
+P456 = $(M24CS)
+P457 = $(M25CS)
+P458 = $(M26CS)
+P459 = $(M27CS)
+P460 = $(M28CS)
+P461 = $(M29CS)
+P462 = $(M30CS)
+P463 = $(M31CS)
+P464 = $(M32CS)
+
+#define axis_number              P400
+; use axis_number to calculate the P variable to look in to see
+; if encoder loss protection is turned on on this axis
+#define encoder_detection        P(P400 + 400)
+; See which axis this motor is in
+#define coord_system_number      P(P400 + 432)
+; m variable pointing at the memory location showing if the encoder is present
+#define encoder_loss_bit         M(P400*100 + 84)
+; this is the flag that is set if encoder is lost
+; needs to be reset by EPICS when encoder is restored
+#define encoder_lost_flag        P(P400+464)
+; this is the old following error limit
+#define saved_fe_limit           P(P400+364)
+; this is the actual following error limit
+#define following_error_limit    I(P400*100 + 11)
+; define some kill commands
+#define abort_coordinate_move    &COMMAND"A"
+#define kill_axis                &COMMAND"K"
+
+; i20 sets up 16-bit data transfer lines between
+; expansion cards and UMAC macro card.
+ms0,i20=$FFF
+ms32,i20=$FFF
+
+; i19 controls how often they are read
+ms0,i19=$4
+ms32,i19=$4
+
+; Set up the M-variable definitions to point to
+; the encoder loss memory locations
+m184->X:$78421,13
+m284->X:$78422,13
+m384->X:$78423,13
+m484->X:$78425,13
+m584->X:$78426,13
+m684->X:$78427,13
+m784->X:$78429,13
+m884->X:$7842A,13
+m984->X:$7842B,13
+m1084->X:$7842D,13
+m1184->X:$7842E,13
+m1284->X:$7842F,13
+m1784->X:$7A421,13
+m1884->X:$7A422,13
+m1984->X:$7A423,13
+m2084->X:$7A425,13
+m2184->X:$7A426,13
+m2284->X:$7A427,13
+m2384->X:$7A429,13
+m2484->X:$7A42A,13
+m2584->X:$7A42B,13
+m2684->X:$7A42D,13
+m2784->X:$7A42E,13
+m2884->X:$7A42F,13
+
+
+;**********************************************************
+;
+; Encoder loss detection PLC.  This checks if the encoder
+; is lost for each axis.  If it is, it kills the axis,
+; sets the following error to 1/16th of a count and aborts
+; any coordinate system move that this axis belongs to.
+;
+; If the encoder is recovered and the latch reset (P(364+axis_number)=0)
+; then the following error will be set back to its orginal
+; value
+;
+;**********************************************************
+OPEN PLC 4
+CLEAR
+
+axis_number = 1
+; Loop through all axis
+WHILE(axis_number < 33)
+        ; Is encoder loss turned on for this axis
+        IF(encoder_detection = on)
+                ; Encoder loss is on so check
+                ; 1) If the loss bit is set to zero
+                ; 2) If the lost flag is set to zero
+                IF(encoder_loss_bit=0 AND encoder_lost_flag=0)
+                        ; Encoder loss detected
+                        ; If the following error limit is sensible
+                        ; then save it for future reference
+                        IF(following_error_limit != 1)
+                                saved_fe_limit = following_error_limit
+                        ENDIF
+                        ; Set the lost flag true
+                        encoder_lost_flag=1
+                        ; Check to see if there is a coordinate system
+                        ; for this axis that needs aborting
+                        IF(coord_system_number > 0)
+                                ; Abort any coordinate system motion
+                                P497 = coord_system_number
+                                ADDRESS&P497
+                                abort_coordinate_move
+                        ENDIF
+                        ; Kill the specific axis
+                        ADDRESS#axis_number
+                        kill_axis
+                ENDIF
+        ENDIF
+
+        ; Check if the encoder lost flag is set
+        IF(encoder_lost_flag = 1)
+                ; Encoder has been lost so set the following
+                ; error for this axis to 1/16th count
+                following_error_limit = 1
+        ENDIF
+
+		IF(encoder_lost_flag = 0 AND following_error_limit = 1)
+				IF(saved_fe_limit > 1)
+						following_error_limit = saved_fe_limit
+				ENDIF
+		ENDIF
+
+        axis_number=axis_number+1
+ENDWHILE
+
+CLOSE
+
+;Enable background PLCs
+i5=2
+
+ENABLE PLC4

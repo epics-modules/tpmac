@@ -1,0 +1,123 @@
+CLOSE
+
+;####################################################
+; PLC for putting PMAC into defined state at startup
+; Original Author: Micromech
+; Used variables: None
+;####################################################
+
+OPEN PLC1
+CLEAR
+;Wait for MACRO ring errors to clear
+WHILE((i6840 & $f) != 0)
+	;100ms delay to prevent i6840 being read too frequently
+	;8388608/i10 gives a millisecond on PMAC2
+	i5111=100*8388608/i10
+	WHILE(i5111>0)
+	ENDW
+ENDW
+COMMAND"ms$$$0 ms$$$32"
+
+; For 32 axes:
+; Set Mx61 = Commanded position = 0 on PMAC reset to make sure autosave works correctly.
+; Set Mx62 = Actual position    = 0 on PMAC reset to make sure autosave works correctly.
+M161  = 0
+M162  = 0
+M261  = 0
+M262  = 0
+M361  = 0
+M362  = 0
+M461  = 0
+M462  = 0
+M561  = 0
+M562  = 0
+M661  = 0
+M662  = 0
+M761  = 0
+M762  = 0
+M861  = 0
+M862  = 0
+M961  = 0
+M962  = 0
+M1061 = 0
+M1062 = 0
+M1161 = 0
+M1162 = 0
+M1261 = 0
+M1262 = 0
+M1361 = 0
+M1362 = 0
+M1461 = 0
+M1462 = 0
+M1561 = 0
+M1562 = 0
+M1661 = 0
+M1662 = 0
+M1761 = 0
+M1762 = 0
+M1861 = 0
+M1862 = 0
+M1961 = 0
+M1962 = 0
+M2061 = 0
+M2062 = 0
+M2161 = 0
+M2162 = 0
+M2261 = 0
+M2262 = 0
+M2361 = 0
+M2362 = 0
+M2461 = 0
+M2462 = 0
+M2561 = 0
+M2562 = 0
+M2661 = 0
+M2662 = 0
+M2761 = 0
+M2762 = 0
+M2861 = 0
+M2862 = 0
+M2961 = 0
+M2962 = 0
+M3061 = 0
+M3062 = 0
+M3161 = 0
+M3162 = 0
+M3261 = 0
+M3262 = 0
+
+; define lookaheads for coordinate systems
+ADDRESS&1
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&2
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&3
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&4
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&5
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&6
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&7
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&8
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&9
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&10
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&11
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&12
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&13
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&14
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&15
+COMMAND"DEFINE LOOKAHEAD 20,20"
+ADDRESS&16
+COMMAND"DEFINE LOOKAHEAD 20,20"
+DISPLC1
+CLOSE

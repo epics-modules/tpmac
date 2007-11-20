@@ -1,0 +1,67 @@
+CLOSE
+
+;################################################
+; Define motion for 2 slit blades
+; Original Author: Tom Cobb
+; Used variables: Q71..Q79, Q81..Q89
+; Macros (and example values): 
+; COORD = 1       ;CS number
+; PLC = 16        ;PLC number, should be CS number+15
+; BP = 1          ;Axisnum for Blade+
+; BM = 3          ;Axisnum for Blade-
+; BPMRES = 0.001  ;Mres for Blade+
+; BPOFF = 0.982   ;Offset for Blade+
+; BMMRES = -0.001 ;Mres for Blade-
+; BMOFF = -0.65   ;Offset for Blade-
+; DEFCENTRE = 0   ;Default Centre
+; DEFGAP = 1000   ;Default Gap
+;################################################
+
+; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same
+; as the underlying axes
+; This is needed as the motor record will only move in full steps
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(BP)->I ; +ve blade
+#$(BM)->I ; -ve blade
+
+; Setup reserved Q variables
+Q71..79=0   ; A,B,C,U,V,W,X,Y,Z demand position
+Q81..89=0   ; A,B,C,U,V,W,X,Y,Z readback position
+
+; Setup default positions
+Q77=$(DEFCENTRE)
+Q88=$(DEFGAP)
+
+OPEN FORWARD
+; Calculate Gap and Centre
+; X = Q7 = centre in mm = ({B+}+{B-})/2
+; Y = Q8 = gap in mm = {B+}-{B-} 
+; Note that we divide by 1000 to give CS mres of 0.001
+; Also note the use of mres and offset in the calculation
+CLEAR
+Q7=($(BPMRES)*P$(BP)+$(BPOFF)+$(BMMRES)*P$(BM)+$(BMOFF))/2000
+Q8=($(BPMRES)*P$(BP)+$(BPOFF)-$(BMMRES)*P$(BM)-$(BMOFF))/1000
+CLOSE
+
+OPEN INVERSE
+; P$(BP) = B+ = {centre}+({gap}/2)
+; P$(BM) = B- = {centre}-({gap}/2)
+CLEAR
+P$(BP)=(1000*Q7+500*Q8-$(BPOFF))/$(BPMRES)
+P$(BM)=(1000*Q7-500*Q8-$(BMOFF))/$(BMMRES)
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89 
+OPEN PLC$(PLC)
+CLEAR
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+ADDRESS$(COORD)
+Q87=($(BPMRES)*m$(BP)62/(I$(BP)08*32)+$(BPOFF)+$(BMMRES)*m$(BM)62/(I$(BM)08*32)+$(BMOFF))/2000
+Q88=($(BPMRES)*m$(BP)62/(I$(BP)08*32)+$(BPOFF)-$(BMMRES)*m$(BM)62/(I$(BM)08*32)-$(BMOFF))/1000
+CLOSE
+ENABLE PLC$(PLC)

@@ -1,0 +1,96 @@
+CLOSE
+
+;###############################################
+; Define motion for Energy in Accel DCM
+; Original Author: Tom Cobb
+; Used variables: Q71..Q79, Q81..Q89, Q100..Q103, Q20, P$(PLC)00
+; Macros (and example values): 
+; COORD = 1         ;CS number
+; PLC = 16          ;PLC number, should be CS number+15
+; BRAGG = 2         ;Axisnum for Bragg
+; T2 = 3            ;Axisnum for T2
+; BMRES = 0.0000138 ;Mres for Bragg
+; BOFF = 0.12246247 ;Offset for Bragg
+; TMRES = -0.0005   ;Mres for Blade-
+; TOFF = 6.928      ;Offset for Blade-
+; DEFENERGY = 35000 ;Default Energy
+; DEFOFFSET = 20000 ;Default Offset
+;################################################
+
+; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same
+; as the underlying axes
+; This is needed as the motor record will only move in full steps
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(BRAGG)->I
+#$(T2)->I
+
+; Trig in degrees
+i15=0
+
+; Setup reserved Q variables
+Q71..79=0   ; A,B,C,U,V,W,X,Y,Z demand position
+Q81..89=0   ; A,B,C,U,V,W,X,Y,Z readback position
+
+; Setup some default values
+Q77=$(DEFENERGY)
+Q78=$(DEFOFFSET)
+
+; Setup Bragg and T2 mres and offset
+Q100=$(BMRES)
+Q101=$(BOFF)
+Q102=$(TMRES)
+Q103=$(TOFF)
+
+; Setup energy calculation variables
+Q110=12.3985 ; Evlambda
+Q111=3.1355  ; d = crystal spacing in angstrom
+
+&1 OPEN FORWARD
+; This kinematic is for the DCM energy
+; need to multiply everything by 1000 to give decent MRES value
+; X = Q7 = energy in kEv = {Evlamda}/(2*{d}*sin(Bragg))
+; Y = Q8 = offset in mm = 2*(T)*cos(Bragg)
+CLEAR
+Q20=2*Q111*SIN(Q100*P$(BRAGG)+Q101)
+IF (Q20>0.01)
+    Q7=1000*Q110/(Q20)
+    Q8=2000*(Q102*P$(T2)+Q103)*COS(Q100*P$(BRAGG)+Q101)
+ELSE
+    M5182=1
+ENDIF
+CLOSE
+
+&1 OPEN INVERSE
+CLEAR
+; P$(BRAGG) = Bragg = arcsin({Evlamda}/(2*{d}*(Energy)) or arcsin((wavelength)/(2*{d}))
+; P$(T2) = T = (Offset)/2*cos(Bragg)
+; TODO: find out why we need 0.2 fudge factor in P3 calculation?
+Q20=1000*Q110/(2*Q111*Q7)
+IF (ABS(Q20)<1)
+    P$(BRAGG)=(ASIN(Q20)-Q101)/Q100
+    P$(T2)=(Q8/(2000.2*COS(ASIN(Q20)))-Q103)/Q102
+ELSE
+    M5182=1
+ENDIF
+CLOSE
+
+OPEN PLC $(PLC)
+; PLC for position reporting
+CLEAR
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+ADDRESS&$(COORD)
+P$(PLC)00=2*Q111*SIN(Q100*m$(BRAGG)62/(I$(BRAGG)08*32)+Q101)
+IF (P$(PLC)>0.01)
+    Q87=1000*Q110/P$(PLC)
+    Q88=2000*(Q102*m$(T2)62/(I$(T2)08*32)+Q103)*COS(Q100*m$(BRAGG)62/(I$(BRAGG)08*32)+Q101)
+ELSE
+    M5182=1
+ENDIF
+CLOSE
+ENABLE PLC $(PLC)
+
+
