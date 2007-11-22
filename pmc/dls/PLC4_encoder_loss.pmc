@@ -5,16 +5,17 @@ CLOSE
 ; Original Author: Alan Greer
 ; Used variables: P364..396 (borrowed from PLC3),P400..497,mxx84 defined
 ; Macros (and example values): 
-; M1ON = 1       ;Turn encoder loss protection for axis 1 on
+; ONM1 = 1       ;Turn encoder loss protection for axis 1 on
 ; ...
-; M32ON = 0      ;Turn encoder loss protection for axis 1 off
-; M1CS = 0       ;CS number that M1 is in (0 for none)
+; ONM32 = 0      ;Turn encoder loss protection for axis 1 off
+; CSM1 = 0       ;CS number that M1 is in (0 for none)
 ; ...
-; M32CS = 4      ;CS number that M32 is in (0 for none)
+; CSM32 = 4      ;CS number that M32 is in (0 for none)
 ;---------------------------------------------------------; 
 ; The following must be uncommented in your main pmc file ;
 ;---------------------------------------------------------;
-;; These addresses work for micromech racks, OD racks need different ones
+;;Memory locations for encoder loss bit
+;;These addresses work for micromech racks, OD racks need different ones
 ;ms0,i21 = $6488C8DCC0A1
 ;ms0,i22 = $6488C9DCC0A2
 ;ms0,i23 = $6488CADCC0A3
@@ -39,84 +40,84 @@ CLOSE
 ;ms32,i30 = $6498C9DCC0AD
 ;ms32,i31 = $6498CADCC0AE
 ;ms32,i32 = $6498CBDCC0AF
-;; Configure MACRO station node enable i variables
+;;Configure MACRO station node enable i variables
 ;ms0,i996 = $FB3FF
 ;ms32,i996 = $2FB3FF
-;; Configure IO
+;;Configure IO
 ;ms0,i975 = $CC
 ;ms32,i975 = $CC
-;; Macro IC0 and IC2 Node Activate Control
+;;Macro IC0 and IC2 Node Activate Control
 ;i6841 = $FF3FF
-;i6941 = $2FB3FF
+;i6941 = $2FF3FF
 ;###############################################################################
 
 ; Turn encoder loss protection on or off
-P401 = $(M1ON)
-P402 = $(M2ON)
-P403 = $(M3ON)
-P404 = $(M4ON)
-P405 = $(M5ON)
-P406 = $(M6ON)
-P407 = $(M7ON)
-P408 = $(M8ON)
-P409 = $(M9ON)
-P410 = $(M10ON)
-P411 = $(M11ON)
-P412 = $(M12ON)
-P413 = $(M13ON)
-P414 = $(M14ON)
-P415 = $(M15ON)
-P416 = $(M16ON)
-P417 = $(M17ON)
-P418 = $(M18ON)
-P419 = $(M19ON)
-P420 = $(M20ON)
-P421 = $(M21ON)
-P422 = $(M22ON)
-P423 = $(M23ON)
-P424 = $(M24ON)
-P425 = $(M25ON)
-P426 = $(M26ON)
-P427 = $(M27ON)
-P428 = $(M28ON)
-P429 = $(M29ON)
-P430 = $(M30ON)
-P431 = $(M31ON)
-P432 = $(M32ON)
+P401 = $(ONM1)
+P402 = $(ONM2)
+P403 = $(ONM3)
+P404 = $(ONM4)
+P405 = $(ONM5)
+P406 = $(ONM6)
+P407 = $(ONM7)
+P408 = $(ONM8)
+P409 = $(ONM9)
+P410 = $(ONM10)
+P411 = $(ONM11)
+P412 = $(ONM12)
+P413 = $(ONM13)
+P414 = $(ONM14)
+P415 = $(ONM15)
+P416 = $(ONM16)
+P417 = $(ONM17)
+P418 = $(ONM18)
+P419 = $(ONM19)
+P420 = $(ONM20)
+P421 = $(ONM21)
+P422 = $(ONM22)
+P423 = $(ONM23)
+P424 = $(ONM24)
+P425 = $(ONM25)
+P426 = $(ONM26)
+P427 = $(ONM27)
+P428 = $(ONM28)
+P429 = $(ONM29)
+P430 = $(ONM30)
+P431 = $(ONM31)
+P432 = $(ONM32)
 
 ; Associate motor with CS
-P433 = $(M1CS)
-P434 = $(M2CS)
-P435 = $(M3CS)
-P436 = $(M4CS)
-P437 = $(M5CS)
-P438 = $(M6CS)
-P439 = $(M7CS)
-P440 = $(M8CS)
-P441 = $(M9CS)
-P442 = $(M10CS)
-P443 = $(M11CS)
-P444 = $(M12CS)
-P445 = $(M13CS)
-P446 = $(M14CS)
-P447 = $(M15CS)
-P448 = $(M16CS)
-P449 = $(M17CS)
-P450 = $(M18CS)
-P451 = $(M19CS)
-P452 = $(M20CS)
-P453 = $(M21CS)
-P454 = $(M22CS)
-P455 = $(M23CS)
-P456 = $(M24CS)
-P457 = $(M25CS)
-P458 = $(M26CS)
-P459 = $(M27CS)
-P460 = $(M28CS)
-P461 = $(M29CS)
-P462 = $(M30CS)
-P463 = $(M31CS)
-P464 = $(M32CS)
+P433 = $(CSM1)
+P434 = $(CSM2)
+P435 = $(CSM3)
+P436 = $(CSM4)
+P437 = $(CSM5)
+P438 = $(CSM6)
+P439 = $(CSM7)
+P440 = $(CSM8)
+P441 = $(CSM9)
+P442 = $(CSM10)
+P443 = $(CSM11)
+P444 = $(CSM12)
+P445 = $(CSM13)
+P446 = $(CSM14)
+P447 = $(CSM15)
+P448 = $(CSM16)
+P449 = $(CSM17)
+P450 = $(CSM18)
+P451 = $(CSM19)
+P452 = $(CSM20)
+P453 = $(CSM21)
+P454 = $(CSM22)
+P455 = $(CSM23)
+P456 = $(CSM24)
+P457 = $(CSM25)
+P458 = $(CSM26)
+P459 = $(CSM27)
+P460 = $(CSM28)
+P461 = $(CSM29)
+P462 = $(CSM30)
+P463 = $(CSM31)
+P464 = $(CSM32)
 
 #define axis_number              P400
 ; use axis_number to calculate the P variable to look in to see
@@ -193,7 +194,7 @@ axis_number = 1
 ; Loop through all axis
 WHILE(axis_number < 33)
         ; Is encoder loss turned on for this axis
-        IF(encoder_detection = on)
+        IF(encoder_detection = 1)
                 ; Encoder loss is on so check
                 ; 1) If the loss bit is set to zero
                 ; 2) If the lost flag is set to zero
