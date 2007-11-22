@@ -720,11 +720,11 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             }
             pAxis->homeSignal = homeSignal;
 
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error+pAxis->enc_offset) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+pAxis->enc_offset) );
 #else
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position) );
 #endif
-            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
+            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position+error );
 
             /* Don't set direction if velocity equals zero and was previously negative */
             motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
