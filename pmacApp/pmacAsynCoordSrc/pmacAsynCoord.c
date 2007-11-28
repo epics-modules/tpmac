@@ -737,7 +737,7 @@ int pmacAsynCoordCreate( char *port, int addr, int card, int cs )
     }
 
     for ( pDrv = pFirstDrv;
-          pDrv != NULL &&  (pDrv->card != card) && (pDrv->cs != cs);
+          pDrv != NULL && !((pDrv->card == card) && (pDrv->cs == cs));
           pDrv = pDrv->pNext )
     {
         ppLast = &(pDrv->pNext);
