@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-int pmacAsynCoordCreate( char *port, int addr, int card, int cs );
+int pmacAsynCoordCreate( char *port, int addr, int cs, int ref, int program );
 
 #ifdef __cplusplus
 }
