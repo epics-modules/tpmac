@@ -37,7 +37,7 @@
 
 int    pmacDrvNumAsc  = 0;     /* DPRAM ASCII driver number   */
 int    pmacDrvNumMbx  = 0;     /* Mailbox ASCII driver number */
-int    replyQueueSize = 2048;  /* Size of ring buffer         */
+int    replyQueueSize = 40960; /* Size of ring buffer - large enough for a list gather response of 1024 samples of 3 variables */
 
 typedef struct
 {
