@@ -350,8 +350,10 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             case motorAxisPosition: {
                 int position = (int) floor(value*32 + 0.5);
 
-                sprintf( command, "&%d%c=%d",
+/*                sprintf( command, "&%d%c=%d",
                          pAxis->coord_system, NAME(pAxis), position);
+*/
+                sprintf(command, "&%d"DEMAND"="READBACK, pAxis->coord_system, pAxis->axis, pAxis->axis);
 
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Set ref %d, axis %c to position %f\n",
