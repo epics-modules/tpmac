@@ -35,25 +35,25 @@ Q81..89=0   ; A,B,C,U,V,W,X,Y,Z readback position
 
 ; Setup default positions
 Q77=$(DEFCENTRE)
-Q88=$(DEFGAP)
+Q78=$(DEFGAP)
 
 OPEN FORWARD
 ; Calculate Gap and Centre
 ; X = Q7 = centre in mm = ({A+}+{A-})/2
 ; Y = Q8 = gap in mm = {ASIZE}-{A+}+{A-} 
-; Note that we divide by 1000 to give CS mres of 0.001
+; Note that we divide by 0.001 to give CS mres of 0.001
 ; Also note the use of mres and offset in the calculation
 CLEAR
-Q7=($(APMRES)*P$(AP)+$(APOFF)+$(AMMRES)*P$(AM)+$(AMOFF))/2000
-Q8=($(ASIZE)-$(APMRES)*P$(AP)-$(APOFF)+$(AMMRES)*P$(AM)+$(AMOFF))/1000
+Q7=($(APMRES)*P$(AP)+$(APOFF)+$(AMMRES)*P$(AM)+$(AMOFF))/0.002
+Q8=($(ASIZE)-($(APMRES)*P$(AP)+$(APOFF))+$(AMMRES)*P$(AM)+$(AMOFF))/0.001
 CLOSE
 
 OPEN INVERSE
 ; P$(AP) = A+ = {centre}+(({ASIZE}-{gap})/2)
 ; P$(AM) = A- = {centre}-(({ASIZE}-{gap})/2)
 CLEAR
-P$(AP)=(1000*Q7+500*($(ASIZE)-Q8)-$(APOFF))/$(APMRES)
-P$(AM)=(1000*Q7-500*($(ASIZE)-Q8)-$(AMOFF))/$(AMMRES)
+P$(AP)=((Q7*0.001+($(ASIZE)-Q8*0.001)/2)-$(APOFF))/$(APMRES)
+P$(AM)=((Q7*0.001-($(ASIZE)-Q8*0.001)/2)-$(AMOFF))/$(AMMRES)
 CLOSE
 
 ; A PLC(sx+15) needs to be made to do position reporting
@@ -61,8 +61,8 @@ CLOSE
 OPEN PLC$(PLC)
 CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
-ADDRESS$(COORD)
-Q87=($(APMRES)*m$(AP)62/(I$(AP)08*32)+$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/2000
-Q88=($(ASIZE)-$(APMRES)*m$(AP)62/(I$(AP)08*32)-$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/1000
+ADDRESS&$(COORD)
+Q87=($(APMRES)*m$(AP)62/(I$(AP)08*32)+$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/0.002
+Q88=($(ASIZE)-$(APMRES)*m$(AP)62/(I$(AP)08*32)-$(APOFF)+$(AMMRES)*m$(AM)62/(I$(AM)08*32)+$(AMOFF))/0.001
 CLOSE
 ENABLE PLC$(PLC)

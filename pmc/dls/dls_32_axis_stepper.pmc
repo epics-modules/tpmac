@@ -2,6 +2,9 @@
 ;**** Configuration File for 32 Axis stepper crate with MSL drive crates **** 
 ;****************************************************************************
 
+;Stop PLCs
+i5=0
+
 ;********** Needed for dls-motor-control.py ********
 i3 = 2       ;Acknowledge valid commands with <LF>
 i6 = 1       ;Acknowledge invalid commands with <BELL>ERRxxx<CR>
@@ -11,7 +14,7 @@ i6 = 1       ;Acknowledge invalid commands with <BELL>ERRxxx<CR>
 I56 = 1      ;VME DPRAM Communications Interrupt Enable (=0 for old, polled, PMAC driver)
 I58 = 1      ;VME DPRAM ASCII Communications Enable
 I90 = $39    ;VME Address Modifier
-I91 = 4      ;VME Address Modifier Don’t Care Bits
+I91 = 4      ;VME Address Modifier Don't Care Bits
 I92 = $FF    ;VME Base Address Bits A31-A24
 I93 = $7F    ;$7F,$8F,$9F for PMAC 1,2,3 = VME Mailbox Address Bits A23-A16,ISA DPRam Address A23-A16
 I94 = $A0    ;VME Mailbox Addr Bits A15-A08,ISA DPRam Addr A15-A14 And Control
@@ -24,25 +27,25 @@ I99 = $90    ;VME Address Width Control
 i70..77=$3333;Macro IC0-3 Node Auxiliary Register Enable and Protocol Type Control
 i78=32       ;Macro timeout (in servo cycles)
 i6840=$30    ;Macro IC0 Ring Configuration
-i6841=$ff33f ;Macro IC0 Node Activate Control
+i6841=$fffff ;Macro IC0 Node Activate Control
 i6890=$90    ;Macro IC1 Ring Configuration
 i6891=$1ff333;Macro IC1 Node Activate Control
 i6940=$90    ;Macro IC2 Ring Configuration
-i6941=$2ff33f;Macro IC2 Node Activate Control
+i6941=$2fffff;Macro IC2 Node Activate Control
 i6990=$90    ;Macro IC3 Ring Configuration
 i6991=$3ff333;Macro IC3 Node Activate Control
 
 ;Configure MACRO station node enable i variables
-ms0,i996=$fb333
+ms0,i996=$fbfff
 ms0,i1996=$1f3333
-ms32,i996=$2fb333
+ms32,i996=$2fbfff
 ms32,i1996=$3f3333
 
 ;Configure IO
-ms0,i975=$c     ;Enable IO nodes 2 and 3
+ms0,i975=$cc     ;Enable IO nodes 2 and 3
 ms0,MI71=$10C0A0208800
 ms0,i19=4
-ms32,i975=$c    ;Enable IO nodes 34 and 35
+ms32,i975=$cc    ;Enable IO nodes 34 and 35
 ms32,MI71=$10C0A0208800
 ms32,i19=4
 
@@ -51,6 +54,41 @@ m7500->x:$78420,0,24    ;Node 2 24 bit register (digital inputs 0-23)
 m7501->x:$78424,0,24    ;Node 3 24 bit register (digital outputs 0-23)
 m7502->x:$7a420,0,24    ;Node 34 24 bit register (digital inputs 24-47)
 m7503->x:$7a424,0,24    ;Node 35 24 bit register (digital outputs 24-47)
+
+;Memory locations for encoder loss bit
+;These addresses work for micromech racks, OD racks need different ones
+ms0,i21 = $6488C8DCC0A1
+ms0,i22 = $6488C9DCC0A2
+ms0,i23 = $6488CADCC0A3
+ms0,i24 = $6488CBDCC0A5
+ms0,i25 = $6488CCDCC0A6
+ms0,i26 = $6488CDDCC0A7
+ms0,i27 = $6488CEDCC0A9
+ms0,i28 = $6488CFDCC0AA
+ms0,i29 = $6498C8DCC0AB
+ms0,i30 = $6498C9DCC0AD
+ms0,i31 = $6498CADCC0AE
+ms0,i32 = $6498CBDCC0AF
+ms0,i33 = $6498CCDCC0B1
+ms0,i34 = $6498CDDCC0B2
+ms0,i35 = $6498CEDCC0B3
+ms0,i36 = $6498CFDCC0B5
+ms32,i21 = $6488C8DCC0A1
+ms32,i22 = $6488C9DCC0A2
+ms32,i23 = $6488CADCC0A3
+ms32,i24 = $6488CBDCC0A5
+ms32,i25 = $6488CCDCC0A6
+ms32,i26 = $6488CDDCC0A7
+ms32,i27 = $6488CEDCC0A9
+ms32,i28 = $6488CFDCC0AA
+ms32,i29 = $6498C8DCC0AB
+ms32,i30 = $6498C9DCC0AD
+ms32,i31 = $6498CADCC0AE
+ms32,i32 = $6498CBDCC0AF
+ms32,i33 = $6498CCDCC0B1
+ms32,i34 = $6498CDDCC0B2
+ms32,i35 = $6498CEDCC0B3
+ms32,i36 = $6498CFDCC0B5
 
 ;Configure PFM clock divider
 ms0,i903=$8f2
@@ -167,13 +205,14 @@ i124,32,100 = $40001     ;enable limit switches ($60001 will disable them)
 i130,32,100 = 14000      ;proportional gain (sets step pulse to encoder pulse ratio on stepper axes)
 i131,32,100 = 0          ;derivative gain
 i132,32,100 = 7500       ;velocity feedforward gain
+i133,32,100 = 0          ;integral gain
 i135,32,100 = 100000     ;Acceleration Feed Forwards Gain
 i136,32,100 = 0          ;Notch filter coefficient N1 (default 0)
 i137,32,100 = 0          ;Notch filter coefficient N2 (default 0)
 i138,32,100 = 0          ;Notch filter coefficient D1 (default 0)
 i139,32,100 = 0          ;Notch filter coefficient D2 (default 0)
 i164,32,100 = -16        ;enable deadband
-i165,32,100 = 64         ;deadband in 16ths of an encoder count (64*1/16)=4 (4 encoder counts = 1 motor count)
+i165,32,100 = 8          ;deadband in 16ths of an encoder count (64*1/16)=4 (4 encoder counts = 1 motor count)
 i169,32,100 = 32767      ;set max output frequency to maximum (default is 20480)
 
 ;******* Axis 1 - ?????????? *********
@@ -611,3 +650,6 @@ open prog 1
 clear
 \    ;stop motors
 close
+
+; Start PLCs
+i5=2

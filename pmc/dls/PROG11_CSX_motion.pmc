@@ -1,7 +1,7 @@
 CLOSE
 
 ;####################################################
-; Generic program for moving any co-ordinate system
+; Generic program for moving X axis in any co-ordinate system
 ; Original Author: Tom Cobb
 ; Used variables: Q71..Q79, Q81..Q89
 ;####################################################
@@ -21,13 +21,12 @@ i5113,16,100=10   ; segmentation time (needed for lookahead)
 i5120,16,100=20   ; lookahead length (needed to limit max velocity to max set in CS)
 i5150,16,100=1    ; Enable kinematics
 
-OPEN PROG 10
+OPEN PROG 11
 CLEAR
 LINEAR
 ABS
-; need to think about the consequences of including all axes in frax
-FRAX(A,B,C,U,V,W,X,Y,Z)
-A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
+FRAX(X)
+X(Q77)
 DWELL0
 CLOSE
 

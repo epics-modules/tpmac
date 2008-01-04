@@ -28,6 +28,10 @@ CLOSE
 ;ms0,i30 = $6498C9DCC0AD
 ;ms0,i31 = $6498CADCC0AE
 ;ms0,i32 = $6498CBDCC0AF
+;ms0,i33 = $6498CCDCC0B1
+;ms0,i34 = $6498CDDCC0B2
+;ms0,i35 = $6498CEDCC0B3
+;ms0,i36 = $6498CFDCC0B5
 ;ms32,i21 = $6488C8DCC0A1
 ;ms32,i22 = $6488C9DCC0A2
 ;ms32,i23 = $6488CADCC0A3
@@ -40,15 +44,19 @@ CLOSE
 ;ms32,i30 = $6498C9DCC0AD
 ;ms32,i31 = $6498CADCC0AE
 ;ms32,i32 = $6498CBDCC0AF
+;ms32,i33 = $6498CCDCC0B1
+;ms32,i34 = $6498CDDCC0B2
+;ms32,i35 = $6498CEDCC0B3
+;ms32,i36 = $6498CFDCC0B5
 ;;Configure MACRO station node enable i variables
-;ms0,i996 = $FB3FF
-;ms32,i996 = $2FB3FF
+;ms0,i996 = $FBFFF
+;ms32,i996 = $2FBFFF
 ;;Configure IO
 ;ms0,i975 = $CC
 ;ms32,i975 = $CC
 ;;Macro IC0 and IC2 Node Activate Control
-;i6841 = $FF3FF
-;i6941 = $2FF3FF
+;i6841 = $FFFFF
+;i6941 = $2FFFFF
 ;###############################################################################
 
 ; Turn encoder loss protection on or off
@@ -130,7 +138,8 @@ P464 = $(CSM32)
 ; this is the flag that is set if encoder is lost
 ; needs to be reset by EPICS when encoder is restored
 #define encoder_lost_flag        P(P400+464)
-; this is the old following error limit
+; this is the old following error limit, reset it on initialise
+P465..496=0
 #define saved_fe_limit           P(P400+364)
 ; this is the actual following error limit
 #define following_error_limit    I(P400*100 + 11)
@@ -161,6 +170,10 @@ m984->X:$7842B,13
 m1084->X:$7842D,13
 m1184->X:$7842E,13
 m1284->X:$7842F,13
+m1384->X:$78431,13
+m1484->X:$78432,13
+m1584->X:$78433,13
+m1684->X:$78435,13
 m1784->X:$7A421,13
 m1884->X:$7A422,13
 m1984->X:$7A423,13
@@ -173,7 +186,10 @@ m2584->X:$7A42B,13
 m2684->X:$7A42D,13
 m2784->X:$7A42E,13
 m2884->X:$7A42F,13
-
+m2984->X:$7A431,13
+m3084->X:$7A432,13
+m3184->X:$7A433,13
+m3284->X:$7A435,13
 
 ;**********************************************************
 ;
