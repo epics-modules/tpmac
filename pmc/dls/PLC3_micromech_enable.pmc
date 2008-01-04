@@ -3,7 +3,7 @@ CLOSE
 ;#################################################
 ; PLC for enabling axis depening on ix00 and mx39
 ; Original Author: James O'Hea
-; Used variables: P300, (P364..P396 donated to PLC4)
+; Used variables: P300, (P301..P332 reserved for CS mres),  (P364..P396 donated to PLC4)
 ;#################################################
 
 OPEN PLC3

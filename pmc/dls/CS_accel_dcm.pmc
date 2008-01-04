@@ -3,18 +3,12 @@ CLOSE
 ;###############################################
 ; Define motion for Energy in Accel DCM
 ; Original Author: Tom Cobb
-; Used variables: Q71..Q79, Q81..Q89, Q100..Q103, Q20, P$(PLC)00
+; Used variables: Q71..Q79, Q81..Q89, BMRES..TOFF, Q20, P$(PLC)00
 ; Macros (and example values): 
 ; COORD = 1          ;CS number (only works for CS 1..9)
 ; PLC = 16           ;PLC number, should be CS number+15
 ; BRAGG = 2          ;Axisnum for Bragg
 ; T2 = 3             ;Axisnum for T2
-; BMRES = 0.0000138  ;Mres for Bragg
-; BOFF = 0.12246247  ;Offset for Bragg
-; TMRES = -0.0005    ;Mres for Blade-
-; TOFF = 6.928       ;Offset for Blade-
-; DEFENERGY = 350000 ;Default Energy
-; DEFOFFSET = 200000 ;Default Offset
 ;################################################
 
 ; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same
@@ -31,19 +25,11 @@ CLOSE
 ; Trig in degrees
 i15=0
 
-; Setup reserved Q variables
-Q71..79=0   ; A,B,C,U,V,W,X,Y,Z demand position
-Q81..89=0   ; A,B,C,U,V,W,X,Y,Z readback position
-
-; Setup some default values
-Q77=$(DEFENERGY)
-Q78=$(DEFOFFSET)
-
-; Setup Bragg and T2 mres and offset
-Q100=$(BMRES)
-Q101=$(BOFF)
-Q102=$(TMRES)
-Q103=$(TOFF)
+; These are set by mres_reporting_motor.template
+#define BMRES P(100+$(BRAGG))
+#define BOFF  P(300+$(BRAGG))
+#define TMRES P(100+$(T2))
+#define TOFF  P(300+$(T2))
 
 ; Setup energy calculation variables
 Q110=12.3985 ; Evlambda
@@ -55,10 +41,10 @@ Q111=3.1355  ; d = crystal spacing in angstrom
 ; X = Q7 = energy in kEv = {Evlamda}/(2*{d}*sin(Bragg))
 ; Y = Q8 = offset in mm = 2*(T)*cos(Bragg)
 CLEAR
-Q20=2*Q111*SIN(Q100*P$(BRAGG)+Q101)
+Q20=2*Q111*SIN(BMRES*P$(BRAGG)+BOFF)
 IF (Q20>0.01)
     Q7=10000*Q110/(Q20)
-    Q8=20000*(Q102*P$(T2)+Q103)*COS(Q100*P$(BRAGG)+Q101)
+    Q8=20000*(TMRES*P$(T2)+TOFF)*COS(BMRES*P$(BRAGG)+BOFF)
 ELSE
     M5$(COORD)82=1
 ENDIF
@@ -68,11 +54,11 @@ CLOSE
 CLEAR
 ; P$(BRAGG) = Bragg = arcsin({Evlamda}/(2*{d}*(Energy)) or arcsin((wavelength)/(2*{d}))
 ; P$(T2) = T = (Offset)/2*cos(Bragg)
-; TODO: find out why we need 0.1% fudge factor in P3 calculation?
+; TODO: find out why we need 0.1% fudge factor in P$(T2) calculation?
 Q20=10000*Q110/(2*Q111*Q7)
 IF (ABS(Q20)<1)
-    P$(BRAGG)=(ASIN(Q20)-Q101)/Q100
-    P$(T2)=(Q8/(20002*COS(ASIN(Q20)))-Q103)/Q102
+    P$(BRAGG)=(ASIN(Q20)-BOFF)/BMRES
+    P$(T2)=(Q8/(20002*COS(ASIN(Q20)))-TOFF)/TMRES
 ELSE
     M5$(COORD)82=1
 ENDIF
@@ -82,11 +68,13 @@ OPEN PLC $(PLC)
 ; PLC for position reporting
 CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define BVAL m$(BRAGG)62/(I$(BRAGG)08*32)
+#define TVAL m$(T2)62/(I$(T2)08*32)
 ADDRESS&$(COORD)
-P$(PLC)00=2*Q111*SIN(Q100*m$(BRAGG)62/(I$(BRAGG)08*32)+Q101)
+P$(PLC)00=2*Q111*SIN(BMRES*BVAL+BOFF)
 IF (P$(PLC)00>0.01)
     Q87=10000*Q110/P$(PLC)00
-    Q88=20000*(Q102*m$(T2)62/(I$(T2)08*32)+Q103)*COS(Q100*m$(BRAGG)62/(I$(BRAGG)08*32)+Q101)
+    Q88=20000*(TMRES*TVAL+TOFF)*COS(BMRES*BVAL+BOFF)
 ELSE
     M5$(COORD)82=1
 ENDIF

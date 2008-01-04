@@ -3,7 +3,7 @@ CLOSE
 ;####################################################
 ; PLC for putting PMAC into defined state at startup
 ; Original Author: Micromech
-; Used variables: None
+; Used variables: None, (P101..P132 reserved for CS mres)
 ;####################################################
 
 OPEN PLC1
