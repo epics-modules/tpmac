@@ -582,10 +582,10 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser,
             /* Don't set direction if velocity equals zero and was previously negative */
             motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
             motorParam->setInteger( pAxis->params, motorAxisDirection,     ((velocity >= 0) || (velocity == 0 && direction)) );
-            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[1] & CS_STATUS2_IN_POSITION) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
+            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[1] & CS_STATUS2_IN_POSITION) != 0) );            
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
             motorParam->callCallback( pAxis->params );           
         }

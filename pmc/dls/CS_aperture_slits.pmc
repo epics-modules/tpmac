@@ -7,8 +7,8 @@ CLOSE
 ; Macros (and example values): 
 ; COORD = 1       ;CS number
 ; PLC = 16        ;PLC number, should be CS number+15
-; AP = 1          ;Axisnum for Aperture+
-; AM = 3          ;Axisnum for Aperture-
+; AP = 1          ;Axisnum for Aperture+ (clips the +ve edge of the beam)
+; AM = 3          ;Axisnum for Aperture- (clips the -ve edge of the beam)
 ; ASIZE = 5.85    ;Size of Aperture
 ;################################################
 
@@ -20,32 +20,32 @@ CLOSE
 &$(COORD)
 
 ; Set relevant axes to use kinematics
-#$(AP)->I ; +ve Aperture
-#$(AM)->I ; -ve Aperture
+#$(AM)->I ; +ve Aperture
+#$(AP)->I ; -ve Aperture
 
 ; These are set by mres_reporting_motor.template
-#define APMRES P(100+$(AP))
-#define APOFF  P(300+$(AP))
 #define AMMRES P(100+$(AM))
 #define AMOFF  P(300+$(AM))
+#define APMRES P(100+$(AP))
+#define APOFF  P(300+$(AP))
 
 OPEN FORWARD
 ; Calculate Gap and Centre
-; X = Q7 = centre in mm = ({A+}+{A-})/2
-; Y = Q8 = gap in mm = {ASIZE}-{A+}+{A-} 
+; X = Q7 = centre in mm = ({A-}+{A+})/2
+; Y = Q8 = gap in mm = {ASIZE}-{A-}+{A+} 
 ; Note that we divide by 0.0001 to give CS mres of 0.0001
 ; Also note the use of mres and offset in the calculation
 CLEAR
-Q7=(APMRES*P$(AP)+APOFF+AMMRES*P$(AM)+AMOFF)/0.0002
-Q8=($(ASIZE)-(APMRES*P$(AP)+APOFF)+AMMRES*P$(AM)+AMOFF)/0.0001
+Q7=(AMMRES*P$(AM)+AMOFF+APMRES*P$(AP)+APOFF)/0.0002
+Q8=($(ASIZE)-AMMRES*P$(AM)-AMOFF+APMRES*P$(AP)+APOFF)/0.0001
 CLOSE
 
 OPEN INVERSE
-; P$(AP) = A+ = {centre}+(({ASIZE}-{gap})/2)
-; P$(AM) = A- = {centre}-(({ASIZE}-{gap})/2)
+; P$(AM) = {A-} = {centre}+(({ASIZE}-{gap})/2)
+; P$(AP) = {A+} = {centre}-(({ASIZE}-{gap})/2)
 CLEAR
-P$(AP)=((Q7*0.0001+($(ASIZE)-Q8*0.0001)/2)-APOFF)/APMRES
-P$(AM)=((Q7*0.0001-($(ASIZE)-Q8*0.0001)/2)-AMOFF)/AMMRES
+P$(AM)=((Q7*0.0001+($(ASIZE)-Q8*0.0001)/2)-AMOFF)/AMMRES
+P$(AP)=((Q7*0.0001-($(ASIZE)-Q8*0.0001)/2)-APOFF)/APMRES
 CLOSE
 
 ; A PLC(sx+15) needs to be made to do position reporting
@@ -53,10 +53,10 @@ CLOSE
 OPEN PLC$(PLC)
 CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
-#define APVAL m$(AP)62/(I$(AP)08*32)
 #define AMVAL m$(AM)62/(I$(AM)08*32)
+#define APVAL m$(AP)62/(I$(AP)08*32)
 ADDRESS&$(COORD)
-Q87=(APMRES*APVAL+APOFF+AMMRES*AMVAL+AMOFF)/0.0002
-Q88=($(ASIZE)-APMRES*APVAL-APOFF+AMMRES*AMVAL+AMOFF)/0.0001
+Q87=(AMMRES*AMVAL+AMOFF+APMRES*APVAL+APOFF)/0.0002
+Q88=($(ASIZE)-AMMRES*AMVAL-AMOFF+APMRES*APVAL+APOFF)/0.0001
 CLOSE
 ENABLE PLC$(PLC)
