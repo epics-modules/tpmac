@@ -151,6 +151,8 @@ static motorAxisLogFunc drvPrintParam = NULL;
 #define DEMAND "Q7%d"
 /* Use Q81 - Q89 for motor readback positions */
 #define READBACK "Q8%d"
+/* use Q91 - Q99 for motor readback velocities */
+#define VELOCITY "Q9%d"
 
 
 static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
@@ -558,15 +560,16 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser,
     double position, error, velocity;
     int nvals;
 
+    /* As yet, there is no way to get the following error of a C.S. axis - set it to zero for now */
     error = 0;
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
         /* Read all the status for this co-ordinate system in one go */
-    	sprintf( command, "&%d"READBACK/*"F V"*/, pAxis->coord_system,
-    			pAxis->axis );
+    	sprintf( command, "&%d" READBACK VELOCITY, pAxis->coord_system,
+    			pAxis->axis, pAxis->axis );
         cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-        nvals = sscanf( response, "%lf"/*" %lf %lf"*/, &position/*,&error, &velocity*/ );
+        nvals = sscanf( response, "%lf %lf", &position, &velocity );
 
-        if ( cmdStatus || nvals != 1) {
+        if ( cmdStatus || nvals != 2) {
             asynPrint(pasynUser, ASYN_TRACE_ERROR,
                       "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
                       cmdStatus, command, response );
