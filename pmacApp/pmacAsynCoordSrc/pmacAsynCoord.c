@@ -431,8 +431,9 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
     int status = MOTOR_AXIS_ERROR;
 
     if (pAxis != NULL) {
-        char acc_buff[32]="\0";
-        char vel_buff[32]="\0";
+        char acc_buff[32]="";
+        char vel_buff[32]="";
+        char go_buff[32]="";
         char command[128];
         char response[32];
 
@@ -445,9 +446,16 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
                 		(fabs(max_velocity/acceleration) * 1000.0));
             }
         }
+        /* If the program specified is non-zero, add a command to run the program.
+         * If program number is zero, then the move will have to be started by some
+         * external process, which is a mechanism of allowing coordinated starts to
+         * movement. */
+        if (pAxis->program != 0) {
+        	sprintf(go_buff, "B%dR", pAxis->program);
+        }
 
-        sprintf( command, "&%d%s%s"DEMAND"=%.2fB%dR", pAxis->coord_system,
-        		vel_buff, acc_buff, pAxis->axis, position, pAxis->program );
+        sprintf( command, "&%d%s%s"DEMAND"=%.2f%s", pAxis->coord_system,
+        		vel_buff, acc_buff, pAxis->axis, position, go_buff );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
