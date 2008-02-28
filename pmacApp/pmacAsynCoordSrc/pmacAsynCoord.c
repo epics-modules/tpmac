@@ -15,6 +15,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include "paramLib.h"
 
@@ -151,8 +152,10 @@ static motorAxisLogFunc drvPrintParam = NULL;
 #define DEMAND "Q7%d"
 /* Use Q81 - Q89 for motor readback positions */
 #define READBACK "Q8%d"
+#define ALL_READBACK "Q8%d..8%d"
 /* use Q91 - Q99 for motor readback velocities */
 #define VELOCITY "Q9%d"
+#define ALL_VELOCITY "Q9%d..9%d"
 
 
 static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
@@ -559,33 +562,47 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
 }
 
 
-static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser,
-				  epicsUInt32 *status)
+static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 {
     char command[128];
-    char response[128];
+    char pos_response[128], vel_response[128];
+    char *pos_parse = pos_response, *vel_parse = vel_response;
     int cmdStatus;
     double position, error, velocity;
-    int nvals;
+    int i;
+    asynUser *pasynUser = pDrv->pasynUser;
+    AXIS_HDL first_axis, last_axis, pAxis;
 
     /* As yet, there is no way to get the following error of a C.S. axis - set it to zero for now */
     error = 0;
-    if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
-        /* Read all the status for this co-ordinate system in one go */
-    	sprintf( command, "&%d" READBACK VELOCITY, pAxis->coord_system,
-    			pAxis->axis, pAxis->axis );
-        cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-        nvals = sscanf( response, "%lf %lf", &position, &velocity );
+    first_axis = &pDrv->axis[0];
+    last_axis = &pDrv->axis[NAXES-1];
+    
+    /* Read all the positions for this co-ordinate system in one go */
+ 	sprintf( command, "&%d" ALL_READBACK, first_axis->coord_system,
+    			first_axis->axis, last_axis->axis);
+    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
 
-        if ( cmdStatus || nvals != 2) {
-            asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                      "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
-                      cmdStatus, command, response );
-        } else {
+    /* Read all the velocities for this co-ordinate system in one go */
+ 	sprintf( command, "&%d" ALL_VELOCITY, first_axis->coord_system,
+    			first_axis->axis, last_axis->axis);
+    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(vel_response), vel_response, 1 );
+
+    for (i = 0; i < NAXES; i++) {
+    	pAxis = &pDrv->axis[i];
+	    if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
             int direction;
 /*            int homeSignal = ((status[1] & CS_STATUS2_HOME_COMPLETE) != 0);*/
 /* TODO: possibly look at the aggregate of the home status of all motors in the c.s ?? */
             int homeSignal = 0;
+            errno = 0;
+            position = strtod(pos_parse, &pos_parse);
+            velocity = strtod(vel_parse, &vel_parse);
+            if ((position == 0 || velocity == 0) && errno != 0) {
+                asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                          "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse1:%s\nResponse2:%s",
+                          cmdStatus, command, pos_response, vel_response );
+            }
 
             motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
@@ -599,10 +616,10 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser,
             motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[1] & CS_STATUS2_IN_POSITION) != 0) );            
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
             motorParam->callCallback( pAxis->params );           
-        }
-
-        epicsMutexUnlock( pAxis->axisMutex );
-    }
+	
+	        epicsMutexUnlock( pAxis->axisMutex );
+	    }
+	}
 }
 
 static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
@@ -648,16 +665,11 @@ static int drvPmacGetCoordStatus(AXIS_HDL pAxis, asynUser *pasynUser,
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
     while ( 1 ) {
-        int i;
         epicsUInt32 status[3];
 
         /* Use the first axis to get the overall C.S. status */
         if(drvPmacGetCoordStatus(&(pDrv->axis[0]), pDrv->pasynUser, status)) {
-        	for ( i = 0; i < NAXES; i++ ) {
-        		AXIS_HDL pAxis = &(pDrv->axis[i]);
-
-        		drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, status);
-        	}
+        	drvPmacGetAxesStatus( pDrv, status);
         }
 
         epicsThreadSleep( DELTA );
@@ -779,8 +791,8 @@ int pmacAsynCoordCreate( char *port, int addr, int cs, int ref, int program )
             AXIS_HDL pAxis = &(pDrv->axis[i]);
 
             drvPmacGetAxisInitialStatus( pAxis, pDrv->pasynUser );
-            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, status );
         }
+        drvPmacGetAxesStatus( pDrv, status );
 
         pDrv->motorThread = epicsThreadCreate( "drvPmacCSThread",
                                                epicsThreadPriorityLow,
