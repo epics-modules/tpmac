@@ -3,13 +3,13 @@ CLOSE
 ;################################################
 ; Define motion for 2 slit Apertures
 ; Original Author: Tom Cobb
-; Used variables: Q71..Q79, Q81..Q89
-; Macros (and example values): 
-; COORD = 1       ;CS number
-; PLC = 16        ;PLC number, should be CS number+15
-; AP = 1          ;Axisnum for Aperture+ (clips the +ve edge of the beam)
-; AM = 3          ;Axisnum for Aperture- (clips the -ve edge of the beam)
-; ASIZE = 5.85    ;Size of Aperture
+; Used variables: Q71..Q79, Q81..Q89, Q91..Q99
+; Macros 
+; COORD = $(COORD) ;CS number, e.g. 1
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; AP = $(AP) ;Axisnum for Aperture+ (clips the +ve edge of the beam), e.g. 1
+; AM = $(AM) ;Axisnum for Aperture- (clips the -ve edge of the beam), e.g. 3
+; ASIZE = $(ASIZE) ;Size of Aperture, e.g. 5.85
 ;################################################
 
 ; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same

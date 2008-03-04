@@ -3,12 +3,12 @@ CLOSE
 ;################################################
 ; Define motion for 2 slit blades
 ; Original Author: Tom Cobb
-; Used variables: Q71..Q79, Q81..Q89
-; Macros (and example values): 
-; COORD = 1       ;CS number
-; PLC = 16        ;PLC number, should be CS number+15
-; BP = 1          ;Axisnum for Blade+
-; BM = 3          ;Axisnum for Blade-
+; Used variables: Q71..Q79, Q81..Q89, Q91..Q99
+; Macros
+; COORD = $(COORD) ;CS number, e.g. 1
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; BP = $(BP) ;Axisnum for Blade+, e.g. 1
+; BM = $(BM) ;Axisnum for Blade-, e.g. 3
 ;################################################
 
 ; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same

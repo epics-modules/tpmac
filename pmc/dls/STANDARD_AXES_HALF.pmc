@@ -1,0 +1,231 @@
+CLOSE
+DELETE GATHER
+DELETE TRACE
+
+;##########################################################################
+; I Variable Settings for a set of default Axes without msx,i9xx variables
+; Works for micromech standard 32 axis stepper crate MSL drive crates
+;##########################################################################
+
+i5=0 ;Stop PLCs
+i100,16,100=0 ;Disable all motors
+i3 = 2       ;Acknowledge valid commands with <LF> - Needed for dls-motor-control.py
+i6 = 1       ;Acknowledge invalid commands with <BELL>ERRxxx<CR> - Needed for dls-motor-control.py
+
+;Configure MACRO station node enable i variables
+i70..77=$3333;Macro IC0-3 Node Auxiliary Register Enable and Protocol Type Control
+i78=32       ;Macro timeout (in servo cycles)
+i6840=$30    ;Macro IC0 Ring Configuration
+i6841=$fffff ;Macro IC0 Node Activate Control
+i6890=$90    ;Macro IC1 Ring Configuration
+i6891=$1ff333;Macro IC1 Node Activate Control
+ms0,i996=$fbfff
+ms0,i1996=$1f3333
+
+;Configure IO, all nodes active, needed for encoder loss
+ms0,i975=$ccc
+ms0,MI71=$10C0A0208800
+ms0,i19=4
+
+;Memory locations for encoder loss bit
+;These addresses work for micromech racks, OD racks need different ones
+ms0,i21 = $6488C8DCC0A1
+ms0,i22 = $6488C9DCC0A2
+ms0,i23 = $6488CADCC0A3
+ms0,i24 = $6488CBDCC0A5
+ms0,i25 = $6488CCDCC0A6
+ms0,i26 = $6488CDDCC0A7
+ms0,i27 = $6488CEDCC0A9
+ms0,i28 = $6488CFDCC0AA
+ms0,i29 = $6498C8DCC0AB
+ms0,i30 = $6498C9DCC0AD
+ms0,i31 = $6498CADCC0AE
+ms0,i32 = $6498CBDCC0AF
+ms0,i33 = $6498CCDCC0B1
+ms0,i34 = $6498CDDCC0B2
+ms0,i35 = $6498CEDCC0B3
+ms0,i36 = $6498CFDCC0B5
+
+;Configure PFM clock divider
+ms0,i903=$8f2
+ms0,i907=$8f2
+ms16,i903=$8f2
+ms16,i907=$8f2
+
+;Configure pulse widths
+ms0,i904=1
+ms0,i908=1
+ms16,i904=1
+ms16,i908=1
+
+;Map Digital I/O to m variables (micromech's enabling technique)
+m7500->x:$78420,0,24    ;Node 2 24 bit register (digital inputs 0-23)
+m7501->x:$78424,0,24    ;Node 3 24 bit register (digital outputs 0-23)
+
+;set up limit switch monitor variables
+m1000->x:$3440,16,4    ;bit1=home bit2=plim bit3=mlim bit4=user
+m1001->x:$3441,16,4
+m1002->x:$3444,16,4
+m1003->x:$3445,16,4
+m1004->x:$3448,16,4
+m1005->x:$3449,16,4
+m1006->x:$344c,16,4
+m1007->x:$344d,16,4
+
+m1008->x:$3450,16,4
+m1009->x:$3451,16,4
+m1010->x:$3454,16,4
+m1011->x:$3455,16,4
+m1012->x:$3458,16,4
+m1013->x:$3459,16,4
+m1014->x:$345c,16,4
+m1015->x:$345d,16,4
+
+;Setup additional encoder conversion table entries for exponential filter, with axis bits and DSP gate address
+;All Axes
+i8065,16,3=$4000      ;Maximum change word
+i8066,16,3=$20000     ;Filter Gain (inverse time constant)
+
+;Axis 1
+i125 = $3440     ;axis bits
+i102 = $78422    ;DSP gate address
+i8064=$D03502    ;Method D = Exponential Filter, 3502 = Source Address of Encoder Input
+i103=$3502       ;$3543 to enable encoder filter (Output to position address)
+i104=$3502       ;$3543 to enable encoder filter (Output to velocity address)
+
+;Axis 2
+i225 = $3441     ;axis bits
+i202 = $78426    ;DSP gate address
+i8067=$D03504    ;Method D = Exponential Filter, 3504 = Source Address of Encoder Input
+i203=$3504       ;$3546 to enable encoder filter (Output to position address)
+i204=$3504       ;$3546 to enable encoder filter (Output to velocity address)
+
+;Axis 3
+i325 = $3444     ;axis bits
+i302 = $7842a    ;DSP gate address
+i8070=$D03506    ;Method D = Exponential Filter, 3506 = Source Address of Encoder Input
+i303=$3506       ;$3549 to enable encoder filter (Output to position address)
+i304=$3506       ;$3549 to enable encoder filter (Output to velocity address)
+
+;Axis 4
+i425 = $3445     ;axis bits
+i402 = $7842e    ;DSP gate address
+i8073=$D03508    ;Method D = Exponential Filter, 3508 = Source Address of Encoder Input
+i403=$3508       ;$354c to enable encoder filter (Output to position address)
+i404=$3508       ;$354c to enable encoder filter (Output to velocity address)
+
+;Axis 5
+i525 = $3448     ;axis bits
+i502 = $78432    ;DSP gate address
+i8076=$D0350a    ;Method D = Exponential Filter, 350a = Source Address of Encoder Input
+i503=$350a       ;$354f to enable encoder filter (Output to position address)
+i504=$350a       ;$354f to enable encoder filter (Output to velocity address)
+
+;Axis 6
+i625 = $3449     ;axis bits
+i602 = $78436    ;DSP gate address
+i8079=$D0350c    ;Method D = Exponential Filter, 350c = Source Address of Encoder Input
+i603=$350c       ;$3552 to enable encoder filter (Output to position address)
+i604=$350c       ;$3552 to enable encoder filter (Output to velocity address)
+
+;Axis 7
+i725 = $344c     ;axis bits
+i702 = $7843a    ;DSP gate address
+i8082=$D0350e    ;Method D = Exponential Filter, 350e = Source Address of Encoder Input
+i703=$350e       ;$3555 to enable encoder filter (Output to position address)
+i704=$350e       ;$3555 to enable encoder filter (Output to velocity address)
+
+;Axis 8
+i825 = $344d     ;axis bits
+i802 = $7843e    ;DSP gate address
+i8085=$D03510    ;Method D = Exponential Filter, 3510 = Source Address of Encoder Input
+i803=$3510       ;$3558 to enable encoder filter (Output to position address)
+i804=$3510       ;$3558 to enable encoder filter (Output to velocity address)
+
+;Axis 9
+i925 = $3450     ;axis bits
+i902 = $79422    ;DSP gate address
+i8088=$d03512    ;Method D = Exponential Filter, 3512 = Source Address of Encoder Input
+i903=$3512       ;$355b to enable encoder filter (Output to position address)
+i904=$3512       ;$355b to enable encoder filter (Output to velocity address)
+
+;Axis 10
+i1025 = $3451     ;axis bits
+i1002 = $79426    ;DSP gate address
+i8091=$d03514     ;Method D = Exponential Filter, 3514 = Source Address of Encoder Input
+i1003=$3514       ;$355e to enable encoder filter (Output to position address)
+i1004=$3514       ;$355e to enable encoder filter (Output to velocity address)
+
+;Axis 11
+i1125 = $3454     ;axis bits
+i1102 = $7942a    ;DSP gate address
+i8094=$d03516     ;Method D = Exponential Filter, 3516 = Source Address of Encoder Input
+i1103=$3516       ;$3561 to enable encoder filter (Output to position address)
+i1104=$3516       ;$3561 to enable encoder filter (Output to velocity address)
+
+;Axis 12
+i1225 = $3455     ;axis bits
+i1202 = $7942e    ;DSP gate address
+i8097=$d03518     ;Method D = Exponential Filter, 3518 = Source Address of Encoder Input
+i1203=$3518       ;$3564 to enable encoder filter (Output to position address)
+i1204=$3518       ;$3564 to enable encoder filter (Output to velocity address)
+
+;Axis 13
+i1325 = $3458     ;axis bits
+i1302 = $79432    ;DSP gate address
+i8100=$d0351a     ;Method D = Exponential Filter, 351a = Source Address of Encoder Input
+i1303=$351a       ;$3567 to enable encoder filter (Output to position address)
+i1304=$351a       ;$3567 to enable encoder filter (Output to velocity address)
+
+;Axis 14
+i1425 = $3459     ;axis bits
+i1402 = $79436    ;DSP gate address
+i8103=$d0351c     ;Method D = Exponential Filter, 351c = Source Address of Encoder Input
+i1403=$351c       ;$356a to enable encoder filter (Output to position address)
+i1404=$351c       ;$356a to enable encoder filter (Output to velocity address)
+
+;Axis 15
+i1525 = $345c     ;axis bits
+i1502 = $7943a    ;DSP gate address
+i8106=$d0351e     ;Method D = Exponential Filter, 351e = Source Address of Encoder Input
+i1503=$351e       ;$356d to enable encoder filter (Output to position address)
+i1504=$351e       ;$356d to enable encoder filter (Output to velocity address)
+
+;Axis 16
+i1625 = $345d     ;axis bits
+i1602 = $7943e    ;DSP gate address
+i8109=$d03520     ;Method D = Exponential Filter, 3520 = Source Address of Encoder Input
+i1603=$3520       ;$3570 to enable encoder filter (Output to position address)
+i1604=$3520       ;$3570 to enable encoder filter (Output to velocity address)
+
+;*********************************************************************************************************
+;Configure motor variables for all axes
+;*********************************************************************************************************
+i100,16,100 = 0          ;deactivate axis (disable if axis not used to improve processing time)
+i101,16,100 = 0          ;disable commutation
+i108,16,100 = 96         ;default scale factor
+i109,16,100 = 96         ;default scale factor
+i111,16,100 = 3200       ;following error limit in 1/16th cts - set to 0 to disable
+i112,16,100 = 1600       ;Warning Following Error Limit
+i113,16,100 = 0          ;+ Software Position Limit
+i114,16,100 = 0          ;- Software Position Limit
+i115,16,100 = 0.25       ;Abort/Lim Decel Rate
+i117,16,100 = 0.015625   ;Maximum Acceleration
+i119,16,100 = 0.009804   ;max jogging accel (counts/msec^2)
+i120,16,100 = 200        ;time to accelerate
+i121,16,100 = 0          ;s-curve time
+i122,16,100 = 1          ;jog speed (counts/msec)
+i123,16,100 = 1          ;Homing velocity (counts/msec)
+i124,16,100 = $40001     ;enable limit switches ($60001 will disable them)
+i130,16,100 = 14000      ;proportional gain (sets step pulse to encoder pulse ratio on stepper axes)
+i131,16,100 = 0          ;derivative gain
+i132,16,100 = 7500       ;velocity feedforward gain
+i133,16,100 = 0          ;integral gain
+i135,16,100 = 100000     ;Acceleration Feed Forwards Gain
+i136,16,100 = 0          ;Notch filter coefficient N1 (default 0)
+i137,16,100 = 0          ;Notch filter coefficient N2 (default 0)
+i138,16,100 = 0          ;Notch filter coefficient D1 (default 0)
+i139,16,100 = 0          ;Notch filter coefficient D2 (default 0)
+i164,16,100 = -16        ;enable deadband
+i165,16,100 = 8          ;deadband in 16ths of an encoder count (64*1/16)=4 (4 encoder counts = 1 motor count)
+i169,16,100 = 32767      ;set max output frequency to maximum (default is 20480)

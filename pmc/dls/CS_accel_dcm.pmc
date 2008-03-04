@@ -3,12 +3,12 @@ CLOSE
 ;###############################################
 ; Define motion for Energy in Accel DCM
 ; Original Author: Tom Cobb
-; Used variables: Q71..Q79, Q81..Q89, BMRES..TOFF, Q20, P$(PLC)00
+; Used variables: Q71..Q79, Q81..Q89, Q91..Q99, Q20, P$(PLC)00
 ; Macros (and example values): 
-; COORD = 1          ;CS number (only works for CS 1..9)
-; PLC = 16           ;PLC number, should be CS number+15
-; BRAGG = 2          ;Axisnum for Bragg
-; T2 = 3             ;Axisnum for T2
+; COORD = $(COORD) ;CS number (only works for CS 1..9), e.g. 1
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; BRAGG = $(BRAGG) ;Axisnum for Bragg, e.g. 2
+; T2 = $(T2) ;Axisnum for T2, e.g. 3
 ;################################################
 
 ; Note that we are providing a CS axis with an MRES of 0.001 and EGU the same
@@ -54,11 +54,10 @@ CLOSE
 CLEAR
 ; P$(BRAGG) = Bragg = arcsin({Evlamda}/(2*{d}*(Energy)) or arcsin((wavelength)/(2*{d}))
 ; P$(T2) = T = (Offset)/2*cos(Bragg)
-; TODO: find out why we need 0.1% fudge factor in P$(T2) calculation?
 Q20=10000*Q110/(2*Q111*Q7)
 IF (ABS(Q20)<1)
     P$(BRAGG)=(ASIN(Q20)-BOFF)/BMRES
-    P$(T2)=(Q8/(20002*COS(ASIN(Q20)))-TOFF)/TMRES
+    P$(T2)=(Q8/(20000*COS(ASIN(Q20)))-TOFF)/TMRES
 ELSE
     M5$(COORD)82=1
 ENDIF

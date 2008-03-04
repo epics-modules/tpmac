@@ -1,0 +1,63 @@
+# First of all we want to clear all CS and PLCs
+file clear_PLC_CS.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we load the VME settings
+file STANDARD_VME_PMAC1.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we set all axes to be default I-variables
+file STANDARD_AXES.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we load our custom I-variables for tuning, speeds, etc.
+file Example_ivariables.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we want the Initialisation PLC to setup lookaheads, and reset umacs
+file PLC1_initialise.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we want to add the amplifier enabling PLC
+file PLC3_micromech_enable.pmc
+{pattern
+{x}
+{x}
+}
+
+# Next we load the encoder loss PLC
+file PLC4_encoder_loss.pmc
+{pattern
+{ONM1,ONM2,ONM3,ONM4,ONM5,ONM6,ONM7,ONM8,ONM9,ONM10,ONM11,ONM12,ONM13,ONM14,ONM15,ONM16,ONM17,ONM18,ONM19,ONM20,ONM21,ONM22,ONM23,ONM24,ONM25,ONM26,ONM27,ONM28,ONM29,ONM30,ONM31,ONM32}
+{   1,   1,   1,   1,   0,   0,   0,   0,   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0}
+}
+
+# Next we put in the generic program for moving CS axes
+file PROG10_CS_motion.pmc
+{pattern
+{x}
+{x}
+}
+
+# Finally we add the CS definition for the aperture slits
+file CS_aperture_slits.pmc
+{pattern 
+{COORD,PLC,APLUS,AMINUS,ASIZE}
+{    1, 16,    1,     3, 5.95}
+{    2, 17,    2,     4, 5.85}
+}

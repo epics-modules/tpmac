@@ -3,14 +3,11 @@ CLOSE
 ;###############################################################################
 ; Define encoder loss protection
 ; Original Author: Alan Greer
-; Used variables: P364..396 (borrowed from PLC3),P400..497,mxx84 defined
+; Used variables: P400..497,mxx84,85,86 defined
 ; Macros (and example values): 
 ; ONM1 = 1       ;Turn encoder loss protection for axis 1 on
 ; ...
 ; ONM32 = 0      ;Turn encoder loss protection for axis 1 off
-; CSM1 = 0       ;CS number that M1 is in (0 for none)
-; ...
-; CSM32 = 4      ;CS number that M32 is in (0 for none)
 ;---------------------------------------------------------; 
 ; The following must be uncommented in your main pmc file ;
 ;---------------------------------------------------------;
@@ -51,9 +48,9 @@ CLOSE
 ;;Configure MACRO station node enable i variables
 ;ms0,i996 = $FBFFF
 ;ms32,i996 = $2FBFFF
-;;Configure IO
-;ms0,i975 = $CC
-;ms32,i975 = $CC
+;;Configure IO, enable all nodes
+;ms0,i975 = $CCC
+;ms32,i975 = $CCC
 ;;Macro IC0 and IC2 Node Activate Control
 ;i6841 = $FFFFF
 ;i6941 = $2FFFFF
@@ -93,64 +90,41 @@ P430 = $(ONM30)
 P431 = $(ONM31)
 P432 = $(ONM32)
 
-; Associate motor with CS
-P433 = $(CSM1)
-P434 = $(CSM2)
-P435 = $(CSM3)
-P436 = $(CSM4)
-P437 = $(CSM5)
-P438 = $(CSM6)
-P439 = $(CSM7)
-P440 = $(CSM8)
-P441 = $(CSM9)
-P442 = $(CSM10)
-P443 = $(CSM11)
-P444 = $(CSM12)
-P445 = $(CSM13)
-P446 = $(CSM14)
-P447 = $(CSM15)
-P448 = $(CSM16)
-P449 = $(CSM17)
-P450 = $(CSM18)
-P451 = $(CSM19)
-P452 = $(CSM20)
-P453 = $(CSM21)
-P454 = $(CSM22)
-P455 = $(CSM23)
-P456 = $(CSM24)
-P457 = $(CSM25)
-P458 = $(CSM26)
-P459 = $(CSM27)
-P460 = $(CSM28)
-P461 = $(CSM29)
-P462 = $(CSM30)
-P463 = $(CSM31)
-P464 = $(CSM32)
-
+; used for storing current axis number
 #define axis_number              P400
+
 ; use axis_number to calculate the P variable to look in to see
 ; if encoder loss protection is turned on on this axis
 #define encoder_detection        P(P400 + 400)
-; See which axis this motor is in
-#define coord_system_number      P(P400 + 432)
+
 ; m variable pointing at the memory location showing if the encoder is present
 #define encoder_loss_bit         M(P400*100 + 84)
+
+; m variable pointing at the CS number (-1) for the motor
+#define coord_system_number      M(P400*100 + 85)
+
+; m variable saying if the motor is in a CS
+#define in_coord_system          M(P400*100 + 86)
+
 ; this is the flag that is set if encoder is lost
 ; needs to be reset by EPICS when encoder is restored
 #define encoder_lost_flag        P(P400+464)
-; this is the old following error limit, reset it on initialise
 P465..496=0
-#define saved_fe_limit           P(P400+364)
+
+; this is the old following error limit
+#define saved_fe_limit           P(P400+432)
+
 ; this is the actual following error limit
 #define following_error_limit    I(P400*100 + 11)
+
 ; define some kill commands
 #define abort_coordinate_move    &COMMAND"A"
 #define kill_axis                &COMMAND"K"
 
 ; i20 sets up 16-bit data transfer lines between
 ; expansion cards and UMAC macro card.
-ms0,i20=$FFF
-ms32,i20=$FFF
+ms0,i20=$FFFF
+ms32,i20=$FFFF
 
 ; i19 controls how often they are read
 ms0,i19=$4
@@ -191,6 +165,75 @@ m3084->X:$7A432,13
 m3184->X:$7A433,13
 m3284->X:$7A435,13
 
+; Set up the M-variables to look for the CS number
+m185->Y:$0000C0,20,4
+m285->Y:$000140,20,4
+m385->Y:$0001C0,20,4
+m485->Y:$000240,20,4
+m585->Y:$0002C0,20,4
+m685->Y:$000340,20,4
+m785->Y:$0003C0,20,4
+m885->Y:$000440,20,4
+m985->Y:$0004C0,20,4
+m1085->Y:$000540,20,4
+m1185->Y:$0005C0,20,4
+m1285->Y:$000640,20,4
+m1385->Y:$0006C0,20,4
+m1485->Y:$000740,20,4
+m1585->Y:$0007C0,20,4
+m1685->Y:$000840,20,4
+m1785->Y:$0008C0,20,4
+m1885->Y:$000940,20,4
+m1985->Y:$0009C0,20,4
+m2085->Y:$000A40,20,4
+m2185->Y:$000AC0,20,4
+m2285->Y:$000B40,20,4
+m2385->Y:$000BC0,20,4
+m2485->Y:$000C40,20,4
+m2585->Y:$000CC0,20,4
+m2685->Y:$000D40,20,4
+m2785->Y:$000DC0,20,4
+m2885->Y:$000E40,20,4
+m2985->Y:$000EC0,20,4
+m3085->Y:$000F40,20,4
+m3185->Y:$000FC0,20,4
+m3285->Y:$001040,20,4
+
+; Set up the M-variables to see if the motor is in a CS
+m186->Y:$0000C0,15,1
+m286->Y:$000140,15,1
+m386->Y:$0001C0,15,1
+m486->Y:$000240,15,1
+m586->Y:$0002C0,15,1
+m686->Y:$000340,15,1
+m786->Y:$0003C0,15,1
+m886->Y:$000440,15,1
+m986->Y:$0004C0,15,1
+m1086->Y:$000540,15,1
+m1186->Y:$0005C0,15,1
+m1286->Y:$000640,15,1
+m1386->Y:$0006C0,15,1
+m1486->Y:$000740,15,1
+m1586->Y:$0007C0,15,1
+m1686->Y:$000840,15,1
+m1786->Y:$0008C0,15,1
+m1886->Y:$000940,15,1
+m1986->Y:$0009C0,15,1
+m2086->Y:$000A40,15,1
+m2186->Y:$000AC0,15,1
+m2286->Y:$000B40,15,1
+m2386->Y:$000BC0,15,1
+m2486->Y:$000C40,15,1
+m2586->Y:$000CC0,15,1
+m2686->Y:$000D40,15,1
+m2786->Y:$000DC0,15,1
+m2886->Y:$000E40,15,1
+m2986->Y:$000EC0,15,1
+m3086->Y:$000F40,15,1
+m3186->Y:$000FC0,15,1
+m3286->Y:$001040,15,1
+
+
 ;**********************************************************
 ;
 ; Encoder loss detection PLC.  This checks if the encoder
@@ -225,9 +268,9 @@ WHILE(axis_number < 33)
                         encoder_lost_flag=1
                         ; Check to see if there is a coordinate system
                         ; for this axis that needs aborting
-                        IF(coord_system_number > 0)
+                        IF(in_coord_system > 0)
                                 ; Abort any coordinate system motion
-                                P497 = coord_system_number
+                                P497 = coord_system_number + 1
                                 ADDRESS&P497
                                 abort_coordinate_move
                         ENDIF
