@@ -7,7 +7,7 @@ CLOSE
 ; Macros (and example values): 
 ; ONM1 = 1       ;Turn encoder loss protection for axis 1 on
 ; ...
-; ONM32 = 0      ;Turn encoder loss protection for axis 1 off
+; ONM32 = 0      ;Turn encoder loss protection for axis 32 off
 ;---------------------------------------------------------; 
 ; The following must be uncommented in your main pmc file ;
 ;---------------------------------------------------------;

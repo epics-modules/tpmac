@@ -17,6 +17,7 @@ i121,32,100 = 0          ;s-curve time
 i122,32,100 = 1          ;jog speed (counts/msec)
 i123,32,100 = 1          ;Homing velocity (counts/msec)
 i124,32,100 = $40001     ;enable limit switches ($60001 will disable them)
+i126,32,100 = 0          ;home offset in 1/16th cts
 i130,32,100 = 14000      ;proportional gain (sets step pulse to encoder pulse ratio on stepper axes)
 i131,32,100 = 0          ;derivative gain
 i132,32,100 = 7500       ;velocity feedforward gain

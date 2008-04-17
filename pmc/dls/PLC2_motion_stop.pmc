@@ -1,0 +1,142 @@
+CLOSE
+
+;###############################################################################
+; PLC to stop all motors if motion stop button is pressed
+; Original Author: James O'Hea
+; Used variables: i5111
+; Macros (and example values): 
+; STOPTIME=$(STOPTIME) ;Time taken for all motors to stop before they are killed
+;###############################################################################
+
+OPEN PLC 2
+CLEAR
+
+;The stopping procedure will drop through 3 states to ensure all motors 
+;stop quickly and safely. First the co-ordinate systems are aborted which 
+;ensures the motors come to a halt in a controlled manner. If they are just 
+;killed their inertia may keep them going for longer. Next the co-ord systems 
+;are aborted to ensure they can no longer affect the motors. Finally all the 
+;individual motors are killed - this ensures all motors cannot be moved again 
+;unless explicitly commanded to. 
+
+;Mask off motion stop input
+#define input (M7502 & $800000)
+
+; To make timeout more readable
+#define MilliSeconds               * 8388608/i10
+#define timer                      i5111
+
+; If the input is off (Stop button pressed)
+IF(input = 0)    
+
+	; Send stop command to every coordinate system
+	COMMAND "&1\"
+	COMMAND "&2\"
+	COMMAND "&3\"
+	COMMAND "&4\"
+	COMMAND "&5\"
+	COMMAND "&6\"
+	COMMAND "&7\"
+	COMMAND "&8\"
+	COMMAND "&9\"
+	COMMAND "&10\"
+	COMMAND "&11\"
+	COMMAND "&12\"
+	COMMAND "&13\"
+	COMMAND "&14\"
+	COMMAND "&15\"
+	COMMAND "&16\"
+
+	; Send stop command to every motor
+	COMMAND "#1\"
+	COMMAND "#2\"
+	COMMAND "#3\"
+	COMMAND "#4\"
+	COMMAND "#5\"
+	COMMAND "#6\"
+	COMMAND "#7\"
+	COMMAND "#8\"
+	COMMAND "#9\"
+	COMMAND "#10\"
+	COMMAND "#11\"
+	COMMAND "#12\"
+	COMMAND "#13\"
+	COMMAND "#14\"
+	COMMAND "#15\"
+	COMMAND "#16\"	
+	COMMAND "#17\"
+	COMMAND "#18\"
+	COMMAND "#19\"
+	COMMAND "#20\"
+	COMMAND "#21\"
+	COMMAND "#22\"
+	COMMAND "#23\"
+	COMMAND "#24\"
+	COMMAND "#25\"
+	COMMAND "#26\"
+	COMMAND "#27\"
+	COMMAND "#28\"
+	COMMAND "#29\"
+	COMMAND "#30\"
+	COMMAND "#31\"
+	COMMAND "#32\"
+
+	; Run timer of $(STOPTIME)ms to allow time for motors to stop		
+	timer = $(STOPTIME) MilliSeconds
+	WHILE (timer > 0)
+	ENDW
+	
+	; Send abort to every coordinate system
+	COMMAND "&1A"
+	COMMAND "&2A"
+	COMMAND "&3A"
+	COMMAND "&4A"
+	COMMAND "&5A"
+	COMMAND "&6A"
+	COMMAND "&7A"
+	COMMAND "&8A"
+	COMMAND "&9A"
+	COMMAND "&10A"
+	COMMAND "&11A"
+	COMMAND "&12A"
+	COMMAND "&13A"
+	COMMAND "&14A"
+	COMMAND "&15A"
+	COMMAND "&16A"
+
+	; Send kill command to every motor
+	COMMAND "#1K"
+	COMMAND "#2K"
+	COMMAND "#3K"
+	COMMAND "#4K"
+	COMMAND "#5K"
+	COMMAND "#6K"
+	COMMAND "#7K"
+	COMMAND "#8K"
+	COMMAND "#9K"
+	COMMAND "#10K"
+	COMMAND "#11K"
+	COMMAND "#12K"
+	COMMAND "#13K"
+	COMMAND "#14K"
+	COMMAND "#15K"
+	COMMAND "#16K"	
+	COMMAND "#17K"
+	COMMAND "#18K"
+	COMMAND "#19K"
+	COMMAND "#20K"
+	COMMAND "#21K"
+	COMMAND "#22K"
+	COMMAND "#23K"
+	COMMAND "#24K"
+	COMMAND "#25K"
+	COMMAND "#26K"
+	COMMAND "#27K"
+	COMMAND "#28K"
+	COMMAND "#29K"
+	COMMAND "#30K"
+	COMMAND "#31K"
+	COMMAND "#32K"
+ENDIF
+
+CLOSE
