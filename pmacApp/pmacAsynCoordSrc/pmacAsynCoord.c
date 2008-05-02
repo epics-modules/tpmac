@@ -661,7 +661,7 @@ static int drvPmacGetCoordStatus(AXIS_HDL pAxis, asynUser *pasynUser,
 }
 
 
-#define DELTA 0.1
+#define DELTA 0.5
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
     while ( 1 ) {
