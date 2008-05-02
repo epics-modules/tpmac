@@ -97,43 +97,6 @@ m7501->x:$78424,0,24    ;Node 3 24 bit register (digital outputs 0-23)
 m7502->x:$7a420,0,24    ;Node 34 24 bit register (digital inputs 24-47)
 m7503->x:$7a424,0,24    ;Node 35 24 bit register (digital outputs 24-47)
 
-;set up limit switch monitor variables
-m1000->x:$3440,16,4    ;bit1=home bit2=plim bit3=mlim bit4=user
-m1001->x:$3441,16,4
-m1002->x:$3444,16,4
-m1003->x:$3445,16,4
-m1004->x:$3448,16,4
-m1005->x:$3449,16,4
-m1006->x:$344c,16,4
-m1007->x:$344d,16,4
-
-m1008->x:$3450,16,4
-m1009->x:$3451,16,4
-m1010->x:$3454,16,4
-m1011->x:$3455,16,4
-m1012->x:$3458,16,4
-m1013->x:$3459,16,4
-m1014->x:$345c,16,4
-m1015->x:$345d,16,4
-
-m1016->x:$3460,16,4
-m1017->x:$3461,16,4
-m1018->x:$3464,16,4
-m1019->x:$3465,16,4
-m1020->x:$3468,16,4
-m1021->x:$3469,16,4
-m1022->x:$346c,16,4
-m1023->x:$346d,16,4
-
-m1024->x:$3470,16,4
-m1025->x:$3471,16,4
-m1026->x:$3474,16,4
-m1027->x:$3475,16,4
-m1028->x:$3478,16,4
-m1029->x:$3479,16,4
-m1030->x:$347c,16,4
-m1031->x:$347d,16,4
-
 ;Setup additional encoder conversion table entries for exponential filter, with axis bits and DSP gate address
 ;All Axes
 i8065,32,3=$4000      ;Maximum change word
