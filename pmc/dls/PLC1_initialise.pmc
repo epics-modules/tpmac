@@ -3,17 +3,20 @@ CLOSE
 ;####################################################
 ; PLC for putting PMAC into defined state at startup
 ; Original Author: Micromech
-; Used variables: None, (P101..P132 reserved for CS mres)
+; Used variables: i5112, (P101..P132 reserved for CS mres)
 ;####################################################
+
+; To make timeout more readable
+#define MilliSeconds               * 8388608/i10
+#define timer                      i5112
 
 OPEN PLC1
 CLEAR
 ;Wait for MACRO ring errors to clear
 WHILE((i6840 & $f) != 0)
 	;100ms delay to prevent i6840 being read too frequently
-	;8388608/i10 gives a millisecond on PMAC2
-	i5111=100*8388608/i10
-	WHILE(i5111>0)
+	timer=100 MilliSeconds
+	WHILE(timer>0)
 	ENDW
 ENDW
 COMMAND"ms$$$0 ms$$$32"

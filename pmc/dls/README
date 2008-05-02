@@ -10,6 +10,15 @@ PLCxx should only use P variables Pxx00-Pxx99
 P101..132 and P301..332 are reserved for Mres and offset reporting
 Coordinate systems should use Q variables instead
 PLC16-PLC31 are reserved for position reporting for CS1-16
+Please uses unique timers for each PLC, 
+Here is a useful #define statement for this:
+#define timer i(5111+($(PLC)&30)*50+$(PLC)%2)
+E.g.
+if $(PLC)=0 defines timer=i5111
+if $(PLC)=1 defines timer=i5112
+if $(PLC)=2 defines timer=i5211
+if $(PLC)=3 defines timer=i5212
+if $(PLC)=4 defines timer=i5311, etc.
 
 Building pmc files:
 Using a series of #includes and #defines you can build a pmc file up using some
@@ -23,3 +32,4 @@ DATA += Example_processed.pmc
 	dls-pmc-preprocessor.py -c -o $@ -I ..:$(TPMAC)/data $<
 	
 Look at Example.pmc for more details
+

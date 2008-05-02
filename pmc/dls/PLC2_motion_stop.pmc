@@ -3,7 +3,7 @@ CLOSE
 ;###############################################################################
 ; PLC to stop all motors if motion stop button is pressed
 ; Original Author: James O'Hea
-; Used variables: i5111
+; Used variables: i5211
 ; Macros (and example values): 
 ; STOPTIME=$(STOPTIME) ;Time taken for all motors to stop before they are killed
 ;###############################################################################
@@ -24,7 +24,7 @@ CLEAR
 
 ; To make timeout more readable
 #define MilliSeconds               * 8388608/i10
-#define timer                      i5111
+#define timer                      i5211
 
 ; If the input is off (Stop button pressed)
 IF(input = 0)    
