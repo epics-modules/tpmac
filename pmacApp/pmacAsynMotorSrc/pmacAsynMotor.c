@@ -563,7 +563,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
 #endif
 
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
-            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
@@ -637,7 +637,7 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
 #endif
 
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
-            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
@@ -683,7 +683,7 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
 #endif
 
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
-            motorParam->setInteger( pAxis->params, motorAxisMoving, 1 );
+            motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
@@ -715,6 +715,7 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
         /* if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0)); */
 
         sprintf( command, "%s#%d J/",  acc_buff, pAxis->axis );
+        pAxis->deferred_move = 0;
 
         status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
     }
@@ -755,7 +756,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 {
     char command[128];
     char response[128];
-    int cmdStatus;
+    int cmdStatus, done;
     double position, error, velocity;
     int nvals;
     epicsUInt32 status[2];
@@ -803,7 +804,12 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             /* Don't set direction if velocity equals zero and was previously negative */
             motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
             motorParam->setInteger( pAxis->params, motorAxisDirection,     ((velocity >= 0) || (velocity == 0 && direction)) );
-            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[1] & PMAC_STATUS2_IN_POSITION) != 0) );
+            if(pAxis->deferred_move) {
+                done = 0; 
+            } else {
+                done = ((status[1] & PMAC_STATUS2_IN_POSITION) != 0);
+            }
+            motorParam->setInteger( pAxis->params, motorAxisDone,          done );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
