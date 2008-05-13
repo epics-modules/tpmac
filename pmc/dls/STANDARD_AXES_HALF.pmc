@@ -4,7 +4,7 @@ DELETE TRACE
 
 ;##########################################################################
 ; I Variable Settings for a set of default Axes without msx,i9xx variables
-; Works for micromech standard 32 axis stepper crate MSL drive crates
+; Works for micromech standard 16 axis stepper crate MSL drive crates
 ;##########################################################################
 
 i5=0 ;Stop PLCs
@@ -58,9 +58,28 @@ ms0,i908=1
 ms16,i904=1
 ms16,i908=1
 
-;Map Digital I/O to m variables (micromech's enabling technique)
-m7500->x:$78420,0,24    ;Node 2 24 bit register (digital inputs 0-23)
-m7501->x:$78424,0,24    ;Node 3 24 bit register (digital outputs 0-23)
+;Map Digital I/O to m variables (micromech's enabling technique), note only first 16 bits
+m7500->x:$78420,0,16    ;Node 2 24 bit register (digital inputs 0-15)
+m7501->x:$78424,0,16    ;Node 3 24 bit register (digital outputs 0-15)
+
+;Map user IO to other m variables
+m7508->x:$78420,16,1    ;Node 2 24 bit register (digital input 16)
+m7509->x:$78420,17,1    ;Node 2 24 bit register (digital input 17)
+m7510->x:$78420,18,1    ;Node 2 24 bit register (digital input 18)
+m7511->x:$78420,19,1    ;Node 2 24 bit register (digital input 19)
+m7512->x:$78420,20,1    ;Node 2 24 bit register (digital input 20)
+m7513->x:$78420,21,1    ;Node 2 24 bit register (digital input 21)
+m7514->x:$78420,22,1    ;Node 2 24 bit register (digital input 22)
+m7515->x:$78420,23,1    ;Node 2 24 bit register (digital input 23)
+
+m7516->x:$78424,16,1    ;Node 3 24 bit register (digital output 16)
+m7517->x:$78424,17,1    ;Node 3 24 bit register (digital output 17)
+m7518->x:$78424,18,1    ;Node 3 24 bit register (digital output 18)
+m7519->x:$78424,19,1    ;Node 3 24 bit register (digital output 19)
+m7520->x:$78424,20,1    ;Node 3 24 bit register (digital output 20)
+m7521->x:$78424,21,1    ;Node 3 24 bit register (digital output 21)
+m7522->x:$78424,22,1    ;Node 3 24 bit register (digital output 22)
+m7523->x:$78424,23,1    ;Node 3 24 bit register (digital output 23)
 
 ;Setup additional encoder conversion table entries for exponential filter, with axis bits and DSP gate address
 ;All Axes
@@ -178,35 +197,3 @@ i1602 = $7943e    ;DSP gate address
 i8109=$d03520     ;Method D = Exponential Filter, 3520 = Source Address of Encoder Input
 i1603=$3520       ;$3570 to enable encoder filter (Output to position address)
 i1604=$3520       ;$3570 to enable encoder filter (Output to velocity address)
-
-;*********************************************************************************************************
-;Configure motor variables for all axes
-;*********************************************************************************************************
-i100,16,100 = 0          ;deactivate axis (disable if axis not used to improve processing time)
-i101,16,100 = 0          ;disable commutation
-i108,16,100 = 96         ;default scale factor
-i109,16,100 = 96         ;default scale factor
-i111,16,100 = 3200       ;following error limit in 1/16th cts - set to 0 to disable
-i112,16,100 = 1600       ;Warning Following Error Limit
-i113,16,100 = 0          ;+ Software Position Limit
-i114,16,100 = 0          ;- Software Position Limit
-i115,16,100 = 0.25       ;Abort/Lim Decel Rate
-i117,16,100 = 0.015625   ;Maximum Acceleration
-i119,16,100 = 0.009804   ;max jogging accel (counts/msec^2)
-i120,16,100 = 200        ;time to accelerate
-i121,16,100 = 0          ;s-curve time
-i122,16,100 = 1          ;jog speed (counts/msec)
-i123,16,100 = 1          ;Homing velocity (counts/msec)
-i124,16,100 = $40001     ;enable limit switches ($60001 will disable them)
-i130,16,100 = 14000      ;proportional gain (sets step pulse to encoder pulse ratio on stepper axes)
-i131,16,100 = 0          ;derivative gain
-i132,16,100 = 7500       ;velocity feedforward gain
-i133,16,100 = 0          ;integral gain
-i135,16,100 = 100000     ;Acceleration Feed Forwards Gain
-i136,16,100 = 0          ;Notch filter coefficient N1 (default 0)
-i137,16,100 = 0          ;Notch filter coefficient N2 (default 0)
-i138,16,100 = 0          ;Notch filter coefficient D1 (default 0)
-i139,16,100 = 0          ;Notch filter coefficient D2 (default 0)
-i164,16,100 = -16        ;enable deadband
-i165,16,100 = 8          ;deadband in 16ths of an encoder count (64*1/16)=4 (4 encoder counts = 1 motor count)
-i169,16,100 = 32767      ;set max output frequency to maximum (default is 20480)

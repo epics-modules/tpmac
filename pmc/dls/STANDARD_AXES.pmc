@@ -91,11 +91,49 @@ ms32,i908=1
 ms48,i904=1
 ms48,i908=1
 
-;Map Digital I/O to m variables (micromech's enabling technique)
-m7500->x:$78420,0,24    ;Node 2 24 bit register (digital inputs 0-23)
-m7501->x:$78424,0,24    ;Node 3 24 bit register (digital outputs 0-23)
-m7502->x:$7a420,0,24    ;Node 34 24 bit register (digital inputs 24-47)
-m7503->x:$7a424,0,24    ;Node 35 24 bit register (digital outputs 24-47)
+;Map Digital I/O to m variables (micromech's enabling technique), note only first 16 bits
+m7500->x:$78420,0,16    ;Node 2 24 bit register (digital inputs 0-15)
+m7501->x:$78424,0,16    ;Node 3 24 bit register (digital outputs 0-15)
+m7502->x:$7a420,0,16    ;Node 34 24 bit register (digital inputs 24-39)
+m7503->x:$7a424,0,16    ;Node 35 24 bit register (digital outputs 24-39)
+
+;Map user IO to other m variables
+m7508->x:$78420,16,1    ;Node 2 24 bit register (digital input 16)
+m7509->x:$78420,17,1    ;Node 2 24 bit register (digital input 17)
+m7510->x:$78420,18,1    ;Node 2 24 bit register (digital input 18)
+m7511->x:$78420,19,1    ;Node 2 24 bit register (digital input 19)
+m7512->x:$78420,20,1    ;Node 2 24 bit register (digital input 20)
+m7513->x:$78420,21,1    ;Node 2 24 bit register (digital input 21)
+m7514->x:$78420,22,1    ;Node 2 24 bit register (digital input 22)
+m7515->x:$78420,23,1    ;Node 2 24 bit register (digital input 23)
+
+m7516->x:$78424,16,1    ;Node 3 24 bit register (digital output 16)
+m7517->x:$78424,17,1    ;Node 3 24 bit register (digital output 17)
+m7518->x:$78424,18,1    ;Node 3 24 bit register (digital output 18)
+m7519->x:$78424,19,1    ;Node 3 24 bit register (digital output 19)
+m7520->x:$78424,20,1    ;Node 3 24 bit register (digital output 20)
+m7521->x:$78424,21,1    ;Node 3 24 bit register (digital output 21)
+m7522->x:$78424,22,1    ;Node 3 24 bit register (digital output 22)
+m7523->x:$78424,23,1    ;Node 3 24 bit register (digital output 23)
+
+m7532->x:$7a420,16,1    ;Node 34 24 bit register (digital input 40)
+m7533->x:$7a420,17,1    ;Node 34 24 bit register (digital input 41)
+m7534->x:$7a420,18,1    ;Node 34 24 bit register (digital input 42)
+m7535->x:$7a420,19,1    ;Node 34 24 bit register (digital input 43)
+m7536->x:$7a420,20,1    ;Node 34 24 bit register (digital input 44)
+m7537->x:$7a420,21,1    ;Node 34 24 bit register (digital input 45)
+m7538->x:$7a420,22,1    ;Node 34 24 bit register (digital input 46)
+m7539->x:$7a420,23,1    ;Node 34 24 bit register (digital input 47)
+
+m7540->x:$7a424,16,1    ;Node 3 24 bit register (digital output 40)
+m7541->x:$7a424,17,1    ;Node 3 24 bit register (digital output 41)
+m7542->x:$7a424,18,1    ;Node 3 24 bit register (digital output 42)
+m7543->x:$7a424,19,1    ;Node 3 24 bit register (digital output 43)
+m7544->x:$7a424,20,1    ;Node 3 24 bit register (digital output 44)
+m7545->x:$7a424,21,1    ;Node 3 24 bit register (digital output 45)
+m7546->x:$7a424,22,1    ;Node 3 24 bit register (digital output 46)
+m7547->x:$7a424,23,1    ;Node 3 24 bit register (digital output 47)
+
 
 ;Setup additional encoder conversion table entries for exponential filter, with axis bits and DSP gate address
 ;All Axes

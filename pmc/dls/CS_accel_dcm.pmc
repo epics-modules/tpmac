@@ -35,7 +35,7 @@ i15=0
 Q110=12.3985 ; Evlambda
 Q111=3.1355  ; d = crystal spacing in angstrom
 
-&1 OPEN FORWARD
+OPEN FORWARD
 ; This kinematic is for the DCM energy
 ; need to multiply everything by 10000 to give decent MRES value
 ; X = Q7 = energy in kEv = {Evlamda}/(2*{d}*sin(Bragg))
@@ -50,7 +50,7 @@ ELSE
 ENDIF
 CLOSE
 
-&1 OPEN INVERSE
+OPEN INVERSE
 CLEAR
 ; P$(BRAGG) = Bragg = arcsin({Evlamda}/(2*{d}*(Energy)) or arcsin((wavelength)/(2*{d}))
 ; P$(T2) = T = (Offset)/2*cos(Bragg)
