@@ -22,7 +22,7 @@
 
 motorAxisDrvSET_t pmacAsynMotor =
   {
-    14,
+    15,
     motorAxisReport,            /**< Standard EPICS driver report function (optional) */
     motorAxisInit,              /**< Standard EPICS dirver initialisation function (optional) */
     motorAxisSetLog,            /**< Defines an external logging function (optional) */
@@ -36,7 +36,8 @@ motorAxisDrvSET_t pmacAsynMotor =
     motorAxisHome,              /**< Pointer to function to execute a more to reference or home */
     motorAxisMove,              /**< Pointer to function to execute a position move */
     motorAxisVelocityMove,      /**< Pointer to function to execute a velocity mode move */
-    motorAxisStop               /**< Pointer to function to stop motion */
+    motorAxisStop,              /**< Pointer to function to stop motion */
+    motorAxisforceCallback,     /**< Pointer to function to request a poller status update */
   };
 
 epicsExportAddress(drvet, pmacAsynMotor);
@@ -94,6 +95,7 @@ typedef struct drvPmac
     AXIS_HDL axis;
     epicsThreadId motorThread;
     epicsTimeStamp now;
+    int movesDeferred;
 } drvPmac_t;
 
 /* These two #define affect the behaviour of the driver.
@@ -131,6 +133,9 @@ typedef struct motorAxisHandle
 #ifdef REMOVE_LIMITS_ON_HOME
     int limitsDisabled;
 #endif
+    double deferred_position;
+    int deferred_move;
+    int deferred_relative;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -234,7 +239,14 @@ static int motorAxisGetInteger( AXIS_HDL pAxis, motorAxisParam_t function, int *
     if (pAxis == NULL) return MOTOR_AXIS_ERROR;
     else
     {
-        return motorParam->getInteger( pAxis->params, (paramIndex) function, value );
+    	switch (function) {
+    	case motorAxisDeferMoves:
+    		*value = pAxis->pDrv->movesDeferred;
+    		return MOTOR_AXIS_OK;
+    		break;
+    	default:
+        	return motorParam->getInteger( pAxis->params, (paramIndex) function, value );
+    	}
     }
 }
 
@@ -243,7 +255,14 @@ static int motorAxisGetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
     if (pAxis == NULL) return MOTOR_AXIS_ERROR;
     else
     {
-        return motorParam->getDouble( pAxis->params, (paramIndex) function, value );
+    	switch (function) {
+    	case motorAxisDeferMoves:
+    		*value = (double)pAxis->pDrv->movesDeferred;
+    		return MOTOR_AXIS_OK;
+    		break;
+    	default:
+    		return motorParam->getDouble( pAxis->params, (paramIndex) function, value );
+    	}
     }
 }
 
@@ -322,6 +341,31 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
 
     motorParam->setInteger( pAxis->params, motorAxisCommError, 0 );
     return MOTOR_AXIS_OK;
+}
+
+static int processDeferredMoves(drvPmac_t *pDrv)
+{
+	int status = MOTOR_AXIS_ERROR;
+	int i;
+	char command[512] = "";
+	char response[32];
+
+	for ( i = 0; i < pDrv->nAxes; i++ )
+	{
+		AXIS_HDL pAxis = &(pDrv->axis[i]);
+		
+		if (pAxis->deferred_move) {
+			pAxis->deferred_move = 0;
+			sprintf(command, "%s #%d%s%.2f", command, pAxis->axis,
+					pAxis->deferred_relative ? "J^" : "J=",
+					pAxis->deferred_position);
+		}
+	}
+
+	status = motorAxisWriteRead( &pDrv->axis[0], command, sizeof(response), response, 0 );
+	/* XXX: Set motor params? Call callback? */
+	
+	return status;
 }
 
 static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double value )
@@ -423,6 +467,17 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                               pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
                 break;
             }
+            case motorAxisDeferMoves:
+            {
+            	pAxis->print( pAxis->logParam, TRACE_FLOW,
+            	              "%sing Deferred Move flag on PMAC card %d\n",
+            	              value != 0.0?"Sett":"Clear",pAxis->pDrv->card);
+            	if (value == 0.0 && pAxis->pDrv->movesDeferred != 0) {
+            		processDeferredMoves(pAxis->pDrv);
+            	}
+            	pAxis->pDrv->movesDeferred = (int)value;
+            	break;
+            }
             default:
                 status = MOTOR_AXIS_ERROR;
                 break;
@@ -456,7 +511,6 @@ static int motorAxisSetInteger( AXIS_HDL pAxis, motorAxisParam_t function, int v
     return status;
 }
 
-
 static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double min_velocity, double max_velocity, double acceleration )
 {
     int status = MOTOR_AXIS_ERROR;
@@ -477,14 +531,21 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
             }
         }
 
-#ifdef SIMULATE_SET_POSITION
-        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
-                 (relative?"J^":"J="),
-                 (relative?position:position - pAxis->enc_offset) );
-#else
-        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
-                 (relative?"J^":"J="), position );
-#endif
+        if (pAxis->pDrv->movesDeferred == 0) {
+	#ifdef SIMULATE_SET_POSITION
+	        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
+	                 (relative?"J^":"J="),
+	                 (relative?position:position - pAxis->enc_offset) );
+	#else
+	        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
+	                 (relative?"J^":"J="), position );
+	#endif
+        } else { /* deferred moves */
+        	sprintf( command, "%s%s", vel_buff, acc_buff);
+        	pAxis->deferred_position = position;
+        	pAxis->deferred_move = 1;
+        	pAxis->deferred_relative = relative;
+        }
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
@@ -658,6 +719,19 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
         status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
     }
     return status;
+}
+
+static int motorAxisforceCallback(AXIS_HDL pAxis)
+{
+	if (pAxis == NULL)
+		return (MOTOR_AXIS_ERROR);
+
+	pAxis->print(pAxis->logParam, TRACE_FLOW, "motorAxisforceCallback: request card %d, axis %d status update\n",
+	             pAxis->pDrv->card, pAxis->axis);
+
+	motorParam->forceCallback(pAxis->params);
+
+	return (MOTOR_AXIS_OK);
 }
 
 /** \defgroup drvPmacTask Routines to implement the motor axis simulation task
