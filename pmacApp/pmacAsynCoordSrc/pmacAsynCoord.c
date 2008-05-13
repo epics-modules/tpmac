@@ -120,7 +120,7 @@ typedef struct motorAxisHandle
 {
     PMACDRV_ID pDrv;
     int coord_system;
-    int axis;
+    int axis;	/*> 1-based index into the coordinate system */
     int	program;
     asynUser * pasynUser;
     PARAMS params;
@@ -342,13 +342,17 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
             switch (function) {
             case motorAxisPosition: {
-/*                int position = (int) floor(value*32 + 0.5);
+                int position = (int) floor(value + 0.5);
 
-                sprintf( command, "&%d%c=%d",
-                         pAxis->coord_system, NAME(pAxis), position);
-*/
-/* TODO: Test if this really does do the right thing for autosave. Where else should the demand be set to the current readback? */
-            	sprintf(command, "&%d"DEMAND"="READBACK, pAxis->coord_system, pAxis->axis, pAxis->axis);
+                /* The response is to set the demand value, but not run the program.
+                 * This relies on there being real motors also defined, that are going
+                 * to set their own positions. This is not ideal, because it precludes
+                 * having a C.S. on its own.
+                 * Once the demand is set, we set the bit in Q80 to indicate that this
+                 * axis has been initialised, and should now report correct values,
+                 * rather than 0 */
+                sprintf(command, "&%d"DEMAND"=%d Q80=Q80|%d",
+                         pAxis->coord_system, pAxis->axis, position, 1<<(pAxis->axis - 1));
 
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Set ref %d, axis %c to position %f\n",
@@ -613,7 +617,7 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
-            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[1] & CS_STATUS2_IN_POSITION) != 0) );            
+            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[0] & CS_STATUS1_RUNNING_PROG) == 0) );            
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
             motorParam->callCallback( pAxis->params );           
 	
