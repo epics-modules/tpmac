@@ -33,7 +33,7 @@
 #include "asynOctetSyncIO.h"
 
 motorAxisDrvSET_t pmacAsynCoord = {
-    14,
+    15,
     motorAxisReport,            /**< Standard EPICS driver report function (optional) */
     motorAxisInit,              /**< Standard EPICS driver initialisation function (optional) */
     motorAxisSetLog,            /**< Defines an external logging function (optional) */
@@ -47,7 +47,8 @@ motorAxisDrvSET_t pmacAsynCoord = {
     motorAxisHome,              /**< Pointer to function to execute a more to reference or home */
     motorAxisMove,              /**< Pointer to function to execute a position move */
     motorAxisVelocityMove,      /**< Pointer to function to execute a velocity mode move */
-    motorAxisStop               /**< Pointer to function to stop motion */
+    motorAxisStop,              /**< Pointer to function to stop motion */
+    motorAxisforceCallback,     /**< Pointer to function to request a poller status update */
 };
 
 epicsExportAddress(drvet, pmacAsynCoord);
@@ -114,6 +115,7 @@ typedef struct drvPmac
     AXIS_HDL axis;
     epicsThreadId motorThread;
     epicsTimeStamp now;
+    int movesDeferred;
 } drvPmac_t;
 
 typedef struct motorAxisHandle
@@ -127,6 +129,7 @@ typedef struct motorAxisHandle
     motorAxisLogFunc print;
     void * logParam;
     epicsMutexId axisMutex;
+    int deferred_move;
 } motorAxis;
 
 const char axisName[] = {' ', 'A','B','C','U','V','W','X','Y','Z'};
@@ -238,7 +241,14 @@ static int motorAxisGetInteger( AXIS_HDL pAxis, motorAxisParam_t function, int *
     if (pAxis == NULL) {
     	return MOTOR_AXIS_ERROR;
     } else {
-        return motorParam->getInteger( pAxis->params, (paramIndex) function, value );
+        switch (function) {
+        case motorAxisDeferMoves:
+            *value = pAxis->pDrv->movesDeferred;
+            return MOTOR_AXIS_OK;
+            break;
+        default:
+            return motorParam->getInteger( pAxis->params, (paramIndex) function, value );
+        }
     }
 }
 
@@ -247,7 +257,14 @@ static int motorAxisGetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
     if (pAxis == NULL) {
     	return MOTOR_AXIS_ERROR;
     } else {
-        return motorParam->getDouble( pAxis->params, (paramIndex) function, value );
+        switch(function) {
+        case motorAxisDeferMoves:
+            *value = (double)pAxis->pDrv->movesDeferred;
+            return MOTOR_AXIS_OK;
+            break;
+        default:
+            return motorParam->getDouble( pAxis->params, (paramIndex) function, value );
+        }
     }
 }
 
@@ -329,6 +346,22 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
     return MOTOR_AXIS_OK;
 }
 
+static int processDeferredMoves(drvPmac_t *pDrv)
+{
+    int i;
+    int status = MOTOR_AXIS_ERROR;
+    char command[128], response[32];
+    
+    sprintf(command, "&%dB%dR", pDrv->cs, pDrv->axis[0].program);
+
+    for (i = 0; i < NAXES; i++) {
+        pDrv->axis[i].deferred_move = 0;
+    }
+    
+    status = motorAxisWriteRead(&pDrv->axis[0], command, sizeof(response), response, 0);
+    return status;
+}
+
 static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double value )
 {
     int status = MOTOR_AXIS_OK;
@@ -401,6 +434,16 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                               pAxis->pDrv->ref, NAME(pAxis), (value!=0?"ON":"OFF") );
                 break;
             }
+            case motorAxisDeferMoves: {
+                pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "%sing Deferred Move flag on PMAC ref %d, cs %d\n",
+                              value != 0.0?"Sett":"Clear", pAxis->pDrv->ref, pAxis->coord_system);
+                if (value == 0.0 && pAxis->pDrv->movesDeferred != 0) {
+                    processDeferredMoves(pAxis->pDrv);
+                }
+                pAxis->pDrv->movesDeferred = (int)value;
+                break;
+            }
             default:
                 status = MOTOR_AXIS_ERROR;
                 break;
@@ -457,8 +500,12 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
          * If program number is zero, then the move will have to be started by some
          * external process, which is a mechanism of allowing coordinated starts to
          * movement. */
-        if (pAxis->program != 0) {
+        if (pAxis->program != 0 && pAxis->pDrv->movesDeferred == 0) {
         	sprintf(go_buff, "B%dR", pAxis->program);
+        }
+        
+        if (pAxis->pDrv->movesDeferred) {
+            pAxis->deferred_move = 1;
         }
 
         sprintf( command, "&%d%s%s"DEMAND"=%.2f%s", pAxis->coord_system,
@@ -558,20 +605,34 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
         char command[128];
         char response[32];
 
-        sprintf( command, "&%d%sA", pAxis->coord_system, acc_buff);
-
+        sprintf( command, "&%d%sA "DEMAND"="READBACK, pAxis->coord_system, acc_buff,
+                 pAxis->axis, pAxis->axis);
+        pAxis->deferred_move = 0;
+        
         status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
     }
     return status;
 }
 
+static int motorAxisforceCallback(AXIS_HDL pAxis)
+{
+       if (pAxis == NULL)
+               return (MOTOR_AXIS_ERROR);
+
+       pAxis->print(pAxis->logParam, TRACE_FLOW, "motorAxisforceCallback: request ref %d, cs %d, axis %c status update\n",
+                    pAxis->pDrv->ref, pAxis->coord_system, NAME(pAxis));
+
+       motorParam->forceCallback(pAxis->params);
+
+       return (MOTOR_AXIS_OK);
+}
 
 static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 {
     char command[128];
     char pos_response[128], vel_response[128];
     char *pos_parse = pos_response, *vel_parse = vel_response;
-    int cmdStatus;
+    int cmdStatus, done;
     double position, error, velocity;
     int i;
     asynUser *pasynUser = pDrv->pasynUser;
@@ -617,7 +678,12 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
-            motorParam->setInteger( pAxis->params, motorAxisDone,          ((status[0] & CS_STATUS1_RUNNING_PROG) == 0) );            
+            if (pAxis->deferred_move) {
+                done = 0;
+            } else {
+                done = ((status[0] & CS_STATUS1_RUNNING_PROG) == 0);
+            }
+            motorParam->setInteger( pAxis->params, motorAxisDone,          done);            
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
             motorParam->callCallback( pAxis->params );           
 	
