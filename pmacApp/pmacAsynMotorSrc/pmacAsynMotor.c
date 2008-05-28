@@ -868,17 +868,28 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 #define DELTA 0.1
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
-    while ( 1 )
-    {
-        int i;
-
+	int i;
+    int done;
+	int timeouts[pDrv->nAxes];
+	
 	for ( i = 0; i < pDrv->nAxes; i++ )
 	{
-            AXIS_HDL pAxis = &(pDrv->axis[i]);
-
-            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+		timeouts[i] = 5;
+	}
+	
+    while ( 1 )
+    {
+		for ( i = 0; i < pDrv->nAxes; i++ )
+		{
+            AXIS_HDL pAxis = &(pDrv->axis[i]);		
+			motorParam->getInteger( pAxis->params, motorAxisDone, &done );
+        	/* only get axis status 1 in 5 polls if done */					
+			if ( done==0 || timeouts[i]--<1 )
+			{
+	            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+	            timeouts[i] = 5;
+	        }
         }
-
         epicsThreadSleep( DELTA );
     }
 }
