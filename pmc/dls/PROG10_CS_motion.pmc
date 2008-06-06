@@ -17,9 +17,9 @@ CLOSE
 ;Isx89 = Feedrate
 
 ; Set some defaults for all CS axes
-i5113,16,100=10   ; segmentation time (needed for lookahead)
-i5120,16,100=20   ; lookahead length (needed to limit max velocity to max set in CS)
-i5150,16,100=1    ; Enable kinematics
+i5213,15,100=10   ; segmentation time (needed for lookahead)
+i5220,15,100=20   ; lookahead length (needed to limit max velocity to max set in CS)
+i5250,15,100=1    ; Enable kinematics
 
 OPEN PROG 10
 CLEAR
