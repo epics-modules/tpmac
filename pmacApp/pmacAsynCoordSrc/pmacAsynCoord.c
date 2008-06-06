@@ -153,12 +153,13 @@ static motorAxisLogFunc drvPrintParam = NULL;
 #define CSVAR(pAxis) (pAxis->coord_system + 50)
 /* Use Q71 - Q79 for motor demand positions */
 #define DEMAND "Q7%d"
+#define ALL_DEMAND "Q7%d..7%d"
 /* Use Q81 - Q89 for motor readback positions */
 #define READBACK "Q8%d"
 #define ALL_READBACK "Q8%d..8%d"
-/* use Q91 - Q99 for motor readback velocities */
-#define VELOCITY "Q9%d"
-#define ALL_VELOCITY "Q9%d..9%d"
+/* Use 91 - 99 for motor deadbands */
+#define DEADBAND "Q9%d"
+#define ALL_DEADBAND "Q9%d..9%d"
 
 
 static void motorAxisReportAxis( AXIS_HDL pAxis, int level )
@@ -376,17 +377,10 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             switch (function) {
             case motorAxisPosition: {
                 int position = (int) floor(value + 0.5);
-
-                /* The response is to set the demand value, but not run the program.
-                 * This relies on there being real motors also defined, that are going
-                 * to set their own positions. This is not ideal, because it precludes
-                 * having a C.S. on its own.
-                 * Once the demand is set, we set the bit in Q80 to indicate that this
-                 * axis has been initialised, and should now report correct values,
-                 * rather than 0 */
-                sprintf(command, "&%d"DEMAND"=%d Q80=Q80|%d",
-                         pAxis->coord_system, pAxis->axis, position, 1<<(pAxis->axis - 1));
-
+                /* Set the demand values. We don't need to do anything clever 
+                 * here as a move command will set reasonable demand values for 
+                 * all axis in CS */
+                sprintf(command, "&%d"DEMAND"=%d",pAxis->coord_system, pAxis->axis, position);
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Set ref %d, axis %c to position %f\n",
                               pAxis->pDrv->ref, NAME(pAxis), value );
@@ -479,13 +473,20 @@ static int motorAxisSetInteger( AXIS_HDL pAxis, motorAxisParam_t function, int v
 static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double min_velocity, double max_velocity, double acceleration )
 {
     int status = MOTOR_AXIS_ERROR;
-
+	AXIS_HDL piAxis, first_axis, last_axis;
+	
     if (pAxis != NULL) {
         char acc_buff[32]="";
         char vel_buff[32]="";
-        char go_buff[32]="";
-        char command[128];
-        char response[32];
+        char buff[20]="";
+        char command[256];
+        char response[256];
+	    char *response_parse = response;        
+        char responsedb[256];
+	    char *responsedb_parse = responsedb;        
+	    
+        double pos, dpos, dband;
+        int i;
 
         if (max_velocity != 0) {
         	sprintf(vel_buff, "I%d89=%f ", CSVAR(pAxis), max_velocity);
@@ -496,21 +497,46 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
                 		(fabs(max_velocity/acceleration) * 1000.0));
             }
         }
-        /* If the program specified is non-zero, add a command to run the program.
-         * If program number is zero, then the move will have to be started by some
-         * external process, which is a mechanism of allowing coordinated starts to
-         * movement. */
-        if (pAxis->program != 0 && pAxis->pDrv->movesDeferred == 0) {
-        	sprintf(go_buff, "B%dR", pAxis->program);
-        }
-        
+        sprintf( command, "&%d%s%s"DEMAND"=%.2f", pAxis->coord_system, vel_buff, acc_buff, pAxis->axis, position );             
+
         if (pAxis->pDrv->movesDeferred) {
             pAxis->deferred_move = 1;
         }
-
-        sprintf( command, "&%d%s%s"DEMAND"=%.2f%s", pAxis->coord_system,
-        		vel_buff, acc_buff, pAxis->axis, position, go_buff );
-
+        else if (pAxis->program != 0) {
+	        /* If we aren't deferring moves and there is a program number, we want to
+	         * make sure that all demand values are what they should be according to
+	         * the relevant motor record */
+		    first_axis = &(pAxis->pDrv->axis[0]);
+		    last_axis = &(pAxis->pDrv->axis[NAXES-1]);
+         
+		    /* Read all the demands for this co-ordinate system in one go */
+		 	sprintf( buff, "&%d" ALL_DEMAND, first_axis->coord_system,
+		    			first_axis->axis, last_axis->axis);
+		    motorAxisWriteRead( first_axis, buff, sizeof(response), response, 1 );
+		    /* Read all the deadbands for this co-ordinate system in one go */		    
+		 	sprintf( buff, "&%d" ALL_DEADBAND, first_axis->coord_system,
+		    			first_axis->axis, last_axis->axis);
+		    motorAxisWriteRead( first_axis, buff, sizeof(responsedb), responsedb, 1 );
+		    for (i = 0; i < NAXES; i++) {
+				piAxis = &(pAxis->pDrv->axis[i]);
+           		dpos = strtod(response_parse, &response_parse);
+           		dband = strtod(responsedb_parse, &responsedb_parse);           		
+            	if (piAxis->axis!=pAxis->axis) {
+	            	motorParam->getDouble(  piAxis->params, motorAxisPosition, &pos );
+            		if (abs(dpos-pos)>dband) {
+				        sprintf( buff, " "DEMAND"=%.2f", piAxis->axis, pos );  	
+				        strcat( command, buff);
+				    }
+			    }
+		    }
+	        /* If the program specified is non-zero, add a command to run the program.
+	         * If program number is zero, then the move will have to be started by some
+	         * external process, which is a mechanism of allowing coordinated starts to
+	         * movement. */
+        	sprintf(buff, "B%dR", pAxis->program);
+		    strcat(command, buff);
+	    }
+       	printf("Command: '%s'\n",command);
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
@@ -652,10 +678,10 @@ static int drvPmacGetCoordStatus(AXIS_HDL pAxis, asynUser *pasynUser,
 static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 {
     char command[128];
-    char pos_response[128], vel_response[128];
-    char *pos_parse = pos_response, *vel_parse = vel_response;
+    char pos_response[128];
+    char *pos_parse = pos_response;
     int cmdStatus, done;
-    double position, error, velocity;
+    double position, oldposition, error;
     int i;
     int abort = 0;
     asynUser *pasynUser = pDrv->pasynUser;
@@ -686,11 +712,6 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 	    			first_axis->axis, last_axis->axis);
 	    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
 
-	    /* Read all the velocities for this co-ordinate system in one go */
-	 	sprintf( command, "&%d" ALL_VELOCITY, first_axis->coord_system,
-	    			first_axis->axis, last_axis->axis);
-	    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(vel_response), vel_response, 1 );
-
 		/* Get the co-ordinate system status */
 		drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
 
@@ -698,30 +719,27 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 	    	pAxis = &pDrv->axis[i];
 /*            int homeSignal = ((status[1] & CS_STATUS2_HOME_COMPLETE) != 0);*/
 /* TODO: possibly look at the aggregate of the home status of all motors in the c.s ?? */
-			direction = 0;
             homeSignal = 0;
             errno = 0;
             position = strtod(pos_parse, &pos_parse);
-            velocity = strtod(vel_parse, &vel_parse);
-            if ((position == 0 || velocity == 0) && errno != 0) {
+            if (position == 0 && errno != 0) {
                 asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                          "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse1:%s\nResponse2:%s",
-                          cmdStatus, command, pos_response, vel_response );
+                          "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse1:%s\n",
+                          cmdStatus, command, pos_response );
             }
-
+            motorParam->getDouble(  pAxis->params, motorAxisPosition,      &oldposition );                      
             motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
-
             /* Don't set direction if velocity equals zero and was previously negative */
             motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
-            motorParam->setInteger( pAxis->params, motorAxisDirection,     ((velocity >= 0) || (velocity == 0 && direction)) );
+            motorParam->setInteger( pAxis->params, motorAxisDirection,     ((position > oldposition) || (position == oldposition && direction)) );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
             if (pAxis->deferred_move) {
                 done = 0;
             } else {
-                done = ((status[0] & CS_STATUS1_RUNNING_PROG) == 0);
+                done = ((status[0] & CS_STATUS1_RUNNING_PROG) == 0)&&((status[1] & CS_STATUS2_IN_POSITION) != 0);
             }
             motorParam->setInteger( pAxis->params, motorAxisDone,          done);            
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
@@ -887,18 +905,11 @@ int pmacAsynCoordCreate( char *port, int addr, int cs, int ref, int program )
     }
 
     if (status == MOTOR_AXIS_OK) {
-        int i;
         epicsUInt32 status[3];
 
         /* Do an initial poll of all status */
-        drvPmacGetCoordStatus(&(pDrv->axis[0]), pDrv->pasynUser, status);
-        for ( i = 0; i < NAXES; i++ ) {
-            AXIS_HDL pAxis = &(pDrv->axis[i]);
-
-            drvPmacGetAxisInitialStatus( pAxis, pDrv->pasynUser );
-        }
         drvPmacGetAxesStatus( pDrv, status );
-
+		
         pDrv->motorThread = epicsThreadCreate( "drvPmacCSThread",
                                                epicsThreadPriorityLow,
                                                epicsThreadGetStackSize(epicsThreadStackMedium),
