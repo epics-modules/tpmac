@@ -401,7 +401,7 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
 #else
                 int position = (int) floor(value*32 + 0.5);
 
-                sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08 J/",
+                sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
                          pAxis->axis,
                          pAxis->axis, position, pAxis->axis, 
                          pAxis->axis, position, pAxis->axis );
@@ -409,6 +409,15 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Set card %d, axis %d to position %f\n",
                               pAxis->pDrv->card, pAxis->axis, value );
+
+	            if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+    	        {
+    	            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+    	        }
+    	        
+		        epicsThreadSleep( 0.1 );
+    	        
+    	        sprintf( command, "#%dJ/", pAxis->axis);
 
 #endif
                 break;
