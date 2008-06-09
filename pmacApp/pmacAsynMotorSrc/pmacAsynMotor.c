@@ -877,30 +877,30 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 #define DELTA 0.1
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
-	int i;
-    int done;
-	int timeouts[pDrv->nAxes];
+  int i = 0;
+  int done = 0;
+  int timeouts[pDrv->nAxes];
 	
-	for ( i = 0; i < pDrv->nAxes; i++ )
-	{
-		timeouts[i] = 5;
-	}
+  for ( i = 0; i < pDrv->nAxes; i++ ) 
+  {
+    timeouts[i] = 5;
+  }
 	
-    while ( 1 )
+  while ( 1 ) 
+  {
+    for ( i = 0; i < pDrv->nAxes; i++ )
     {
-		for ( i = 0; i < pDrv->nAxes; i++ )
-		{
-            AXIS_HDL pAxis = &(pDrv->axis[i]);		
-			motorParam->getInteger( pAxis->params, motorAxisDone, &done );
-        	/* only get axis status 1 in 5 polls if done */					
-			if ( done==0 || timeouts[i]--<1 )
-			{
-	            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
-	            timeouts[i] = 5;
-	        }
-        }
-        epicsThreadSleep( DELTA );
+	AXIS_HDL pAxis = &(pDrv->axis[i]);		
+	motorParam->getInteger( pAxis->params, motorAxisDone, &done );
+	/* only get axis status 1 in 5 polls if done */					
+	if ( done==0 || timeouts[i]--<1 )
+	{
+	    drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+	    timeouts[i] = 5;
+	}
     }
+    epicsThreadSleep( DELTA );
+  }
 }
 
 int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
