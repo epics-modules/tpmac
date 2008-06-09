@@ -5,8 +5,8 @@ CLOSE
 ; Original Author: Tom Cobb
 ; Used variables: Q71..Q79, Q81..Q89, Q91..Q99
 ; Macros 
-; COORD = $(COORD) ;CS number, e.g. 1
-; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; COORD = $(COORD) ;CS number, e.g. 2
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 17
 ; AP = $(AP) ;Axisnum for Aperture+ (clips the +ve edge of the beam), e.g. 1
 ; AM = $(AM) ;Axisnum for Aperture- (clips the -ve edge of the beam), e.g. 3
 ; ASIZE = $(ASIZE) ;Size of Aperture, e.g. 5.85
@@ -55,13 +55,13 @@ CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
 #define AMVAL m$(AM)62/(I$(AM)08*32)
 #define APVAL m$(AP)62/(I$(AP)08*32)
-; Put velocity into Q9x
-#define AMVEL m$(AM)66/(I$(AM)09*32)
-#define APVEL m$(AP)66/(I$(AP)09*32)
+; Put deadband into Q9x
+#define AMDB  i$(BM)65*AMMRES/16
+#define APDB  i$(BP)65*APMRES/16
 ADDRESS&$(COORD)
 Q87=(AMMRES*AMVAL+AMOFF+APMRES*APVAL+APOFF)/0.0002
 Q88=($(ASIZE)-AMMRES*AMVAL-AMOFF+APMRES*APVAL+APOFF)/0.0001
-Q97=(AMMRES*AMVEL+APMRES*APVEL)/0.0002
-Q98=(APMRES*APVEL-AMMRES*AMVEL)/0.0001
+Q97=(ABS(AMDB) + ABS(APDB))*2/0.0001
+Q98=Q97
 CLOSE
 ENABLE PLC$(PLC)

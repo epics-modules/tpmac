@@ -5,8 +5,8 @@ CLOSE
 ; Original Author: Tom Cobb
 ; Used variables: Q71..Q79, Q81..Q89, Q91..Q99
 ; Macros
-; COORD = $(COORD) ;CS number, e.g. 1
-; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; COORD = $(COORD) ;CS number, e.g. 2
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 17
 ; BP = $(BP) ;Axisnum for Blade+, e.g. 1
 ; BM = $(BM) ;Axisnum for Blade-, e.g. 3
 ;################################################
@@ -54,13 +54,13 @@ CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
 #define BPVAL m$(BP)62/(I$(BP)08*32)
 #define BMVAL m$(BM)62/(I$(BM)08*32)
-; Put velocity into Q9x
-#define BMVEL m$(BM)66/(I$(BM)09*32)
-#define BPVEL m$(BP)66/(I$(BP)09*32)
+; Put deadband into Q9x
+#define BMDB  i$(BM)65*BMMRES/16
+#define BPDB  i$(BP)65*BPMRES/16
 ADDRESS&$(COORD)
 Q87=(BPMRES*BPVAL+BPOFF+BMMRES*BMVAL+BMOFF)/0.0002
 Q88=(BPMRES*BPVAL+BPOFF-BMMRES*BMVAL-BMOFF)/0.0001
-Q97=(BMMRES*BMVEL+BPMRES*BPVEL)/0.0002
-Q98=(BPMRES*BPVEL-BMMRES*BMVEL)/0.0001
+Q97=(ABS(BMDB) + ABS(BPDB))*2/0.0001
+Q98=Q97
 CLOSE
 ENABLE PLC$(PLC)

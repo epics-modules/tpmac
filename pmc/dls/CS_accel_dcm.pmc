@@ -5,8 +5,8 @@ CLOSE
 ; Original Author: Tom Cobb
 ; Used variables: Q71..Q79, Q81..Q89, Q91..Q99, Q20, P$(PLC)00
 ; Macros (and example values): 
-; COORD = $(COORD) ;CS number (only works for CS 1..9), e.g. 1
-; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 16
+; COORD = $(COORD) ;CS number (only works for CS 1..9), e.g. 2
+; PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 17
 ; BRAGG = $(BRAGG) ;Axisnum for Bragg, e.g. 2
 ; T2 = $(T2) ;Axisnum for T2, e.g. 3
 ;################################################
@@ -69,16 +69,17 @@ CLEAR
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
 #define BVAL m$(BRAGG)62/(I$(BRAGG)08*32)
 #define TVAL m$(T2)62/(I$(T2)08*32)
-; Put velocity into Q9x
-#define BVEL m$(BRAGG)66/(I$(BRAGG)09*32)
-#define TVEL m$(T2)66/(I$(T2)09*32)
+; Put deadband into Q9x
+#define BDB  i$(BM)65*BMRES/16
+#define TDB  i$(BP)65*TMRES/16
 ADDRESS&$(COORD)
 P$(PLC)00=2*Q111*SIN(BMRES*BVAL+BOFF)
 IF (P$(PLC)00>0.01)
     Q87=10000*Q110/P$(PLC)00
     Q88=20000*(TMRES*TVAL+TOFF)*COS(BMRES*BVAL+BOFF)
-    Q97=10000*Q110/(2*Q111*SIN(BMRES*BVEL))
-    Q98=20000*(TMRES*TVEL)*COS(BMRES*BVEL)
+    ; Approximations to deadband as a calculated value is not worth the effort
+    Q97=20000*ABS(BDB)
+    Q98=10000*(ABS(BDB)+ABS(TDB))
 ELSE
     M5$(COORD)82=1
 ENDIF
