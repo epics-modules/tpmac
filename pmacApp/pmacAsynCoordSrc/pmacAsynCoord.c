@@ -536,7 +536,6 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         	sprintf(buff, "B%dR", pAxis->program);
 		    strcat(command, buff);
 	    }
-       	printf("Command: '%s'\n",command);
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK) {
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
