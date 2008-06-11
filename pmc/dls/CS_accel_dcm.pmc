@@ -70,8 +70,8 @@ CLEAR
 #define BVAL m$(BRAGG)62/(I$(BRAGG)08*32)
 #define TVAL m$(T2)62/(I$(T2)08*32)
 ; Put deadband into Q9x
-#define BDB  i$(BM)65*BMRES/16
-#define TDB  i$(BP)65*TMRES/16
+#define BDB  i$(BRAGG)65*BMRES/16
+#define TDB  i$(T2)65*TMRES/16
 ADDRESS&$(COORD)
 P$(PLC)00=2*Q111*SIN(BMRES*BVAL+BOFF)
 IF (P$(PLC)00>0.01)
