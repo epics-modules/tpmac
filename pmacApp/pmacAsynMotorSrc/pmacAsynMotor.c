@@ -608,21 +608,53 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
             /* If homing onto an end-limit and home velocity is in the right direction, clear limits protection */
             int macro_station = ((pAxis->axis-1)/2)*4 + (pAxis->axis-1)%2;
             int home_type, home_flag, flag_mode, nvals, home_offset;
+            int controller_type;
             double home_velocity;
             char buffer[128];
 
-            /* Read home flags and home direction from PMAC */ 
-            sprintf( buffer, "ms%d,i912 ms%d,i913 i%d24 i%d23 i%d26", macro_station, macro_station, pAxis->axis, pAxis->axis, pAxis->axis );
+            /* Discover type of controller */
+            strcpy( buffer, "cid" );
             status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
-            nvals = sscanf( response, "$%x $%x $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
-	    if (nvals !=5)
-	      nvals = sscanf( response, "%d %d %d %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+	    nvals  = sscanf( response, "%d", &controller_type );
+            if( controller_type == 603382 )
+              printf("This is a Geobrick LV\n");
+            else if( controller_type == 602413 )
+              printf("This is a Turbo PMAC 2 Ultralite\n");
+            else
+              printf("Unknown controller type = %d\n", controller_type);
+
+            if( controller_type == 603382 )
+            {
+              /* Read home flags and home direction from PMAC */ 
+              if( pAxis->axis < 5 )
+                sprintf( buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis, pAxis->axis );
+              else
+                sprintf( buffer, "I71%d2 I71%d3 i%d24 i%d23 i%d26", pAxis->axis-4, pAxis->axis-4, pAxis->axis, pAxis->axis, pAxis->axis );
+              printf("%s\n", buffer);
+              status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
+              nvals = sscanf( response, "%d %d $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+              if( nvals != 5 )
+                nvals = sscanf( response, "%d %d $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+              printf("home_type = %d, home_flag = %d, flag_mode = %x, home_velocity = %f, home_offset = %d\n", home_type, home_flag, flag_mode, home_velocity, home_offset );
+            }
+
+            if( controller_type == 602413 )
+            {
+              /* Read home flags and home direction from PMAC */ 
+              sprintf( buffer, "ms%d,i912 ms%d,i913 i%d24 i%d23 i%d26", macro_station, macro_station, pAxis->axis, pAxis->axis, pAxis->axis );
+              status = motorAxisWriteRead( pAxis, buffer, sizeof(response), response, 0 );
+              nvals = sscanf( response, "$%x $%x $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+	      if (nvals !=5)
+	        nvals = sscanf( response, "%d %d %d %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset );
+            }
+
             if (max_velocity != 0) home_velocity = (forwards?1:-1)*(fabs(max_velocity) / 1000.0);
 
+            printf("status = %d, nvals = %d\n", status, nvals);
             if ( status || nvals != 5)
             {
                 pAxis->print( pAxis->logParam, TRACE_ERROR,
-			      "drvPmac motorAxisHome: can not read home flags. Status: %d, nvals %d\n", status, nvals );
+	                      "drvPmac motorAxisHome: can not read home flags. Status: %d, nvals %d\n", status, nvals );
             }
             else if ( ( home_type <= 15 )      && 
                       ( home_type % 4 >= 2 )   &&
@@ -630,12 +662,12 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
                       (( home_velocity > 0 && home_flag == 1 && home_offset <= 0 ) || 
                        ( home_velocity < 0 && home_flag == 2 && home_offset >= 0 )    )   )
             {
-                sprintf( buffer, " i%d24=i%d24|$20000", pAxis->axis, pAxis->axis );
-                strcat( command, buffer );
-                pAxis->limitsDisabled = 1;
-                pAxis->print( pAxis->logParam, TRACE_FLOW,
-                              "Disabling limits whilst homing PMAC card %d, axis %d, type:%d, flag:$%x, vel:%f\n",
-                              pAxis->pDrv->card, pAxis->axis, home_type, home_flag, home_velocity );
+              sprintf( buffer, " i%d24=i%d24|$20000", pAxis->axis, pAxis->axis );
+              strcat( command, buffer );
+              pAxis->limitsDisabled = 1;
+              pAxis->print( pAxis->logParam, TRACE_FLOW,
+                            "Disabling limits whilst homing PMAC card %d, axis %d, type:%d, flag:$%x, vel:%f\n",
+                            pAxis->pDrv->card, pAxis->axis, home_type, home_flag, home_velocity );
             }
             else
             {
@@ -644,7 +676,6 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
                               pAxis->pDrv->card, pAxis->axis, home_type, home_flag, home_velocity, flag_mode, home_offset );
             }
 #endif
-
             status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
             motorParam->setInteger( pAxis->params, motorAxisDone, 0 );
             motorParam->callCallback( pAxis->params );
