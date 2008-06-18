@@ -858,7 +858,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
         }
 
 #ifdef REMOVE_LIMITS_ON_HOME
-        if ( pAxis->limitsDisabled && (status[1] & PMAC_STATUS2_HOME_COMPLETE) )
+        if ( pAxis->limitsDisabled && (status[1] & PMAC_STATUS2_HOME_COMPLETE) && (status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) )
         {
             /* Re-enable limits */
             sprintf( command, "i%d24=i%d24&$FDFFFF", pAxis->axis, pAxis->axis );
