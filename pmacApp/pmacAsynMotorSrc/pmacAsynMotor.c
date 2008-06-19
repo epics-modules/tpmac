@@ -10,6 +10,7 @@
 #include "epicsFindSymbol.h"
 #include "epicsTime.h"
 #include "epicsThread.h"
+#include "epicsEvent.h"
 #include "epicsMutex.h"
 #include "ellLib.h"
 
@@ -96,7 +97,14 @@ typedef struct drvPmac
     epicsThreadId motorThread;
     epicsTimeStamp now;
     int movesDeferred;
+    double movingPollPeriod;
+    double idlePollPeriod;
+    epicsEventId pollEventId;
 } drvPmac_t;
+
+/* Default polling periods (in milliseconds). */ 
+static const int defaultMovingPollPeriod = 100;
+static const int defaultIdlePollPeriod = 500;
 
 /* These two #define affect the behaviour of the driver.
 
@@ -576,6 +584,10 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
+
+	/* Signal the poller task.*/
+	epicsEventSignal(pAxis->pDrv->pollEventId);
+
     }
     return status;
 }
@@ -681,6 +693,8 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
+	/* Signal the poller task.*/
+	epicsEventSignal(pAxis->pDrv->pollEventId);
     }
     return status;
 }
@@ -727,6 +741,8 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
             motorParam->callCallback( pAxis->params );
             epicsMutexUnlock( pAxis->axisMutex );
         }
+	/* Signal the poller task.*/
+	epicsEventSignal(pAxis->pDrv->pollEventId);
     }
     return status;
 }
@@ -905,35 +921,52 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     }
 }
 
-#define DELTA 0.1
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
   int i = 0;
   int done = 0;
-  int timeouts[pDrv->nAxes];
-	
-  for ( i = 0; i < pDrv->nAxes; i++ ) 
-  {
-    timeouts[i] = 5;
-  }
-	
+  int cachedDone = 1;
+  int eventStatus = 0;
+  int forcedFastPolls = 0;
+  float timeout = 0;
+
   while ( 1 ) 
   {
+    cachedDone = 1;
+
+    /* Wait for an event, or a timeout. If we get an event, do a series of fast polls.*/
+    eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
+    if (eventStatus == epicsEventWaitOK) {
+      forcedFastPolls = 10;
+    }
+
     for ( i = 0; i < pDrv->nAxes; i++ )
     {
 	AXIS_HDL pAxis = &(pDrv->axis[i]);		
 	motorParam->getInteger( pAxis->params, motorAxisDone, &done );
-	/* only get axis status 1 in 5 polls if done */					
-	if ( done==0 || timeouts[i]--<1 )
-	{
-	    drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
-	    timeouts[i] = 5;
-	}
+	cachedDone &= done;
+	drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
     }
-    epicsThreadSleep( DELTA );
+
+    if (forcedFastPolls > 0) {
+      timeout = pDrv->movingPollPeriod;
+      forcedFastPolls--;
+    } else if (!cachedDone) {
+      timeout = pDrv->movingPollPeriod;
+    } else {
+      timeout = pDrv->idlePollPeriod;
+    }
   }
 }
 
+/**
+ * Set up motor controller on an Asyn port and address.
+ * @param port Name of ASYN port
+ * @param addr Address of ASYN port
+ * @param card Numerical ID for controller
+ * @param nAxes Number of axes on this controller
+ * @return status
+ */
 int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
 {
     int i;
@@ -966,6 +999,12 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
             {
                 pDrv->nAxes = nAxes;
                 pDrv->card = card;
+		/* Set default polling rates.*/
+		pDrv->movingPollPeriod = (double)defaultMovingPollPeriod / 1000.0;
+		pDrv->idlePollPeriod = (double)defaultIdlePollPeriod / 1000.0;
+		/* Create event to signal poller task with.*/
+		pDrv->pollEventId = epicsEventMustCreate(epicsEventEmpty);
+
                 status = motorAxisAsynConnect( port, addr, &(pDrv->pasynUser), "\006", "\r" );
 
                 for (i=0; i<nAxes && status == MOTOR_AXIS_OK; i++ )
@@ -1076,3 +1115,58 @@ static int drvPmacLogMsg( void * param, const motorAxisLogMask_t mask, const cha
 
     return(nchar);
 }
+
+
+/**
+ * Function to set the movingPollPeriod time to use when polling 
+ * the controller during a move.
+ * @param card Numerical ID of the controller.
+ * @param movingPollPeriod The period in miliseconds.
+ * @return status
+ */
+int pmacSetMovingPollPeriod(int card, int movingPollPeriod)
+{
+  int status = 1;
+  PMACDRV_ID pDrv = NULL;
+
+  if (pFirstDrv != NULL) {
+    for (pDrv = pFirstDrv; pDrv != NULL; pDrv = pDrv->pNext) {
+      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting moving poll period of %dms on card %d\n", movingPollPeriod, pDrv->card);
+      if (card == pDrv->card) {
+	pDrv->movingPollPeriod = (double)movingPollPeriod / 1000.0;
+	status = 0;
+      }
+    }
+    drvPrint(drvPrintParam, TRACE_FLOW, "** Moving poll period set to %fs\n.", pDrv->movingPollPeriod);
+  }
+
+  return status;
+}
+
+
+/**
+ * Function to set the idlePollPeriod time to use when polling 
+ * the controller when there is no motion.
+ * @param card Numerical ID of the controller.
+ * @param idlePollPeriod The period in miliseconds.
+ * @return status
+ */
+int pmacSetIdlePollPeriod(int card, int idlePollPeriod)
+{
+  int status = 1;
+  PMACDRV_ID pDrv = NULL;
+
+  if (pFirstDrv != NULL) {
+    for (pDrv = pFirstDrv; pDrv!=NULL; pDrv = pDrv->pNext) {
+      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting idle poll period of %dms on card %d\n", idlePollPeriod, pDrv->card);
+      if (card == pDrv->card) {
+	pDrv->idlePollPeriod = (double)idlePollPeriod / 1000.0;
+	status = 0;
+      }
+    }
+    drvPrint(drvPrintParam, TRACE_FLOW, "** Idle poll period set to %fs\n.", pDrv->idlePollPeriod);
+  }
+
+  return status;
+}
+

@@ -4,6 +4,28 @@
 
 extern "C" {
 
+/* int pmacSetCoordMovingPollPeriod(int card, int movingPollPeriod) */
+static const iocshArg pmacSetCoordMovingPollPeriodArg0 = {"CS number", iocshArgInt};
+static const iocshArg pmacSetCoordMovingPollPeriodArg1 = {"Moving poll period", iocshArgInt};
+static const iocshArg * const pmacSetCoordMovingPollPeriodArgs[2] = {&pmacSetCoordMovingPollPeriodArg0, &pmacSetCoordMovingPollPeriodArg1};
+static const iocshFuncDef pmacSetCoordMovingPollPeriodDef = {"pmacSetCoordMovingPollPeriod", 2, pmacSetCoordMovingPollPeriodArgs};
+static void pmacSetCoordMovingPollPeriodCallFunc(const iocshArgBuf *args)
+{
+    pmacSetCoordMovingPollPeriod(args[0].ival, args[1].ival);
+}
+
+
+/* int pmacSetCoordIdlePollPeriod(int card, int idlePollPeriod) */
+static const iocshArg pmacSetCoordIdlePollPeriodArg0 = {"CS number", iocshArgInt};
+static const iocshArg pmacSetCoordIdlePollPeriodArg1 = {"Idle poll period", iocshArgInt};
+static const iocshArg * const pmacSetCoordIdlePollPeriodArgs[2] = {&pmacSetCoordIdlePollPeriodArg0, &pmacSetCoordIdlePollPeriodArg1};
+static const iocshFuncDef pmacSetCoordIdlePollPeriodDef = {"pmacSetCoordIdlePollPeriod", 2, pmacSetCoordIdlePollPeriodArgs};
+static void pmacSetCoordIdlePollPeriodCallFunc(const iocshArgBuf *args)
+{
+    pmacSetCoordIdlePollPeriod(args[0].ival, args[1].ival);
+}
+
+
 static const iocshArg pmacAsynCoordCreateArg0 = { "port",     iocshArgString};
 static const iocshArg pmacAsynCoordCreateArg1 = { "address",  iocshArgInt};
 static const iocshArg pmacAsynCoordCreateArg2 = { "C.S. no",  iocshArgInt};
@@ -27,6 +49,8 @@ static void pmacAsynCoordCreateCallFunc(const iocshArgBuf *args)
 void pmacAsynCoordRegister(void)
 {
   iocshRegister(&pmacAsynCoordCreateDef, pmacAsynCoordCreateCallFunc);
+  iocshRegister(&pmacSetCoordMovingPollPeriodDef, pmacSetCoordMovingPollPeriodCallFunc);
+  iocshRegister(&pmacSetCoordIdlePollPeriodDef, pmacSetCoordIdlePollPeriodCallFunc);
 }
 epicsExportRegistrar(pmacAsynCoordRegister);
 

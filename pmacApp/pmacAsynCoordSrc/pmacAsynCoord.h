@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 int pmacAsynCoordCreate( char *port, int addr, int cs, int ref, int program );
+int pmacSetCoordMovingPollPeriod(int cs, int movingPollPeriod);
+int pmacSetCoordIdlePollPeriod(int cs, int idlePollPeriod);
 
 #ifdef __cplusplus
 }
