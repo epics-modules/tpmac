@@ -700,7 +700,6 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
     int cmdStatus, done;
     double position, oldposition, error;
     int i;
-    int abort = 0;
     asynUser *pasynUser = pDrv->pasynUser;
     AXIS_HDL first_axis, last_axis, pAxis;
     int direction;
@@ -709,63 +708,55 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 	/* First lock all the axes */
     for (i = 0; i < NAXES; i++) {
     	pAxis = &pDrv->axis[i];
-	    if (epicsMutexLock( pAxis->axisMutex ) != epicsMutexLockOK) {	
-	    	/* if we can't lock the axis then abort */
-	    	abort = 1;
-	    	break;
-	    }
+		epicsMutexLock( pAxis->axisMutex );
 	}
 	
-	/* If we don't have to abort then read the status for all axes */
-	if (abort==0) {
+    /* As yet, there is no way to get the following error of a C.S. axis - set it to zero for now */
+    error = 0;
+    first_axis = &pDrv->axis[0];
+    last_axis = &pDrv->axis[NAXES-1];
+    
+    /* Read all the positions for this co-ordinate system in one go */
+ 	sprintf( command, "&%d" ALL_READBACK, first_axis->coord_system,
+    			first_axis->axis, last_axis->axis);
+    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
 
-	    /* As yet, there is no way to get the following error of a C.S. axis - set it to zero for now */
-	    error = 0;
-	    first_axis = &pDrv->axis[0];
-	    last_axis = &pDrv->axis[NAXES-1];
-	    
-	    /* Read all the positions for this co-ordinate system in one go */
-	 	sprintf( command, "&%d" ALL_READBACK, first_axis->coord_system,
-	    			first_axis->axis, last_axis->axis);
-	    cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
+	/* Get the co-ordinate system status */
+	drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
 
-		/* Get the co-ordinate system status */
-		drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
-
-	    for (i = 0; i < NAXES; i++) {
-	    	pAxis = &pDrv->axis[i];
+    for (i = 0; i < NAXES; i++) {
+    	pAxis = &pDrv->axis[i];
 /*            int homeSignal = ((status[1] & CS_STATUS2_HOME_COMPLETE) != 0);*/
 /* TODO: possibly look at the aggregate of the home status of all motors in the c.s ?? */
-            homeSignal = 0;
-            errno = 0;
-            position = strtod(pos_parse, &pos_parse);
-            if (position == 0 && errno != 0) {
-                asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                          "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse1:%s\n",
-                          cmdStatus, command, pos_response );
-            }
-            motorParam->getDouble(  pAxis->params, motorAxisPosition,      &oldposition );                      
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
-            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
-            /* Don't set direction if velocity equals zero and was previously negative */
-            motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
-            motorParam->setInteger( pAxis->params, motorAxisDirection,     ((position > oldposition) || (position == oldposition && direction)) );
-            motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
-            motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
-            motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
-            if (pAxis->deferred_move) {
-                done = 0;
-            } else {
-                done = ((status[0] & CS_STATUS1_RUNNING_PROG) == 0)&&((status[1] & CS_STATUS2_IN_POSITION) != 0);
-            }
-            motorParam->setInteger( pAxis->params, motorAxisDone,          done);            
-            motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
-            motorParam->callCallback( pAxis->params );           
-	    }
-	}
+        homeSignal = 0;
+        errno = 0;
+        position = strtod(pos_parse, &pos_parse);
+        if (position == 0 && errno != 0) {
+            asynPrint(pasynUser, ASYN_TRACE_ERROR,
+                        "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse1:%s\n",
+                        cmdStatus, command, pos_response );
+        }
+        motorParam->getDouble(  pAxis->params, motorAxisPosition,      &oldposition );                      
+        motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+        motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
+        /* Don't set direction if velocity equals zero and was previously negative */
+        motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
+        motorParam->setInteger( pAxis->params, motorAxisDirection,     ((position > oldposition) || (position == oldposition && direction)) );
+        motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[2] & CS_STATUS3_LIMIT) != 0) );
+        motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
+        motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[1] & CS_STATUS2_IN_POSITION) == 0) );
+        if (pAxis->deferred_move) {
+            done = 0;
+        } else {
+            done = ((status[0] & CS_STATUS1_RUNNING_PROG) == 0)&&((status[1] & CS_STATUS2_IN_POSITION) != 0);
+        }
+        motorParam->setInteger( pAxis->params, motorAxisDone,          done);            
+        motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
+        motorParam->callCallback( pAxis->params );           
+    }
 	
 	/* Now unlock all the axes */
-    for (i = i-abort; i >= 0; i--) {
+    for (i = 0; i < NAXES; i++) {
     	pAxis = &pDrv->axis[i];
 		epicsMutexUnlock( pAxis->axisMutex );
 	}	

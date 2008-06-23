@@ -12,14 +12,28 @@ CLOSE
 
 OPEN PLC1
 CLEAR
+
 ;Wait for MACRO ring errors to clear
-WHILE((i6840 & $f) != 0)
+WHILE ((i6840 & $f) != 0)
 	;100ms delay to prevent i6840 being read too frequently
 	timer=100 MilliSeconds
 	WHILE(timer>0)
 	ENDW
 ENDW
+
+; Reset macro stations
 COMMAND"ms$$$0 ms$$$32"
+
+;2000ms delay to make sure everything has settled
+timer=2000 MilliSeconds
+WHILE(timer>0)
+ENDW
+
+;Clear any macro faults
+COMMAND"MSCLRF0"
+COMMAND"MSCLRF16"
+COMMAND"MSCLRF32"
+COMMAND"MSCLRF48"
 
 ; define lookaheads for coordinate systems and clear Q80
 ADDRESS&16
@@ -53,107 +67,65 @@ COMMAND"DEFINE LOOKAHEAD 20,20"
 ADDRESS&2
 COMMAND"DEFINE LOOKAHEAD 20,20"
 
+; stop all motors
+COMMAND^A
+
+;1000ms delay to make sure everything has stopped
+timer=1000 MilliSeconds
+WHILE(timer>0)
+ENDW
+
+; kill all motors
+COMMAND^K
+
+;100ms delay to process the kill
+timer=100 MilliSeconds
+WHILE(timer>0)
+ENDW
+
 ; For 32 axes:
 ; Set Mx61 = Commanded position = 0 on PMAC reset to make sure autosave works correctly.
 ; Set Mx62 = Actual position    = 0 on PMAC reset to make sure autosave works correctly.
-M161  = 0
-M162  = 0
-M261  = 0
-M262  = 0
-M361  = 0
-M362  = 0
-M461  = 0
-M462  = 0
-M561  = 0
-M562  = 0
-M661  = 0
-M662  = 0
-M761  = 0
-M762  = 0
-M861  = 0
-M862  = 0
-M961  = 0
-M962  = 0
-M1061 = 0
-M1062 = 0
-M1161 = 0
-M1162 = 0
-M1261 = 0
-M1262 = 0
-M1361 = 0
-M1362 = 0
-M1461 = 0
-M1462 = 0
-M1561 = 0
-M1562 = 0
-M1661 = 0
-M1662 = 0
-M1761 = 0
-M1762 = 0
-M1861 = 0
-M1862 = 0
-M1961 = 0
-M1962 = 0
-M2061 = 0
-M2062 = 0
-M2161 = 0
-M2162 = 0
-M2261 = 0
-M2262 = 0
-M2361 = 0
-M2362 = 0
-M2461 = 0
-M2462 = 0
-M2561 = 0
-M2562 = 0
-M2661 = 0
-M2662 = 0
-M2761 = 0
-M2762 = 0
-M2861 = 0
-M2862 = 0
-M2961 = 0
-M2962 = 0
-M3061 = 0
-M3062 = 0
-M3161 = 0
-M3162 = 0
-M3261 = 0
-M3262 = 0
+CMD"M161..162 = 0"
+CMD"M261..262 = 0"
+CMD"M361..362 = 0"
+CMD"M461..462 = 0"
+CMD"M561..562 = 0"
+CMD"M661..662 = 0"
+CMD"M761..762 = 0"
+CMD"M861..862 = 0"
+CMD"M961..962 = 0"
+CMD"M1061..1062 = 0"
+CMD"M1161..1162 = 0"
+CMD"M1261..1262 = 0"
+CMD"M1361..1362 = 0"
+CMD"M1461..1462 = 0"
+CMD"M1561..1562 = 0"
+CMD"M1661..1662 = 0"
+CMD"M1761..1762 = 0"
+CMD"M1861..1862 = 0"
+CMD"M1961..1962 = 0"
+CMD"M2061..2062 = 0"
+CMD"M2161..2162 = 0"
+CMD"M2261..2262 = 0"
+CMD"M2361..2362 = 0"
+CMD"M2461..2462 = 0"
+CMD"M2561..2562 = 0"
+CMD"M2661..2662 = 0"
+CMD"M2761..2762 = 0"
+CMD"M2861..2862 = 0"
+CMD"M2961..2962 = 0"
+CMD"M3061..3062 = 0"
+CMD"M3161..3162 = 0"
+CMD"M3261..3262 = 0"
+
+;100ms delay to prevent motors going into following error
+timer=100 MilliSeconds
+WHILE(timer>0)
+ENDW
 
 ; stop all motors
-COMMAND"#1j/"
-COMMAND"#2j/"
-COMMAND"#3j/"
-COMMAND"#4j/"
-COMMAND"#5j/"
-COMMAND"#6j/"
-COMMAND"#7j/"
-COMMAND"#8j/"
-COMMAND"#9j/"
-COMMAND"#10j/"
-COMMAND"#11j/"
-COMMAND"#12j/"
-COMMAND"#13j/"
-COMMAND"#14j/"
-COMMAND"#15j/"
-COMMAND"#16j/"
-COMMAND"#17j/"
-COMMAND"#18j/"
-COMMAND"#19j/"
-COMMAND"#20j/"
-COMMAND"#21j/"
-COMMAND"#22j/"
-COMMAND"#23j/"
-COMMAND"#24j/"
-COMMAND"#25j/"
-COMMAND"#26j/"
-COMMAND"#27j/"
-COMMAND"#28j/"
-COMMAND"#29j/"
-COMMAND"#30j/"
-COMMAND"#31j/"
-COMMAND"#32j/"
+COMMAND^A
 
 DISPLC1
 CLOSE

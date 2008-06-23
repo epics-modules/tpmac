@@ -78,8 +78,8 @@ IF (P$(PLC)00>0.01)
     Q87=10000*Q110/P$(PLC)00
     Q88=20000*(TMRES*TVAL+TOFF)*COS(BMRES*BVAL+BOFF)
     ; Approximations to deadband as a calculated value is not worth the effort
-    Q97=20000*ABS(BDB)
-    Q98=10000*(ABS(BDB)+ABS(TDB))
+    Q97=200000*ABS(BDB)
+    Q98=100000*(ABS(BDB)+ABS(TDB))
 ELSE
     M5$(COORD)82=1
 ENDIF
