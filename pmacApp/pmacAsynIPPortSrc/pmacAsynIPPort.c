@@ -513,7 +513,7 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
                 pasynUser->timeout = delay;
                 status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
                 timeleft -= delay;
-                if (delay < 0.5) delay += 0.005; /* lengthen delay up to a maximum of 0.5 sec */
+                if (delay < 0.5) delay += 0.001; /* lengthen delay up to a maximum of 0.5 sec */
             } while (thisRead==0 && timeleft > 0);
             
             if(status!=asynSuccess || thisRead==0) break;       
