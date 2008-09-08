@@ -260,10 +260,12 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
     *nbytesTransfered = 0;
     if (maxchars>INPUT_SIZE) maxchars = INPUT_SIZE;
 
+    asynPrint(pasynUser,ASYN_TRACE_FLOW, "pmacAsynIPPort::readResponse. Performing pPmacPvt->poctet->readRaw().\n");
+
     status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
          pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
     asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);
-         
+     
     if (status == asynTimeout && thisRead == 0 && pasynUser->timeout>0) {
          /* failed to read as many characters as required into the input buffer, 
             check for more response data on the PMAC */
@@ -506,11 +508,12 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
             }
             if(eomReason && *eomReason) break;
             
-            /* read data with zero timeout - i.e. get whats already available in the asyn buffer without waiting */
+            /* read data with small timeout. This almost always is enough time to read a response.*/
             timeleft = timeout;
-            delay = 0;
+            delay = 0.005;
             do {
                 pasynUser->timeout = delay;
+		asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
                 status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
                 timeleft -= delay;
                 if (delay < 0.5) delay += 0.001; /* lengthen delay up to a maximum of 0.5 sec */
