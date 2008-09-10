@@ -620,7 +620,7 @@ M710->X:$078116,0,24,S ; ENC7 compare autoincrement value
 M711->X:$078115,11     ; ENC7 compare initial state write enable
 M712->X:$078115,12     ; ENC7 compare initial state
 M714->X:$078115,14     ; AENA7 output status
-M715->X:$078110,19     ; CHC7 input status
+M715->X:$078110,19     ; USER7 flag input status
 M716->X:$078110,9      ; ENC7 compare output value
 M717->X:$078110,11     ; ENC7 capture flag
 M718->X:$078110,8      ; ENC7 count error flag
@@ -1300,7 +1300,7 @@ M1510->X:$078316,0,24,S ; ENC7 compare autoincrement value
 M1511->X:$078315,11     ; ENC7 compare initial state write enable
 M1512->X:$078315,12     ; ENC7 compare initial state
 M1514->X:$078315,14     ; AENA7 output status
-M1515->X:$078310,19     ; CHC7 input status
+M1515->X:$078310,19     ; USER7 flag input status
 M1516->X:$078310,9      ; ENC7 compare output value
 M1517->X:$078310,11     ; ENC7 capture flag
 M1518->X:$078310,8      ; ENC7 count error flag
@@ -1979,7 +1979,7 @@ M2310->X:$079316,0,24,S ; ENC7 compare autoincrement value
 M2311->X:$079315,11     ; ENC7 compare initial state write enable
 M2312->X:$079315,12     ; ENC7 compare initial state
 M2314->X:$079315,14     ; AENA7 output status
-M2315->X:$079310,19     ; CHC7 input status
+M2315->X:$079310,19     ; USER7 flag input status
 M2316->X:$079310,9      ; ENC7 compare output value
 M2317->X:$079310,11     ; ENC7 capture flag
 M2318->X:$079310,8      ; ENC7 count error flag
@@ -2659,7 +2659,7 @@ M3110->X:$07A316,0,24,S ; ENC7 compare autoincrement value
 M3111->X:$07A315,11     ; ENC7 compare initial state write enable
 M3112->X:$07A315,12     ; ENC7 compare initial state
 M3114->X:$07A315,14     ; AENA7 output status
-M3115->X:$07A310,19     ; CHC7 input status
+M3115->X:$07A310,19     ; USER7 flag input status
 M3116->X:$07A310,9      ; ENC7 compare output value
 M3117->X:$07A310,11     ; ENC7 capture flag
 M3118->X:$07A310,8      ; ENC7 count error flag
