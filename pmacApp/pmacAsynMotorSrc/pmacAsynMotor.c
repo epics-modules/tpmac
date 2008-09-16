@@ -916,6 +916,7 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
             motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
             motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
+	    motorParam->setDouble(  pAxis->params, motorAxisHasEncoder, 1);
             motorParam->callCallback( pAxis->params );
         }
 
