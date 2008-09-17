@@ -86,6 +86,32 @@ epicsExportAddress(drvet, pmacAsynMotor);
 #define PMAC_STATUS2_NA14              (0x1<<14)
 #define PMAC_STATUS2_ASSIGNED_CS       (0x1<<15)
 
+/*Global status ???*/
+#define PMAC_GSTATUS_CARD_ADDR             (0x1<<0)
+#define PMAC_GSTATUS_ALL_CARD_ADDR         (0x1<<1)
+#define PMAC_GSTATUS_RESERVED              (0x1<<2)
+#define PMAC_GSTATUS_PHASE_CLK_MISS        (0x1<<3)
+#define PMAC_GSTATUS_MACRO_RING_ERRORCHECK (0x1<<4)
+#define PMAC_GSTATUS_MACRO_RING_COMMS      (0x1<<5)
+#define PMAC_GSTATUS_TWS_PARITY_ERROR      (0x1<<6)
+#define PMAC_GSTATUS_CONFIG_ERROR          (0x1<<7)
+#define PMAC_GSTATUS_ILLEGAL_LVAR          (0x1<<8)
+#define PMAC_GSTATUS_REALTIME_INTR         (0x1<<9)
+#define PMAC_GSTATUS_FLASH_ERROR           (0x1<<10)
+#define PMAC_GSTATUS_DPRAM_ERROR           (0x1<<11)
+#define PMAC_GSTATUS_CKSUM_ACTIVE          (0x1<<12)
+#define PMAC_GSTATUS_CKSUM_ERROR           (0x1<<13)
+#define PMAC_GSTATUS_LEADSCREW_COMP        (0x1<<14)
+#define PMAC_GSTATUS_WATCHDOG              (0x1<<15)
+#define PMAC_GSTATUS_SERVO_REQ             (0x1<<16)
+#define PMAC_GSTATUS_DATA_GATHER_START     (0x1<<17)
+#define PMAC_GSTATUS_DATA_GATHER_ON        (0x1<<18)
+#define PMAC_GSTATUS_SERVO_ERROR           (0x1<<19)
+#define PMAC_GSTATUS_CPUTYPE               (0x1<<20)
+#define PMAC_GSTATUS_REALTIME_INTR_RE      (0x1<<21)
+#define PMAC_GSTATUS_RESERVED2             (0x1<<22)
+
+
 typedef struct drvPmac * PMACDRV_ID;
 typedef struct drvPmac
 {
@@ -352,6 +378,48 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
 
     return MOTOR_AXIS_OK;
 }
+
+/**
+ * Send a global command to the PMAC, not related to a particular axis.
+ * @param pDrv The controller struct
+ * @param command The command to send
+ * @param reply_buff_size The maximum size of the reply (bytes)
+ * @param reponse The response
+ * @return MOTOR_AXIS_OK or MOTOR_AXIS_ERROR
+ */
+static int globalWriteRead( PMACDRV_ID pDrv, char * command, size_t reply_buff_size, char * response)
+{
+    asynStatus status;
+    const double timeout=0.1;
+    size_t nwrite, nread;
+    int eomReason;
+    asynUser * pasynUser = pDrv->pasynUser;
+
+    asynPrint(pasynUser, TRACE_FLOW, "Sending to PMAC %d command: %s\n", pDrv->card, command);
+   
+    status = pasynOctetSyncIO->writeRead( pasynUser,
+                                          command, strlen(command),
+                                          response, reply_buff_size,
+                                          timeout,
+                                          &nwrite, &nread, &eomReason );
+
+    if ( nread != 0 ) {
+        asynPrint(pasynUser, TRACE_FLOW, "Recvd from PMAC %d response: %s\n", pDrv->card, response);
+    }
+
+    if (status)
+    {
+        asynPrint( pasynUser,
+                   ASYN_TRACE_ERROR,
+                   "Read/write error to PMAC card %d, command %s. Status=%d, Error=%s\n",
+                   pDrv->card, command,
+                   status, pasynUser->errorMessage);
+        return MOTOR_AXIS_ERROR;
+    }
+
+    return MOTOR_AXIS_OK;
+}
+
 
 static int processDeferredMoves(drvPmac_t *pDrv)
 {
@@ -810,7 +878,7 @@ static int motorAxisforceCallback(AXIS_HDL pAxis)
 */
 
 
-static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
+static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUInt32 globalStatus )
 {
     char command[128];
     char response[128];
@@ -818,9 +886,16 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     double position, error, velocity;
     int nvals;
     epicsUInt32 status[2];
+    epicsUInt32 combinedStatus = 0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
+      /*Set any global status bits.*/
+      
+      /*Combine several comms type errors for the motor record comm error bit.*/
+      combinedStatus = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG);
+      motorParam->setInteger( pAxis->params, motorAxisCommError, ((globalStatus & combinedStatus) != 0) );
+      
         /* Read all the status for this axis in one go */
         sprintf( command, "#%d ? P F V", pAxis->axis );
         cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
@@ -890,6 +965,33 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
     }
 }
 
+/**
+ * Read the PMAC global status integer (using a ???)
+ * @param pDrv Pointer to the controller struct
+ * @param pasynUser The asynUser pointer
+ * @return int The global status integer (23 active bits)
+ */
+static int drvPmacGetGlobalStatus( PMACDRV_ID pDrv, asynUser * pasynUser )
+{
+  char command[32];
+  char response[128];
+  int cmdStatus = 0;
+  int nvals = 0;
+  epicsUInt32 pmacStatus = 0;
+
+  if (epicsMutexLock(pDrv->controllerMutexId) == epicsMutexLockOK) {
+    sprintf(command, "???");
+    cmdStatus = globalWriteRead(pDrv, command, sizeof(response), response);
+    nvals = sscanf(response, "%6x", &pmacStatus);
+    epicsMutexUnlock(pDrv->controllerMutexId);
+  } else {
+    drvPrint(drvPrintParam, TRACE_ERROR, "drvPmacGetGlobalStatus: Failed to get controllerMutexId lock.\n");
+  }
+
+  return pmacStatus;
+
+}
+
 static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 {
     char command[32];
@@ -933,6 +1035,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   int eventStatus = 0;
   int forcedFastPolls = 0;
   float timeout = 0.0;
+  epicsUInt32 globalStatus = 0;
 
   while ( 1 ) 
   {
@@ -944,6 +1047,10 @@ static void drvPmacTask( PMACDRV_ID pDrv )
       forcedFastPolls = 10;
     }
 
+    /* Get global status */
+    globalStatus = drvPmacGetGlobalStatus(pDrv, pDrv->pasynUser);
+
+    /* Get axis status */
     for ( i = 0; i < pDrv->nAxes; i++ )
     {
       AXIS_HDL pAxis = &(pDrv->axis[i]);
@@ -953,7 +1060,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 	epicsMutexUnlock( pAxis->axisMutex );
       }
       cachedDone &= done;
-      drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+      drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, globalStatus );
     }
 
 
@@ -1093,7 +1200,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
             AXIS_HDL pAxis = &(pDrv->axis[i]);
 
             drvPmacGetAxisInitialStatus( pAxis, pDrv->pasynUser );
-            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser );
+            drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, 0 );
         }
 
         pDrv->motorThread = epicsThreadCreate( "drvPmacThread",
