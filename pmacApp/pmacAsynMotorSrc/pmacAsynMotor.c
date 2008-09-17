@@ -872,6 +872,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
+	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
             motorParam->callCallback( pAxis->params );           
         }
 
