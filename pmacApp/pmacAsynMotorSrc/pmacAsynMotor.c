@@ -111,6 +111,7 @@ epicsExportAddress(drvet, pmacAsynMotor);
 #define PMAC_GSTATUS_REALTIME_INTR_RE      (0x1<<21)
 #define PMAC_GSTATUS_RESERVED2             (0x1<<22)
 
+static const int PMAC_HARDWARE_PROB = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG);
 
 typedef struct drvPmac * PMACDRV_ID;
 typedef struct drvPmac
@@ -886,15 +887,14 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     double position, error, velocity;
     int nvals;
     epicsUInt32 status[2];
-    epicsUInt32 combinedStatus = 0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
       /*Set any global status bits.*/
       
       /*Combine several comms type errors for the motor record comm error bit.*/
-      combinedStatus = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG);
-      motorParam->setInteger( pAxis->params, motorAxisCommError, ((globalStatus & combinedStatus) != 0) );
+      /*      combinedStatus = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG);*/
+      motorParam->setInteger( pAxis->params, motorAxisHardwareProb, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
         /* Read all the status for this axis in one go */
         sprintf( command, "#%d ? P F V", pAxis->axis );
