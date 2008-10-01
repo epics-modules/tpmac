@@ -940,13 +940,13 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             if(pAxis->deferred_move) {
                 done = 0; 
             } else {
-                done = ((status[1] & PMAC_STATUS2_IN_POSITION) != 0);
+                done = (((status[1] & PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & PMAC_STATUS1_MOTOR_ON) == 0)); 
             }
             motorParam->setInteger( pAxis->params, motorAxisDone,          done );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
             /*motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );*/
 	    motorParam->setInteger( pAxis->params, motorAxisHomed,    homeSignal );
-            motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) );
+            motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) && ((status[0] & PMAC_STATUS1_MOTOR_ON) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
 	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
             motorParam->callCallback( pAxis->params );           
@@ -967,7 +967,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 }
 
 /**
- * Read the PMAC global status integer (using a ???)
+ * Read the PMAC global status integer (using a ??? )
  * @param pDrv Pointer to the controller struct
  * @param pasynUser The asynUser pointer
  * @return int The global status integer (23 active bits)
@@ -1020,10 +1020,9 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
             motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
             motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
-	    motorParam->setDouble(  pAxis->params, motorAxisHasEncoder, 1);
+	        motorParam->setDouble(  pAxis->params, motorAxisHasEncoder, 1);
             motorParam->callCallback( pAxis->params );
         }
-
         epicsMutexUnlock( pAxis->axisMutex );
     }
 }
@@ -1032,21 +1031,30 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 {
   int i = 0;
   int done = 0;
-  int cachedDone = 1;
   int eventStatus = 0;
-  int forcedFastPolls = 0;
   float timeout = 0.0;
+  float factor = 0.0;
+  float skips[pDrv->nAxes];
   epicsUInt32 globalStatus = 0;
+
+  for ( i = 0; i < pDrv->nAxes; i++ )
+  {
+    skips[i]=0;
+  }
 
   while ( 1 ) 
   {
-    cachedDone = 1;
-
-    /* Wait for an event, or a timeout. If we get an event, do a series of fast polls.*/
-    eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
-    if (eventStatus == epicsEventWaitOK) {
-      forcedFastPolls = 10;
+    /* Wait for an event, or a timeout. If we get an event, force an update.*/
+    if (epicsMutexLock(pDrv->controllerMutexId) == epicsMutexLockOK) {
+		timeout = pDrv->movingPollPeriod;
+		/* roughly calculate how many moving polls to an idle poll */
+		factor = pDrv->movingPollPeriod / pDrv->idlePollPeriod;
     }
+	else {
+      drvPrint(drvPrintParam, TRACE_ERROR, "drvPmacTask: Failed to get controllerMutexId lock.\n");
+    }
+    epicsMutexUnlock(pDrv->controllerMutexId);
+    eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
 
     /* Get global status */
     globalStatus = drvPmacGetGlobalStatus(pDrv, pDrv->pasynUser);
@@ -1055,28 +1063,25 @@ static void drvPmacTask( PMACDRV_ID pDrv )
     for ( i = 0; i < pDrv->nAxes; i++ )
     {
       AXIS_HDL pAxis = &(pDrv->axis[i]);
-      if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
+      if (eventStatus == epicsEventWaitOK)
       {
-	motorParam->getInteger( pAxis->params, motorAxisDone, &done );
-	epicsMutexUnlock( pAxis->axisMutex );
+      	/* If we got an event, then one motor is moving, so force an update for all */
+      	done = 0;
       }
-      cachedDone &= done;
-      drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, globalStatus );
-    }
-
-
-    if (epicsMutexLock(pDrv->controllerMutexId) == epicsMutexLockOK) {
-      if (forcedFastPolls > 0) {
-	timeout = pDrv->movingPollPeriod;
-	forcedFastPolls--;
-      } else if (!cachedDone) {
-	timeout = pDrv->movingPollPeriod;
-      } else {
-	timeout = pDrv->idlePollPeriod;
-      }
-      epicsMutexUnlock(pDrv->controllerMutexId);
-    } else {
-      drvPrint(drvPrintParam, TRACE_ERROR, "drvPmacTask: Failed to get controllerMutexId lock.\n");
+      else
+      {
+      	/* get the cached done status */
+      	epicsMutexLock( pAxis->axisMutex );
+		motorParam->getInteger( pAxis->params, motorAxisDone, &done );
+		epicsMutexUnlock( pAxis->axisMutex );
+      }    
+      if ((skips[i]<=0.0) || (done == 0))
+	  {
+	  	/* if it's time for an idle poll or the motor is moving */
+	    drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, globalStatus );
+	    skips[i] = 1.0;
+	  }
+	  skips[i] -= factor;
     }
   }
 }
@@ -1146,8 +1151,8 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].logParam  = pDrv->pasynUser;
                         pDrv->axis[i].pasynUser = pDrv->pasynUser;
 
-                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
-                        motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );
+/*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
+                        motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
                         asynPrint( pDrv->pasynUser, ASYN_TRACE_FLOW, "Created motor for card %d, signal %d OK\n", card, i );
                     }
                     else
