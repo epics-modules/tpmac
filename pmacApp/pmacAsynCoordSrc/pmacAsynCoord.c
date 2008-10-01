@@ -795,15 +795,15 @@ static void drvPmacTask( PMACDRV_ID pDrv )
     /* Wait for an event, or a timeout. If we get an event, do a series of fast polls.*/
     eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
     if (eventStatus == epicsEventWaitOK) {
-      forcedFastPolls = 10;
+      forcedFastPolls = 2;
     }
 
     for (i = 0; i < NAXES; i++) {
       pAxis = &pDrv->axis[i];
       motorParam->getInteger( pAxis->params, motorAxisDone, &done );
       cachedDone &= done;
-      drvPmacGetAxesStatus( pDrv, status);
     }
+    drvPmacGetAxesStatus( pDrv, status);    
     
     if (forcedFastPolls > 0) {
       timeout = pDrv->movingPollPeriod;
@@ -971,19 +971,19 @@ static int drvPmacLogMsg( void * param, const motorAxisLogMask_t mask, const cha
 /**
  * Function to set the movingPollPeriod time to use when polling 
  * the controller during a move.
- * @param cs Numerical ID of the coordinate system.
+ * @param ref Numerical ID of the coordinate system.
  * @param movingPollPeriod The period in miliseconds.
  * @return status
  */
-int pmacSetCoordMovingPollPeriod(int cs, int movingPollPeriod)
+int pmacSetCoordMovingPollPeriod(int ref, int movingPollPeriod)
 {
   int status = 1;
   PMACDRV_ID pDrv = NULL;
 
   if (pFirstDrv != NULL) {
     for (pDrv = pFirstDrv; pDrv != NULL; pDrv = pDrv->pNext) {
-      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting moving poll period of %dms on cs %d\n", movingPollPeriod, pDrv->cs);
-      if (cs == pDrv->cs) {
+      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting moving poll period of %dms on ref %d\n", movingPollPeriod, pDrv->ref);
+      if (ref == pDrv->ref) {
 	pDrv->movingPollPeriod = (double)movingPollPeriod / 1000.0;
 	status = 0;
       }
@@ -998,19 +998,19 @@ int pmacSetCoordMovingPollPeriod(int cs, int movingPollPeriod)
 /**
  * Function to set the idlePollPeriod time to use when polling 
  * the controller when there is no motion.
- * @param cs Numerical ID of the cs.
+ * @param ref Numerical ID of the cs.
  * @param idlePollPeriod The period in miliseconds.
  * @return status
  */
-int pmacSetCoordIdlePollPeriod(int cs, int idlePollPeriod)
+int pmacSetCoordIdlePollPeriod(int ref, int idlePollPeriod)
 {
   int status = 1;
   PMACDRV_ID pDrv = NULL;
 
   if (pFirstDrv != NULL) {
     for (pDrv = pFirstDrv; pDrv!=NULL; pDrv = pDrv->pNext) {
-      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting idle poll period of %dms on cs %d\n", idlePollPeriod, pDrv->cs);
-      if (cs == pDrv->cs) {
+      drvPrint(drvPrintParam, TRACE_FLOW, "** Setting idle poll period of %dms on ref %d\n", idlePollPeriod, pDrv->ref);
+      if (ref == pDrv->ref) {
 	pDrv->idlePollPeriod = (double)idlePollPeriod / 1000.0;
 	status = 0;
       }
