@@ -10,8 +10,8 @@ SUPPORT=/dls_sw/prod/R3.14.8.2/support
 WORK=/dls_sw/work/R3.14.8.2/support
 
 ASYN=	$(SUPPORT)/asyn/4-9
-MOTOR=  /home/mp49/epics/support/motor
-#MOTOR=	$(SUPPORT)/motor/6-3dls5
+MOTOR=	$(SUPPORT)/motor/6-3dls6
+#MOTOR= $(WORK)/motor
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
