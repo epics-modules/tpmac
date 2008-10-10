@@ -7,7 +7,6 @@ DELETE TRACE
 ; Works for micromech standard 16 axis stepper crate MSL drive crates
 ;##########################################################################
 
-i5=0 ;Stop PLCs
 i100,16,100=0 ;Disable all motors
 i3 = 2       ;Acknowledge valid commands with <LF> - Needed for dls-motor-control.py
 i6 = 1       ;Acknowledge invalid commands with <BELL>ERRxxx<CR> - Needed for dls-motor-control.py

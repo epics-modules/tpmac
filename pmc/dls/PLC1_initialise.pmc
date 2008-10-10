@@ -129,3 +129,6 @@ COMMAND^A
 
 DISPLC1
 CLOSE
+
+;Set i15=2 as standard. This need to be set in order to run background PLC programs.
+i5=2
