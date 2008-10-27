@@ -893,8 +893,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
       /*Set any global status bits.*/
       
       /*Combine several comms type errors for the motor record comm error bit.*/
-      /*      combinedStatus = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG);*/
-      motorParam->setInteger( pAxis->params, motorAxisHardwareProb, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
+      motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
         /* Read all the status for this axis in one go */
         sprintf( command, "#%d ? P F V", pAxis->axis );
@@ -1034,23 +1033,18 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   int eventStatus = 0;
   float timeout = 0.0;
   float factor = 0.0;
-  float skips[pDrv->nAxes];
+  float skips[pDrv->nAxes] = {0};
   epicsUInt32 globalStatus = 0;
-
-  for ( i = 0; i < pDrv->nAxes; i++ )
-  {
-    skips[i]=0;
-  }
 
   while ( 1 ) 
   {
     /* Wait for an event, or a timeout. If we get an event, force an update.*/
     if (epicsMutexLock(pDrv->controllerMutexId) == epicsMutexLockOK) {
-		timeout = pDrv->movingPollPeriod;
-		/* roughly calculate how many moving polls to an idle poll */
-		factor = pDrv->movingPollPeriod / pDrv->idlePollPeriod;
+      timeout = pDrv->movingPollPeriod;
+      /* roughly calculate how many moving polls to an idle poll */
+      factor = pDrv->movingPollPeriod / pDrv->idlePollPeriod;
     }
-	else {
+    else {
       drvPrint(drvPrintParam, TRACE_ERROR, "drvPmacTask: Failed to get controllerMutexId lock.\n");
     }
     epicsMutexUnlock(pDrv->controllerMutexId);
@@ -1072,16 +1066,16 @@ static void drvPmacTask( PMACDRV_ID pDrv )
       {
       	/* get the cached done status */
       	epicsMutexLock( pAxis->axisMutex );
-		motorParam->getInteger( pAxis->params, motorAxisDone, &done );
-		epicsMutexUnlock( pAxis->axisMutex );
+	motorParam->getInteger( pAxis->params, motorAxisDone, &done );
+	epicsMutexUnlock( pAxis->axisMutex );
       }    
       if ((skips[i]<=0.0) || (done == 0))
-	  {
-	  	/* if it's time for an idle poll or the motor is moving */
-	    drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, globalStatus );
-	    skips[i] = 1.0;
-	  }
-	  skips[i] -= factor;
+      {
+	/* if it's time for an idle poll or the motor is moving */
+	drvPmacGetAxisStatus( pAxis, pDrv->pasynUser, globalStatus );
+	skips[i] = 1.0;
+      }
+      skips[i] -= factor;
     }
   }
 }
