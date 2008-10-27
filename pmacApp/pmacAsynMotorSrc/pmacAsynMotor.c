@@ -1033,8 +1033,12 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   int eventStatus = 0;
   float timeout = 0.0;
   float factor = 0.0;
-  float skips[pDrv->nAxes] = {0};
+  float skips[pDrv->nAxes];
   epicsUInt32 globalStatus = 0;
+
+  for (i=0; i<pDrv->nAxes; i++) {
+    skips[i] = 0;
+  }
 
   while ( 1 ) 
   {
