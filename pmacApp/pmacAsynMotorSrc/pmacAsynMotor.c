@@ -347,7 +347,7 @@ static int motorAxisAsynConnect( const char * port, int addr, asynUser ** ppasyn
 static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff_size, char * response, int logGlobal )
 {
     asynStatus status;
-    const double timeout=0.1;
+    const double timeout=0.5;
     size_t nwrite, nread;
     int eomReason;
     asynUser * pasynUser = (logGlobal? pAxis->pDrv->pasynUser: pAxis->pasynUser);
