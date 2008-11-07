@@ -674,7 +674,9 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
         char command[128];
         char response[128];
 
-        if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / 1000.0));
+	/* Commented out for now, because setting ixx23 can cause homing to fail, depending on the
+	   value of the forwards parameter. MP 7/11/08.*/
+        /*if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / 1000.0));
         if (acceleration != 0)
         {
             if (max_velocity != 0)
@@ -682,7 +684,8 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
                 sprintf(acc_buff, "I%d20=%f ", pAxis->axis, (fabs(max_velocity/acceleration) * 1000.0));
             }
         }
-        sprintf( command, "%s%s#%d HOME", vel_buff, acc_buff,  pAxis->axis );
+        sprintf( command, "%s%s#%d HOME", vel_buff, acc_buff,  pAxis->axis );*/
+	sprintf( command, "#%d HOME", pAxis->axis );
 
         if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
         {
