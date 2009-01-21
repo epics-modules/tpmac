@@ -510,7 +510,7 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
             
             /* read data with small timeout. This almost always is enough time to read a response.*/
             timeleft = timeout;
-            delay = 0.005;
+            delay = 0.010;
             do {
                 pasynUser->timeout = delay;
 		asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
