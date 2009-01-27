@@ -1051,6 +1051,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   int eventStatus = 0;
   float timeout = 0.0;
   float factor = 0.0;
+  float skipglobal = 0.0;
   float skips[pDrv->nAxes];
   epicsUInt32 globalStatus = 0;
 
@@ -1072,8 +1073,12 @@ static void drvPmacTask( PMACDRV_ID pDrv )
     epicsMutexUnlock(pDrv->controllerMutexId);
     eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
 
-    /* Get global status */
-    globalStatus = drvPmacGetGlobalStatus(pDrv, pDrv->pasynUser);
+    /* Get global status at the slow poll rate.*/
+    if (skipglobal <= 0.0) {
+      globalStatus = drvPmacGetGlobalStatus(pDrv, pDrv->pasynUser);
+      skipglobal = 1.0;
+    }
+    skipglobal -= factor;
 
     /* Get axis status */
     for ( i = 0; i < pDrv->nAxes; i++ )
