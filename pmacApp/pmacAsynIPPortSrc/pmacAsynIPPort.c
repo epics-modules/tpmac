@@ -256,7 +256,7 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 {
     ethernetCmd* inCmd;
     asynStatus status = asynSuccess;
-    size_t thisRead;
+    size_t thisRead = 0;
     *nbytesTransfered = 0;
     if (maxchars>INPUT_SIZE) maxchars = INPUT_SIZE;
 
@@ -312,9 +312,9 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
 {
     ethernetCmd cmd;
-    unsigned char data[2];
+    unsigned char data[2] = {0};
     asynStatus status;
-    size_t thisRead;
+    size_t thisRead = 0;
     size_t nbytesTransfered = 0;
     int eomReason = 0;
     int retval = 0;
