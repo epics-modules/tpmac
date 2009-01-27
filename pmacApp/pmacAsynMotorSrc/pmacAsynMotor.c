@@ -172,6 +172,8 @@ typedef struct motorAxisHandle
     double deferred_position;
     int deferred_move;
     int deferred_relative;
+    double previous_position;
+    double previous_direction;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -887,9 +889,10 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     char command[128];
     char response[128];
     int cmdStatus, done;
-    double position, error, velocity;
+    double position, error;
     int nvals;
     epicsUInt32 status[2];
+    double position_with_error = 0.0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
@@ -899,11 +902,11 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
       motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
         /* Read all the status for this axis in one go */
-        sprintf( command, "#%d ? P F V", pAxis->axis );
+        sprintf( command, "#%d ? P F", pAxis->axis );
         cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-        nvals = sscanf( response, "%6x%6x %lf %lf %lf", &status[0], &status[1], &position, &error, &velocity );
+        nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &error );
 
-        if ( cmdStatus || nvals != 5)
+        if ( cmdStatus || nvals != 4)
         {
             asynPrint(pasynUser, ASYN_TRACE_ERROR,
                       "drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
@@ -913,6 +916,8 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
         {
             int homeSignal = ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0);
             int direction;
+
+	    position_with_error = position + error;
 
 #ifdef SIMULATE_SET_POSITION
             if ( homeSignal && !pAxis->homeSignal )
@@ -930,15 +935,25 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             }
             pAxis->homeSignal = homeSignal;
 
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error+pAxis->enc_offset) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position_with_error+pAxis->enc_offset) );
 #else
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+error) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position_with_error) );
 #endif
             motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
 
-            /* Don't set direction if velocity equals zero and was previously negative */
-            motorParam->getInteger( pAxis->params, motorAxisDirection,     &direction );
-            motorParam->setInteger( pAxis->params, motorAxisDirection,     ((velocity >= 0) || (velocity == 0 && direction)) );
+            /* Use previous position and current position to calculate direction.*/
+	    if ((position_with_error - pAxis->previous_position) > 0) {
+	      direction = 1;
+	    } else if (position_with_error - pAxis->previous_position == 0.0) {
+	      direction = pAxis->previous_direction;
+	    } else {
+	      direction = 0;
+	    }
+	    motorParam->setInteger( pAxis->params, motorAxisDirection, direction);
+	    /*Store position to calculate direction for next poll.*/
+	    pAxis->previous_position = position_with_error;
+	    pAxis->previous_direction = direction;
+
             if(pAxis->deferred_move) {
                 done = 0; 
             } else {
