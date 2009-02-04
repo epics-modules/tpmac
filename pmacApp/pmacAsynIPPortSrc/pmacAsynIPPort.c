@@ -32,7 +32,14 @@
    Modified to handle responses other than those ending in <ACK> (e.g. errors) - No longer used asyn EOS.
    
    9 Aug 07 - Pete Leicester - Diamond Light Source
-   Initial version reliant on asyn EOS to return <ACK> terminated responses.            
+   Initial version reliant on asyn EOS to return <ACK> terminated responses. 
+
+   2 Feb 09 - Matthew Pearson - Diamond Light Source
+   Ported to work with Asyn 4-10. Still works with pre Asyn4-10 versions, although ACK returns will be
+   lost for some commands, resulting in an error message.
+   Also added new config function, pmacAsynIPPortConfigureEos(), to be used when disabling 
+   low level EOS handling in the Asyn IP layer. This new function should be used with Asyn 4-10 and above (it is not 
+   compatible with Asyn 4-9).
 */  
 
 
@@ -51,6 +58,7 @@
 #include "asynDriver.h"
 #include "asynOctet.h"
 #include "pmacAsynIPPort.h"
+#include "asynInterposeEos.h"
 
 #include <netinet/in.h>
 
@@ -135,11 +143,7 @@ static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception);
 /* asynOctet methods */
 static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
     const char *data,size_t numchars,size_t *nbytesTransfered);
-static asynStatus writeRaw(void *ppvt,asynUser *pasynUser,
-    const char *data,size_t numchars,size_t *nbytesTransfered);
 static asynStatus readIt(void *ppvt,asynUser *pasynUser,
-    char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason);
-static asynStatus readRaw(void *ppvt,asynUser *pasynUser,
     char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason);
 static asynStatus flushIt(void *ppvt,asynUser *pasynUser);
 static asynStatus registerInterruptUser(void *ppvt,asynUser *pasynUser,
@@ -154,88 +158,159 @@ static asynStatus setOutputEos(void *ppvt,asynUser *pasynUser,
     const char *eos,int eoslen);
 static asynStatus getOutputEos(void *ppvt,asynUser *pasynUser,
     char *eos,int eossize,int *eoslen);
-static asynOctet octet = {
-    writeIt,writeRaw,readIt,readRaw,flushIt,
-    registerInterruptUser, cancelInterruptUser,
-    setInputEos,getInputEos,setOutputEos,getOutputEos
-};
+
+/* Declare asynOctet here, and assign functions later on 
+(compatible with both Asyn 4-10 and pre 4-10 versions).*/
+static asynOctet octet;
 
 static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars, size_t *nbytesTransfered, int *eomReason );
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
+static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
+
+/**
+ * This reimplements pmacAsynIPPort::pmacAsynIPPortConfigure(), but introduces
+ * EOS handling interpose layer above the PMAC IP layer.
+ *
+ * The setup of the Asyn IP port must set noProcessEos=1 to use this function. 
+ *
+ * NOTE: The use of this function is not compatible with versions of Asyn before 4-10.
+ *
+ * @param portName The Asyn port name
+ * @param addr The Asyn address.
+ * @return status
+ */
+epicsShareFunc int pmacAsynIPPortConfigureEos(const char *portName,int addr)
+{
+  pmacPvt       *pPmacPvt = NULL;
+  asynInterface *plowerLevelInterface = NULL;
+  asynStatus    status = 0;
+  asynUser      *pasynUser = NULL;
+  
+  status = pmacAsynIPPortCommon(portName, addr, &pPmacPvt, &plowerLevelInterface, &pasynUser);
+  if (status) {
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+	      "pmacAsynIPPortConfigureEos: error from pmacAsynIPPortCommon %s: %s\n", 
+	      portName, pasynUser->errorMessage);
+  }
+  
+  /*Now interpose EOS handling layer, above the PMAC IP layer.*/
+  asynInterposeEosConfig(portName,addr,1,1);
+  
+  asynPrint(pasynUser,ASYN_TRACE_FLOW, "Done pmacAsynIPPortConfigureEos OK\n");
+  return(0);
+}
+
 
 epicsShareFunc int pmacAsynIPPortConfigure(const char *portName,int addr)
 {
-    pmacPvt       *pPmacPvt;
-    asynInterface *plowerLevelInterface;
+  pmacPvt       *pPmacPvt = NULL;
+  asynInterface *plowerLevelInterface = NULL;
+  asynUser      *pasynUser = NULL;
+  asynStatus    status = 0;
+ 
+  status = pmacAsynIPPortCommon(portName, addr, &pPmacPvt, &plowerLevelInterface, &pasynUser);
+
+  status = pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt, pasynUser, "\6", 1);
+  if (status) {
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+	      "pmacAsynIPPortConfigure: unable to set input EOS on %s: %s\n", 
+	      portName, pasynUser->errorMessage);
+    return -1;
+  }
+  status = pPmacPvt->poctet->setOutputEos(pPmacPvt->octetPvt, pasynUser, "\r", 1);
+  if (status) {
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+	      "pmacAsynIPPortConfigure: unable to set output EOS on %s: %s\n", 
+	      portName, pasynUser->errorMessage);
+    return -1;
+  }
+
+  asynPrint(pasynUser,ASYN_TRACE_FLOW, "Done pmacAsynIPPortConfigure OK\n");
+  return(0);
+}
+
+/**
+ * Common code for both pmacAsynIPPortConfigure and pmacAsynIPPortConfigureEos.
+ * @param portName
+ * @param addr
+ * @param pPmacPvt pointer
+ * @param plowerLevelInterface pointer
+ * @param pasynUser pointer
+ * @return status
+ */
+static int pmacAsynIPPortCommon(const char *portName,
+				int addr,
+				pmacPvt **pPmacPvt,
+				asynInterface **plowerLevelInterface,
+				asynUser **pasynUser)
+{
     asynStatus    status;
-    asynUser      *pasynUser;
     size_t        len;
 
+    /*Assign static asynOctet functions here.*/
+    octet.write = writeIt;
+    octet.read = readIt;
+    octet.flush = flushIt;
+    octet.setInputEos = setInputEos;
+    octet.setOutputEos = setOutputEos;
+    octet.getInputEos = getInputEos;
+    octet.getOutputEos = getOutputEos;
+    octet.registerInterruptUser = registerInterruptUser;
+    octet.cancelInterruptUser = cancelInterruptUser;
+
     len = sizeof(pmacPvt) + strlen(portName) + 1;
-    pPmacPvt = callocMustSucceed(1,len,"pmacAsynIPPortConfig");
-    pPmacPvt->portName = (char *)(pPmacPvt+1);
-    strcpy(pPmacPvt->portName,portName);
-    pPmacPvt->addr = addr;
-    pPmacPvt->pmacInterface.interfaceType = asynOctetType;
-    pPmacPvt->pmacInterface.pinterface = &octet;
-    pPmacPvt->pmacInterface.drvPvt = pPmacPvt;
-    pasynUser = pasynManager->createAsynUser(0,0);
-    pPmacPvt->pasynUser = pasynUser;
-    pPmacPvt->pasynUser->userPvt = pPmacPvt;
-    status = pasynManager->connectDevice(pasynUser,portName,addr);
+    *pPmacPvt = callocMustSucceed(1,len,"calloc pPmacPvt error in pmacAsynIPPort::pmacAsynIPPortCommon().");
+    (*pPmacPvt)->portName = (char *)(*pPmacPvt+1);
+    strcpy((*pPmacPvt)->portName,portName);
+    (*pPmacPvt)->addr = addr;
+    (*pPmacPvt)->pmacInterface.interfaceType = asynOctetType;
+    (*pPmacPvt)->pmacInterface.pinterface = &octet;
+    (*pPmacPvt)->pmacInterface.drvPvt = *pPmacPvt;
+    *pasynUser = pasynManager->createAsynUser(0,0);
+    (*pPmacPvt)->pasynUser = *pasynUser;
+    (*pPmacPvt)->pasynUser->userPvt = *pPmacPvt;
+     
+    status = pasynManager->connectDevice(*pasynUser,portName,addr);
     if(status!=asynSuccess) {
-        printf("pmacAsynIPPortConfigure: %s connectDevice failed\n",portName);
-        pasynManager->freeAsynUser(pasynUser);
-        free(pPmacPvt);
-        return -1;
+      printf("pmacAsynIPPortConfigure: %s connectDevice failed\n",portName);
+      pasynManager->freeAsynUser(*pasynUser);
+      free(*pPmacPvt);
+      return -1;
     }
-    status = pasynManager->exceptionCallbackAdd(pasynUser,pmacInExceptionHandler);
+    
+    status = pasynManager->exceptionCallbackAdd(*pasynUser,pmacInExceptionHandler);
     if(status!=asynSuccess) {
-        printf("pmacAsynIPPortConfigure: %s exceptionCallbackAdd failed\n",portName);
-        pasynManager->freeAsynUser(pasynUser);
-        free(pPmacPvt);
-        return -1;
+      printf("pmacAsynIPPortConfigure: %s exceptionCallbackAdd failed\n",portName);
+      pasynManager->freeAsynUser(*pasynUser);
+      free(*pPmacPvt);
+      return -1;
     }
+
     status = pasynManager->interposeInterface(portName,addr,
-       &pPmacPvt->pmacInterface,&plowerLevelInterface);
+      &(*pPmacPvt)->pmacInterface,&(*plowerLevelInterface));
     if(status!=asynSuccess) {
         printf("pmacAsynIPPortConfigure: %s interposeInterface failed\n",portName);
-        pasynManager->exceptionCallbackRemove(pasynUser);
-        pasynManager->freeAsynUser(pasynUser);
-        free(pPmacPvt);
+        pasynManager->exceptionCallbackRemove(*pasynUser);
+        pasynManager->freeAsynUser(*pasynUser);
+        free(*pPmacPvt);
         return -1;
-    }
-    pPmacPvt->poctet = (asynOctet *)plowerLevelInterface->pinterface;
-    pPmacPvt->octetPvt = plowerLevelInterface->drvPvt;
+	}
 
-    status = pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt, pasynUser, "\6", 1);
-    if (status) {
-        asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                  "pmacAsynIPPortConfigure: unable to set input EOS on %s: %s\n", 
-                  portName, pasynUser->errorMessage);
-        return -1;
-    }
-    status = pPmacPvt->poctet->setOutputEos(pPmacPvt->octetPvt, pasynUser, "\r", 1);
-    if (status) {
-        asynPrint(pasynUser, ASYN_TRACE_ERROR,
-                  "pmacAsynIPPortConfigure: unable to set output EOS on %s: %s\n", 
-                  portName, pasynUser->errorMessage);
-        return -1;
-    }
+    (*pPmacPvt)->poctet = (asynOctet *)(*plowerLevelInterface)->pinterface;
+    (*pPmacPvt)->octetPvt = (*plowerLevelInterface)->drvPvt;
 
-
-    pPmacPvt->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
-    pPmacPvt->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"pmacAsynIPPortConfig");
+    (*pPmacPvt)->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"calloc poutCmd error in pmacAsynIPPort::pmacAsynIPPortCommon().");
+    (*pPmacPvt)->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"calloc pinCmd error in pmacAsynIPPort::pmacAsynIPPortCommon().");
     
-    pPmacPvt->inBuf = callocMustSucceed(1,INPUT_SIZE,"pmacAsynIPPortConfig");
+    (*pPmacPvt)->inBuf = callocMustSucceed(1,INPUT_SIZE,"calloc inBuf error in pmacAsynIPPort::pmacAsynIPPortCommon().");
     
-    pPmacPvt->inBufHead = 0;
-    pPmacPvt->inBufTail = 0;
-
-    asynPrint(pasynUser,ASYN_TRACE_FLOW, "Done pmacAsynIPPortConfig OK\n");
-   return(0);
+    (*pPmacPvt)->inBufHead = 0;
+    (*pPmacPvt)->inBufTail = 0;
+    
+    return status;
 }
+
 
 static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception)
 {
@@ -260,10 +335,13 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
     *nbytesTransfered = 0;
     if (maxchars>INPUT_SIZE) maxchars = INPUT_SIZE;
 
-    asynPrint(pasynUser,ASYN_TRACE_FLOW, "pmacAsynIPPort::readResponse. Performing pPmacPvt->poctet->readRaw().\n");
+    asynPrint(pasynUser,ASYN_TRACE_FLOW, "pmacAsynIPPort::readResponse. Performing pPmacPvt->poctet->read().\n");
 
-    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-         pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+    /*pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt,pasynUser,NULL,0);*/
+
+    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+      pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+
     asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);
      
     if (status == asynTimeout && thisRead == 0 && pasynUser->timeout>0) {
@@ -278,15 +356,15 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
             inCmd->wValue = 0;
             inCmd->wIndex = 0;
             inCmd->wLength = htons(0);
-            status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-               pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
+	    status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+	      pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
                
             asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,
                 "%s write GETBUFFER\n",pPmacPvt->portName);
                 
             /* We have nothing to return at the moment so read again */
-            status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-                pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
+	    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+	      pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
                
             asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse2 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);                    
         } 
@@ -324,16 +402,17 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
     cmd.wValue = 0;
     cmd.wIndex = 0;
     cmd.wLength = htons(2);
-    status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-        pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
+
+    status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+      pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
     
     if(status!=asynSuccess) { 
         asynPrintIO(pasynUser,ASYN_TRACE_ERROR,(char*)&cmd,ETHERNET_CMD_HEADER,
             "%s write pmacReadReady fail\n",pPmacPvt->portName);
     }
      
-    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-         pasynUser,data,2,&thisRead,&eomReason);
+    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+      pasynUser,data,2,&thisRead,&eomReason);
 
     if(status==asynSuccess) {
          if (thisRead==2 && data[0] != 0) {
@@ -367,8 +446,9 @@ static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
     cmd.wValue = 0;
     cmd.wIndex = 0;
     cmd.wLength = 0;
-    status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-        pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
+
+    status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+      pasynUser,(char*)&cmd,ETHERNET_CMD_HEADER,&nbytesTransfered);
     
     if(status!=asynSuccess) { 
         asynPrintIO(pasynUser,ASYN_TRACE_ERROR,(char*)&cmd,ETHERNET_CMD_HEADER,
@@ -377,8 +457,8 @@ static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
         
     /* read flush acknowledgement character */
     /* NB we don't check what the character is (manual sais ctrlX, we get 0x40 i.e.VR_DOWNLOAD) */
-    status = pPmacPvt->poctet->readRaw(pPmacPvt->octetPvt,
-         pasynUser,data,1,&thisRead,&eomReason);
+    status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
+      pasynUser,data,1,&thisRead,&eomReason);
 
     if(status==asynSuccess) {
          asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s read pmacFlush OK\n",pPmacPvt->portName);
@@ -419,8 +499,8 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
         outCmd->wValue = data[0];
         outCmd->wIndex = 0;
         outCmd->wLength = htons(0);
-        status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-            pasynUser,(char*)pPmacPvt->poutCmd,ETHERNET_CMD_HEADER,&nbytesActual);
+	status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+	  pasynUser,(char*)pPmacPvt->poutCmd,ETHERNET_CMD_HEADER,&nbytesActual);
         *nbytesTransfered = (nbytesActual==ETHERNET_CMD_HEADER) ? numchars : 0;
     } else {
         if (numchars > ETHERNET_DATA_SIZE) {
@@ -434,8 +514,8 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
         outCmd->wIndex = 0;
         outCmd->wLength = htons(numchars);
         memcpy(outCmd->bData,data,numchars);
-        status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-            pasynUser,(char*)pPmacPvt->poutCmd,numchars+ETHERNET_CMD_HEADER,&nbytesActual);
+	status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+	  pasynUser,(char*)pPmacPvt->poutCmd,numchars+ETHERNET_CMD_HEADER,&nbytesActual);
         *nbytesTransfered = (nbytesActual>ETHERNET_CMD_HEADER) ? (nbytesActual - ETHERNET_CMD_HEADER) : 0;
     }
         
@@ -446,28 +526,13 @@ static asynStatus writeIt(void *ppvt,asynUser *pasynUser,
 }
 
 
-static asynStatus writeRaw(void *ppvt,asynUser *pasynUser,
-    const char *data,size_t numchars,size_t *nbytesTransfered)
-{
-    pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynStatus status = asynSuccess;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::writeRaw\n" );
-    assert(pPmacPvt);
-
-    status = pPmacPvt->poctet->writeRaw(pPmacPvt->octetPvt,
-        pasynUser,data,numchars,nbytesTransfered);
-        
-    return status;    
-}
-
-
-/* This function reads data using readRaw into a local buffer and then look for message terminating characters and returns a complete 
-   response (or times out). Note that <ACK> is stripped from the end of the response, other responses are returned as is. 
+/* This function reads data using read() into a local buffer and then look for message terminating characters and returns a complete 
+   response (or times out), adding on ACK if neccessary.
    The PMAC command response may be any of the following:-
        data<CR>data<CR>....data<CR><ACK>
        <BELL>data<CR> e.g. an error <BELL>ERRxxx<CR>
        <STX>data<CR>
-   (NB asyn EOS only allows one message terminator to be specified so cannot be used here)    
+   (NB asyn EOS only allows one message terminator to be specified. We add on ACK for the EOS layer above.)    
 */             
 static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason)
@@ -510,7 +575,7 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
             
             /* read data with small timeout. This almost always is enough time to read a response.*/
             timeleft = timeout;
-            delay = 0.010;
+            delay = 0.050;
             do {
                 pasynUser->timeout = delay;
 		asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
@@ -526,39 +591,6 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     pasynUser->timeout = timeout; /* restore users timeout */
     
 /*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
-*/        
-    return status;
-}
-
-
-static asynStatus readRaw(void *ppvt,asynUser *pasynUser,
-    char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason)
-{
-    pmacPvt *pPmacPvt = (pmacPvt *)ppvt;
-    asynStatus status = asynSuccess;
-    size_t thisRead;
-    size_t nRead = 0;
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readRaw\n" );
-    assert(pPmacPvt);
-
-    if(eomReason) *eomReason = 0;
-    if (maxchars > 0) {
-        for (;;) {
-            if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
-                *data++ = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
-                nRead++;
-                if (nRead >= maxchars) break;
-                continue;
-            }
-            if(eomReason && *eomReason) break;
-            status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
-        
-            if(status!=asynSuccess || thisRead==0) break;
-        }
-    } else if (eomReason) *eomReason = ASYN_EOM_CNT;
-    *nbytesTransfered = nRead;
-
-/*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readRaw nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
 */        
     return status;
 }
@@ -643,7 +675,7 @@ static asynStatus getOutputEos(void *ppvt,asynUser *pasynUser,
 }
 
 
-/* register pmacAsynIPPortConfig*/
+/* register pmacAsynIPPortConfigure*/
 static const iocshArg pmacAsynIPPortConfigArg0 =
     { "portName", iocshArgString };
 static const iocshArg pmacAsynIPPortConfigArg1 =
@@ -657,12 +689,28 @@ static void pmacAsynIPPortConfigCallFunc(const iocshArgBuf *args)
     pmacAsynIPPortConfigure(args[0].sval,args[1].ival);
 }
 
+/* Register pmacAsynIPPortConfigureEos.*/
+static const iocshArg pmacAsynIPPortConfigEosArg0 =
+    { "portName", iocshArgString };
+static const iocshArg pmacAsynIPPortConfigEosArg1 =
+    { "addr", iocshArgInt };
+static const iocshArg *pmacAsynIPPortConfigEosArgs[] = 
+    {&pmacAsynIPPortConfigEosArg0,&pmacAsynIPPortConfigEosArg1};
+static const iocshFuncDef pmacAsynIPPortConfigEosFuncDef =
+    {"pmacAsynIPPortConfigureEos", 2, pmacAsynIPPortConfigEosArgs};
+static void pmacAsynIPPortConfigEosCallFunc(const iocshArgBuf *args)
+{
+    pmacAsynIPPortConfigureEos(args[0].sval,args[1].ival);
+}
+
+
 static void pmacAsynIPPortRegister(void)
 {
     static int firstTime = 1;
     if (firstTime) {
         firstTime = 0;
         iocshRegister(&pmacAsynIPPortConfigFuncDef, pmacAsynIPPortConfigCallFunc);
+	iocshRegister(&pmacAsynIPPortConfigEosFuncDef, pmacAsynIPPortConfigEosCallFunc);
     }
 }
 epicsExportRegistrar(pmacAsynIPPortRegister);
