@@ -35,8 +35,7 @@
    Initial version reliant on asyn EOS to return <ACK> terminated responses. 
 
    2 Feb 09 - Matthew Pearson - Diamond Light Source
-   Ported to work with Asyn 4-10. Still works with pre Asyn4-10 versions, although ACK returns will be
-   lost for some commands, resulting in an error message.
+   Ported to work with Asyn 4-10. Still works with pre Asyn4-10 versions.
    Also added new config function, pmacAsynIPPortConfigureEos(), to be used when disabling 
    low level EOS handling in the Asyn IP layer. This new function should be used with Asyn 4-10 and above (it is not 
    compatible with Asyn 4-9).
