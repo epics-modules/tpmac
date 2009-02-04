@@ -337,13 +337,10 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 
     asynPrint(pasynUser,ASYN_TRACE_FLOW, "pmacAsynIPPort::readResponse. Performing pPmacPvt->poctet->read().\n");
 
-    /*pPmacPvt->poctet->setInputEos(pPmacPvt->octetPvt,pasynUser,NULL,0);*/
-
     status = pPmacPvt->poctet->read(pPmacPvt->octetPvt,
       pasynUser,pPmacPvt->inBuf,maxchars,&thisRead,eomReason);
 
-    asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);
-     
+    asynPrint(pasynUser,ASYN_TRACE_FLOW, "%s readResponse1 maxchars=%d, thisRead=%d, eomReason=%d, status=%d\n",pPmacPvt->portName, maxchars, thisRead, *eomReason, status);     
     if (status == asynTimeout && thisRead == 0 && pasynUser->timeout>0) {
          /* failed to read as many characters as required into the input buffer, 
             check for more response data on the PMAC */
@@ -372,7 +369,6 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
           
     if (thisRead>0) {
         if (status == asynTimeout) status = asynSuccess;
-        /* TODO do we need eomReason = 0 here ??? */
         *nbytesTransfered = thisRead;   
         pPmacPvt->inBufTail = 0;
         pPmacPvt->inBufHead = thisRead;
@@ -541,57 +537,60 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     asynStatus status = asynSuccess;
     size_t thisRead = 0;
     size_t nRead = 0;
-    double timeout = pasynUser->timeout;
-    double timeleft;
-    float delay;
     int bell = 0;
  
     asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt\n" );
     assert(pPmacPvt);
-    
+
     if (eomReason) *eomReason = 0;
     if (maxchars > 0) {
-        for (;;) {
-            if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
-                *data = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
-                if (*data == BELL || *data == STX) bell = 1;
-                if (*data == '\r' && bell) {  
-                    /* <BELL>xxxxxx<CR> or <STX>xxxxx<CR> received - its probably an error response (<BELL>ERRxxx<CR>) - assume there is no more response data to come */
-                    nRead++; /* make sure the <CR> is passed to the client app */
-                    if (eomReason) *eomReason = ASYN_EOM_EOS;
-                    break;
-                }
-                if (*data == ACK || *data == '\n') {
-                    /* <ACK> or <LF> received - assume there is no more response data to come */
-                    if (eomReason) *eomReason = ASYN_EOM_EOS;
-                    break;
-                }
-                data++;
-                nRead++;
-                if (nRead >= maxchars) break;
-                continue;
-            }
-            if(eomReason && *eomReason) break;
-            
-            /* read data with small timeout. This almost always is enough time to read a response.*/
-            timeleft = timeout;
-            delay = 0.050;
-            do {
-                pasynUser->timeout = delay;
-		asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
-                status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
-                timeleft -= delay;
-                if (delay < 0.5) delay += 0.001; /* lengthen delay up to a maximum of 0.5 sec */
-            } while (thisRead==0 && timeleft > 0);
-            
-            if(status!=asynSuccess || thisRead==0) break;       
-        }
+      for (;;) {
+	if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
+	  *data = pPmacPvt->inBuf[pPmacPvt->inBufTail++];
+	  if (*data == BELL || *data == STX) bell = 1;
+	  if (*data == '\r' && bell) { 
+	    /* <BELL>xxxxxx<CR> or <STX>xxxxx<CR> received - its probably an error response (<BELL>ERRxxx<CR>) - assume there is no more response data to come */
+	    nRead++; /* make sure the <CR> is passed to the client app */
+	    /*Add on ACK, because that's what we expect to be EOS in EOS interpose layer.*/
+	    if ((nRead+1)>maxchars) {
+	      /*If maxchars is reached overwrite <CR> with ACK, so that no more reads will be done from EOS layer.*/
+	      *data = ACK;
+	    } else {
+	      data++;
+	      nRead++;
+	      *data = ACK;
+	    }
+	    if (eomReason) *eomReason = ASYN_EOM_EOS;
+	    break;
+	  }
+	  if (*data == ACK || *data == '\n') {
+	    /* <ACK> or <LF> received - assume there is no more response data to come */
+	    if (eomReason) *eomReason = ASYN_EOM_EOS;
+	    /* If <LF>, replace with an ACK.*/
+	    if (*data == '\n') {
+	      *data = ACK;
+	    }
+	    /*Pass ACK up to Asyn EOS handling layer.*/
+	    data++;
+	    nRead++;
+	    break;
+	  }
+	  data++;
+	  nRead++;
+	  if (nRead >= maxchars) break;
+	  continue;
+	}
+	if(eomReason && *eomReason) break;
+	
+	asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
+	status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
+	if(status!=asynSuccess || thisRead==0) break;       
+      }
     } else if (eomReason) *eomReason = ASYN_EOM_CNT;
     *nbytesTransfered = nRead;
-    pasynUser->timeout = timeout; /* restore users timeout */
     
-/*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
-*/        
+    /*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
+     */        
     return status;
 }
 
