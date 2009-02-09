@@ -35,10 +35,10 @@
    Initial version reliant on asyn EOS to return <ACK> terminated responses. 
 
    2 Feb 09 - Matthew Pearson - Diamond Light Source
-   Ported to work with Asyn 4-10. Still works with pre Asyn4-10 versions.
+   Ported to work with Asyn 4-10. Still compiles with pre Asyn4-10 versions but does not work.
    Also added new config function, pmacAsynIPPortConfigureEos(), to be used when disabling 
-   low level EOS handling in the Asyn IP layer. This new function should be used with Asyn 4-10 and above (it is not 
-   compatible with Asyn 4-9).
+   low level EOS handling in the Asyn IP layer. This new function should be used with Asyn 4-10 and above 
+   (it is not compatible with Asyn 4-9).
 */  
 
 
@@ -541,7 +541,6 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt\n" );
     assert(pPmacPvt);
 
-    if (eomReason) *eomReason = 0;
     if (maxchars > 0) {
       for (;;) {
 	if ((pPmacPvt->inBufTail != pPmacPvt->inBufHead)) {
@@ -559,12 +558,10 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
 	      nRead++;
 	      *data = ACK;
 	    }
-	    if (eomReason) *eomReason = ASYN_EOM_EOS;
 	    break;
 	  }
 	  if (*data == ACK || *data == '\n') {
 	    /* <ACK> or <LF> received - assume there is no more response data to come */
-	    if (eomReason) *eomReason = ASYN_EOM_EOS;
 	    /* If <LF>, replace with an ACK.*/
 	    if (*data == '\n') {
 	      *data = ACK;
@@ -579,13 +576,12 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
 	  if (nRead >= maxchars) break;
 	  continue;
 	}
-	if(eomReason && *eomReason) break;
 	
 	asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
 	status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
 	if(status!=asynSuccess || thisRead==0) break;       
       }
-    } else if (eomReason) *eomReason = ASYN_EOM_CNT;
+    }
     *nbytesTransfered = nRead;
     
     /*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
