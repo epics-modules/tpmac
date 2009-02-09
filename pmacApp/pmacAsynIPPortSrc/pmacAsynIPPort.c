@@ -58,6 +58,7 @@
 #include "asynOctet.h"
 #include "pmacAsynIPPort.h"
 #include "asynInterposeEos.h"
+#include "drvAsynIPPort.h"
 
 #include <netinet/in.h>
 
@@ -166,6 +167,31 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
+static int pmacAsynIPConfigure(const char *portName, const char *hostInfo);
+
+/**
+ * Function that first initialises an Asyn IP port and then the PMAC Asyn IP interpose layer.
+ * It is a wrapper for drvAsynIPPort::drvAsynIPPortConfigure() and 
+ * pmacAsynIPPort::pmacAsynIPPortConfigureEos().
+ * 
+ * @param portName The Asyn Port name string.
+ * @param hostInfo The hostname or IP address followed by IP port (eg. 172.23.243.156:1025)
+ * @return status
+ */
+epicsShareFunc int pmacAsynIPConfigure(const char *portName, const char *hostInfo)
+{
+  asynStatus status = 0;
+
+  if ((status = drvAsynIPPortConfigure(portName, hostInfo, 0, 0, 1)) != 0) {
+    printf("pmacAsynIPConfigure: error from drvAsynIPPortConfigure. Port: %s\n", portName);
+  }
+
+  if ((status = pmacAsynIPPortConfigureEos(portName, 0)) != 0) {
+    printf("pmacAsynIPConfigure: error from pmacAsynIPPortConfigureEos. Port: %s\n", portName);
+  }
+  
+  return status;
+}
 
 /**
  * This reimplements pmacAsynIPPort::pmacAsynIPPortConfigure(), but introduces
@@ -698,6 +724,20 @@ static void pmacAsynIPPortConfigEosCallFunc(const iocshArgBuf *args)
 }
 
 
+/* Register pmacAsynIPConfigure.*/
+static const iocshArg pmacAsynIPConfigureArg0 =
+    { "portName", iocshArgString };
+static const iocshArg pmacAsynIPConfigureArg1 =
+    { "hostInfo", iocshArgString };
+static const iocshArg *pmacAsynIPConfigureArgs[] = 
+    {&pmacAsynIPConfigureArg0,&pmacAsynIPConfigureArg1};
+static const iocshFuncDef pmacAsynIPConfigureFuncDef =
+    {"pmacAsynIPConfigure", 2, pmacAsynIPConfigureArgs};
+static void pmacAsynIPConfigureCallFunc(const iocshArgBuf *args)
+{
+    pmacAsynIPConfigure(args[0].sval,args[1].ival);
+}
+
 static void pmacAsynIPPortRegister(void)
 {
     static int firstTime = 1;
@@ -705,6 +745,7 @@ static void pmacAsynIPPortRegister(void)
         firstTime = 0;
         iocshRegister(&pmacAsynIPPortConfigFuncDef, pmacAsynIPPortConfigCallFunc);
 	iocshRegister(&pmacAsynIPPortConfigEosFuncDef, pmacAsynIPPortConfigEosCallFunc);
+	iocshRegister(&pmacAsynIPConfigureFuncDef, pmacAsynIPConfigureCallFunc);
     }
 }
 epicsExportRegistrar(pmacAsynIPPortRegister);
