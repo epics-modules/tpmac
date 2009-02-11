@@ -1,3 +1,40 @@
+              RELEASE NOTES for asyn version of tpmac module
+
+		            Matthew Pearson
+	                      11 Feb 09
+
+1. Changes to pmacAsynIPPort 
+
+Ported to work with Asyn 4-10. It still compiles with Asyn 4-9, but
+is no longer compatible.
+
+Made extensive changes to the pmacAsynIPPort.c file to enable better
+support for ethernet based Delta Tau PMACS. This is an asyn interpose
+layer that deals with ethernet specific PMAC headers and trailers.
+
+Also added new configuration functions for use in the IOC shell.
+
+2. How to configure an IOC to use an ethernet PMAC:
+
+pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
+pmacAsynMotorCreate("pmacLV", 0, 0, 8)
+drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
+pmacSetIdlePollPeriod(0, 500)
+pmacSetMovingPollPeriod(0, 50)
+
+similary for a 2nd ethernet PMAC in the same IOC:
+
+pmacAsynIPConfigure("pmacLV2", "172.23.243.157:1025")
+pmacAsynMotorCreate("pmacLV2", 0, 1, 8)
+drvAsynMotorConfigure("PMAC2", "pmacAsynMotor", 1, 9)
+pmacSetIdlePollPeriod(1, 500)
+pmacSetMovingPollPeriod(1, 50)
+
+The polling periods somewhat depend on the application. The default value
+for idle (non moving) axes is 500ms. The default value for moving axes is 100ms.
+
+
+
               RELEASE NOTES for asyn version of tpmac module.
 
                                Nick Rees
