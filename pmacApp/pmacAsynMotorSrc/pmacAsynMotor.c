@@ -671,8 +671,8 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
 
     if (pAxis != NULL)
     {
-        char acc_buff[32]="\0";
-        char vel_buff[32]="\0";
+      /*char acc_buff[32]="\0";
+        char vel_buff[32]="\0";*/
         char command[128];
         char response[128];
 
@@ -1164,7 +1164,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                     if ((pDrv->axis[i].params = motorParam->create( 0, MOTOR_AXIS_NUM_PARAMS )) != NULL &&
                         (pDrv->axis[i].axisMutex = epicsMutexCreate( )) != NULL )
                     {
-                        char command[32], reply[32];
+		      /*char command[32], reply[32];*/
 
                         pDrv->axis[i].pDrv = pDrv;
 
