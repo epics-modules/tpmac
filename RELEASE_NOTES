@@ -19,19 +19,13 @@ Also added new configuration functions for use in the IOC shell.
 pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
 pmacAsynMotorCreate("pmacLV", 0, 0, 8)
 drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
-pmacSetIdlePollPeriod(0, 500)
-pmacSetMovingPollPeriod(0, 50)
 
 similary for a 2nd ethernet PMAC in the same IOC:
 
 pmacAsynIPConfigure("pmacLV2", "172.23.243.157:1025")
 pmacAsynMotorCreate("pmacLV2", 0, 1, 8)
 drvAsynMotorConfigure("PMAC2", "pmacAsynMotor", 1, 9)
-pmacSetIdlePollPeriod(1, 500)
-pmacSetMovingPollPeriod(1, 50)
 
-The polling periods somewhat depend on the application. The default value
-for idle (non moving) axes is 500ms. The default value for moving axes is 100ms.
 
 
 
