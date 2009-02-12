@@ -168,6 +168,7 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
 static int pmacAsynIPConfigure(const char *portName, const char *hostInfo);
+static int pmacAsynIPPortConfigureEos(const char *portName,int addr);
 
 /**
  * Function that first initialises an Asyn IP port and then the PMAC Asyn IP interpose layer.
@@ -735,7 +736,7 @@ static const iocshFuncDef pmacAsynIPConfigureFuncDef =
     {"pmacAsynIPConfigure", 2, pmacAsynIPConfigureArgs};
 static void pmacAsynIPConfigureCallFunc(const iocshArgBuf *args)
 {
-    pmacAsynIPConfigure(args[0].sval,args[1].ival);
+    pmacAsynIPConfigure(args[0].sval,args[1].sval);
 }
 
 static void pmacAsynIPPortRegister(void)
