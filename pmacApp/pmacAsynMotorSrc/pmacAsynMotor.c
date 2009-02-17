@@ -892,7 +892,6 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     int nvals;
     double position_with_error = 0.0;
     epicsUInt32 status[2];
-    double position_with_error = 0.0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
