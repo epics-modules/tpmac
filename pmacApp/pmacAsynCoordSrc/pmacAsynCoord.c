@@ -488,6 +488,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         char vel_buff[32]="";
         char buff[20]="";
         char command[256];
+	char commandtemp[128];
         char response[256];
 	    char *response_parse = response;        
         char responsedb[256];
@@ -518,18 +519,26 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
 		    last_axis = &(pAxis->pDrv->axis[NAXES-1]);
          
 		    /* Read all the demands for this co-ordinate system in one go */
-		 	sprintf( buff, "&%d" ALL_DEMAND, first_axis->coord_system,
-		    			first_axis->axis, last_axis->axis);
+		    sprintf( command, "&%d", first_axis->coord_system);
+		    for (i = first_axis->axis; i <= last_axis->axis; i++) {
+		      sprintf( commandtemp, DEMAND, i);
+		      strcat(command, commandtemp);
+		    }
 		    motorAxisWriteRead( first_axis, buff, sizeof(response), response, 1 );
-		    /* Read all the deadbands for this co-ordinate system in one go */		    
-		 	sprintf( buff, "&%d" ALL_DEADBAND, first_axis->coord_system,
-		    			first_axis->axis, last_axis->axis);
+
+		    /* Read all the deadbands for this co-ordinate system in one go */	
+		    sprintf( command, "&%d", first_axis->coord_system);
+		    for (i = first_axis->axis; i <= last_axis->axis; i++) {
+		      sprintf( commandtemp, DEADBAND, i);
+		      strcat(command, commandtemp);
+		    }
 		    motorAxisWriteRead( first_axis, buff, sizeof(responsedb), responsedb, 1 );
+
 		    for (i = 0; i < NAXES; i++) {
 				piAxis = &(pAxis->pDrv->axis[i]);
            		dpos = strtod(response_parse, &response_parse);
            		dband = strtod(responsedb_parse, &responsedb_parse);           		
-            	if (piAxis->axis!=pAxis->axis) {
+			if (piAxis->axis!=pAxis->axis) {
 	            	motorParam->getDouble(  piAxis->params, motorAxisPosition, &pos );
             		if (abs(dpos-pos)>dband) {
 				        sprintf( buff, " "DEMAND"=%.2f", piAxis->axis, pos );  	
@@ -694,7 +703,8 @@ static int drvPmacGetCoordStatus(AXIS_HDL pAxis, asynUser *pasynUser,
 
 static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
 {
-    char command[128];
+  char command[128];
+    char commandtemp[128];
     char pos_response[128];
     char *pos_parse = pos_response;
     int cmdStatus, done;
@@ -717,12 +727,16 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
     last_axis = &pDrv->axis[NAXES-1];
     
     /* Read all the positions for this co-ordinate system in one go */
- 	sprintf( command, "&%d" ALL_READBACK, first_axis->coord_system,
-    			first_axis->axis, last_axis->axis);
+    sprintf( command, "&%d", first_axis->coord_system);
+    for (i = first_axis->axis; i <= last_axis->axis; i++) {
+      sprintf( commandtemp, READBACK, i);
+      strcat(command, commandtemp);
+    }
+
     cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
 
-	/* Get the co-ordinate system status */
-	drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
+    /* Get the co-ordinate system status */
+    drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
 
     for (i = 0; i < NAXES; i++) {
     	pAxis = &pDrv->axis[i];
