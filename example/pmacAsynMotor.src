@@ -27,9 +27,9 @@ pmacVmeDebug = 0
 drvPmacDebug = 0
 
 #### VME pmac - start ####
-#$(VXWORKS_ONLY)pmacVmeConfig (0, 0x7FA000, 0x700000, 0xc1, 2)
-#$(VXWORKS_ONLY)pmacDrv()
-#$(VXWORKS_ONLY)drvAsynSerialPortConfigure( "TEST", "/dev/pmac/0/asc", 0, 0, 0 )
+$(VXWORKS_ONLY)pmacVmeConfig (0, 0x7FA000, 0x700000, 0xc1, 2)
+$(VXWORKS_ONLY)pmacDrv()
+$(VXWORKS_ONLY)drvAsynSerialPortConfigure( "TEST", "/dev/pmac/0/asc", 0, 0, 0 )
 #### VME pmac - end ####
 
 #### ???? - start ####
@@ -41,14 +41,14 @@ drvPmacDebug = 0
 #### ???? - end ####
 
 #### IP pmac - start ####
-drvAsynIPPortConfigure("TEST","172.23.243.143:1025",0,0,0)
+pmacAsynIPConfigure("TEST", "172.23.243.143:1025")
+
 #asynSetTraceMask -> 0=none,1=err,2=IO_device,4=IO_filter,8=IO_driver,0x10=flow
 #asynSetTraceMask("TEST",-1,0x1F)
-asynSetTraceMask("TEST",-1,0x13)
+#asynSetTraceMask("TEST",-1,0x13)
 #asynSetTraceMask("TEST",-1,0x3)
 # asynSetTraceIOMask -> 0=none,1=ascii,2=esc,4=hex
-asynSetTraceIOMask("TEST",-1,0x2)
-pmacAsynIPPortConfigure("TEST",0)
+#asynSetTraceIOMask("TEST",-1,0x2)
 #### IP pmac - end ####
 
 pmacAsynMotorCreate("TEST", 0, 0, 6 );

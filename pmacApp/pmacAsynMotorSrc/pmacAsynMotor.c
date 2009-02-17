@@ -172,6 +172,7 @@ typedef struct motorAxisHandle
     double deferred_position;
     int deferred_move;
     int deferred_relative;
+    int scale;
     double previous_position;
     double previous_direction;
 } motorAxis;
@@ -480,7 +481,7 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                 printf( "Set PMAC card %d, axis %d to position %f, offset %f, old position %f\n",
                         pAxis->pDrv->card, pAxis->axis, value, pAxis->enc_offset, position );
 #else
-                int position = (int) floor(value*32 + 0.5);
+                int position = (int) floor(value*32/pAxis->scale + 0.5);
 
                 sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
                          pAxis->axis,
@@ -491,12 +492,12 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                               "Set card %d, axis %d to position %f\n",
                               pAxis->pDrv->card, pAxis->axis, value );
 
-	            if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+                if ( command[0] != 0 && status == MOTOR_AXIS_OK)
     	        {
     	            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
     	        }
     	        
-		        epicsThreadSleep( 0.1 );
+                epicsThreadSleep( 0.1 );
     	        
     	        sprintf( command, "#%dJ/", pAxis->axis);
 
@@ -512,7 +513,7 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             }
             case motorAxisLowLimit:
             {
-                sprintf( command, "I%d14=%f", pAxis->axis, value );
+                sprintf( command, "I%d14=%f", pAxis->axis, value/pAxis->scale );
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Setting PMAC card %d, axis %d low limit (%f)\n",
                               pAxis->pDrv->card, pAxis->axis, value );
@@ -520,7 +521,7 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             }
             case motorAxisHighLimit:
             {
-                sprintf( command, "I%d13=%f", pAxis->axis, value );
+                sprintf( command, "I%d13=%f", pAxis->axis, value/pAxis->scale );
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Setting PMAC card %d, axis %d high limit (%f)\n",
                               pAxis->pDrv->card, pAxis->axis, value );
@@ -612,7 +613,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
         char command[128];
         char response[32];
 
-        if (max_velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (max_velocity / 1000.0));
+        if (max_velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (max_velocity / (pAxis->scale * 1000.0) ));
         if (acceleration != 0)
         {
             if (max_velocity != 0)
@@ -625,14 +626,14 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
 	#ifdef SIMULATE_SET_POSITION
 	        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
 	                 (relative?"J^":"J="),
-	                 (relative?position:position - pAxis->enc_offset) );
+	                 (relative?position:position - pAxis->enc_offset)/pAxis->scale );
 	#else
 	        sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, pAxis->axis,
-	                 (relative?"J^":"J="), position );
+	                 (relative?"J^":"J="), position/pAxis->scale );
 	#endif
         } else { /* deferred moves */
         	sprintf( command, "%s%s", vel_buff, acc_buff);
-        	pAxis->deferred_position = position;
+        	pAxis->deferred_position = position/pAxis->scale;
         	pAxis->deferred_move = 1;
         	pAxis->deferred_relative = relative;
         }
@@ -671,14 +672,12 @@ static int motorAxisHome( AXIS_HDL pAxis, double min_velocity, double max_veloci
 
     if (pAxis != NULL)
     {
-      /*char acc_buff[32]="\0";
-        char vel_buff[32]="\0";*/
         char command[128];
         char response[128];
 
 	/* Commented out for now, because setting ixx23 can cause homing to fail, depending on the
 	   value of the forwards parameter. MP 7/11/08.*/
-        /*if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / 1000.0));
+        /*if (max_velocity != 0) sprintf(vel_buff, "I%d23=%f ", pAxis->axis, (forwards?1:-1)*(fabs(max_velocity) / (pAxis->scale*1000.0) ));
         if (acceleration != 0)
         {
             if (max_velocity != 0)
@@ -787,7 +786,7 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
         char command[128];
         char response[32];
 
-        if (velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (fabs(velocity) / 1000.0));
+        if (velocity != 0) sprintf(vel_buff, "I%d22=%f ", pAxis->axis, (fabs(velocity) / (pAxis->scale * 1000.0) ));
         if (acceleration != 0)
         {
             if (velocity != 0)
@@ -891,6 +890,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     int cmdStatus, done;
     double position, error;
     int nvals;
+    double position_with_error = 0.0;
     epicsUInt32 status[2];
     double position_with_error = 0.0;
 
@@ -916,6 +916,9 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
         {
             int homeSignal = ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0);
             int direction;
+
+            position *= pAxis->scale;
+            error *= pAxis->scale;
 
 	    position_with_error = position + error;
 
@@ -1032,8 +1035,8 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
         }
         else
         {
-            motorParam->setDouble(  pAxis->params, motorAxisLowLimit,  low_limit );
-            motorParam->setDouble(  pAxis->params, motorAxisHighLimit, high_limit );
+            motorParam->setDouble(  pAxis->params, motorAxisLowLimit,  low_limit*pAxis->scale );
+            motorParam->setDouble(  pAxis->params, motorAxisHighLimit, high_limit*pAxis->scale );
             motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
             motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
             motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
@@ -1164,13 +1167,13 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                     if ((pDrv->axis[i].params = motorParam->create( 0, MOTOR_AXIS_NUM_PARAMS )) != NULL &&
                         (pDrv->axis[i].axisMutex = epicsMutexCreate( )) != NULL )
                     {
-		      /*char command[32], reply[32];*/
 
                         pDrv->axis[i].pDrv = pDrv;
 
                         pDrv->axis[i].axis = i+1;
                         pDrv->axis[i].logParam  = pDrv->pasynUser;
                         pDrv->axis[i].pasynUser = pDrv->pasynUser;
+                        pDrv->axis[i].scale = 1;
 
 /*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
                         motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
@@ -1330,3 +1333,21 @@ int pmacSetIdlePollPeriod(int card, int idlePollPeriod)
   return status;
 }
 
+int pmacSetAxisScale( int card, int axis, int scale )
+{
+    AXIS_HDL pAxis = motorAxisOpen( card, axis, NULL );
+    int status = MOTOR_AXIS_ERROR;
+
+    if (pAxis && scale != 0)
+    {
+        double value;
+        motorParam->getDouble(  pAxis->params, motorAxisLowLimit,  &value );
+        motorParam->setDouble(  pAxis->params, motorAxisLowLimit,  scale*value/pAxis->scale );
+        motorParam->getDouble(  pAxis->params, motorAxisHighLimit, &value );
+        motorParam->setDouble(  pAxis->params, motorAxisHighLimit, scale*value/pAxis->scale );
+        pAxis->scale = scale;
+        status = MOTOR_AXIS_OK;
+    }
+
+    return status;
+}

@@ -8,6 +8,7 @@ extern "C" {
 int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes );
 int pmacSetMovingPollPeriod(int card, int movingPollPeriod);
 int pmacSetIdlePollPeriod(int card, int idlePollPeriod);
+int pmacSetAxisScale( int card, int axis, int scale );
 
 #ifdef __cplusplus
 }

@@ -4,6 +4,17 @@
 
 extern "C" {
 
+/* int pmacSetAxisScale(int card, int axis, int scale ) */
+static const iocshArg pmacSetAxisScaleArg0 = {"Card number", iocshArgInt};
+static const iocshArg pmacSetAxisScaleArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmacSetAxisScaleArg2 = {"Scale factor", iocshArgInt};
+static const iocshArg * const pmacSetAxisScaleArgs[] = {&pmacSetAxisScaleArg0, &pmacSetAxisScaleArg1, &pmacSetAxisScaleArg2};
+static const iocshFuncDef pmacSetAxisScaleDef = {"pmacSetAxisScale", 3, pmacSetAxisScaleArgs};
+static void pmacSetAxisScaleCallFunc(const iocshArgBuf *args)
+{
+    pmacSetAxisScale(args[0].ival, args[1].ival, args[2].ival);
+}
+
 /* int pmacSetMovingPollPeriod(int card, int movingPollPeriod) */
 static const iocshArg pmacSetMovingPollPeriodArg0 = {"Card number", iocshArgInt};
 static const iocshArg pmacSetMovingPollPeriodArg1 = {"Moving poll period", iocshArgInt};
@@ -51,6 +62,7 @@ void pmacAsynMotorRegister(void)
 {
   iocshRegister(&pmacSetMovingPollPeriodDef, pmacSetMovingPollPeriodCallFunc);
   iocshRegister(&pmacSetIdlePollPeriodDef, pmacSetIdlePollPeriodCallFunc);
+  iocshRegister(&pmacSetAxisScaleDef, pmacSetAxisScaleCallFunc);
   iocshRegister(&pmacAsynMotorCreateDef, pmacAsynMotorCreateCallFunc);
 }
 epicsExportRegistrar(pmacAsynMotorRegister);
