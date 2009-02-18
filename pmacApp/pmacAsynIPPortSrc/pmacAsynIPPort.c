@@ -167,7 +167,6 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
-static int pmacAsynIPConfigure(const char *portName, const char *hostInfo);
 static int pmacAsynIPPortConfigureEos(const char *portName,int addr);
 
 /**
