@@ -486,7 +486,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
     if (pAxis != NULL) {
         char acc_buff[32]="";
         char vel_buff[32]="";
-        char buff[20]="";
+        char buff[128];
         char command[256];
 	char commandtemp[128];
         char response[256];
@@ -519,19 +519,20 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
 		    last_axis = &(pAxis->pDrv->axis[NAXES-1]);
          
 		    /* Read all the demands for this co-ordinate system in one go */
-		    sprintf( command, "&%d", first_axis->coord_system);
+		    sprintf( buff, "&%d", first_axis->coord_system);
 		    for (i = first_axis->axis; i <= last_axis->axis; i++) {
 		      sprintf( commandtemp, DEMAND, i);
-		      strcat(command, commandtemp);
+		      strcat(buff, commandtemp);
 		    }
 		    motorAxisWriteRead( first_axis, buff, sizeof(response), response, 1 );
 
 		    /* Read all the deadbands for this co-ordinate system in one go */	
-		    sprintf( command, "&%d", first_axis->coord_system);
+		    sprintf( buff, "&%d", first_axis->coord_system);
 		    for (i = first_axis->axis; i <= last_axis->axis; i++) {
 		      sprintf( commandtemp, DEADBAND, i);
-		      strcat(command, commandtemp);
+		      strcat(buff, commandtemp);
 		    }
+		   
 		    motorAxisWriteRead( first_axis, buff, sizeof(responsedb), responsedb, 1 );
 
 		    for (i = 0; i < NAXES; i++) {
