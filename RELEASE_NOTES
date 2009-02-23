@@ -26,6 +26,20 @@ pmacAsynIPConfigure("pmacLV2", "172.23.243.157:1025")
 pmacAsynMotorCreate("pmacLV2", 0, 1, 8)
 drvAsynMotorConfigure("PMAC2", "pmacAsynMotor", 1, 9)
 
+3. To change to PMAC driver polling rates in the IOC shell:
+
+To change the polling period when the motor is not moving:
+pmacSetIdlePollPeriod(0, 500)
+
+To change the polling period when the motor is moving.
+pmacSetMovingPollPeriod(0, 50)
+
+The first parameter is the 'card'. The second parameter is the 
+polling period in milliseconds.
+
+NOTE: The default idle polling period is 500ms. The default moving
+polling period is 100ms.
+
 
 
 
