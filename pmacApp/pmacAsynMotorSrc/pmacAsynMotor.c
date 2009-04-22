@@ -175,6 +175,7 @@ typedef struct motorAxisHandle
     int scale;
     double previous_position;
     double previous_direction;
+    int amp_enabled;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -845,7 +846,14 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
         /* We now don't touch I19 and leave it as a safety limit */
         /* if (acceleration != 0) sprintf(acc_buff, "I%d19=%f ", pAxis->axis, (fabs(acceleration) / 1000000.0)); */
 
-        sprintf( command, "%s#%d J/",  acc_buff, pAxis->axis );
+	/*Only send a J/ if the amplifier output is enabled. When we send a stop, 
+	  we don't want to power on axes that have been powered off for a reason.*/
+	if (pAxis->amp_enabled == 1) {
+	  sprintf( command, "%s#%d J/ M%d40=1",  acc_buff, pAxis->axis, pAxis->axis );
+	} else {
+	  /*Just set the inposition bit in this case.*/
+	  sprintf( command, "M%d40=1",  pAxis->axis );
+	}
         pAxis->deferred_move = 0;
 
         status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
@@ -980,6 +988,12 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             pAxis->limitsDisabled = (cmdStatus != 0);
         }
 #endif
+	/*Set amplifier enabled bit.*/
+	if ((status[0] & PMAC_STATUS1_AMP_ENABLED) != 0) {
+	  pAxis->amp_enabled = 1;
+	} else {
+	  pAxis->amp_enabled = 0;
+	}
 
         epicsMutexUnlock( pAxis->axisMutex );
     }
