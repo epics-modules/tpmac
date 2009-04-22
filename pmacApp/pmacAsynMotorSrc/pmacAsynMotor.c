@@ -176,6 +176,7 @@ typedef struct motorAxisHandle
     double previous_position;
     double previous_direction;
     int amp_enabled;
+    int fatal_following;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -848,7 +849,7 @@ static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
 
 	/*Only send a J/ if the amplifier output is enabled. When we send a stop, 
 	  we don't want to power on axes that have been powered off for a reason.*/
-	if (pAxis->amp_enabled == 1) {
+	if ((pAxis->amp_enabled == 1) || (pAxis->fatal_following == 1)) {
 	  sprintf( command, "%s#%d J/ M%d40=1",  acc_buff, pAxis->axis, pAxis->axis );
 	} else {
 	  /*Just set the inposition bit in this case.*/
@@ -976,6 +977,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             motorParam->setInteger( pAxis->params, motorAxisMoving,        ((status[0] & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) && ((status[0] & PMAC_STATUS1_MOTOR_ON) != 0) );
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
 	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
+	    pAxis->fatal_following = ((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0);
             motorParam->callCallback( pAxis->params );           
         }
 
