@@ -120,6 +120,7 @@ typedef struct drvPmac
     double movingPollPeriod;
     double idlePollPeriod;
     epicsEventId pollEventId;
+    epicsMutexId controllerMutexId;    
 } drvPmac_t;
 
 /* Default polling periods (in milliseconds). */ 
@@ -790,46 +791,45 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
 
 
 
-
-
 static void drvPmacTask( PMACDRV_ID pDrv )
 {
-  int cachedDone = 1;
+  int i = 0;
   int done = 0;
-  int i;
-  AXIS_HDL pAxis;
   int eventStatus = 0;
-  int forcedFastPolls = 0;
-  float timeout = 0;
+  float timeout = 0.0;
+  epicsUInt32 status[3];
 
-  while ( 1 ) {
-    epicsUInt32 status[3];
-    done = 1; 
-    cachedDone = 1;
-
-    /* Wait for an event, or a timeout. If we get an event, do a series of fast polls.*/
-    eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);
-    if (eventStatus == epicsEventWaitOK) {
-      forcedFastPolls = 2;
-    }
-
-    for (i = 0; i < NAXES; i++) {
-      pAxis = &pDrv->axis[i];
-      motorParam->getInteger( pAxis->params, motorAxisDone, &done );
-      cachedDone &= done;
-    }
-    drvPmacGetAxesStatus( pDrv, status);    
-    
-    if (forcedFastPolls > 0) {
-      timeout = pDrv->movingPollPeriod;
-      forcedFastPolls--;
-    } else if (!cachedDone) {
-      timeout = pDrv->movingPollPeriod;
-    } else {
+  while ( 1 ) 
+  {
+	/* if it's time for an idle poll or the motor is moving */
+	drvPmacGetAxesStatus( pDrv, status);    
+    /* Wait for an event, or a timeout. If we get an event, force an update.*/
+    if (epicsMutexLock(pDrv->controllerMutexId) == epicsMutexLockOK) {
       timeout = pDrv->idlePollPeriod;
     }
+    else {
+      drvPrint(drvPrintParam, TRACE_ERROR, "drvPmacTask: Failed to get controllerMutexId lock.\n");
+    }
+    /* Get axis status */
+    for ( i = 0; i < NAXES; i++ )
+    {
+      AXIS_HDL pAxis = &(pDrv->axis[i]);
+      /* get the cached done status */
+      epicsMutexLock( pAxis->axisMutex );
+      motorParam->getInteger( pAxis->params, motorAxisDone, &done );
+      epicsMutexUnlock( pAxis->axisMutex );
+      if ((eventStatus == epicsEventWaitOK) || (done == 0))
+      {
+      	/* If we got an event, then one motor is moving, so force an update for all */      
+        timeout = pDrv->movingPollPeriod;      	
+        break;
+      }
+    }
+    epicsMutexUnlock(pDrv->controllerMutexId);
+    eventStatus = epicsEventWaitWithTimeout(pDrv->pollEventId, timeout);    
   }
 }
+
 
 /**
  * Test if a connected pasynUser matches a given port and address
@@ -894,6 +894,10 @@ int pmacAsynCoordCreate( char *port, int addr, int cs, int ref, int program )
 		pDrv->idlePollPeriod = (double)defaultIdlePollPeriod / 1000.0;
 		/* Create event to signal poller task with.*/
 		pDrv->pollEventId = epicsEventMustCreate(epicsEventEmpty);
+		/* Create mutex ID for controller.*/
+		if ((pDrv->controllerMutexId = epicsMutexCreate()) == NULL) {
+		  drvPrint( drvPrintParam, TRACE_ERROR, "pmacAsynMotorCreate: Could not create controllerMutexId.\n");
+		}
 
                 status = motorAxisAsynConnect( port, addr, &(pDrv->pasynUser), "\006", "\r" );
 
@@ -982,7 +986,6 @@ static int drvPmacLogMsg( void * param, const motorAxisLogMask_t mask, const cha
 }
 
 
-
 /**
  * Function to set the movingPollPeriod time to use when polling 
  * the controller during a move.
@@ -999,11 +1002,15 @@ int pmacSetCoordMovingPollPeriod(int ref, int movingPollPeriod)
     for (pDrv = pFirstDrv; pDrv != NULL; pDrv = pDrv->pNext) {
       drvPrint(drvPrintParam, TRACE_FLOW, "** Setting moving poll period of %dms on ref %d\n", movingPollPeriod, pDrv->ref);
       if (ref == pDrv->ref) {
-	pDrv->movingPollPeriod = (double)movingPollPeriod / 1000.0;
-	status = 0;
+        if (epicsMutexLock( pDrv->controllerMutexId ) == epicsMutexLockOK) {
+	      pDrv->movingPollPeriod = (double)movingPollPeriod / 1000.0;
+	      epicsMutexUnlock( pDrv->controllerMutexId );
+	      status = 0;
+	    } else {
+	      drvPrint(drvPrintParam, TRACE_ERROR, "pmacSetCoordMovingPollPeriod: could not access pDrv to set polling period.\n" );
+        } 
       }
     }
-    drvPrint(drvPrintParam, TRACE_FLOW, "** Moving poll period set to %fs\n.", pDrv->movingPollPeriod);
   }
 
   return status;
@@ -1013,7 +1020,7 @@ int pmacSetCoordMovingPollPeriod(int ref, int movingPollPeriod)
 /**
  * Function to set the idlePollPeriod time to use when polling 
  * the controller when there is no motion.
- * @param ref Numerical ID of the cs.
+ * @param ref Numerical ID of the coordinate system.
  * @param idlePollPeriod The period in miliseconds.
  * @return status
  */
@@ -1026,11 +1033,15 @@ int pmacSetCoordIdlePollPeriod(int ref, int idlePollPeriod)
     for (pDrv = pFirstDrv; pDrv!=NULL; pDrv = pDrv->pNext) {
       drvPrint(drvPrintParam, TRACE_FLOW, "** Setting idle poll period of %dms on ref %d\n", idlePollPeriod, pDrv->ref);
       if (ref == pDrv->ref) {
-	pDrv->idlePollPeriod = (double)idlePollPeriod / 1000.0;
-	status = 0;
+    	if (epicsMutexLock( pDrv->controllerMutexId ) == epicsMutexLockOK) {
+    	pDrv->idlePollPeriod = (double)idlePollPeriod / 1000.0;
+    	epicsMutexUnlock( pDrv->controllerMutexId );
+    	status = 0;
+    	} else {
+    	    drvPrint(drvPrintParam, TRACE_ERROR, "pmacSetMovingPollPeriod: could not access pDrv to set polling period.\n" );
+    	}
       }
     }
-    drvPrint(drvPrintParam, TRACE_FLOW, "** Idle poll period set to %fs\n.", pDrv->idlePollPeriod);
   }
 
   return status;
