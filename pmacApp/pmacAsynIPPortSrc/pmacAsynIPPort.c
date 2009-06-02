@@ -377,7 +377,7 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
             inCmd->Request = VR_PMAC_GETBUFFER;
             inCmd->wValue = 0;
             inCmd->wIndex = 0;
-            inCmd->wLength = htons(0);
+            inCmd->wLength = htons(maxchars);
 	    status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
 	      pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
                
