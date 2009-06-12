@@ -4,6 +4,18 @@
 
 extern "C" {
 
+static const iocshArg sendBufferArg0 = {"Port name", iocshArgString};
+static const iocshArg sendBufferArg1 = {"Address", iocshArgInt};
+static const iocshArg sendBufferArg2 = {"Command", iocshArgString};
+static const iocshArg * const sendBufferArgs[] =  {&sendBufferArg0,
+                                                              &sendBufferArg1,
+                                                              &sendBufferArg2};
+static const iocshFuncDef sendBufferDef = {"sendBuffer", 3, sendBufferArgs};
+static void sendBufferCallFunc(const iocshArgBuf *args)
+{
+    sendBuffer(args[0].sval, args[1].ival, args[2].sval);
+}
+
 /* int pmacSetAxisScale(int card, int axis, int scale ) */
 static const iocshArg pmacSetAxisScaleArg0 = {"Card number", iocshArgInt};
 static const iocshArg pmacSetAxisScaleArg1 = {"Axis number", iocshArgInt};
@@ -64,6 +76,7 @@ void pmacAsynMotorRegister(void)
   iocshRegister(&pmacSetIdlePollPeriodDef, pmacSetIdlePollPeriodCallFunc);
   iocshRegister(&pmacSetAxisScaleDef, pmacSetAxisScaleCallFunc);
   iocshRegister(&pmacAsynMotorCreateDef, pmacAsynMotorCreateCallFunc);
+  iocshRegister(&sendBufferDef, sendBufferCallFunc);
 }
 epicsExportRegistrar(pmacAsynMotorRegister);
 

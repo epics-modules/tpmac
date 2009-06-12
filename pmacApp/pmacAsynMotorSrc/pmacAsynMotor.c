@@ -21,6 +21,8 @@
 #include "asynDriver.h"
 #include "asynOctetSyncIO.h"
 
+#define PMAC_BUFFER_SIZE 2097152
+
 motorAxisDrvSET_t pmacAsynMotor =
   {
     15,
@@ -1121,6 +1123,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 	skips[i] = 1.0;
       }
       skips[i] -= factor;
+
     }
   }
 }
@@ -1365,4 +1368,38 @@ int pmacSetAxisScale( int card, int axis, int scale )
     }
 
     return status;
+}
+
+int sendBuffer(const char *portName, int addr, const char *command)
+{
+
+  char response[PMAC_BUFFER_SIZE] = {0};
+  int nwrite = 0;
+  int nread = 0;
+  int eomReason = 0;
+  int reply_buff_size = PMAC_BUFFER_SIZE;
+  int status = 0;
+  int timeout = 10;
+
+  asynPrint(pFirstDrv->pasynUser, ASYN_TRACE_FLOW, "pmacAsynMotor::sendBuffer. START.\n" );
+
+  if (pFirstDrv != NULL) {
+
+    status = pasynOctetSyncIO->setInputEos(pFirstDrv->pasynUser, "\6", 1 );
+
+    status = pasynOctetSyncIO->setOutputEos(pFirstDrv->pasynUser, "", 0);
+
+    status = pasynOctetSyncIO->writeRead( pFirstDrv->pasynUser,
+                                          command, strlen(command),
+                                          response, reply_buff_size,
+                                          timeout,
+                                          &nwrite, &nread, &eomReason );
+
+  }
+
+  asynPrint(pFirstDrv->pasynUser, ASYN_TRACE_FLOW, "pmacAsynMotor::sendBuffer. END.\n" );
+
+  asynPrintIO(pFirstDrv->pasynUser, ASYN_TRACEIO_DRIVER, response, PMAC_BUFFER_SIZE,"\n");
+
+  return(asynSuccess);
 }
