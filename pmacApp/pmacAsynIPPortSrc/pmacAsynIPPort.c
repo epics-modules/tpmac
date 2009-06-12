@@ -63,6 +63,7 @@
 #include <netinet/in.h>
 
 #define ETHERNET_DATA_SIZE 1492
+#define MAX_BUFFER_SIZE 2097152
 #define INPUT_SIZE        (ETHERNET_DATA_SIZE+1)  /* +1 to allow space to add terminating ACK */
 #define STX   '\2'
 #define CTRLB '\2'
@@ -168,6 +169,7 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
 static int pmacAsynIPPortConfigureEos(const char *portName,int addr);
+static asynStatus sendPmacGetBuffer(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars,size_t *nbytesTransfered);
 
 /**
  * Function that first initialises an Asyn IP port and then the PMAC Asyn IP interpose layer.
@@ -328,7 +330,7 @@ static int pmacAsynIPPortCommon(const char *portName,
     (*pPmacPvt)->poutCmd = callocMustSucceed(1,sizeof(ethernetCmd),"calloc poutCmd error in pmacAsynIPPort::pmacAsynIPPortCommon().");
     (*pPmacPvt)->pinCmd = callocMustSucceed(1,sizeof(ethernetCmd),"calloc pinCmd error in pmacAsynIPPort::pmacAsynIPPortCommon().");
     
-    (*pPmacPvt)->inBuf = callocMustSucceed(1,INPUT_SIZE,"calloc inBuf error in pmacAsynIPPort::pmacAsynIPPortCommon().");
+    (*pPmacPvt)->inBuf = callocMustSucceed(1,MAX_BUFFER_SIZE,"calloc inBuf error in pmacAsynIPPort::pmacAsynIPPortCommon().");
     
     (*pPmacPvt)->inBufHead = 0;
     (*pPmacPvt)->inBufTail = 0;
@@ -370,17 +372,8 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
          /* failed to read as many characters as required into the input buffer, 
             check for more response data on the PMAC */
          if ( pmacReadReady(pPmacPvt,pasynUser )) { 
-            /* response data is available on the PMAC */
-            /* issue a getbuffer command */
-            inCmd = pPmacPvt->pinCmd;
-            inCmd->RequestType = VR_UPLOAD;
-            inCmd->Request = VR_PMAC_GETBUFFER;
-            inCmd->wValue = 0;
-            inCmd->wIndex = 0;
-            inCmd->wLength = htons(maxchars);
-	    status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
-	      pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
-               
+
+	    status = sendPmacGetBuffer(pPmacPvt, pasynUser, maxchars, nbytesTransfered);
             asynPrintIO(pasynUser,ASYN_TRACE_FLOW,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,
                 "%s write GETBUFFER\n",pPmacPvt->portName);
                 
@@ -398,6 +391,8 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
         pPmacPvt->inBufTail = 0;
         pPmacPvt->inBufHead = thisRead;
     }
+
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readResponse. END\n" );
 
     return status; 
 }
@@ -563,8 +558,10 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     size_t thisRead = 0;
     size_t nRead = 0;
     int bell = 0;
+    int initialRead = 1;
+    ethernetCmd* inCmd;
  
-    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt\n" );
+    asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. START\n" );
     assert(pPmacPvt);
 
     if (maxchars > 0) {
@@ -592,6 +589,7 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
 	    if (*data == '\n') {
 	      *data = ACK;
 	    }
+	    asynPrint( pasynUser, ASYN_TRACE_FLOW, "Message was terminated with ACK in pmacAsynIPPort::readIt.\n" );
 	    /*Pass ACK up to Asyn EOS handling layer.*/
 	    data++;
 	    nRead++;
@@ -604,15 +602,41 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
 	}
 	
 	asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. Calling readResponse().\n" );
+	if (!initialRead) {
+	  if (pmacReadReady(pPmacPvt, pasynUser)) { 
+	    status = sendPmacGetBuffer(pPmacPvt, pasynUser, maxchars, nbytesTransfered);
+	  }
+	}
 	status = readResponse(pPmacPvt, pasynUser, maxchars-nRead, &thisRead, eomReason);
+	initialRead = 0;
 	if(status!=asynSuccess || thisRead==0) break;       
       }
     }
     *nbytesTransfered = nRead;
     
-    /*    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
-     */        
+    asynPrintIO(pasynUser,ASYN_TRACE_FLOW, data, *nbytesTransfered, "%s pmacAsynIPPort readIt nbytesTransfered=%d, eomReason=%d, status=%d\n",pPmacPvt->portName,*nbytesTransfered, *eomReason, status);
+             
+	asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. END\n" );
+
     return status;
+}
+
+static asynStatus sendPmacGetBuffer(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars,size_t *nbytesTransfered)
+{
+  asynStatus status = 0;
+  ethernetCmd* inCmd = NULL;
+
+  inCmd = pPmacPvt->pinCmd;
+  inCmd->RequestType = VR_UPLOAD;
+  inCmd->Request = VR_PMAC_GETBUFFER;
+  inCmd->wValue = 0;
+  inCmd->wIndex = 0;
+  inCmd->wLength = htons(maxchars);
+  status = pPmacPvt->poctet->write(pPmacPvt->octetPvt,
+				   pasynUser,(char*)pPmacPvt->pinCmd,ETHERNET_CMD_HEADER,nbytesTransfered);
+  
+  return status;
+
 }
 
 
