@@ -768,6 +768,10 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
         }
         motorParam->setInteger( pAxis->params, motorAxisDone,          done);            
         motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[2] & CS_STATUS3_LIMIT)!=0) );
+	/*Deal with error bits*/
+	motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & CS_STATUS2_FOLLOW_ERR)!=0) );
+	motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[1] & CS_STATUS2_AMP_FAULT) != 0) );
+	motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[1] & CS_STATUS2_RUNTIME_ERR) != 0) );
         motorParam->callCallback( pAxis->params );           
     }
 	
