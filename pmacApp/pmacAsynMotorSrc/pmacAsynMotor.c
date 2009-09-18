@@ -1383,8 +1383,8 @@ int sendBuffer(const char *portName, int addr, const char *command)
 {
 
   char response[PMAC_BUFFER_SIZE] = {0};
-  int nwrite = 0;
-  int nread = 0;
+  size_t nwrite = 0;
+  size_t nread = 0;
   int eomReason = 0;
   int reply_buff_size = PMAC_BUFFER_SIZE;
   int status = 0;
