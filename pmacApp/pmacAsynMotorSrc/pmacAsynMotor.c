@@ -116,6 +116,9 @@ epicsExportAddress(drvet, pmacAsynMotor);
 
 static const int PMAC_HARDWARE_PROB = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG | PMAC_GSTATUS_SERVO_ERROR);
 
+static const int PMAX_AXIS_GENERAL_PROB1 = 0;
+static const int PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP);
+
 typedef struct drvPmac * PMACDRV_ID;
 typedef struct drvPmac
 {
@@ -981,6 +984,11 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             motorParam->setInteger( pAxis->params, motorAxisLowHardLimit,  ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
 	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
 	    pAxis->fatal_following = ((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0);
+
+	    /*Set any axis specific general problem bits.*/
+	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[0] & PMAX_AXIS_GENERAL_PROB1) != 0) );
+	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[1] & PMAX_AXIS_GENERAL_PROB2) != 0) );
+
             motorParam->callCallback( pAxis->params );           
         }
 
