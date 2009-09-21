@@ -912,7 +912,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     {
       /*Set any global status bits.*/
       
-      /*Combine several comms type errors for the motor record comm error bit.*/
+      /*Combine several general errors for the motor record problem error bit.*/
       motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
         /* Read all the status for this axis in one go */
@@ -988,8 +988,6 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	    /*Set any axis specific general problem bits.*/
 	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[0] & PMAX_AXIS_GENERAL_PROB1) != 0) );
 	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[1] & PMAX_AXIS_GENERAL_PROB2) != 0) );
-
-            motorParam->callCallback( pAxis->params );           
         }
 
 #ifdef REMOVE_LIMITS_ON_HOME
@@ -1007,6 +1005,8 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	} else {
 	  pAxis->amp_enabled = 0;
 	}
+
+	motorParam->callCallback( pAxis->params );           
 
         epicsMutexUnlock( pAxis->axisMutex );
     }
