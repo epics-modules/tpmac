@@ -1,3 +1,4 @@
-include "motorSupport.dbd"
+# Commenting out as this lives in the motor module
+# include "motorSupport.dbd"
 driver(pmacAsynCoord)
 registrar(pmacAsynCoordRegister)
