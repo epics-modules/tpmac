@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86">
+	<tpmac.MotionPrg assy="assy" prg0="prg0" prg1="prg1" prg2="prg2"/>
+	<tpmac.MO_TsubRbk assy="assy" val="val" tsub="tsub" x1="x1" x2="x2" d1="d1" d2="d2" m1="m1" m2="m2" nla="nla" egu_d1="egu_d1" desc_d1="desc_d1" egu_d2="egu_d2" desc_d2="desc_d2" egu_x1="egu_x1" desc_x1="desc_x1" egu_x2="egu_x2" desc_x2="desc_x2"/>
+	<tpmac.MO_Calibrate d1="d1" assy="assy" d2="d2"/>
+	<tpmac.IxMtrMv mtr="mtr" C="C" x="x"/>
+	<tpmac.CtlPnlPmac pmac="pmac" C="C"/>
+	<tpmac.bkgfix1pcs pcs="pcs" C="C" S="S"/>
+	<tpmac.bkgfix0 pmac="pmac" C="C"/>
+	<tpmac.XY_TsubRbk assy="assy" val="val" tsub="tsub" d1="d1" d2="d2" m1="m1" m2="m2" nla="nla" egu_d1="egu_d1" desc_d1="desc_d1" egu_d2="egu_d2" desc_d2="desc_d2"/>
+	<tpmac.bkgvar0 pmac="pmac" C="C"/>
+	<tpmac.OpnLp mtr="mtr" C="C" M="M"/>
+	<tpmac.MO_TsubSpeed assy="assy" tsub="tsub" m1="m1" m2="m2" d1="d1" d2="d2" x1="x1" x2="x2" egu_d1="egu_d1" egu_d2="egu_d2" egu_x1="egu_x1" egu_x2="egu_x2"/>
+	<tpmac.X_TsubSpeed assy="assy" tsub="tsub" m1="m1" d1="d1" egu_d1="egu_d1"/>
+	<tpmac.X_LimAmp assy="assy" d1="d1"/>
+	<tpmac.Load08XY3 assy="assy" C="C" pcs="pcs" m1="m1" m2="m2"/>
+	<tpmac.RqsTwkMem pref="pref" prec="prec"/>
+	<tpmac.Load05X3 assy="assy" C="C" pcs="pcs" m1="m1"/>
+	<tpmac.MO_TsubRqsPos assy="assy" tsub="tsub" x1="x1" x2="x2" d1="d1" d2="d2" m1="m1" m2="m2"/>
+	<tpmac.X_Calibrate d1="d1" assy="assy"/>
+	<tpmac.mbxvar0 pmac="pmac" C="C"/>
+	<tpmac.XY_Calibrate d1="d1" assy="assy" d2="d2"/>
+	<tpmac.AsciiPcs pcs="pcs" C="C" x="x"/>
+	<tpmac.svofix0 pmac="pmac" C="C"/>
+	<tpmac.AsciiMtr mtr="mtr" C="C" x="x"/>
+	<tpmac.X_Tsub assy="assy" val="val" tsub="tsub" d1="d1" m1="m1" nla="nla"/>
+	<tpmac.mtrdat mtr="mtr" C="C" S="S" assy="assy" desc="desc" prec="prec" asloPos="asloPos" asloVel="asloVel" m="m"/>
+	<tpmac.X_TsubRbk assy="assy" val="val" tsub="tsub" d1="d1" m1="m1" nla="nla" egu_d1="egu_d1" desc_d1="desc_d1"/>
+	<tpmac.XY_LimAmp assy="assy" d1="d1" d2="d2"/>
+	<tpmac.AsciiPmac pmac="pmac" C="C"/>
+	<tpmac.XY_Tsub assy="assy" val="val" tsub="tsub" d1="d1" d2="d2" m1="m1" m2="m2" nla="nla"/>
+	<tpmac.MO_TsubRqsBkl assy="assy" tsub="tsub" x1="x1" x2="x2" d1="d1" d2="d2" m1="m1" m2="m2"/>
+	<tpmac.Ram08XY3 assy="assy" C="C" S="S"/>
+	<tpmac.Load08XY3_mono assy="assy" C="C" pcs="pcs" m1="m1" m2="m2"/>
+	<tpmac.Ram05X3 assy="assy" C="C" S="S"/>
+	<tpmac.CtlPnlPcs pcs="pcs" pmac="pmac" wrd="wrd"/>
+	<tpmac.pmacAsynMotor DEVICE="DEVICE"/>
+	<tpmac.MO_LimAmp assy="assy" d1="d1" d2="d2" x1="x1" x2="x2"/>
+	<tpmac.AssyGeneric assy="assy" desc="desc"/>
+	<tpmac.LimTransfer drv="drv" mtr="mtr"/>
+	<tpmac.XY_TsubSpeed assy="assy" tsub="tsub" m1="m1" m2="m2" d1="d1" d2="d2" egu_d1="egu_d1" egu_d2="egu_d2"/>
+	<tpmac.Acc59E P="P" CH="CH" C="C"/>
+	<tpmac.mtrdat_out mtr="mtr" C="C" S="S" desc="desc" prec="prec" asloPos="asloPos" asloVel="asloVel" m="m"/>
+</components>
