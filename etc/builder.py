@@ -117,9 +117,70 @@ class _GeoBrickChannel:
             '@asyn(%s,%d)' % (device, channel + 1))
     
 
+class PMAC(DeltaTau):
+    ctype = PMAC
+    LibFileList = ['pmacIoc', 'pmacAsynMotor']
+    DbdFileList = ['pmacInclude', 'pmacAsynMotor']
+    
+    _Cards = []
+    
+    def __init__(self, DeviceName = None, NAxes = 32, 
+        IdlePoll = 500, MovingPoll = 200):
+        # Now add self to list of cards
+        self.Card = len(self._Cards)
+        self._Cards.append(self)                
+        # First create an asyn IP port to connect to
+        if DeviceName is None:
+            DeviceName = "PMAC%d" % (self.Card + 1)         
+        self.PortName = "PMAC_S%d" % self.Card
+        # Store other attributes
+        self.NAxes = NAxes
+        self.IdlePoll = IdlePoll
+        self.MovingPoll = MovingPoll
+        self.vector = self.AllocateIntVector(3)
+        assert self.vector == 192 + self.Card * 3, "PMAC should be instantiated first to avoid interrupt clashes, vector = %d"% self.vector            
+        # init the AsynPort superclass
+        self.__super.__init__(DeviceName)
+    
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        DeviceName = Simple('Name to use for the asyn motor port, defaults to PMAC+"number"', str),        
+        NAxes      = Simple('Number of axes', int),
+        IdlePoll   = Simple('Idle Poll Period in ms', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))
+    
+    def IncludePmc(self, pmc_substitution):
+        if not hasattr(self, 'pmc'):
+            self.pmc = _PmcDataFile(self.DeviceName())
+            AddDataFile(self.DeviceName() + '.pmc', self.pmc.Generate)
+        self.pmc.AddSubstitution(pmc_substitution)
+                                                                                    
+    def InitialiseOnce(self):
+        print 'pmacVmeDebug=1'
+        print 'drvPmacDebug=1'
+        print '# Configure %d PMAC cards' % len(self._Cards)
+        for i in range(len(self._Cards)):
+            print 'pmacVmeConfig(%d, 0x%dfa000, 0x%d00000, 0xC%d, %d)' % (i, i+7, i+7, 3*i+1, i+3)
+        print '# Startup driver for DPRAM ASCII buffer'
+        print 'pmacDrv()'
+        print 'pmacVmeDebug=0'
+        print 'drvPmacDebug=0'
+        print 'pmacAsynConfig(0, "PMAC_S")'       
+        
+    def Initialise(self):        
+        print '# Initialise the low-level PMAC driver (comms port, comms addr, card, nAxes)'
+        print 'pmacAsynMotorCreate("%(PortName)s", 0, %(Card)d, %(NAxes)d)' % self.__dict__
+        print '# Configure PMAC (PortName, DriverName, BrickNum, NAxes+1)'
+        print 'drvAsynMotorConfigure("%s", "pmacAsynMotor", %d, %d)' % (
+            self.DeviceName(), self.Card, self.NAxes+1)            
+        print 'pmacSetIdlePollPeriod(%(Card)d, %(IdlePoll)d)' % self.__dict__
+        print 'pmacSetMovingPollPeriod(%(Card)d, %(MovingPoll)d)' % \
+            self.__dict__                  
 
 class GeoBrick_sim(GeoBrick):
     Dependencies = (MotorSimLib,)
+    LibFileList = ()
+    DbdFileList = ()    
 
     def InitialiseOnce(self):
         print 'motorSimCreate( 100, 0, -150000, 150000, 3, %d, %d )' \
@@ -128,8 +189,23 @@ class GeoBrick_sim(GeoBrick):
     def Initialise(self):
         print 'drvAsynMotorConfigure("%s", "motorSim", %d, %d)' % (
             self.DeviceName(), self.Card+100, self.NAxes + 1)
-SetSimulation(GeoBrick, GeoBrick_sim)
-                  
+SetSimulation(GeoBrick, GeoBrick_sim)      
+
+class PMAC_sim(PMAC): 
+    Dependencies = (MotorSimLib,)
+    LibFileList = ()
+    DbdFileList = ()    
+
+    def InitialiseOnce(self):
+        print 'motorSimCreate( 100, 0, -150000, 150000, 3, %d, %d )' \
+            %(len(self._Cards),self.NAxes+1)
+
+    def Initialise(self):
+        print 'drvAsynMotorConfigure("%s", "motorSim", %d, %d)' % (
+            self.DeviceName(), self.Card+100, self.NAxes + 1)
+                                               
+SetSimulation(PMAC, PMAC_sim)
+                                                                                                                                                                  
 class CS(DeltaTau):
     Dependencies = (tpmac,)
     LibFileList = [ 'pmacAsynCoord' ]
@@ -186,6 +262,8 @@ class CS(DeltaTau):
 
 class CS_sim(CS):
     Dependencies = (MotorSimLib,)
+    LibFileList = ()
+    DbdFileList = ()      
     
     def InitialiseOnce(self):
         print 'motorSimCreate( 200, 0, -150000, 150000, 3, %d, %d )' \
