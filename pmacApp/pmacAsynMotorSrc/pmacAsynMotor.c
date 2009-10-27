@@ -975,7 +975,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
                 done = 0; 
             } else {
                 done = (((status[1] & PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & PMAC_STATUS1_MOTOR_ON) == 0)); 
-		//If we are not done, but amp has been disabled, then set done (to stop when we get following errors).
+		/*If we are not done, but amp has been disabled, then set done (to stop when we get following errors).*/
 		if ((done == 0) && ((status[0] & PMAC_STATUS1_AMP_ENABLED) == 0)) {
 		  done = 1;
 		}
