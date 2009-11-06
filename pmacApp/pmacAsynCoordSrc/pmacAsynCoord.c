@@ -507,7 +507,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
                 		(fabs(max_velocity/acceleration) * 1000.0));
             }
         }
-        sprintf( command, "&%d%s%s"DEMAND"=%.2f", pAxis->coord_system, vel_buff, acc_buff, pAxis->axis, position );             
+        sprintf( command, "&%dA%s%s"DEMAND"=%.2f", pAxis->coord_system, vel_buff, acc_buff, pAxis->axis, position );             
 
         if (pAxis->pDrv->movesDeferred) {
             pAxis->deferred_move = 1;
