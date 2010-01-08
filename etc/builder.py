@@ -1,53 +1,18 @@
-from iocbuilder import Device, records, RecordFactory
-from iocbuilder import SetSimulation, IocDataStream, AddDataFile
-from iocbuilder.recordset import SubstitutionSetBase, SubstitutionBase
-from iocbuilder.iocwriter import WriteFile, PrintDisclaimer
+from iocbuilder import Device, records, RecordFactory, SetSimulation
 from iocbuilder.arginfo import *
-
 from iocbuilder.modules.asyn import AsynPort, Asyn
-from iocbuilder.modules.motor import MotorLib, MotorController, MotorSimLib
-
-import sys
-import os.path
+from iocbuilder.modules.motor import MotorLib, MotorSimLib
 
 __all__ = ['GeoBrick', 'CS']
-
-PMAC = 0
-GEOBRICK = 1
 
 class tpmac(Device):
     Dependencies = (Asyn, MotorLib)
     AutoInstantiate = True  
 
-class DeltaTau(AsynPort, MotorController):
+class DeltaTau(AsynPort):
     Dependencies = (tpmac,)        
 
-
-class _PmcDataFile(SubstitutionSetBase):
-    def __init__(self, device):
-        self.device = device
-        self.__super.__init__()
-
-    def Generate(self, datadir):
-        WriteFile(
-            os.path.join(datadir, self.device + '.substitutions'), self.Print,
-            header = None)
-        
-
-class PmcSubstitution(SubstitutionBase):
-    BaseClass = True
-    Dependencies = (tpmac,)
-    TemplateDir = 'data'
-
-    def __init__(self, Controller, Filename=None, **args):
-        if Filename is not None:
-            self.TemplateFile = Filename
-        self.__super.__init__(**args)
-        Controller.IncludePmc(self)
-    
-
 class GeoBrick(DeltaTau):
-    ctype = GEOBRICK
     LibFileList = ['pmacAsynIPPort', 'pmacAsynMotor']
     DbdFileList = ['pmacAsynIPPort', 'pmacAsynMotor']
     
@@ -83,13 +48,6 @@ class GeoBrick(DeltaTau):
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll = Simple('Moving Poll Period in ms', int))
     
-    def IncludePmc(self, pmc_substitution):
-        if not hasattr(self, 'pmc'):
-            self.pmc = _PmcDataFile(self.DeviceName())
-            AddDataFile(self.DeviceName() + '.pmc', self.pmc.Generate)
-        self.pmc.AddSubstitution(pmc_substitution)
-        
-                    
     def Initialise(self):
         print '# Create IP Port (IPPort, IPAddr)'    
         print 'pmacAsynIPConfigure("%(PortName)s", "%(IP)s")' % \
@@ -118,7 +76,6 @@ class _GeoBrickChannel:
     
 
 class PMAC(DeltaTau):
-    ctype = PMAC
     LibFileList = ['pmacIoc', 'pmacAsynMotor']
     DbdFileList = ['pmacInclude', 'pmacAsynMotor']
     
@@ -149,12 +106,6 @@ class PMAC(DeltaTau):
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll = Simple('Moving Poll Period in ms', int))
     
-    def IncludePmc(self, pmc_substitution):
-        if not hasattr(self, 'pmc'):
-            self.pmc = _PmcDataFile(self.DeviceName())
-            AddDataFile(self.DeviceName() + '.pmc', self.pmc.Generate)
-        self.pmc.AddSubstitution(pmc_substitution)
-                                                                                    
     def InitialiseOnce(self):
         print 'pmacVmeDebug=1'
         print 'drvPmacDebug=1'
@@ -216,7 +167,6 @@ class CS(DeltaTau):
         Program = 10, IdlePoll = 500, MovingPoll = 100):
 
         self.PortName = Controller.PortName
-        self.IncludePmc = Controller.IncludePmc
         # PLC number for position reporting
         if PLCNum is None:
             self.PLCNum = CS + 15        
