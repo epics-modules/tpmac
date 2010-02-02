@@ -507,7 +507,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
                 		(fabs(max_velocity/acceleration) * 1000.0));
             }
         }
-        sprintf( command, "&%dA%s%s"DEMAND"=%.2f", pAxis->coord_system, vel_buff, acc_buff, pAxis->axis, position );             
+        sprintf( command, "&%d%s%s"DEMAND"=%.2f", pAxis->coord_system, vel_buff, acc_buff, pAxis->axis, position );             
 
         if (pAxis->pDrv->movesDeferred) {
             pAxis->deferred_move = 1;
@@ -520,7 +520,7 @@ static int motorAxisMove( AXIS_HDL pAxis, double position, int relative, double 
 		    last_axis = &(pAxis->pDrv->axis[NAXES-1]);
          
 		    /* Read all the demands for this co-ordinate system in one go */
-		    sprintf( buff, "&%d", first_axis->coord_system);
+		    sprintf( buff, "&%dA&%d", pAxis->coord_system, first_axis->coord_system);
 		    for (i = first_axis->axis; i <= last_axis->axis; i++) {
 		      sprintf( commandtemp, DEMAND, i);
 		      strcat(buff, commandtemp);
