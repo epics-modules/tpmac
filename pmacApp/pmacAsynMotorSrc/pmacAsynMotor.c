@@ -183,6 +183,7 @@ typedef struct motorAxisHandle
     double previous_direction;
     int amp_enabled;
     int fatal_following;
+    int encoder_axis;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -504,8 +505,6 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
     	        {
     	            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
     	        }
-    	        
-                epicsThreadSleep( 0.1 );
     	        
     	        sprintf( command, "#%dJ/", pAxis->axis);
 
@@ -830,6 +829,7 @@ static int motorAxisVelocityMove(  AXIS_HDL pAxis, double min_velocity, double v
     return status;
 }
 
+/*
 static int motorAxisProfileMove( AXIS_HDL pAxis, int npoints, double positions[], double times[], int relative, int trigger )
 {
   return MOTOR_AXIS_ERROR;
@@ -839,6 +839,7 @@ static int motorAxisTriggerProfile( AXIS_HDL pAxis )
 {
   return MOTOR_AXIS_ERROR;
 }
+*/
 
 static int motorAxisStop( AXIS_HDL pAxis, double acceleration )
 {
@@ -903,22 +904,32 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     char command[128];
     char response[128];
     int cmdStatus, done;
-    double position, error;
+    double position, enc_position;
     int nvals;
-    double position_with_error = 0.0;
     epicsUInt32 status[2];
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
-      /*Set any global status bits.*/
+        /*Set any global status bits.*/
       
-      /*Combine several general errors for the motor record problem error bit.*/
-      motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
+        /*Combine several general errors for the motor record problem error bit.*/
+        motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
         /* Read all the status for this axis in one go */
-        sprintf( command, "#%d ? P F", pAxis->axis );
+        if ( pAxis->encoder_axis != 0 )
+        {
+            /* Encoder position comes back on a different axis */
+            sprintf( command, "#%d ? P #%d P", pAxis->axis,  pAxis->encoder_axis);
+        }
+        else
+        {
+            /* Encoder position comes back on this axis - note we initially read 
+               the following error into the position variable */
+            sprintf( command, "#%d ? F P", pAxis->axis );
+        }
+
         cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
-        nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &error );
+        nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &enc_position );
 
         if ( cmdStatus || nvals != 4)
         {
@@ -931,10 +942,11 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             int homeSignal = ((status[1] & PMAC_STATUS2_HOME_COMPLETE) != 0);
             int direction;
 
-            position *= pAxis->scale;
-            error *= pAxis->scale;
+            /* For closed loop axes, position is actually following error up to this point */ 
+            if ( pAxis->encoder_axis == 0 ) position += enc_position;
 
-	    position_with_error = position + error;
+            position *= pAxis->scale;
+            enc_position  *= pAxis->scale;
 
 #ifdef SIMULATE_SET_POSITION
             if ( homeSignal && !pAxis->homeSignal )
@@ -952,23 +964,23 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
             }
             pAxis->homeSignal = homeSignal;
 
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position_with_error+pAxis->enc_offset) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position+pAxis->enc_offset) );
 #else
-            motorParam->setDouble(  pAxis->params, motorAxisPosition,      (position_with_error) );
+            motorParam->setDouble(  pAxis->params, motorAxisPosition,      position );
 #endif
-            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   position );
+            motorParam->setDouble(  pAxis->params, motorAxisEncoderPosn,   enc_position );
 
             /* Use previous position and current position to calculate direction.*/
-	    if ((position_with_error - pAxis->previous_position) > 0) {
-	      direction = 1;
-	    } else if (position_with_error - pAxis->previous_position == 0.0) {
-	      direction = pAxis->previous_direction;
-	    } else {
-	      direction = 0;
-	    }
+            if ((position - pAxis->previous_position) > 0) {
+              direction = 1;
+            } else if (position - pAxis->previous_position == 0.0) {
+              direction = pAxis->previous_direction;
+            } else {
+              direction = 0;
+            }
 	    motorParam->setInteger( pAxis->params, motorAxisDirection, direction);
 	    /*Store position to calculate direction for next poll.*/
-	    pAxis->previous_position = position_with_error;
+	    pAxis->previous_position = position;
 	    pAxis->previous_direction = direction;
 
             if(pAxis->deferred_move) {
@@ -1071,7 +1083,7 @@ static void drvPmacGetAxisInitialStatus( AXIS_HDL pAxis, asynUser * pasynUser )
             motorParam->setDouble(  pAxis->params, motorAxisPGain,     pgain );
             motorParam->setDouble(  pAxis->params, motorAxisIGain,     igain );
             motorParam->setDouble(  pAxis->params, motorAxisDGain,     dgain );
-	        motorParam->setDouble(  pAxis->params, motorAxisHasEncoder, 1);
+            motorParam->setDouble(  pAxis->params, motorAxisHasEncoder, 1);
             motorParam->callCallback( pAxis->params );
         }
         epicsMutexUnlock( pAxis->axisMutex );
@@ -1206,6 +1218,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].logParam  = pDrv->pasynUser;
                         pDrv->axis[i].pasynUser = pDrv->pasynUser;
                         pDrv->axis[i].scale = 1;
+                        pDrv->axis[i].encoder_axis = 0;
 
 /*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
                         motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
@@ -1378,6 +1391,20 @@ int pmacSetAxisScale( int card, int axis, int scale )
         motorParam->getDouble(  pAxis->params, motorAxisHighLimit, &value );
         motorParam->setDouble(  pAxis->params, motorAxisHighLimit, scale*value/pAxis->scale );
         pAxis->scale = scale;
+        status = MOTOR_AXIS_OK;
+    }
+
+    return status;
+}
+
+int pmacSetOpenLoopEncoderAxis(int card, int axis, int encoder_axis )
+{
+    AXIS_HDL pAxis = motorAxisOpen( card, axis, NULL );
+    int status = MOTOR_AXIS_ERROR;
+
+    if (pAxis)
+    {
+        pAxis->encoder_axis = encoder_axis;
         status = MOTOR_AXIS_OK;
     }
 
