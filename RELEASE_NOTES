@@ -1,4 +1,42 @@
-              RELEASE NOTES for asyn version of tpmac module
+             RELEASE NOTES for asyn version of tpmac module
+
+		              Nick Rees
+	                      15 Feb 10
+
+There are now a couple of axis configuration routines, as well as the
+PMAC global ones. These are pmacSetAxisScale and pmacSetOpenLoopEncoderAxis.
+
+pmacSetAxisScale will scale all positions by a set number, so the
+EPICS motor record (which likes integral positions) can make use of
+the extra 5 bits of interpolated position which are available after
+the decimal point on the pmac. All motor and limit positions for that
+axis will be in the new scale. The call is:
+
+    pmacSetAxisScale(
+        int card,         /* the third parameter for pmacAsynMotorCreate */
+        int axis,         /* a PMAC axis which is driven open loop. */
+        int scale )/* the scale (1-32, usually in powers of 2 */
+
+This call should be made just after pmacAsynMotorCreate. Note that
+scale is an integer, and should normally, sensibly, only be 32, but
+other values are a possibility.
+
+pmacSetOpenLoopEncoderAxis can be used if you want to close open loop
+PMAC axes in the motor record (using UEIP) around a econder on another
+axis in the PMAC. It should also be called just after pmacAsynMotorCreate:
+
+    pmacSetOpenLoopEncoderAxis(
+        int card,         /* the third parameter for pmacAsynMotorCreate */
+        int axis,         /* a PMAC axis which is driven open loop. */
+        int encoder_axis )/* the axis on which the encoder is read back. */
+
+This is fiarly self explanatory. The result of the "P" command on the
+motor axis will be returned on the "motor position" motor status
+field, and the reult of the "P" command on the encoder axis will be
+returned in the "encoder position" motor status field.
+
+
+             RELEASE NOTES for asyn version of tpmac module
 
 		            Matthew Pearson
 	                      11 Feb 09
