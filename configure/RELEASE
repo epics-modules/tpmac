@@ -5,13 +5,13 @@
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 #Sergey:
-EPICS_BASE= /dls_sw/epics/R3.14.8.2/base
+EPICS_BASE= /dls_sw/epics/R3.14.11/base
 
-SUPPORT=    /dls_sw/prod/R3.14.8.2/support
-WORK=       /dls_sw/work/R3.14.8.2/support
+SUPPORT=    /dls_sw/prod/R3.14.11/support
+WORK=       /dls_sw/work/R3.14.11/support
 
-ASYN=       $(SUPPORT)/asyn/4-10
-MOTOR=      $(SUPPORT)/motor/6-4-4dls6
+ASYN=       $(SUPPORT)/asyn/4-13
+MOTOR=      $(WORK)/motor
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
