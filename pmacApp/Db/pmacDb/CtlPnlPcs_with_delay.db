@@ -1,0 +1,33 @@
+record(sseq, "$(pcs)Abort") {
+  field(DESC, "Abort")
+  field(PRIO, "HIGH")
+  field(DLY1, "0")
+  field(STR1, "A")
+  field(LNK1, "$(pcs)StrCmd PP MS")
+  field(DLY2, "0.2")
+  field(STR2, "1")
+  field(LNK2, "$(pcs)Ready.PROC PP MS")
+  field(PINI, "YES")
+# field(FLNK, "$(pcs)Ready.PROC PP MS")
+}
+
+record(sseq, "$(pcs)Run") {
+  field(DESC, "Run")
+  field(PRIO, "HIGH")
+  field(STR1, "R")
+  field(LNK1, "$(pcs)StrCmd PP MS")
+}
+
+### Added by Sergey 2005/04/14 for fast scans and homing:
+
+record(stringout, "$(pcs)Pmac") {
+  field(DESC, "Coord.System pmac")
+  field(DTYP, "Soft Channel")
+  field(VAL, "$(pmac)")
+}
+
+record(longout, "$(pcs)Pcs") {
+  field(DESC, "Coord.System Number")
+  field(DTYP, "Soft Channel")
+  field(VAL, "$(wrd)")
+}

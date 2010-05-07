@@ -4,8 +4,8 @@
   shellPromptSet "23o:ioc1> "
 
 ### This is routeAdd, hostAdd, hostShow, nfsMount...
-  nfsAuthUnixSet "bl2dl380upper", 500, 100
-  nfsMount("bl2dl380upper", "/home/gmca/epics_synApps/synApps_5_1", "/ioc")
+  nfsAuthUnixSet "bl2dl380lower", 500, 100
+  nfsMount("bl2dl380lower", "/home/gmca/epics_synApps/synApps_5_2", "/ioc")
 
 ### Add gateway to be visible from 23ID-in network:
 ### routeAdd  "destaddr",      "gateaddr"
@@ -15,34 +15,37 @@
   routeAdd  "164.54.210.64",  "164.54.210.129"
 # routeShow
 
-  startup   = "/ioc/xxx1/iocBoot/iocgmca1"
-  appbin    = "/ioc/xxx1/bin/vxWorks-ppc603"
+  < iocEnv
 
-  putenv ("AUTOSAVE=/ioc/autosave/4-2/asApp/Db")
-  putenv ("GMCA=/ioc/gmca/1-0/gmcaApp/Db")
-  putenv ("STD=/ioc/std/2-5-2/stdApp/Db")
-  putenv ("TPMAC=/ioc/tpmac/3-3/pmacApp/Db")
-  putenv ("CALC=/ioc/calc/2-6-1/calcApp/Db")
-  putenv ("SSCAN=/ioc/sscan/2-5-2/sscanApp/Db")
-  putenv ("VME=/ioc/vme/2-4-2/vmeApp/Db")
-  putenv ("VXSTATS=/ioc/vxStats/1-7-2c/db")
   putenv ("EPICS_TS_NTP_INET=164.54.210.2")
 
+### Needed for Derek's feedback:
+  putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
+  printf "EPICS_CA_ADDR_LIST=%s\n",getenv("EPICS_CA_ADDR_LIST")
 ################################################################################
 
 ### If the VxWorks kernel was built using the project facility, the following must
 ### be added before any C++ code is loaded (see SPR #28980).
   sysCplusEnable=1
 
+################################################################################
 ### Load EPICS software
   cd appbin
   ld < xxx.munch
 
-
+# Increase size of buffer for error logging from default 1256
+  errlogInit(5000)
+################################################################################
 ### Register all support components
   cd startup
   dbLoadDatabase("../../dbd/iocxxxVX.dbd",0,0)
   iocxxxVX_registerRecordDeviceDriver(pdbbase)
+
+  iocLogDisable=1
+
+################################################################################
+### IP stuff:
+  < st_ip.cmd
 
 ##############################################################################
 ### dbrestore setup
@@ -95,22 +98,17 @@
 ### crate-resident scan.  This executes 1D, 2D, 3D, and 4D scans, and caches
 ### 1D data, but it doesn`t store anything to disk.  (See 'saveData' below
 ### for that.)
-# dbLoadRecords("$(SSCAN)/scan.db","P=23o:1:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
-
+  dbLoadRecords("$(SSCAN)/scan.db","P=23o:1:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### Load Keithley-428 Current Amplifier databases:
-  < st_keithley.cmd
+# < st_keithley.cmd
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### Load PMAC databases:
   < st_pmac.cmd
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-###############################################################################
-
-  iocLogDisable=1
 
 ###############################################################################
   dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23o:1")
@@ -121,10 +119,10 @@
 
 ### save positions and settings every NN seconds
   taskDelay 240
-# create_monitor_set("auto_positions.req", 5, "P=23o:ioc1")
-# create_monitor_set("auto_settings.req", 30, "P=23o:ioc1")
-# create_periodic_set("auto_settings.req", 600, "P=23o:ioc1")
-# create_triggered_set("triggered_settings.req", "23o:ioc1:saveTrigger.PROC", "P=23o:ioc1")
+### create_monitor_set("auto_positions.req", 5, "P=23o:ioc1")
+### create_monitor_set("auto_settings.req", 30, "P=23o:ioc1")
+### create_periodic_set("auto_settings.req", 600, "P=23o:ioc1")
+### create_triggered_set("triggered_settings.req", "23o:ioc1:saveTrigger.PROC", "P=23o:ioc1")
   create_monitor_set("auto_positions.req", 1800, "P=23o:ioc1")
   create_monitor_set("auto_settings.req", 18000, "P=23o:ioc1")
   create_triggered_set("auto_settings.req", "23o:ioc1:saveTrigger.PROC", "P=23o:ioc1")
@@ -137,7 +135,7 @@
 ### For security reasons it is recommended to unmount the drive space,
 ### but then backup_restore fails. Therefore commented until further
 ### decision be made:
-#SEC  cd "px0:/home/gmca/epics_synApps/synApps_5_1/xxx1/iocBoot/iocgmca1"
+#SEC  cd "px0:/home/gmca/epics_synApps/synApps_5_2/xxx1/iocBoot/iocgmca1"
 #SEC  nfsUnmount "/ioc"
 
 ### Clear Macro Faults:
@@ -152,7 +150,7 @@
   taskDelay 30
 
 ### Disable Telnet:
-  ts tTelnetd
+# ts tTelnetd
 ############################# END 23o:ioc1 ##########################
 ### ALL DONE!
 ### Enter ^X or "reboot" to reboot!

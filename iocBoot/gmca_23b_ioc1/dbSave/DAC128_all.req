@@ -1,0 +1,8 @@
+file DAC128_single.req P=$(P),D=$(D),N=1
+file DAC128_single.req P=$(P),D=$(D),N=2
+file DAC128_single.req P=$(P),D=$(D),N=3
+file DAC128_single.req P=$(P),D=$(D),N=4
+file DAC128_single.req P=$(P),D=$(D),N=5
+file DAC128_single.req P=$(P),D=$(D),N=6
+file DAC128_single.req P=$(P),D=$(D),N=7
+file DAC128_single.req P=$(P),D=$(D),N=8

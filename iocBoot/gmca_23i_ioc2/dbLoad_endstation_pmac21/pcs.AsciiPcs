@@ -8,14 +8,14 @@ file "$(TPMAC)/pmacDb/AsciiPcs.db"
 # pcs == _p_mac _c_oordinate _s_ystem
 #
 # pmac21:
-        { 23i:COL:St:, 1,  1 }
-        { 23i:XY:P1:,  1,  2 }
+        { 23i:HS:Av:,  1,  1 }
+        { 23i:HS:Ah:,  1,  2 }
         { 23i:RB:Rd:,  1,  3 }
         { 23i:RB:Rr:,  1,  4 }
         { 23i:FLU:Di:, 1,  5 }
         { 23i:PIN:St:, 1,  6 }
-        { 23i:HS:Av:,  1,  7 }
-        { 23i:HS:Ah:,  1,  8 }
+        { 23i:COL:St:, 1,  7 }
+        { 23i:XY:P1:,  1,  8 }
         { 23i:XY:P2:,  1,  9 }
         { 23i:XY:P3:,  1, 10 }
         { 23i:XY:P4:,  1, 11 }

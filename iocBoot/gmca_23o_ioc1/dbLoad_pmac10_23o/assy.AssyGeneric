@@ -1,11 +1,11 @@
-file $(TPMAC)/softDb/AssyGeneric.db
+file "$(TPMAC)/softDb/AssyGeneric.db"
 {
 	pattern { assy, desc, assembly_no, assembly_type, shift }
-# ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments 
+# ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments
 # The values of shifts are:
 #  5 for  5X3   (1 motor)
 #  8 for  8XY3  (2 motors)
-# 11 for 11XYZ3 (3 motors) 
+# 11 for 11XYZ3 (3 motors)
 # pmac10
         { 23o:WS:Av:,  "White Beam Slits Vertical",    1, "HSAp - Huber Slits Assembly type",     0}
         { 23o:WS:Ah:,  "White Beam Slits Horizontal",  2, "HSAp - Huber Slits Assembly type",     8}
@@ -18,4 +18,5 @@ file $(TPMAC)/softDb/AssyGeneric.db
 	{ 23o:HD:Up:,  "HDM1 Y-adjustment",            9, "MISt - Mirror Suppot Assembly type",  61}
 	{ 23o:HD:Dn:,  "HDM2 Y-adjustment",           10, "MISt - Mirror Suppot Assembly type",  69}
  	{ 23o:BP:Hd1:, "HDM1 BPM",                    11, "XPs  - Modular Drive Assembly type",  77}
+ 	{ 23o:BP:Hd3:, "HDM1a BPM",                   12, "XPs  - Modular Drive Assembly type",  82}
 }

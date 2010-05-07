@@ -16,28 +16,28 @@ file "$(TPMAC)/bdDb/BD_LimAmp.db"
 #----------------------------------------------------------------------------
 file "$(TPMAC)/bdDb/BD_Tsub.db"
 {
- 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, x1, prec_x1, x2, prec_x2, d1, prec_d1, d2, prec_d2, m1, m2, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
 # nla=0/1 correspond to absolute/relative conversion.
 # pmac20:
-  { 23o:BD:Dh:, 23o:BD:HD:, 23o:BD:HA:, 23o:BD:HDS:, 23o:BD:HUS:, 23o:BD:mhd:, 23o:BD:mhu:, RqsPos, 0, tsubBDSt }
-  { 23o:BD:Dh:, 23o:BD:HD:, 23o:BD:HA:, 23o:BD:HDS:, 23o:BD:HUS:, 23o:BD:mhd:, 23o:BD:mhu:, RqsBkl, 1, tsubBDSt }
-  { 23o:BD:Dv:, 23o:BD:VD:, 23o:BD:VA:, 23o:BD:VDS:, 23o:BD:VUS:, 23o:BD:mvd:, 23o:BD:mvu:, RqsPos, 0, tsubBDSt }
-  { 23o:BD:Dv:, 23o:BD:VD:, 23o:BD:VA:, 23o:BD:VDS:, 23o:BD:VUS:, 23o:BD:mvd:, 23o:BD:mvu:, RqsBkl, 1, tsubBDSt }
+  { 23o:BD:Dh:, 23o:BD:HD:, 3, 23o:BD:HA:, 3, 23o:BD:HDS:, 3, 23o:BD:HUS:, 3, 23o:BD:mhd:, 23o:BD:mhu:, RqsPos, 0, tsubBDSt }
+  { 23o:BD:Dh:, 23o:BD:HD:, 3, 23o:BD:HA:, 3, 23o:BD:HDS:, 3, 23o:BD:HUS:, 3, 23o:BD:mhd:, 23o:BD:mhu:, RqsBkl, 1, tsubBDSt }
+  { 23o:BD:Dv:, 23o:BD:VD:, 3, 23o:BD:VA:, 3, 23o:BD:VDS:, 3, 23o:BD:VUS:, 3, 23o:BD:mvd:, 23o:BD:mvu:, RqsPos, 0, tsubBDSt }
+  { 23o:BD:Dv:, 23o:BD:VD:, 3, 23o:BD:VA:, 3, 23o:BD:VDS:, 3, 23o:BD:VUS:, 3, 23o:BD:mvd:, 23o:BD:mvu:, RqsBkl, 1, tsubBDSt }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/bdDb/BD_TsubRbk.db"
 {
-  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+  pattern { assy, x1, prec_x1, desc_x1, egu_x1, x2, prec_x2, desc_x2, egu_x2, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
 # pmac20:
-  { 23o:BD:Dh:, 23o:BD:HD:, "Beam pipe H-pos.", "(mm)", 23o:BD:HA:, "Beam pipe H-Angle", "(mrad)", 23o:BD:HDS:, "Horiz.pipe DS", "(mm)", 23o:BD:HUS:, "Horiz.pipe US", "(mm)", 23o:BD:mhd:,  23o:BD:mhu:,  ActPos, 0, tsubBDSt }
-  { 23o:BD:Dv:, 23o:BD:VD:, "Beam pipe V-pos.", "(mm)", 23o:BD:VA:, "Beam pipe V-Angle", "(mrad)", 23o:BD:VDS:, "Vert.pipe DS",  "(mm)", 23o:BD:VUS:, "Vert.pipe US",  "(mm)", 23o:BD:mvd:,  23o:BD:mvu:,  ActPos, 0, tsubBDSt }
+  { 23o:BD:Dh:, 23o:BD:HD:, 3, "Beam pipe H-pos.", "(mm)", 23o:BD:HA:, 3, "Beam pipe H-Angle", "(mrad)", 23o:BD:HDS:, 3, "Horiz.pipe DS", "(mm)", 23o:BD:HUS:, 3, "Horiz.pipe US", "(mm)", 23o:BD:mhd:,  23o:BD:mhu:,  ActPos, 0, tsubBDSt }
+  { 23o:BD:Dv:, 23o:BD:VD:, 3, "Beam pipe V-pos.", "(mm)", 23o:BD:VA:, 3, "Beam pipe V-Angle", "(mrad)", 23o:BD:VDS:, 3, "Vert.pipe DS",  "(mm)", 23o:BD:VUS:, 3, "Vert.pipe US",  "(mm)", 23o:BD:mvd:,  23o:BD:mvu:,  ActPos, 0, tsubBDSt }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/bdDb/BD_TsubSpeed.db"
 {
-  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+  pattern { assy, x1, prec_x1, egu_x1, x2, prec_x2, egu_x2, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, m1, m2, tsub }
 # pmac20:
-  { 23o:BD:Dh:, 23o:BD:HD:, "(mm/s)", 23o:BD:HA:, "(mrad/s)", 23o:BD:HDS:, "(mm/s)", 23o:BD:HUS:, "(mm/s)", 23o:BD:mhd:,  23o:BD:mhu:, tsubBDSt }
-  { 23o:BD:Dv:, 23o:BD:VD:, "(mm/s)", 23o:BD:VA:, "(mrad/s)", 23o:BD:VDS:, "(mm/s)", 23o:BD:VUS:, "(mm/s)", 23o:BD:mvd:,  23o:BD:mvu:, tsubBDSt }
+  { 23o:BD:Dh:, 23o:BD:HD:, 3, "(mm/s)", 23o:BD:HA:, 3, "(mrad/s)", 23o:BD:HDS:, 3, "(mm/s)", 23o:BD:HUS:, 3, "(mm/s)", 23o:BD:mhd:,  23o:BD:mhu:, tsubBDSt }
+  { 23o:BD:Dv:, 23o:BD:VD:, 3, "(mm/s)", 23o:BD:VA:, 3, "(mrad/s)", 23o:BD:VDS:, 3, "(mm/s)", 23o:BD:VUS:, 3, "(mm/s)", 23o:BD:mvd:,  23o:BD:mvu:, tsubBDSt }
 }

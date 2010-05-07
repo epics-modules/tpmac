@@ -1,0 +1,29 @@
+CLOSE
+;
+;=======================================================================
+; Programs 2 and 4 for shutter:
+;
+OPEN PROG 2 CLEAR
+TA(0)
+TS(10)
+FRAX(X)	;specify feedrate axes -- is not used here
+F30000
+LINEAR
+ABS
+X(0)	;goto RqsPos
+CLOSE
+
+OPEN PROG 4 CLEAR
+TA(0)
+TS(10)
+FRAX(X)	;specify feedrate axes -- is not used here
+LINEAR
+F30000
+ABS
+X(80)	;goto RqsPos
+CLOSE
+
+
+
+
+

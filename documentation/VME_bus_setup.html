@@ -30,8 +30,7 @@ level 2, and interrupt vectors 0xA0, 0xA1, and 0xA2.</p>
       <td>24-bit addressing</td>
     </tr>
     <tr VALIGN="top">
-      <td>VME Address Modifier Don&#8217;t Care
-Bits</td>
+      <td>VME Address Modifier Don't Care Bits</td>
       <td>I91</td>
       <td>$4</td>
       <td>permits both "non-privileged" and "supervisory" data access</td>
@@ -43,15 +42,13 @@ Bits</td>
       <td>&nbsp;</td>
     </tr>
     <tr VALIGN="top">
-      <td>VME Mailbox Base Address Bits
-A23-A16</td>
+      <td>VME Mailbox Base Address Bits A23-A16</td>
       <td>I93</td>
       <td>$7F</td>
       <td>&nbsp;</td>
     </tr>
     <tr VALIGN="top">
-      <td>VME Mailbox Base Address Bits
-A15-A08</td>
+      <td>VME Mailbox Base Address Bits A15-A08</td>
       <td>I94</td>
       <td>$A0</td>
       <td>&nbsp;</td>
@@ -90,9 +87,9 @@ A15-A08</td>
 </table>
 <br>
 
-<p><B><FONT COLOR="Red">NOTE:</FONT></B> The above VME settings must correspond
-to the driver configuration parameters in the IOC startup script st_pmac.cmd
-(see examples in the iocBoot directories):</p>
+<p><B><FONT COLOR="Red">NOTE:</FONT></B> The above VME settings must
+correspond to the driver configuration parameters in the IOC startup script
+st_pmac.cmd (see examples in the iocBoot directories):</p>
 <pre>
 ### Configure PMAC-VME Hardware
 #	args:	(1) EPICS VME Card #
@@ -111,5 +108,17 @@ drvPmacDebug
   pmacVmeConfig (1, 0x7FA000, 0x700000, 0xa1, 2)
 </pre>
 
+<hr WIDTH="20%" ALIGN="left">
+<p>Some additional PMAC settings to allow proper EPICS communications with
+PMAC mailbox and DPRAM:</p>
+<pre>
+i47=20			// update period for motor data
+i48=1			// enable copying motor data
+i49=1			// enable copying C.S. data
+i50=40			// update period for C.S. data
+i55=1			// enable variable read buffer
+i56=1			// DPRAM ASCII Communications Interrupt Enable
+M100->X:$000000,0,24,S	// servo clock M-variable
+</pre>
 </body>
 </html>

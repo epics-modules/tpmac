@@ -59,7 +59,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
  * ---------------------
  * .01  6-7-95        tac     initial
  * .02  7-3-97        wfl     added include of stdioLib.h
- * .03  7-15-03       oam     rewrited fot Turbo PMAC2 Ultralite
+ * .03  7-15-03       oam     rewrited for Turbo PMAC2 Ultralite
  * .04  26th May 2006 ajf     Addition of Open/Close/Read/Write/Ioctl interface.
  *                            Changed WAIT_TIMEOUT to WAIT_FOREVER in
  *                            semTake of Mailbox semaphore.
@@ -95,6 +95,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 /* EPICS Includes */
 
 #include	<dbDefs.h>
+#include	<dbTest.h>
 #include	<recSup.h>
 #include	<devLib.h>
 #include	<devSup.h>
@@ -104,13 +105,13 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #include	<callback.h>
 #include	<dbLock.h>
 #include	<dbCommon.h>
-
+#include	<errlog.h>
+#include	<tsDefs.h>
 #define PMAC_ASYN
 #ifdef PMAC_ASYN
 #include "asynDriver.h"
 #include "asynOctetSyncIO.h"
 #endif
-
 /* local includes */
 
 #include	<drvPmac.h>
@@ -148,9 +149,10 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 #define PMAC_MAX_CARDS	(PMAC_MAX_CTLRS)
 
 #define PMAC_MAX_MTR	(256) /* 32 motors x 8 values = 256 */
-#define	PMAC_MAX_BKG	(343) /* 16 C.S. x 18 values + 5 global = 293 */
+#define	PMAC_MAX_BKG	(314) /* 16 C.S. x 19 values + 10 global = 314 */
 #define	PMAC_MAX_VAR	(128) /* max allowed */
 #define	PMAC_MAX_OPN	(480) /* */
+#define	PMAC_MAX_TIM	(1)   /* */
 
 #define PMAC_TASKNAME_LEN	15
 
@@ -224,10 +226,7 @@ typedef struct  /* PMAC_DRVET */
 typedef struct  /* PMAC_CARD */
 {
 	int		card;
-	int		ctlr;
 	int		configured;
-	int		present;
-	int		enabled;
 
 	int		enabledMbx;
 	int		enabledRam;
@@ -237,7 +236,7 @@ typedef struct  /* PMAC_CARD */
 	int		enabledOpn;
 
 	SEM_ID		scanMbxSem;
-
+	SEM_ID		mutex_rngBuf;
 	RING_ID		scanMbxQ;
 
 	volatile int	scanMtrRate;
@@ -269,9 +268,12 @@ typedef struct  /* PMAC_CARD */
 	PMAC_RAM_IO	BkgIo[PMAC_MAX_BKG];
 	PMAC_RAM_IO	VarIo[PMAC_MAX_VAR];
 	PMAC_RAM_IO	OpnIo[PMAC_MAX_OPN];
-	PMAC_RAM_IO	timMT[10];
-	PMAC_RAM_IO	timCS[10];
-	PMAC_RAM_IO	timVB[10];
+	PMAC_RAM_IO	timMT[PMAC_MAX_TIM];
+	PMAC_RAM_IO	timCS[PMAC_MAX_TIM];
+	PMAC_RAM_IO	timVB[PMAC_MAX_TIM];
+	
+	struct waveformRecord *StrErr;
+	char	 	*Err;
 
 #ifdef PMAC_ASYN
         asynUser *      pasynUser;
@@ -305,6 +307,8 @@ PMAC_LOCAL void		drvPmacMbxScanInit (int card);
 int			drvPmacMbxTask (int card);
 char			drvPmacMbxWriteRead (int card, char * writebuf, char * readbuf, char * errmsg);
 
+void 			drvPmacStrErr (waveformRecord *pRec);
+
 /*
  * GLOBALS
  */
@@ -329,9 +333,9 @@ epicsExportAddress(drvet,drvPmac);
  * LOCALS
  */
 
-LOCAL int		drvPmacConfigLock = 0;
-PMAC_LOCAL int		drvPmacNumCards = 0;
-PMAC_LOCAL PMAC_CARD	drvPmacCard[PMAC_MAX_CARDS];
+LOCAL int	   drvPmacConfigLock = 0;
+LOCAL int	   drvPmacNumCards = 0;
+LOCAL PMAC_CARD    drvPmacCard[PMAC_MAX_CARDS];
 
 /*******************************************************************************
  *
@@ -403,7 +407,6 @@ long pmacDrvConfig
 
 	pCard = &drvPmacCard[cardNumber];
 	pCard->card = cardNumber;
-	pCard->ctlr = cardNumber;
 	pCard->numMtrIo = 0;
 	pCard->numBkgIo = 0;
 	pCard->numVarIo = 0;
@@ -423,7 +426,8 @@ long pmacDrvConfig
 	pCard->enabledBkg = TRUE;
 	pCard->enabledVar = TRUE;
 	pCard->enabledOpn = TRUE;
-
+	pCard->StrErr = NULL;
+	pCard->Err = NULL;
 	pCard->configured = TRUE;
 	drvPmacNumCards++;
 	
@@ -496,8 +500,8 @@ PMAC_LOCAL long drvPmac_report
               		{
 				pCard = &drvPmacCard[i];
 
-				printf ("card = %d  ctlr = %d  present = %d  enabled = %d\n",
-					pCard->card, pCard->ctlr, pCard->present, pCard->enabled);
+				printf ("card = %d  \n",
+					pCard->card);
 				printf ("    enabledMbx = %d  enabledRam = %d\n",
 					pCard->enabledMbx, pCard->enabledRam);
 				printf ("    enabledMtr = %d  enabledBkg = %d  enabledVar = %d\n",
@@ -833,7 +837,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numMtrIo++;
-		if (pCard->numMtrIo >= PMAC_MAX_MTR) {
+		if (pCard->numMtrIo > PMAC_MAX_MTR) {
 		  printf("%s: too many records refer to MtrIo %d \n",MyName,pCard->numMtrIo);
 		  return -1;
 		}
@@ -870,7 +874,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numBkgIo++;
-		if (pCard->numBkgIo >= PMAC_MAX_BKG) {
+		if (pCard->numBkgIo > PMAC_MAX_BKG) {
 		  printf("%s: too many records refer to BkgIo %d \n",MyName,pCard->numBkgIo);
 		  return -1;
 		}
@@ -897,7 +901,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numVarIo++;
-		if (pCard->numVarIo >= PMAC_MAX_VAR) {
+		if (pCard->numVarIo > PMAC_MAX_VAR) {
 		  printf("%s: too many records refer to VarIo %d \n",MyName,pCard->numVarIo);
 		  return -1;
 		}
@@ -916,6 +920,8 @@ long drvPmacDpramRequest
 		ptimCS->pFunc = pFunc;
 		ptimCS->pParm = pParm;
 
+		(*pFunc)(ptimCS->pParm); /* read CS time register once */
+		
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ( "%s: timCS -- index %d memType %d hostOfs %x pAddress %#010lx\n",
@@ -924,7 +930,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numtimCS++;
-		if (pCard->numtimCS >= 10) {
+		if (pCard->numtimCS > PMAC_MAX_TIM) {
 		  printf("%s: too many records refer to timCS %d \n",MyName,pCard->numtimCS);
 		  return -1;
 		}
@@ -943,6 +949,8 @@ long drvPmacDpramRequest
 		ptimMT->pFunc = pFunc;
 		ptimMT->pParm = pParm;
 
+		(*pFunc)(ptimMT->pParm); /* read MT time register once */
+		
 		PMAC_DEBUG
 		(	1,
 			PMAC_MESSAGE ( "%s: timMT -- index %d memType %d hostOfs %x pAddress %#010lx\n",
@@ -951,7 +959,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numtimMT++;
-		if (pCard->numtimMT >= 10) {
+		if (pCard->numtimMT > PMAC_MAX_TIM) {
 		  printf("%s: too many records refer to timMT %d \n",MyName,pCard->numtimMT);
 		  return -1;
 		}
@@ -969,16 +977,19 @@ long drvPmacDpramRequest
 		ptimVB->pAddress = pmacRamAddr(card,ptimVB->hostOfs);
 		ptimVB->pFunc = pFunc;
 		ptimVB->pParm = pParm;
+		
+		(*pFunc)(ptimVB->pParm); /* read VB time register once */
+		
 
 		PMAC_DEBUG
 		(	1,
-			PMAC_MESSAGE ( "%s: timMT -- index %d memType %d hostOfs %x pAddress %#010lx\n",
+			PMAC_MESSAGE ( "%s: timVB -- index %d memType %d hostOfs %x pAddress %#010lx\n",
 				MyName,
 				i, ptimVB->memType, ptimVB->hostOfs, ptimVB->pAddress,0);
 		)
 
 		pCard->numtimVB++;
-		if (pCard->numtimVB >= 10) {
+		if (pCard->numtimVB > PMAC_MAX_TIM) {
 		  printf("%s: too many records refer to timVB %d \n",MyName,pCard->numtimVB);
 		  return -1;
 		}
@@ -1015,7 +1026,7 @@ long drvPmacDpramRequest
 		)
 
 		pCard->numOpnIo++;
-		if (pCard->numOpnIo >= PMAC_MAX_OPN) {
+		if (pCard->numOpnIo > PMAC_MAX_OPN) {
 		  printf("%s: too many records refer to OpnIo %d \n",MyName,pCard->numOpnIo);
 		  return -1;
 		}
@@ -1596,15 +1607,17 @@ char drvPmacMbxWriteRead (
         if (status) asynPrintIO( pasynUser,
                                  ASYN_TRACE_ERROR,
                                  readbuf, nread,
-                                 "Asyn read/write error to PMAC card %d, command=%s. Status=%d, Error=%s, Response:\n",
+                                 "Asyn read/write error to PMAC card %d, command=%s. Status=%d, Error=%s\n",
                                  card, writebuf, status, pasynUser->errorMessage);
-        else asynPrintIO( pasynUser,
+        else {
+	asynPrintIO( pasynUser,
                           ASYN_TRACE_ERROR,
                           readbuf, nread,
-                          "PMAC error on card %d, command=%s, Error=%s, Response:\n",
+                          "PMAC error on card %d, command=%s, Error=%s\n",
                           card, writebuf, pmacError( readbuf ) );
+	}
 
-        strncpy( errmsg, readbuf, nread-1 );
+        strncpy( errmsg, readbuf, nread-1 ); errmsg[nread-1]='\0';
         *readbuf = 0;
         terminator = PMAC_TERM_BELL;
     }
@@ -1645,20 +1658,25 @@ void drvPmacMbxScan
 {
 	char *	MyName = "drvPmacMbxScan";
 	PMAC_CARD *	pCard;
+	struct dbCommon * pRec;
 
 	pCard = &drvPmacCard[pMbxIo->card];
 	
-	if ( rngBufPut(pCard->scanMbxQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
-	{
+	semTake (pCard->mutex_rngBuf, WAIT_FOREVER);
+	if ( rngBufPut(pCard->scanMbxQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) ) {
 		errMessage (0,"drvPmacMbxScan: rngBufPut overflow.");
+		callbackGetUser (pRec, &pMbxIo->callback);
+		pRec->pact = FALSE;
+	} else {
+		PMAC_DEBUG
+		(	9,
+			PMAC_MESSAGE ("%s: rngBufPut completed.\n", MyName,0,0,0,0,0);
+		)
+
+		semGive (pCard->scanMbxSem);
 	}
 
-	PMAC_DEBUG
-	(	9,
-		PMAC_MESSAGE ("%s: rngBufPut completed.\n", MyName,0,0,0,0,0);
-	)
-
-	semGive (pCard->scanMbxSem);
+	semGive (pCard->mutex_rngBuf);
 	return;
 }
 
@@ -1679,19 +1697,16 @@ PMAC_LOCAL void drvPmacMbxScanInit
 
 	pCard->scanMbxQ = rngCreate(sizeof(void *) * PMAC_MBX_QUEUE_SIZE);
 
-	if ( pCard->scanMbxQ == NULL )
-	{
+	if ( pCard->scanMbxQ == NULL ) {
 		errMessage (0, "drvPmacMbxScanInit: rngCreate failed");
 		exit(1);
 	}
 
+	pCard->mutex_rngBuf = semBCreate(SEM_Q_PRIORITY,SEM_FULL);
 	pCard->scanMbxSem = semBCreate(SEM_Q_FIFO,SEM_EMPTY);
-	if ( pCard->scanMbxSem == NULL )
-	{
+	if ( pCard->scanMbxSem == NULL ) {
 		errMessage (0, "drvPmacMbxScanInit: semBcreate failed.");
-	}
-	else
-	{
+	} else {
 		sprintf ( pCard->scanMbxTaskName, "%s%d", PMAC_MBX_SCAN, pCard->card);
 		pCard->scanMbxTaskId = taskSpawn ( pCard->scanMbxTaskName,
 					PMAC_MBX_PRI, PMAC_MBX_OPT, PMAC_MBX_STACK,
@@ -1719,12 +1734,17 @@ int drvPmacMbxTask
 	char *	MyName = "drvPmacMbxTask";
 	/* long	status; */
 
-	PMAC_CARD *	pCard = &drvPmacCard[card];
+	PMAC_CARD *	        pCard = &drvPmacCard[card];
 
-	PMAC_MBX_IO *		pMbxIo;
+	PMAC_MBX_IO *		pMbxIo = NULL;
 
-	struct dbCommon *	pRec;
-	struct rset *		pRset;
+	struct dbCommon *	pRec = NULL;
+	struct rset *		pRset = NULL;
+	int                     len;
+	epicsTimeStamp          err_time;
+	char			time_str[40];
+
+	len = sizeof(pMbxIo);
 	
 	FOREVER
 	{
@@ -1732,65 +1752,49 @@ int drvPmacMbxTask
                 /*     to avoid repeated messages when we do not     */
                 /*     have a database record connected to the ASCII */
                 /*     mailboxes                                     */
-		if ( semTake(pCard->scanMbxSem,WAIT_FOREVER) != OK )
-		{
+		if ( semTake(pCard->scanMbxSem,WAIT_FOREVER) != OK ) {
 			errMessage(0,"drvPmacMbxTask: semTake returned error.");
 		}
-		while ( rngNBytes(pCard->scanMbxQ) >= sizeof(pMbxIo) )
-		{
-			if( rngBufGet(pCard->scanMbxQ,(void *)&pMbxIo,sizeof(pMbxIo)) != sizeof(pMbxIo) )
-			{
+
+		semTake(pCard->mutex_rngBuf, WAIT_FOREVER);
+		while ( rngNBytes(pCard->scanMbxQ) >= len ) {
+			if ( rngBufGet(pCard->scanMbxQ,(void *)&pMbxIo,len) != len ) {
 				errMessage (0,"drvPmacMbxTask: rngBufGet returned error.");
-			}
-			else
-			{
+			} else {
+				semGive(pCard->mutex_rngBuf);
+				callbackGetUser (pRec, &pMbxIo->callback);
 				PMAC_DEBUG
 				(	6,
 					PMAC_MESSAGE ("%s: rngBufGet completed.\n", MyName,0,0,0,0,0);
-					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName,
-						pMbxIo->card, pMbxIo->command,0,0,0);
+					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName, pMbxIo->card, pMbxIo->command,0,0,0);
 				)
+				pMbxIo->terminator = drvPmacMbxWriteRead (pMbxIo->card, pMbxIo->command, pMbxIo->response, pMbxIo->errmsg);
 
-				pMbxIo->terminator = drvPmacMbxWriteRead (pMbxIo->card,
-								pMbxIo->command, pMbxIo->response,
-								pMbxIo->errmsg);
-
-				if ( pMbxIo->terminator == PMAC_TERM_BELL )
-				{
-					PMAC_MESSAGE ("%s: PMAC Error=[%s]\n", MyName, pMbxIo->errmsg,0,0,0,0);
-					PMAC_MESSAGE ("%s: card=%d command=[%s]\n", MyName,
-						pMbxIo->card, pMbxIo->command,0,0,0);
-					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
+				if ( pMbxIo->terminator == PMAC_TERM_BELL ) {
+					epicsTimeGetCurrent (&err_time);
+					pRec->pact = FALSE;
+					
+				        if (pCard->StrErr) { 	/* report error through the StrErr waveform record */
+					       tsStampToText (&err_time, TS_TEXT_MMDDYY, time_str);
+					       dbScanLock ((struct dbCommon *)pCard->StrErr); pCard->StrErr->putf = TRUE;
+					       sprintf (pCard->Err, "%17.17s PV=%s CMD=%s %s %s", time_str, pRec->name, pMbxIo->command, &pMbxIo->errmsg[1], pmacError (pMbxIo->errmsg));
+					       pCard->StrErr->nord = strlen (pCard->Err); pCard->Err[pCard->StrErr->nelm - 1] = '\0';
+					       pCard->StrErr->pact = TRUE; pRset = pCard->StrErr->rset; (*(pRset->process))(pCard->StrErr); dbScanUnlock ((struct dbCommon *)pCard->StrErr);
+					       
+					}	
 				} else {
-
-				PMAC_DEBUG
-				(	6,
-					PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
-				)
+					PMAC_DEBUG
+					(	6,
+						PMAC_MESSAGE ("%s: response=[%s]\n", MyName, pMbxIo->response,0,0,0,0);
+					)
+        				dbScanLock (pRec); pRset = pRec->rset; (*(pRset->process))(pRec); dbScanUnlock (pRec);
 				}
-/*
-				callbackRequest (&pMbxIo->callback);
-
-				PMAC_DEBUG
-				(	6,
-					PMAC_MESSAGE ("%s: Callback requested.\n", MyName,0,0,0,0,0);
-				)
-*/
-	callbackGetUser (pRec, &pMbxIo->callback);
-
-
-	if (pRec) {
-          dbScanLock (pRec);
-	  pRset = pRec->rset;
-	  (*(pRset->process))(pRec);
-          dbScanUnlock (pRec);
-	} else {
-	  logMsg("%s: pMbxIo->callback = 0x%x, pRec = 0x%x \n", (int)MyName, (int)&pMbxIo->callback, (int)pRec,0,0,0);
-	}
+				semTake(pCard->mutex_rngBuf, WAIT_FOREVER);
 
 			}
 
 		}
+		semGive(pCard->mutex_rngBuf);
 	}
 }
 
@@ -1937,5 +1941,13 @@ PMAC_LOCAL void drvPmacVarScanInit
 				pCard->card,0,0,0,0,0,0,0,0,0 );
 	taskwdInsert ((void*)pCard->scanVarTaskId, NULL, NULL);
 
+	return;
+}
+
+void drvPmacStrErr (struct waveformRecord *pRec) { /* set StrErr pointer in the drvPmacCard[card] structure */
+	PMAC_CARD * 	pCard = &drvPmacCard[pRec->inp.value.vmeio.card];
+	pCard->StrErr = pRec;
+	pCard->Err = pRec->bptr;
+	printf ("drvPmacStrErr: pRec=0x%x [%s], pval=0x%x, card=%d \n", (unsigned int)pRec, pRec->name, (unsigned int)pRec->bptr, pRec->inp.value.vmeio.card);
 	return;
 }

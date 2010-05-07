@@ -1,0 +1,44 @@
+file "$(TPMAC)/pmacDb/mtrdat.db"
+{
+	pattern { assy, mtr, desc, C, m, S, asloPos, asloVel, prec }
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number/
+#		  S =   0  12  24  36  48  60  72  84 ... / 12*(m-1)/
+# pmac20:
+        { 23b:JET:Ps:,  23b:JET:mp:,  "mtr cryo pos.",       2,  1,   0, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:BD:DhB:,  23b:BD:mhd:,  "mtr beam pipe-Y",     2,  2,  12, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:BD:Dv:,	23b:BD:mvd:,  "mtr beam pipe-Z",     2,  3,  24, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:BD:Dv:,	23b:BD:mvu:,  "mtr gimbal vert.",    2,  4,  36, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GO:Om:,   23b:GO:mom:,  "mtr gonio omega",     2,  5,  48, 3.2552e-04, 3.2552e-04, 2}
+ 	{ 23b:GO:Kp:,   23b:GO:mkp:,  "mtr gonio kappa",     2,  6,  60, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GO:Kp:,   23b:GO:mph:,  "mtr gonio phi",       2,  7,  72, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GO:Kp:,   23b:GO:mcz:,  "mtr cr.stage Z",      2,  8,  84, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GO:Cr:,   23b:GO:mcx:,  "mtr cr.stage X",      2,  9,  96, 3.2552e-04, 3.2552e-04, 0}
+  	{ 23b:GO:Cr:,   23b:GO:mcy:,  "mtr cr.stage Y",      2, 10, 108, 3.2552e-04, 3.2552e-04, 0}
+  	{ 23b:GO:StB:,  23b:GO:msh:,  "mtr gonio horiz.",    2, 11, 120, 3.2552e-04, 3.2552e-04, 0}
+  	{ 23b:GO:StB:,  23b:GO:msv:,  "mtr gonio vert.",     2, 12, 132, 3.2552e-04, 3.2552e-04, 0}
+  	{ 23b:CCD:LpB:, 23b:CCD:ml:,  "mtr det.lateral",     2, 13, 144, 3.2552e-04, 3.2552e-04, 0}
+  	{ 23b:CCD:StB:, 23b:CCD:mx:,  "mtr det.distance",    2, 14, 156, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:CCD:StB:, 23b:CCD:mus:, "mtr det.vert.US",     2, 15, 168, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:CCD:StB:, 23b:CCD:mds:, "mtr det.vert.DS",     2, 16, 180, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:GS:StB:,  23b:GS:mx:,   "mtr GS X",            2, 17, 192, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:GS:StB:,  23b:GS:mpt:,  "mtr GS pitch",        2, 18, 204, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:GS:Av:,   23b:GS:mt:,   "mtr GS top",          2, 19, 216, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GS:Av:,   23b:GS:mb:,   "mtr GS bottom",       2, 20, 228, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:GS:Ah:,   23b:GS:mo:,   "mtr GS out",          2, 21, 240, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:GS:Ah:,   23b:GS:mi:,   "mtr GS in",           2, 22, 252, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:BS:Ps:,   23b:BS:md:,   "mtr BS distance",     2, 23, 264, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:BS:Ps: ,  23b:BS:mpt:,  "mtr BS pitch",        2, 24, 276, 3.2552e-04, 3.2552e-04, 0}
+        { 23b:BS:Ps:,   23b:BS:myw:,  "mtr BS yaw",          2, 25, 288, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:TV:V1:,   23b:TV:mz1:,  "mtr hi-res zoom",     2, 29, 336, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:TV:V2:,   23b:TV:mz2:,  "mtr lo-res zoom",     2, 30, 348, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23b:SH:Ps:,   23b:SH:mp:,   "mtr shutter",         2, 31, 360, 3.2552e-04, 3.2552e-04, 0}
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/mtrdat_out.db"
+{
+	pattern { mtr, desc, C, m, S, asloPos, asloVel, prec }
+#		  m =   1   2   3   4   5   6   7   8 ... /motor number/
+#		  S =   0  12  24  36  48  60  72  84 ... / 12*(m-1)/
+# pmac20:
+ 	{ 23b:pmac20:mo:, "pmac20: motor output",           2, 32, 372, 3.2552e-04, 3.2552e-04, 0}
+}

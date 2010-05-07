@@ -1,11 +1,29 @@
-record(calc, "$(drv)NgLimSet") {
+record(bi, "$(drv)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(drv)NgLimCALC.VAL PP MS")
+}  
+
+record(calc, "$(drv)NgLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(mtr)NgLimSet.VAL NPP MS")
   field(INPB, "$(mtr)PsLimSet.VAL NPP MS")
   field(INPC, "$(drv)Scale.VAL NPP MS")
 }
 
-record(calc, "$(drv)PsLimSet") {
+record(bi, "$(drv)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(drv)PsLimCALC.VAL PP MS")
+}  
+
+record(calc, "$(drv)PsLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(mtr)PsLimSet.VAL NPP MS")
   field(INPB, "$(mtr)NgLimSet.VAL NPP MS")

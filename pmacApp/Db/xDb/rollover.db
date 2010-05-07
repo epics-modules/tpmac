@@ -1,0 +1,7 @@
+#! 23b:GO:Om:ActPosTsubMtr
+#! 23b:GO:Om:RqsBklTsubMtr
+#! 23b:GO:Om:RqsPosTsubMtr
+
+record(tsub, "$(assy)$(val)TsubMtr") {
+  field(A2, "$(rollover)")
+}

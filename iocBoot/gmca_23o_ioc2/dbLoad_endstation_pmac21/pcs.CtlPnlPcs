@@ -8,14 +8,14 @@ file "$(TPMAC)/pmacDb/CtlPnlPcs.db"
 # pcs == _p_mac _c_oordinate _s_ystem
 #
 # pmac21:
-        { 23o:COL:St:, 23o:pmac21:,   1  }
-        { 23o:XY:P1:,  23o:pmac21:,   2  }
+        { 23o:HS:Av:,  23o:pmac21:,   1  }
+        { 23o:HS:Ah:,  23o:pmac21:,   2  }
         { 23o:RB:Rd:,  23o:pmac21:,   3  }
         { 23o:RB:Rr:,  23o:pmac21:,   4  }
  	{ 23o:FLU:Di:, 23o:pmac21:,   5  }
  	{ 23o:PIN:St:, 23o:pmac21:,   6  }
- 	{ 23o:HS:Av:,  23o:pmac21:,   7  }
- 	{ 23o:HS:Ah:,  23o:pmac21:,   8  }
+ 	{ 23o:COL:St:, 23o:pmac21:,   7  }
+ 	{ 23o:XY:P1:,  23o:pmac21:,   8  }
  	{ 23o:XY:P2:,  23o:pmac21:,   9  }
         { 23o:XY:P3:,  23o:pmac21:,  10  }
         { 23o:XY:P4:,  23o:pmac21:,  11  }

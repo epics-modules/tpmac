@@ -1,0 +1,12 @@
+%
+% BURT Request File
+%
+% $(P)MO:Be:  DCM Bender
+%
+
+file assy.req ASSY=$(P)MO:Be
+file mtr1.req MTR1=$(P)MO:mb1
+file mtr1.req MTR1=$(P)MO:mb2
+file drv1.req DRV1=$(P)MO:B1
+file drv1.req DRV1=$(P)MO:B2
+file axs1.req AXS1=$(P)MO:BE

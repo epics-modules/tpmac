@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/Ram05X3.db
+file "$(TPMAC)/pmacDb/Ram05X3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8
@@ -16,7 +16,7 @@ file $(TPMAC)/pmacDb/Ram05X3.db
         { 23b:BP:Vf:,  1,  53 }
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/Ram08XY3.db
+file "$(TPMAC)/pmacDb/Ram08XY3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8
@@ -35,7 +35,7 @@ file $(TPMAC)/pmacDb/Ram08XY3.db
         { 23b:VF:Vy:,  1,  40 }
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/Ram11XYZ3.db
+file "$(TPMAC)/pmacDb/Ram11XYZ3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8

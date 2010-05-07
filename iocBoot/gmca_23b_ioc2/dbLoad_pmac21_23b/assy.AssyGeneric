@@ -1,0 +1,27 @@
+file "$(TPMAC)/softDb/AssyGeneric.db"
+{
+        pattern { assy, desc, assembly_no, assembly_type, shift }
+# ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac21:
+        { 23b:HS:Av:,  "Huber Slits Vert.Assembly",    1, "HSAp - Huber Slits Assembly type",	  0 }
+        { 23b:HS:Ah:,  "Huber Slits Horz.Assembly",    2, "HSAp - Huber Slits Assembly type",	  8 }
+        { 23b:RB:Rd:,  "Robot XYZ position Assembly",  3, "XYZPs- XYZ Positioner Assembly type" ,16 }
+        { 23b:RB:Rr:,  "Robot rotation Assembly",      4, "XPs  - X Positioner Assembly type",   27 }
+        { 23b:FLU:Di:, "Fluorescence Detector Assy",   5, "XPs  - X Positioner Assembly type",   32 }
+        { 23b:PIN:St:, "Pin Diode Support Assembly",   6, "XPs  - X Positioner Assembly type",   37 }
+        { 23b:COL:St:, "Collimator Support Assembly",  7, "XYPs - XY Positioner Assembly type",  42 }
+        { 23b:XY:P1:,  "XY Positioner-1 Assy (step)",  8, "XYPs - XY Positioner Assembly type",  50 }
+        { 23b:XY:P2:,  "XY Positioner-2 Assembly",     9, "XYPs - XY Positioner Assembly type",  58 }
+        { 23b:XY:P3:,  "XY Positioner-3 Assembly",    10, "XYPs - XY Positioner Assembly type",  66 }
+        { 23b:XY:P4:,  "XY Positioner-4 Assembly",    11, "XYPs - XY Positioner Assembly type",  74 }
+        { 23b:XY:P5:,  "XY Positioner-5 Assembly",    12, "XYPs - XY Positioner Assembly type",  82 }
+        { 23b:XY:P6:,  "XY Positioner-6 Assembly",    13, "XYPs - XY Positioner Assembly type",  90 }
+        { 23b:XY:P7:,  "XY Positioner-7 Assembly",    14, "XYPs - XY Positioner Assembly type",  98 }
+        { 23b:XY:P8:,  "XY Positioner-8 Assembly",    15, "XYPs - XY Positioner Assembly type", 106 }
+        { 23b:XY:P9:,  "XY Positioner-9 Assembly",    16, "XYPs - XY Positioner Assembly type", 114 }
+}

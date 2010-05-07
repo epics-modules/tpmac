@@ -1,0 +1,4 @@
+$(P)waitForFeedback
+$(P)enableBeamstopCheck
+$(P)enableEnergyGapCheck
+$(P)enableEndShutterCheck

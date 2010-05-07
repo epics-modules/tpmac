@@ -168,7 +168,7 @@ proc pRestore {} {
       global var$assy
       if { [set var$assy] } {
          lappend CmdString [join $restore]
-         .fRack.f..cbFunc$assy config -foreground #007700
+         .fRack.f.cbFunc$assy config -foreground #007700
          set var$assy 0
       }
    }
@@ -202,7 +202,7 @@ proc pChangeSnap {} {
    global snapdir snapFile restoreList dateStamp user
 
    set newSnap [tk_getOpenFile -title {Restore Positions: Open SNAP File} \
-	             -initialdir ${snapdir} -filetypes {{SNAP {.snap}} {ALL {*}}}]
+	             -initialdir ${snapdir} -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}}]
    if { $newSnap != "" && $newSnap != $snapFile } {
       set snapFile $newSnap
       set restoreList [pReadSnap $snapFile]
@@ -261,8 +261,19 @@ proc pError {text} {
       set sep \\
    }
 
-   set tclGMCA [pwd]${sep}
-   set restoreScript mtrPositionsRestore2.pl
+   if { [ info exists env(FASTSCANS) ] } {
+      set Fastscans $env(FASTSCANS)
+   } else {
+      if ( ${SYSTEM} == "LINUX" ) {
+	 set Fastscans ${sep}home${sp}gmca${sep}epics${sep}fastscans
+      } else {
+         set Fastscans c:${sep}gmca${sep}fastscans
+      }
+   }
+### Produce tclGMCA dir name from Fastscans:
+   set tclGMCA [regsub fastscans ${Fastscans} gmcaApp${sep}tcl${sep}]
+### Produce script name from Fastscans:
+   set restoreScript [regsub fastscans ${Fastscans} ${sep}pezca${sep}mtrPositionsRestore2.pl]
 
    source ${tclGMCA}config.tcl
    source ${tclGMCA}config${Beamline}.tcl
@@ -303,7 +314,7 @@ proc pError {text} {
    pack .fRestore -side left -padx 4 -pady 4 -anchor n
 
    set snapFile [tk_getOpenFile -title {Restore Positions: Open SNAP File} \
-                -initialdir ${snapdir} -filetypes {{SNAP {.snap}} {ALL {*}}}]
+                -initialdir ${snapdir} -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}}]
    if {$snapFile == ""} { exit; }
    set restoreList [pReadSnap $snapFile]
    .lbSnap      config -text $snapFile

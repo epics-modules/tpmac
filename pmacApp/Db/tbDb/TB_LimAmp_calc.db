@@ -1,0 +1,102 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(d2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(d2)PsLimSet.PROC PP MS")
+  field(LNK5, "$(d3)NgLimSet.PROC PP MS")
+  field(LNK6, "$(d3)PsLimSet.PROC PP MS")
+  field(FLNK, "$(assy)xLimFLNK.PROC PP MS")
+}
+
+record(fanout, "$(assy)xLimFLNK") {
+  field(LNK1, "$(x1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(x1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(x2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(x2)PsLimSet.PROC PP MS")
+  field(LNK5, "$(x3)NgLimSet.PROC PP MS")
+  field(LNK6, "$(x3)PsLimSet.PROC PP MS")
+}
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+  field(LNK2, "$(d2)AmpEna.PROC PP MS")
+  field(LNK3, "$(d3)AmpEna.PROC PP MS")
+  field(LNK4, "$(x1)AmpEna.PROC PP MS")
+  field(LNK5, "$(x2)AmpEna.PROC PP MS")
+  field(LNK6, "$(x3)AmpEna.PROC PP MS")
+}
+
+record(calc,"$(x1)NgLimSet") {
+  field(CALC,"A+B+C")
+  field(INPA,"$(d1)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPC,"$(d3)NgLimSet.VAL NPP MS")
+}
+
+record(calc,"$(x1)PsLimSet") {
+  field(CALC,"A+B+C")
+  field(INPA,"$(d1)PsLimSet.VAL NPP MS")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d3)PsLimSet.VAL NPP MS")
+}
+
+record(calc,"$(x2)NgLimSet") {
+  field(CALC,"G>0?(C+E+B):(D+F+A)")
+  field(INPA,"$(d1)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d1)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPF,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPG,"$(assy)Base1:23.VAL NPP MS")
+}
+
+record(calc,"$(x2)PsLimSet") {
+  field(CALC,"G>0?(D+F+A):(C+E+B)")
+  field(INPA,"$(d1)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d1)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPF,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPG,"$(assy)Base1:23.VAL NPP MS")
+}
+
+record(calc,"$(x3)NgLimSet") {
+  field(CALC,"E>0?(A+D):(B+C)")
+  field(INPA,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)Base23.VAL NPP MS")
+}
+
+record(calc,"$(x3)PsLimSet") {
+  field(CALC,"E>0?(B+C):(A+D)")
+  field(INPA,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)Base23.VAL NPP MS")
+}
+
+record(calc,"$(x1)AmpEna") {
+  field(CALC,"((A>0)&&(B>0)&&(C>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+  field(INPC,"$(d3)AmpEna.VAL NPP MS")
+}
+
+record(calc,"$(x2)AmpEna") {
+  field(CALC,"((A>0)&&(B>0)&&(C>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+  field(INPC,"$(d3)AmpEna.VAL NPP MS")
+}
+
+record(calc,"$(x3)AmpEna") {
+  field(CALC,"((A>0)&&(B>0))?1:0")
+  field(INPA,"$(d2)AmpEna.VAL NPP MS")
+  field(INPB,"$(d3)AmpEna.VAL NPP MS")
+}
+

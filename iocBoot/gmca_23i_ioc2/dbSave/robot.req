@@ -2,6 +2,9 @@
 $(P)gh_pos
 $(P)gy_pos
 $(P)tmoh
-$(P)tmoc
 $(P)senh
+$(P)senb
 $(P)senc
+$(P)send
+$(P)senb_extradelay
+$(P)warmup_duration

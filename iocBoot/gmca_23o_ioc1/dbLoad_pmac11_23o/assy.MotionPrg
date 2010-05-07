@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/MotionPrg.db
+file "$(TPMAC)/softDb/MotionPrg.db"
 {
 #            assembly, Slew,Backlash,Position
 	pattern { assy, prg0, prg1, prg2 }

@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% One Keithley 
+%
+$(P)keithley$(D)
+$(P)keithley$(D).DESC
+$(P)keithley$(D):RqsGain
+$(P)keithley$(D):RqsOffset
+$(P)keithley$(D):RqsTime

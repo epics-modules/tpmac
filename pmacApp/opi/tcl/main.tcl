@@ -58,6 +58,19 @@ ${widget} add cascade -label $label -menu ${widget}.${submenu}
 }
 
 #***********************************************************
+#  proc menuLabel
+
+proc menuLabel {widget label} {
+  set fg [ ${widget} cget -foreground ]
+  set bg [ ${widget} cget -background ]
+  ${widget} add command -label $label -activeforeground $fg -activebackground $bg -state disabled
+}
+#proc menuLabel {widget name label} {
+#  label ${widget}.l$name -text $label
+#  pack ${widget}.l$name -side top -pady 1m
+#}
+
+#***********************************************************
 #  proc menuSeparator
 
 proc menuSeparator {widget} {

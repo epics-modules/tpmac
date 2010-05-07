@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/Ram05X3.db
+file "$(TPMAC)/pmacDb/Ram05X3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8
@@ -8,15 +8,16 @@ file $(TPMAC)/pmacDb/Ram05X3.db
 # The values of shifts are:
 #  5 for  5X3   (1 motor)
 #  8 for  8XY3  (2 motors)
-# 11 for 11XYZ3 (3 motors) 
+# 11 for 11XYZ3 (3 motors)
 #
 # pmac10
         { 23o:MO:Tn1:, 0,  32 }
         { 23o:BP:Mo:,  0,  45 }
         { 23o:BP:Hd1:, 0,  77 }
+        { 23o:BP:Hd3:, 0,  82 }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/Ram08XY3.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/Ram08XY3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8
@@ -26,7 +27,7 @@ file $(TPMAC)/pmacDb/Ram08XY3.db
 # The values of shifts are:
 #  5 for  5X3   (1 motor)
 #  8 for  8XY3  (2 motors)
-# 11 for 11XYZ3 (3 motors) 
+# 11 for 11XYZ3 (3 motors)
 #
 # pmac10:
         { 23o:WS:Av:,  0,   0 }
@@ -37,8 +38,8 @@ file $(TPMAC)/pmacDb/Ram08XY3.db
         { 23o:HD:Up:,  0,  61 }
         { 23o:HD:Dn:,  0,  69 }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/Ram11XYZ3.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/Ram11XYZ3.db"
 {
 	pattern { assy, C, S }
 #                               pcs = 1  2  3  4  5  6  7  8
@@ -48,7 +49,7 @@ file $(TPMAC)/pmacDb/Ram11XYZ3.db
 # The values of shifts are:
 #  5 for  5X3   (1 motor)
 #  8 for  8XY3  (2 motors)
-# 11 for 11XYZ3 (3 motors) 
+# 11 for 11XYZ3 (3 motors)
 #
 # pmac10:
         { 23o:HD:St:,  0,  50 }

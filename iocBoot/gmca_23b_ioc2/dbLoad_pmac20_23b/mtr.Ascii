@@ -1,0 +1,111 @@
+file "$(TPMAC)/pmacDb/AsciiMtr.db"
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac20:
+        { 23b:JET:mp:,    2,  1 }
+        { 23b:BD:mhd:,    2,  2 }
+        { 23b:BD:mvd:,    2,  3 }
+        { 23b:BD:mvu:,    2,  4 }
+ 	{ 23b:GO:mom:,    2,  5 }
+ 	{ 23b:GO:mkp:,    2,  6 }
+ 	{ 23b:GO:mph:,    2,  7 }
+  	{ 23b:GO:mcz:,    2,  8 }
+ 	{ 23b:GO:mcx:,    2,  9 }
+ 	{ 23b:GO:mcy:,    2, 10 }
+  	{ 23b:GO:msh:,    2, 11 }
+  	{ 23b:GO:msv:,    2, 12 }
+  	{ 23b:CCD:ml:,    2, 13 }
+  	{ 23b:CCD:mx:,    2, 14 }
+        { 23b:CCD:mus:,   2, 15 }
+        { 23b:CCD:mds:,   2, 16 }
+        { 23b:GS:mx:,     2, 17 }
+        { 23b:GS:mpt:,    2, 18 }
+        { 23b:GS:mt:,     2, 19 }
+        { 23b:GS:mb:,     2, 20 }
+        { 23b:GS:mo:,     2, 21 }
+        { 23b:GS:mi:,     2, 22 }
+        { 23b:BS:md:,     2, 23 }
+        { 23b:BS:mpt:,    2, 24 }
+        { 23b:BS:myw:,    2, 25 }
+        { 23b:TV:mz1:,    2, 29 }
+        { 23b:TV:mz2:,    2, 30 }
+        { 23b:SH:mp:,     2, 31 }
+ 	{ 23b:pmac20:mo:, 2, 32 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/IxMtrMv.db"
+{
+	pattern { mtr, C, x }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  x = 1 2 3 4 5 6 7 8
+# pmac20:
+        { 23b:JET:mp:,    2,  1 }
+        { 23b:BD:mhd:,    2,  2 }
+        { 23b:BD:mvd:,    2,  3 }
+        { 23b:BD:mvu:,    2,  4 }
+ 	{ 23b:GO:mom:,    2,  5 }
+ 	{ 23b:GO:mkp:,    2,  6 }
+ 	{ 23b:GO:mph:,    2,  7 }
+ 	{ 23b:GO:mcz:,    2,  8 }
+ 	{ 23b:GO:mcx:,    2,  9 }
+  	{ 23b:GO:mcy:,    2, 10 }
+  	{ 23b:GO:msh:,    2, 11 }
+  	{ 23b:GO:msv:,    2, 12 }
+  	{ 23b:CCD:ml:,    2, 13 }
+  	{ 23b:CCD:mx:,    2, 14 }
+        { 23b:CCD:mus:,   2, 15 }
+        { 23b:CCD:mds:,   2, 16 }
+        { 23b:GS:mx:,     2, 17 }
+        { 23b:GS:mpt:,    2, 18 }
+        { 23b:GS:mt:,     2, 19 }
+        { 23b:GS:mb:,     2, 20 }
+        { 23b:GS:mo:,     2, 21 }
+        { 23b:GS:mi:,     2, 22 }
+        { 23b:BS:md:,     2, 23 }
+        { 23b:BS:mpt:,    2, 24 }
+        { 23b:BS:myw:,    2, 25 }
+        { 23b:TV:mz1:,    2, 29 }
+        { 23b:TV:mz2:,    2, 30 }
+        { 23b:SH:mp:,     2, 31 }
+#	{ 23b:pmac20:mo:, 2, 32 }	# not used
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/OpnLp.db"
+{
+	pattern { mtr, C, M }
+#				mtr = 1 2 3 4 5 6 7 8
+#				  M = 1 2 3 4 5 6 7 8
+
+# pmac20:
+        { 23b:JET:mp:,    2,  1 }
+        { 23b:BD:mhd:,    2,  2 }
+        { 23b:BD:mvd:,    2,  3 }
+        { 23b:BD:mvu:,    2,  4 }
+ 	{ 23b:GO:mom:,    2,  5 }
+ 	{ 23b:GO:mkp:,    2,  6 }
+ 	{ 23b:GO:mph:,    2,  7 }
+ 	{ 23b:GO:mcz:,    2,  8 }
+ 	{ 23b:GO:mcx:,    2,  9 }
+  	{ 23b:GO:mcy:,    2, 10 }
+  	{ 23b:GO:msh:,    2, 11 }
+  	{ 23b:GO:msv:,    2, 12 }
+  	{ 23b:CCD:ml:,    2, 13 }
+  	{ 23b:CCD:mx:,    2, 14 }
+        { 23b:CCD:mus:,   2, 15 }
+        { 23b:CCD:mds:,   2, 16 }
+        { 23b:GS:mx:,     2, 17 }
+        { 23b:GS:mpt:,    2, 18 }
+        { 23b:GS:mt:,     2, 19 }
+        { 23b:GS:mb:,     2, 20 }
+        { 23b:GS:mo:,     2, 21 }
+        { 23b:GS:mi:,     2, 22 }
+        { 23b:BS:md:,     2, 23 }
+        { 23b:BS:mpt:,    2, 24 }
+        { 23b:BS:myw:,    2, 25 }
+        { 23b:TV:mz1:,    2, 29 }
+        { 23b:TV:mz2:,    2, 30 }
+        { 23b:SH:mp:,     2, 31 }
+#	{ 23b:pmac20:mo:, 2, 32 }	# not used
+}

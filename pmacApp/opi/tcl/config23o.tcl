@@ -27,6 +27,7 @@
             {
                 { "Mono BPM"            Mo:  MDCs pmac10: 05X3     {}      {MOZ:}    {{20 mmo:}}             }
 		{ "HDM1 BPM"            Hd1: MDCs pmac10: 05X3     {}      {H1Z:}    {{28 mh1z:}}            }
+		{ "HDM1a BPM"           Hd3: MDCs pmac10: 05X3     {}      {H3Z:}    {{ 9 mh3z:}}            }
 		{ "HDM2 BPM"            Hd2: MDCs pmac11: 05X3     {}      {H2Z:}    {{ 1 mh2z:}}            }
                 { "KB mirrors BPM"      Kb:  MDCs pmac11: 05X3     {}      {KBZ:}    {{16 mkb:}}             }
 
@@ -79,7 +80,7 @@
  	}
  	{ "Collimator" COL:
  	    {
- 		{ "Support"             St:  XYPs  pmac21: 08XY3      {}       {H:   V: }       {{ 1 mh: }  { 2 mv: }}              }
+ 		{ "Support"             St:  XYPs  pmac21: 08XY3      {}       {H:   V: }       {{ 11 mh: }  { 12 mv: }}              }
  	    }
  	}
         { "Beam Stop"   BS:
@@ -102,7 +103,7 @@
  	}
         { "Cryo Jet" JET:
             {
-                { "Cryo Jet position"   Ps:  XPs   pmac20: 05X3       {}       {P: }            {{13 mp:}}                          }
+                { "Cryo Jet position"   Ps:  XPs   pmac20: 05X3       {}       {P: }            {{14 mp:}}                          }
             }
  	}
         { "Fluorescent Detector" FLU:
@@ -124,21 +125,15 @@
  	}
  	{ "PMAC-21 XY Positioners " XY:
  	    {
- 		{ "Positioner-1"        P1:  XYPs  pmac21: 08XY3      {}       {X1:  Y1: }      {{3  mx1: } {4  my1: }}             }
- 		{ "Positioner-2"        P2:  XYPs  pmac21: 08XY3      {}       {X2:  Y2: }      {{15 mx2: } {16 my2: }}             }
- 		{ "Positioner-3"        P3:  XYPs  pmac21: 08XY3      {}       {X3:  Y3: }      {{17 mx3: } {18 my3: }}             }
- 		{ "Positioner-4"        P4:  XYPs  pmac21: 08XY3      {}       {X4:  Y4: }      {{19 mx4: } {20 my4: }}             }
- 		{ "Positioner-5"        P5:  XYPs  pmac21: 08XY3      {}       {X5:  Y5: }      {{21 mx5: } {22 my5: }}             }
- 		{ "Positioner-6"        P6:  XYPs  pmac21: 08XY3      {}       {X6:  Y6: }      {{23 mx6: } {24 my6: }}             }
- 		{ "Positioner-7"        P7:  XYPs  pmac21: 08XY3      {}       {X7:  Y7: }      {{25 mx7: } {26 my7: }}             }
- 		{ "Positioner-8"        P8:  XYPs  pmac21: 08XY3      {}       {X8:  Y8: }      {{27 mx8: } {28 my8: }}             }
- 		{ "Positioner-9"        P9:  XYPs  pmac21: 08XY3      {}       {X9:  Y9: }      {{29 mx8: } {30 my8: }}             }
+ 		{ "Positioner-2 (Pico)"           P2:  XYPs  pmac21: 08XY3      {}       {X2:  Y2: }      {{15 mx2: } {16 my2: }}             }
+ 		{ "Positioner-3 (ThinGap)"        P3:  XYPs  pmac21: 08XY3      {}       {X3:  Y3: }      {{17 mx3: } {18 my3: }}             }
+ 		{ "Positioner-6 (Newport)"        P6:  XYPs  pmac21: 08XY3      {}       {X6:  Y6: }      {{23 mx6: } {24 my6: }}             }
  	    }
  	}
  	{ "Huber Slits" HS:
  	    {
-                { "Vertical   Aperture" Av:  HSAp  pmac21: 08XY3   {ZC: ZS:}   {ZT: ZB:  }      {{11 mt:  } {12 mb:  }}             }
-                { "Horizontal Aperture" Ah:  HSAp  pmac21: 08XY3   {YC: YS:}   {YO: YI:  }      {{13 mo:  } {14 mi:  }}             }
+                { "Vertical   Aperture" Av:  HSAp  pmac21: 08XY3   {ZC: ZS:}   {ZT: ZB:  }      {{1 mt:  } {2 mb:  }}             }
+                { "Horizontal Aperture" Ah:  HSAp  pmac21: 08XY3   {YC: YS:}   {YO: YI:  }      {{3 mo:  } {4 mi:  }}             }
  	    }
  	}
   }
@@ -160,6 +155,7 @@
                   { 9 HD:Up: }
                   {10 HD:Dn: }
                   {11 BP:Hd1:}
+                  {12 BP:Hd3:}
                 }
 	    }
 	    {
@@ -200,14 +196,14 @@
  	    }
  	    {
  		pmac21:
- 		{ { 1 COL:St:}
-                  { 2 XY:P1: }
+ 		{ { 1 HS:Av: }
+                  { 2 HS:Ah: }
                   { 3 RB:Rd: }
                   { 4 RB:Rr: }
                   { 5 FLU:Di:}
                   { 6 PIN:St:}
-                  { 7 HS:Av: }
-                  { 8 HS:Ah: }
+		  { 7 COL:St:}
+                  { 8 XY:P1: }
                   { 9 XY:P2: }
                   {10 XY:P3: }
                   {11 XY:P4: }
@@ -234,6 +230,15 @@
 ## Additional list for Acc_65E:
   set acc65eList {pmac20: pmac21:}
 
+## Additional list for Acc_59E:
+  set acc59eList {pmac20: pmac21:}
+
+## Additional settings for the shutter program executed by gonio during frame collection:
+## (see 2_m3300-endstation-pmacXX_BLN.pmc)
+  set shutterOpenedMvar M3425
+  set shutterClosedMvar M3426
+
+
 ####################################################################################
 # For users only:
   set ComponentUsers {
@@ -241,6 +246,11 @@
             {
                 { "Mono Energy"         En:  {E:  L: } }
                 { "Crystal-2 Tuning"    Tn2: {P2:    } }
+            }
+	}
+	{ "Horiz Deflecting Mirrors" HD:
+            {
+             	{ "HDM Z-pos.         " St:  {SL: } }
             }
 	}
         { "KB Mirrors" KB:
@@ -272,6 +282,11 @@
                 { "HiRes.Camera"        V1:  {ZM1: } }
                 { "LoRes.Camera"        V2:  {ZM2: } }
             }
+ 	}
+ 	{ "Collimator" COL:
+ 	    {
+ 		{ "Collimator Position" St:  {H: V:} }
+ 	    }
  	}
         { "Beam Stop"   BS:
             {

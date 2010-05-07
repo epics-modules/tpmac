@@ -83,6 +83,7 @@ record(tsub, "$(assy)RqsPosTsubAxs") {
   field(INPH, "$(assy)EvLambda NPP MS")
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
+  field(INPN, "$(d2)RqsPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
@@ -104,28 +105,28 @@ record(ao, "$(m1)RqsPosFra") {
   field(PREC, "4")
 }
 
-record(ao, "$(d1)RqsPos") {
-  field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
-  field(PREC, "4")
-}
-
 record(ao, "$(m2)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubMtr.PROC PP MS")
 }
 
+record(ao, "$(d1)RqsPos") {
+  field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
+  field(PREC, "$(prec_d1)")
+}
+
 record(ao, "$(d2)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
-  field(PREC, "2")
+  field(PREC, "$(prec_d2)")
 }
 
 record(ao, "$(x1)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubAxs1.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x1)")
 }
 
 record(ao, "$(x2)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubAxs2.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x2)")
 }
 
 record(calc, "$(assy)RqsPosSDISx1") {

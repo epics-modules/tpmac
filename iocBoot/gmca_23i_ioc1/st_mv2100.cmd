@@ -1,11 +1,11 @@
 ### vxWorks startup script
   loginUserAdd "gmca", "RceeQSdRSb"
-  loginUserDelete "vw5"
+# loginUserDelete "vw5"
   shellPromptSet "23i:ioc1> "
 
 ### This is routeAdd, hostAdd, hostShow, nfsMount...
-  nfsAuthUnixSet "bl1dl380upper", 500, 100
-  nfsMount "bl1dl380upper", "/home/gmca/epics_synApps/synApps_5_1", "/ioc"
+  nfsAuthUnixSet "bl1dl380lower", 500, 100
+  nfsMount "bl1dl380lower", "/home/gmca/epics_synApps/synApps_5_2", "/ioc"
 
 ### Add gateway to be visible from lab network:
 ### routeAdd   "destaddr",      "gateaddr"
@@ -13,19 +13,13 @@
   routeAdd  "164.54.210.128",  "164.54.210.65"
 # routeShow
 
-  startup   = "/ioc/xxx1/iocBoot/iocgmca1"
-  appbin    = "/ioc/xxx1/bin/vxWorks-ppc603"
+  < iocEnv
 
-  putenv ("AUTOSAVE=/ioc/autosave/4-1-1/asApp/Db")
-  putenv ("GMCA=/ioc/gmca/1-0/gmcaApp/Db")
-  putenv ("STD=/ioc/std/2-4a/stdApp/Db")
-  putenv ("TPMAC=/ioc/tpmac/2-3/pmacApp/Db")
-  putenv ("CALC=/ioc/calc/2-3/calcApp/Db")
-  putenv ("SSCAN=/ioc/sscan/2-3/sscanApp/Db")
-  putenv ("VME=/ioc/vme/2-4a/vmeApp/Db")
-  putenv ("VXSTATS=/ioc/vxStats/1-7-2c/db")
-# putenv ("EPICS_TS_NTP_INET=164.54.210.2")
+  putenv ("EPICS_TS_NTP_INET=164.54.210.2")
 
+### This is needed for Derek's feedback:
+  putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
+  printf "EPICS_CA_ADDR_LIST=%s\n",getenv("EPICS_CA_ADDR_LIST")
 ################################################################################
 
 ### If the VxWorks kernel was built using the project facility, the following must
@@ -48,6 +42,10 @@
 
 ### override address, interrupt vector, etc. information in module_types.h
 #  module_types()
+
+################################################################################
+### IP stuff: 
+  < st_ip.cmd
 
 ##############################################################################
 ### save_restore setup
@@ -97,11 +95,28 @@
 ### crate-resident scan.  This executes 1D, 2D, 3D, and 4D scans, and caches
 ### 1D data, but it doesn`t store anything to disk.  (See 'saveData' below
 ### for that.)
-# dbLoadRecords("$(SSCAN)/scan.db","P=23i:1:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
+  dbLoadRecords("$(SSCAN)/scan.db","P=23i:1:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
+
+###############################################################################
+### Acromag AVME9440 setup parameters:
+### devAvem9440Config (ncards,a16base,intvecbase)
+### uses 8 vectors
+  devAvme9440Config(1, 0x2800, 0x78)
+
+### Acromag 9440 digital IO records:
+### - Outpot Channels 0--15 can provide digital output
+### - Input  Channels 0--7 are scanned in I/O interrupt mode
+### - Input  Channels 8--15 are scanned in passive mode
+### - Input  Channels 16--31 provide digital output readback
+### ATTENTION: to use interrupts, set interrupt level to 5 (jumper J4: 1&2, 5&6 IN))
+
+  dbLoadTemplate("digital_IO.substitutions")
+
+# devAvme9440Debug=5
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### Load Keithley-428 Current Amplifier databases:
-  < st_keithley.cmd
+# < st_keithley.cmd
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -111,7 +126,7 @@
 
 ###############################################################################
   dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23i:1")
-### medm -x -attach -macro P=23i:2 std/2-5/stdApp/op/adl/IOC_Status_full.adl
+
 ###############################################################################
 # reboot_restoreDebug=1
 # reboot_restoreDebug=5
@@ -157,7 +172,7 @@
 # dbpf ("23i:MO:mr:FolErr.ASLO","0.0000625")
 
 ### Disable Telnet:
-  ts tTelnetd
+# ts tTelnetd
 ############################# END 23i:ioc3 ##########################
 ### ALL DONE!
 ### Enter ^X or "reboot" to reboot!

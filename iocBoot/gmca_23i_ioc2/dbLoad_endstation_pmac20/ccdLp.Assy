@@ -15,24 +15,24 @@ file "$(TPMAC)/ccdDb/CCDLp_LimAmp.db"
 #----------------------------------------------------------------------------
 file "$(TPMAC)/ccdDb/CCDLp_Tsub.db"
 {
-	pattern { assy, d1, m1, assySt, x1St, x2St, val, nla, tsub }
+	pattern { assy, d1, prec_d1, m1, assySt, x1St, x2St, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
 # nla=0/1 correspond to absolute/relative conversion.
 # pmac20:
-        { 23i:CCD:Lp:, 23i:CCD:DL:, 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, RqsPos, 0, tsubCCDLp }
-        { 23i:CCD:Lp:, 23i:CCD:DL:, 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, RqsBkl, 1, tsubCCDLp }
+        { 23i:CCD:Lp:, 23i:CCD:DL:, 3, 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, RqsPos, 0, tsubCCDLp }
+        { 23i:CCD:Lp:, 23i:CCD:DL:, 3, 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, RqsBkl, 1, tsubCCDLp }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/ccdDb/CCDLp_TsubRbk.db"
 {
-	pattern { assy, d1, desc_d1, egu_d1, m1, assySt, x1St, x2St, val, nla, tsub }
+	pattern { assy, d1, prec_d1, desc_d1, egu_d1, m1, assySt, x1St, x2St, val, nla, tsub }
 # pmac20:
-        { 23i:CCD:Lp:, 23i:CCD:DL:, "CCD later.pos.", "(mm)", 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, ActPos, 0, tsubCCDLp }
+        { 23i:CCD:Lp:, 23i:CCD:DL:, 3, "CCD later.pos.", "(mm)", 23i:CCD:ml:, 23i:CCD:St:, 23i:CCD:D:, 23i:CCD:2Q:, ActPos, 0, tsubCCDLp }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/ccdDb/CCDLp_TsubSpeed.db"
 {
-  pattern { assy, d1, egu_d1, m1, tsub }
+  pattern { assy, d1, prec_d1, egu_d1, m1, tsub }
 # pmac20:
-        { 23i:CCD:Lp:, 23i:CCD:DL:, "(mm/s)",   23i:CCD:ml:, tsubCCDLp }
+        { 23i:CCD:Lp:, 23i:CCD:DL:, 3, "(mm/s)",   23i:CCD:ml:, tsubCCDLp }
 }

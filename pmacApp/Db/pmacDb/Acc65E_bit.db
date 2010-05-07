@@ -1,0 +1,19 @@
+
+record(bi, "$(P)bi$(N)") {
+  field(INP, "$(P)IN.BI$(NN) NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bi, "$(P)rb$(N)") {
+  field(INP, "$(P)OUT_rb.BI$(NN) NPP MS")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+}
+
+record(bo,"$(P)bo$(N)") {
+  field(SDIS,"$(SDIS)")
+  field(ZNAM,"Off")
+  field(ONAM,"On") 
+  field(FLNK, "$(P)TSUB.PROC PP MS") 
+} 

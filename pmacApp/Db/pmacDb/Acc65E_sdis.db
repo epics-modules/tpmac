@@ -1,0 +1,51 @@
+
+### Do not put backlight IN if beamstop is IN, or pin diode is IN,
+### or pin diode is running and beamstop distance below critical:
+### A = bi20 - backlight sensor (1=in, 0=out)
+### B = bi21 - beamstop sensor (1=in, 0=out)
+### C = rb14 - beamstop request (1=in, 0=out)
+
+record(calc, "$(P)SDIS13") {
+### Here BS big distance avoids collision with Backlight and PIN
+  field(CALC, "A=0&&(B=1||C=1||F=1)&&D<E")
+### Here BS big distance avoids collision with Backlight only
+# field(CALC, "A=0&&(((B=1||C=1)&&D<E)||F=1)")
+  field(INPA, "$(P)bi20.VAL NPP MS")
+  field(INPB, "$(P)bi21.VAL NPP MS")
+  field(INPC, "$(P)rb14.VAL NPP MS")
+  field(INPD, "$(BL)BS:D:ActPos.VAL NPP MS")
+  field(INPE, "$(BL)BS:D:critical.VAL NPP MS")
+  field(INPF, "$(BL)PIN:stateCALC.VAL PP MS")
+}
+
+### Do not put beamstop IN if backlight is IN, or backlight has been requested to go IN:
+### A = bi21 - beamstop sensor (1=in, 0=out)
+### B = bi20 - backlight sensor (1=in, 0=out)
+### C = rb13 - backlight request (1=in, 0=out)
+
+record(calc, "$(P)SDIS14") {
+  field(CALC, "A=0&&(B=1||C=1)&&D<E")
+  field(INPA, "$(P)bi21.VAL NPP MS")
+  field(INPB, "$(P)bi20.VAL NPP MS")
+  field(INPC, "$(P)rb13.VAL NPP MS")
+  field(INPD, "$(BL)BS:D:ActPos.VAL NPP MS")
+  field(INPE, "$(BL)BS:D:critical.VAL NPP MS")
+}
+
+record(ao, "$(BL)BS:D:critical") {
+  field(DESC, "Beamstop critical distance")
+  field(PREC, "3")
+  field(DOL, "35.0")
+  field(EGU, "mm")
+}
+
+record(calc, "$(BL)PIN:stateCALC") {
+  field(DESC, "True if PIN is IN or moving")
+  field(CALC, "ABS(D-E)<ABS(D-F)||G=1")
+  field(INPD, "$(BL)PIN:P:ActPos.VAL NPP MS")
+### E = RqsPosMem1 - pin diode-IN destination
+### F = RqsPosMem2 - pin diode-OUT destination
+  field(INPE, "$(BL)PIN:P:RqsPosMem1.VAL NPP MS")
+  field(INPF, "$(BL)PIN:P:RqsPosMem2.VAL NPP MS")
+  field(INPG, "$(BL)PIN:St:RunPrg.VAL NPP MS")
+}

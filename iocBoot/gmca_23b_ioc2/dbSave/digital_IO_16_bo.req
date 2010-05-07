@@ -1,0 +1,21 @@
+%
+% This request file stores settings for Acromag 9440 digital out
+%
+
+$(P)0.VAL
+$(P)1.VAL
+$(P)2.VAL
+$(P)3.VAL
+$(P)4.VAL
+$(P)5.VAL
+$(P)6.VAL
+$(P)7.VAL
+$(P)8.VAL
+$(P)9.VAL
+$(P)10.VAL
+$(P)11.VAL
+$(P)12.VAL
+$(P)13.VAL
+$(P)14.VAL
+$(P)15.VAL
+

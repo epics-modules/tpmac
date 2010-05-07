@@ -21,12 +21,12 @@ drvPmacDebug
   pmacVmeConfig (0, 0x6FA000, 0x600000, 0xa5, 6)
   pmacVmeConfig (1, 0x7FA000, 0x700000, 0xa1, 1)
 
-
 ### Configure PMAC-VME Driver
 ### This uses MAILBOX:
 # pmacAsynConfig( "PMAC_MBX_PORT_", 0 )
 ### This uses DPRAM ASCII:
   pmacAsynConfig( 0, "PMAC_MBX_PORT_" )
+
 # 	args:	(1) EPICS VME Card #
 #		(2) DPRAM Servo Fixed Buffer Scan Rate
 # 			(ticks, 0=default, -1=disabled, -2=interrupt)
@@ -56,7 +56,7 @@ drvPmacDebug
 
 ### PMAC Databases
   dbLoadTemplate ("dbLoad_pmac10_23o/pmac.Ascii")
-# dbLoadTemplate ("dbLoad_pmac10_23o/pmac.acc11e") 
+# dbLoadTemplate ("dbLoad_pmac10_23o/pmac.acc11e")
 # dbLoadTemplate ("dbLoad_pmac10_23o/pmac.acc65e")
 
 ### Motor Databases
@@ -96,7 +96,7 @@ drvPmacDebug
 
 ### PMAC Databases
   dbLoadTemplate ("dbLoad_pmac11_23o/pmac.Ascii")
-# dbLoadTemplate ("dbLoad_pmac11_23o/pmac.acc11e") 
+# dbLoadTemplate ("dbLoad_pmac11_23o/pmac.acc11e")
 
 ### Motor Databases
   dbLoadTemplate ("dbLoad_pmac11_23o/mtr.mtrdat")

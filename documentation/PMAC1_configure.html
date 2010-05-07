@@ -281,13 +281,19 @@ Ix25=$A0C0xx
 </tr>
 </table>
 
-
-<!-- This script inserts a 'Last Modified Date Stamp' -->
-<SCRIPT LANGUAGE="JavaScript">
+<!-- This script inserts a 'Last updated Date Stamp' -->
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 <!--
-        document.write('<FONT SIZE="1">Last modified ' + document.lastModified + '</FONT><BR>')
-// -->
+var MonthOfYearArray = ['January','February','March','April','May','June','July',
+                        'August','September','October','November','December'];
+var LastModifiedDate = new Date(document.lastModified);
+var day       = LastModifiedDate.getDate();
+var month     = LastModifiedDate.getMonth()+1;
+var monthName = MonthOfYearArray[month-1];
+var year      = LastModifiedDate.getYear();
+if (year < 2000) {year += 1900;}
+document.write('<FONT SIZE="1">Last updated '+monthName+' '+day+', '+year+'</FONT><BR>');
+//-->
 </SCRIPT>
-
 </body>
 </html>

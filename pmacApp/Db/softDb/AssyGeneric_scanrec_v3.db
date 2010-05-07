@@ -1,0 +1,183 @@
+#############################################################################
+# NOTE: AssyGeneric_scanrec_v3.db differs from AssyGeneric_scanrec_v2.db
+# by aading an optional link LNK3->todoatstart to the Start PV that allows
+# for launching some extra action when the motor starts.
+# When this functionality is not needed, leave the todoatstart blank (i.e. '')
+# in the template calling the DB. However, pay attention to the fact that the
+# templates calling AssyGeneric_scanrec_v3.db require this extra "todoatstart"
+# definition.
+# -- Sergey Stepanov
+#############################################################################
+# NOTE: AssyGeneric_scanrec_v2.db is a patch to AssyGeneric_scanrec_v1.db
+# suggested by Lewis Muir <jlmuir@anl.gov>. Use it in conjunction with
+# ../pmacDb/bkgfix1pcs_scanrec_v2.db
+# The rational for the change according to Lewis is:
+# When performing an sscan module step scan of a tpmac drive, sometimes
+# the (assy)Busy record does not get set to Done, and so the sscan record
+# waits indefinitely for the move to complete.  The move has completed,
+# but the (assy)Busy record doesn't reflect this.
+#
+# I tracked down the problem to the fact that for some moves (maybe small
+# ones that complete very quickly?), (pcs)PrgExeSts is never processed
+# (verified by setting its TPRO field to 1) and hence (pcs)InPos is never
+# processed.  This makes Tim Mooney's (pcs)ClearBusy record not work
+# right since it never sees (pcs)InPos transition to 0 (Moving) and then
+# to 1 (Positioned) - so it never sets (assy)Busy to Done and so the step
+# scan waits indefinitely.
+#
+# Attached is a patch against tpmac 3-5 to fix this problem.  The fix uses
+# a software-only "in-position" indicator that gets set to 0 (Moving) at
+# the start of the move and 1 (Positioned) 0.25 sec later.  0.25 sec was
+# chosen because in the cases where (pcs)InPos did process, it always
+# seemed to process within 0.1 sec of having started the move, so 0.25 sec
+# seemed safe.
+#
+# The idea is that if (pcs)InPos has not transitioned to 0 (Moving)
+# within 0.25 sec of starting the move, it never will.  In this case, the
+# software-only "in-position" indicator is observed by the (pcs)ClearBusy
+# record and it sets (assy)Busy to Done after 0.25 sec.  If, however,
+# (pcs)InPos does transition to 0 (Moving) within 0.25 sec of starting
+# the move, (pcs)ClearBusy will track it for determining when the move
+# completes.
+#
+# The downside of this patch is that every move will take a minimum of
+# 0.25 sec.  The upside is that step scans will work correctly - the sscan
+# module will not lock up.
+#
+# A cleaner fix would be for (pcs)InPos to transition to 0 (Moving) and
+# then to 1 (Positioned) for every move (even if the move takes a very
+# short time).  I didn't look at the C code, but perhaps there's a way to
+# force (pcs)PrgExeSts to update right after starting the motion program,
+# and again once the motion program completes.  Or maybe that won't work,
+# and a separate flag would be needed that gets set to 0 (Moving) before
+# starting the motion program and get set to 1 (Positioned) after the
+# motion program completes (maybe even the motion program itself sets it
+# as its last instruction).
+#
+#############################################################################
+# NOTE: AssyGeneric_scanrec_v1.db is modification to AssyGeneric_noscan.db by
+# Tim Mooney. Use it in conjunction with ../pmacDb/bkgfix1pcs_scanrec_v1.db
+# if you plan to use PMAC motors with Scan Record in the step-scan mode. In
+# that case simply replace:
+#       AssyGeneric_noscan.db -> AssyGeneric_scanrec_v1.db
+#        bkgfix1pcs_noscan.db ->  bkgfix1pcs_scanrec_v1.db
+# -- or otherwise the Scan Record would not wait for motion to execute.
+#############################################################################
+
+record(fanout, "$(assy)AutoStartFLNK") {
+  field(SDIS, "$(assy)AutoStart.VAL PP MS")
+  field(LNK1, "$(assy)Start.PROC PP MS")
+}
+
+# Modified for ca_put_callback(): added LNK2 to set busy record  -Tim Mooney
+record(fanout, "$(assy)Start") {
+  field(DISV, "0")
+  field(SDIS, "$(assy)Ready.VAL PP MS")
+  field(LNK1, "$(assy)Run.PROC PP MS")
+  field(LNK2, "$(assy)SetBusy.PROC PP")
+  field(LNK3, "$(todoatstart)")
+  field(DESC, "$(desc)")
+}
+
+# Begin - Added for ca_put_callback()  -Tim Mooney
+record(bo, "$(assy)SetBusy") {
+  field(DOL, "1")
+  field(OMSL, "closed_loop")
+  field(OUT, "$(assy)Busy PP")
+  field(FLNK, "$(assy)SwInPosPls")
+}
+
+record(seq, "$(assy)SwInPosPls") {
+  field(DOL1, "0")
+  field(LNK1, "$(assy)SwInPos.VAL PP NMS")
+  field(DLY2, "0.25")
+  field(DOL2, "1")
+  field(LNK2, "$(assy)SwInPos.VAL PP NMS")
+}
+
+record(bo, "$(assy)SwInPos") {
+  field(VAL, "1")
+  field(ZNAM, "Moving")
+  field(ONAM, "Positioned")
+  field(PINI, "YES")
+}
+
+record(busy, "$(assy)Busy") {
+}
+# End - Added for ca_put_callback()
+
+record(bi, "$(assy)Ready") {
+  field(DESC, "Ready")
+  field(INP, "$(assy)ReadyCALC.VAL PP MS")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "NotReady")
+  field(ONAM, "Ready")
+  field(PINI, "YES")
+}
+
+# A: RunPrg: 0=Idle, 1=Running                       (bkgfix1pcs.db)
+# B: Motion: 0=None, 1=Slew, 2=Backlash, 3=Position  (MotionPrg.db)
+#
+record(calc, "$(assy)ReadyCALC") {
+  field(CALC, "(A=0)&&(B#0)")
+  field(INPA, "$(assy)RunPrg.VAL NPP MS")
+  field(INPB, "$(assy)Motion.VAL NPP MS")
+}
+
+record(fanout, "$(assy)ChangedFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)Load.PROC PP MS")
+}
+
+record(fanout, "$(assy)LoadFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)AutoStartFLNK.PROC PP MS")
+}
+
+record(bo, "$(assy)AutoStart") {
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Auto")
+  field(ONAM, "Man")
+}
+
+record(fanout, "$(assy)ScaleFanD") {
+  field(LNK1, "$(assy)RqsPosTsubMtr.PROC PP MS")
+  field(LNK2, "$(assy)RqsBklTsubMtr.PROC PP MS")
+  field(LNK3, "$(assy)ActPosTsubMtr.PROC PP MS")
+}
+
+#---------------------------------------------------------------
+# Added by Sergey on 2005/12/21 for BluIce. This is a timeout trigger.
+# The timout value has to be calculated externally and loaded into
+# TmoTrigger.DLY1 before pushing "Start" (or before entering RqsPos if
+# Autostart=On). One also has to set TimeOut.VAL to 0 before starting
+# motion.
+# After the timeout interval, the TmoTrigger copies DOL1 (==1) into
+# LNK1 (==TimeOut.VAL). In order to catch that event one has to
+# monitor either TimeOut.PROC or the change of TimeOut.VAL from 0 to 1.
+#
+# The seq record fields (the record can work with up to 10 imput-output pairs).
+# SELM=Select Mechanism (All, Specified, Mask),
+# SELN=Link Selection (for Specified or Mask),
+# DOL1=Input Link-1,
+# DLY1=Delay-1,
+# LNK1=Output Link-1
+#
+# For more info on Sequence Record (seq) see:
+# http://www.aps.anl.gov/asd/controls/epics/EpicsDocumentation/AppDevManuals/RecordRef/Recordref-34.html
+#
+# Removed by Sergey on 2006/05/08 (not implemented in BluIce)
+#
+# record(seq, "$(assy)TmoTrigger") {
+#   field(SELM, "Specified")
+#   field(SELN, "1")
+#   field(DOL1, "1")
+#   field(DLY1, "0")
+#   field(LNK1, "$(assy)TimeOut PP MS")
+# }
+#
+# record(ao, "$(assy)TimeOut") {
+#   field(PINI, "YES")
+#   field(DOL, "0.0")
+# }

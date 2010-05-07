@@ -16,14 +16,14 @@ file "$(TPMAC)/softDb/Load08XY3.db"
 {
         pattern { assy, m1, m2, C, pcs }
 # pmac21:
-        { 23o:COL:St:, 23o:COL:mh:,  23o:COL:mv:,  1,  1 }
-        { 23o:XY:P1:,  23o:XY:mx1:,  23o:XY:my1:,  1,  2 }
+        { 23o:HS:Av:,  23o:HS:mt:,   23o:HS:mb:,   1,  1 }
+        { 23o:HS:Ah:,  23o:HS:mo:,   23o:HS:mi:,   1,  2 }
 #       { 23o:RB:Rd:,  23o:RB:mrx:,  23o:RB:mry:,  23o:RB:mrz:,  1,  3 }
 #       { 23o:RB:Rr:,  23o:RB:mra:,  1,  4 }
 #	{ 23o:FLU:Di:, 23o:FLU:md:,  1,  5 }
 #	{ 23o:PIN:St:, 23o:PIN:mp:,  1,  6 }
-        { 23o:HS:Av:,  23o:HS:mt:,   23o:HS:mb:,   1,  7 }
-        { 23o:HS:Ah:,  23o:HS:mo:,   23o:HS:mi:,   1,  8 }
+        { 23o:COL:St:, 23o:COL:mh:,  23o:COL:mv:,  1,  7 }
+        { 23o:XY:P1:,  23o:XY:mx1:,  23o:XY:my1:,  1,  8 }
         { 23o:XY:P2:,  23o:XY:mx2:,  23o:XY:my2:,  1,  9 }
         { 23o:XY:P3:,  23o:XY:mx3:,  23o:XY:my3:,  1, 10 }
         { 23o:XY:P4:,  23o:XY:mx4:,  23o:XY:my4:,  1, 11 }

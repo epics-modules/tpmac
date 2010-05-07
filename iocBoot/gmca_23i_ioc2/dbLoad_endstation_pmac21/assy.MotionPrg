@@ -4,14 +4,14 @@ file "$(TPMAC)/softDb/MotionPrg.db"
         pattern { assy, prg0, prg1, prg2 }
 #
 # pmac21:
-        { 23i:COL:St:, 30, 31, 32 }
-        { 23i:XY:P1:,  30, 31, 32 }
+        { 23i:HS:Av:,  30, 31, 32 }
+        { 23i:HS:Ah:,  30, 31, 32 }
         { 23i:RB:Rd:,  70, 71, 72 }
         { 23i:RB:Rr:,  10, 11, 12 }
         { 23i:FLU:Di:, 10, 11, 12 }
         { 23i:PIN:St:, 10, 11, 12 }
-        { 23i:HS:Av:,  30, 31, 32 }
-        { 23i:HS:Ah:,  30, 31, 32 }
+        { 23i:COL:St:, 30, 31, 32 }
+        { 23i:XY:P1:,  30, 31, 32 }
         { 23i:XY:P2:,  30, 31, 32 }
         { 23i:XY:P3:,  30, 31, 32 }
         { 23i:XY:P4:,  30, 31, 32 }

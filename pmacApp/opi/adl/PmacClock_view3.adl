@@ -5,9 +5,9 @@ file {
 }
 display {
 	object {
-		x=265
-		y=43
-		width=490
+		x=244
+		y=350
+		width=570
 		height=115
 	}
 	clr=14
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=490
+		width=570
 		height=22
 	}
 	"basic attribute" {
@@ -112,7 +112,7 @@ text {
 }
 text {
 	object {
-		x=391
+		x=471
 		y=5
 		width=95
 		height=16
@@ -123,72 +123,61 @@ text {
 	textix="$(bl)"
 	align="horiz. right"
 }
-composite {
+text {
 	object {
-		x=3
+		x=45
 		y=92
-		width=377
+		width=97
 		height=20
 	}
-	"composite name"=""
-	children {
-		text {
-			object {
-				x=3
-				y=92
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Mailbox"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=107
-				y=92
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Servo"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=211
-				y=92
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Backgr"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=315
-				y=92
-				width=65
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Var"
-			align="horiz. centered"
-		}
+	"basic attribute" {
+		clr=63
 	}
+	textix="Mailbox"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=187
+		y=92
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Servo"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=291
+		y=92
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Backgr"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=395
+		y=92
+		width=65
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Var"
+	align="horiz. centered"
 }
 composite {
 	object {
-		x=4
+		x=83
 		y=28
 		width=482
 		height=59
@@ -197,7 +186,7 @@ composite {
 	children {
 		composite {
 			object {
-				x=4
+				x=83
 				y=28
 				width=482
 				height=15
@@ -206,7 +195,7 @@ composite {
 			children {
 				text {
 					object {
-						x=388
+						x=467
 						y=28
 						width=98
 						height=14
@@ -218,7 +207,7 @@ composite {
 				}
 				byte {
 					object {
-						x=4
+						x=83
 						y=28
 						width=97
 						height=15
@@ -232,7 +221,7 @@ composite {
 				}
 				byte {
 					object {
-						x=108
+						x=187
 						y=28
 						width=97
 						height=15
@@ -246,7 +235,7 @@ composite {
 				}
 				byte {
 					object {
-						x=212
+						x=291
 						y=28
 						width=97
 						height=15
@@ -260,7 +249,7 @@ composite {
 				}
 				byte {
 					object {
-						x=316
+						x=395
 						y=28
 						width=65
 						height=15
@@ -275,7 +264,7 @@ composite {
 		}
 		composite {
 			object {
-				x=4
+				x=83
 				y=50
 				width=482
 				height=15
@@ -284,7 +273,7 @@ composite {
 			children {
 				text {
 					object {
-						x=388
+						x=467
 						y=50
 						width=98
 						height=14
@@ -296,7 +285,7 @@ composite {
 				}
 				byte {
 					object {
-						x=4
+						x=83
 						y=50
 						width=97
 						height=15
@@ -310,7 +299,7 @@ composite {
 				}
 				byte {
 					object {
-						x=108
+						x=187
 						y=50
 						width=97
 						height=15
@@ -324,7 +313,7 @@ composite {
 				}
 				byte {
 					object {
-						x=212
+						x=291
 						y=50
 						width=97
 						height=15
@@ -338,7 +327,7 @@ composite {
 				}
 				byte {
 					object {
-						x=316
+						x=395
 						y=50
 						width=65
 						height=15
@@ -353,7 +342,7 @@ composite {
 		}
 		composite {
 			object {
-				x=4
+				x=83
 				y=72
 				width=482
 				height=15
@@ -362,7 +351,7 @@ composite {
 			children {
 				text {
 					object {
-						x=388
+						x=467
 						y=72
 						width=98
 						height=14
@@ -374,7 +363,7 @@ composite {
 				}
 				byte {
 					object {
-						x=4
+						x=83
 						y=72
 						width=97
 						height=15
@@ -388,7 +377,7 @@ composite {
 				}
 				byte {
 					object {
-						x=108
+						x=187
 						y=72
 						width=97
 						height=15
@@ -402,7 +391,7 @@ composite {
 				}
 				byte {
 					object {
-						x=212
+						x=291
 						y=72
 						width=97
 						height=15
@@ -416,7 +405,7 @@ composite {
 				}
 				byte {
 					object {
-						x=316
+						x=395
 						y=72
 						width=65
 						height=15
@@ -427,6 +416,68 @@ composite {
 						bclr=14
 					}
 				}
+			}
+		}
+	}
+}
+composite {
+	object {
+		x=5
+		y=29
+		width=75
+		height=57
+	}
+	"composite name"=""
+	children {
+		"text update" {
+			object {
+				x=6
+				y=29
+				width=74
+				height=13
+			}
+			monitor {
+				chan="$(pmac1)mbx:ClockStatus"
+				clr=60
+				bclr=14
+			}
+			clrmod="alarm"
+			align="horiz. centered"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=5
+				y=51
+				width=74
+				height=13
+			}
+			monitor {
+				chan="$(pmac2)mbx:ClockStatus"
+				clr=60
+				bclr=14
+			}
+			clrmod="alarm"
+			align="horiz. centered"
+			limits {
+			}
+		}
+		"text update" {
+			object {
+				x=5
+				y=73
+				width=74
+				height=13
+			}
+			monitor {
+				chan="$(pmac3)mbx:ClockStatus"
+				clr=60
+				bclr=14
+			}
+			clrmod="alarm"
+			align="horiz. centered"
+			limits {
 			}
 		}
 	}

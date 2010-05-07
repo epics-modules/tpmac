@@ -6,8 +6,8 @@
 #! ** ACCEL version of piggy-back collimator slits -- different from BIOCAT!**
 
 record(fanout, "$(assy)dLimFLNK") {
-  field(LNK1, "$(d2)a:NgLimSet.PROC PP MS")
-  field(LNK2, "$(d2)a:PsLimSet.PROC PP MS")
+  field(LNK1, "$(d2)a:NgLimCALC.PROC PP MS")
+  field(LNK2, "$(d2)a:PsLimCALC.PROC PP MS")
   field(LNK3, "$(d1)NgLimSet.PROC PP MS")
   field(LNK4, "$(d1)PsLimSet.PROC PP MS")
   field(LNK5, "$(d2)NgLimSet.PROC PP MS")
@@ -29,59 +29,122 @@ record(fanout, "$(assy)dAmpEnaFLNK") {
   field(LNK4, "$(x2)AmpEna.PROC PP MS")
 }
 
-record(calc,"$(d2)a:NgLimSet") {
+record(calc,"$(d2)a:NgLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(m2)NgLimSet.VAL NPP MS")
   field(INPB, "$(m2)PsLimSet.VAL NPP MS")
   field(INPC, "$(d2)Scale.VAL NPP MS")
 }
 
-record(calc,"$(d2)a:PsLimSet") {
+record(calc,"$(d2)a:PsLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(m2)PsLimSet.VAL NPP MS")
   field(INPB, "$(m2)NgLimSet.VAL NPP MS")
   field(INPC, "$(d2)Scale.VAL NPP MS")
 }
 
-record(calc, "$(d1)NgLimSet") {
+record(bi, "$(d1)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(d1)NgLimCALC.VAL PP MS")
+}  
+
+record(calc, "$(d1)NgLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(m1)NgLimSet.VAL NPP MS")
   field(INPB, "$(m1)PsLimSet.VAL NPP MS")
   field(INPC, "$(d1)Scale.VAL NPP MS")
 }
 
-record(calc, "$(d1)PsLimSet") {
+record(bi, "$(d1)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(d1)PsLimCALC.VAL PP MS")
+}  
+
+record(calc, "$(d1)PsLimCALC") {
   field(CALC, "C<0?B:A")
   field(INPA, "$(m1)PsLimSet.VAL NPP MS")
   field(INPB, "$(m1)NgLimSet.VAL NPP MS")
   field(INPC, "$(d1)Scale.VAL NPP MS")
 }
 
-record(calc,"$(d2)NgLimSet") {
+record(bi, "$(d2)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(d2)NgLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(d2)NgLimCALC") {
   field(CALC,"A+B")
   field(INPA,"$(d1)NgLimSet.VAL NPP MS")
-  field(INPB,"$(d2)a:NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)a:NgLimCALC.VAL NPP MS")
 }
 
-record(calc,"$(d2)PsLimSet") {
+record(bi, "$(d2)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(d2)PsLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(d2)PsLimCALC") {
   field(CALC,"A+B")
   field(INPA,"$(d1)PsLimSet.VAL NPP MS")
-  field(INPB,"$(d2)a:PsLimSet.VAL NPP MS")
+  field(INPB,"$(d2)a:PsLimCALC.VAL NPP MS")
 }
 
-record(calc,"$(x1)NgLimSet") {
+record(bi, "$(x1)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x1)NgLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x1)NgLimCALC") {
   field(CALC,"A+B")
   field(INPA,"$(d1)NgLimSet.VAL NPP MS")
   field(INPB,"$(d2)NgLimSet.VAL NPP MS")
 }
 
-record(calc,"$(x1)PsLimSet") {
+record(bi, "$(x1)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x1)PsLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x1)PsLimCALC") {
   field(CALC,"A+B")
   field(INPA,"$(d1)PsLimSet.VAL NPP MS")
   field(INPB,"$(d2)PsLimSet.VAL NPP MS")
 }
 
-record(calc,"$(x2)NgLimSet") {
+record(bi, "$(x2)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x2)NgLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x2)NgLimCALC") {
   field(CALC,"(B+C)*(1-E)+(A+D)*E")
   field(INPA,"$(d1)NgLimSet.VAL NPP MS")
   field(INPB,"$(d2)NgLimSet.VAL NPP MS")
@@ -90,7 +153,16 @@ record(calc,"$(x2)NgLimSet") {
   field(INPE,"$(assy)Invert.VAL NPP MS")
 }
 
-record(calc,"$(x2)PsLimSet") {
+record(bi, "$(x2)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x2)PsLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x2)PsLimCALC") {
   field(CALC,"(D+A)*(1-E)+(C+B)*E")
   field(INPA,"$(d1)NgLimSet.VAL NPP MS")
   field(INPB,"$(d2)NgLimSet.VAL NPP MS")
@@ -99,23 +171,59 @@ record(calc,"$(x2)PsLimSet") {
   field(INPE,"$(assy)Invert.VAL NPP MS")
 }
 
-record(calc,"$(d1)AmpEna") {
+record(bi, "$(d1)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(d1)AmpEnaCALC.VAL PP MS")
+} 
+
+record(calc,"$(d1)AmpEnaCALC") {
   field(CALC,"((A>0)&&(B>0))?1:0")
   field(INPA,"$(m1)AmpEna.VAL NPP MS")
   field(INPB,"$(m2)AmpEna.VAL NPP MS")
 }
 
 record(bi, "$(d2)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(d2)AmpEnaCALC.VAL PP MS")
+} 
+
+record(bi, "$(d2)AmpEna") {
   field(INP, "$(m2)AmpEna.VAL NPP MS")
 }
 
-record(calc,"$(x1)AmpEna") {
+record(bi, "$(x1)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(x1)AmpEnaCALC.VAL PP MS")
+} 
+
+record(calc,"$(x1)AmpEnaCALC") {
   field(CALC,"((A>0)&&(B>0))?1:0")
   field(INPA,"$(d1)AmpEna.VAL NPP MS")
   field(INPB,"$(d2)AmpEna.VAL NPP MS")
 }
 
-record(calc,"$(x2)AmpEna") {
+record(bi, "$(x2)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(x2)AmpEnaCALC.VAL PP MS")
+} 
+
+record(calc,"$(x2)AmpEnaCALC") {
   field(CALC,"((A>0)&&(B>0))?1:0")
   field(INPA,"$(d1)AmpEna.VAL NPP MS")
   field(INPB,"$(d2)AmpEna.VAL NPP MS")

@@ -65,6 +65,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (708-252-2000).
 
 #include <pmacVme.h>
 #include <pmacError.h>
+#include <waveformRecord.h>
 
 typedef struct  /* PMAC_MBX_IO */
 {
@@ -124,5 +125,6 @@ long drvPmacDpramRequest (short card, short pmacAdrOfs, char *pmacAdrSpec, void 
 PMAC_LOCAL long drvPmacRamGetData(PMAC_RAM_IO *pRamIo);
 PMAC_LOCAL long drvPmacRamPutData(PMAC_RAM_IO *pRamIo);
 void drvPmacMbxScan (PMAC_MBX_IO *pMbxIo);
+void drvPmacStrErr (waveformRecord *pRec);
 
 #endif /* __INCdrvPmacH */

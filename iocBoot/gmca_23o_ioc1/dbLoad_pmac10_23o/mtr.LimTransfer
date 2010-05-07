@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/LimTransfer.db
+file "$(TPMAC)/softDb/LimTransfer.db"
 {
 	pattern { drv, mtr }
 #--------------------------------------
@@ -30,5 +30,6 @@ file $(TPMAC)/softDb/LimTransfer.db
         { 23o:HD:DY1:, 23o:HD:mdy1: }
         { 23o:HD:DY2:, 23o:HD:mdy2: }
         { 23o:BP:H1Z:, 23o:BP:mh1z: }
+        { 23o:BP:H3Z:, 23o:BP:mh3z: }
 }
 

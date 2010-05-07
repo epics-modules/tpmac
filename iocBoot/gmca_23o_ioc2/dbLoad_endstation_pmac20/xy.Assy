@@ -15,24 +15,24 @@ file "$(TPMAC)/xyDb/XY_LimAmp.db"
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xyDb/XY_Tsub.db"
 {
- 	pattern { assy, d1, d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, d1, prec_d1, d2, prec_d2, m1, m2, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
 # nla=0/1 correspond to absolute/relative conversion.
 # pmac20:
-  { 23o:GO:Cr:, 23o:GO:CX:, 23o:GO:CY:, 23o:GO:mcx:, 23o:GO:mcy:, RqsPos, 0, tsubXYPs }
-  { 23o:GO:Cr:, 23o:GO:CX:, 23o:GO:CY:, 23o:GO:mcx:, 23o:GO:mcy:, RqsBkl, 1, tsubXYPs }
+  { 23o:GO:Cr:, 23o:GO:CX:, 4, 23o:GO:CY:, 4, 23o:GO:mcx:, 23o:GO:mcy:, RqsPos, 0, tsubXYPs }
+  { 23o:GO:Cr:, 23o:GO:CX:, 4, 23o:GO:CY:, 4, 23o:GO:mcx:, 23o:GO:mcy:, RqsBkl, 1, tsubXYPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xyDb/XY_TsubRbk.db"
 {
- 	pattern { assy, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
 # pmac20:
-  { 23o:GO:Cr:, 23o:GO:CX:, "Xtal-X", "(mm)", 23o:GO:CY:, "Xtal-Y", "(mm)", 23o:GO:mcx:, 23o:GO:mcy:,  ActPos, 0, tsubXYPs }
+  { 23o:GO:Cr:, 23o:GO:CX:, 4, "Xtal-X", "(mm)", 23o:GO:CY:, 4, "Xtal-Y", "(mm)", 23o:GO:mcx:, 23o:GO:mcy:,  ActPos, 0, tsubXYPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xyDb/XY_TsubSpeed.db"
 {
-  pattern { assy, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+  pattern { assy, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, m1, m2, tsub }
 #pmac20:
-  { 23o:GO:Cr:, 23o:GO:CX:, "(mm/s)",   23o:GO:CY:, "(mm/s)", 23o:GO:mcx:, 23o:GO:mcy:, tsubXYPs }
+  { 23o:GO:Cr:, 23o:GO:CX:, 4, "(mm/s)", 23o:GO:CY:, 4, "(mm/s)", 23o:GO:mcx:, 23o:GO:mcy:, tsubXYPs }
 }

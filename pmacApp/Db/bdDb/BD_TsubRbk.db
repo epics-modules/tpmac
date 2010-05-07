@@ -25,25 +25,25 @@ record(fanout, "$(m2)$(val)FLNK") {
 }
 
 record(ai, "$(d1)$(val)") {
-  field(PREC, "3")
+  field(PREC, "$(prec_d1)")
   field(EGU, "$(egu_d1)")
   field(DESC, "$(desc_d1)")
 }
 
 record(ai, "$(d2)$(val)") {
-  field(PREC, "3")
+  field(PREC, "$(prec_d2)")
   field(EGU, "$(egu_d2)")
   field(DESC, "$(desc_d2)")
 }
 
 record(ai, "$(x1)$(val)") {
-  field(PREC, "3")
+  field(PREC, "$(prec_x1)")
   field(EGU, "$(egu_x1)")
   field(DESC, "$(desc_x1)")
 }
 
 record(ai, "$(x2)$(val)") {
-  field(PREC, "3")
+  field(PREC, "$(prec_x2)")
   field(EGU, "$(egu_x2)")
   field(DESC, "$(desc_x2)")
 }

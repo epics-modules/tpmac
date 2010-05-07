@@ -105,6 +105,7 @@ OWNED RIGHTS.
 #include	<longoutRecord.h>
 #include	<mbbiRecord.h>
 #include	<mbboRecord.h>
+#include	<errlog.h>
 
 /* local includes */
 
@@ -550,6 +551,8 @@ LOCAL long devPmacRamAi_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -564,8 +567,6 @@ LOCAL long devPmacRamAi_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 
@@ -607,6 +608,8 @@ LOCAL long devPmacRamBi_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -621,8 +624,6 @@ LOCAL long devPmacRamBi_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 
@@ -664,6 +665,8 @@ LOCAL long devPmacRamEvent_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -678,8 +681,6 @@ LOCAL long devPmacRamEvent_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 
@@ -722,6 +723,8 @@ LOCAL long devPmacRamLi_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -736,8 +739,6 @@ LOCAL long devPmacRamLi_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 
@@ -780,6 +781,8 @@ LOCAL long devPmacRamMbbi_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -794,8 +797,6 @@ LOCAL long devPmacRamMbbi_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 
@@ -839,6 +840,8 @@ LOCAL long devPmacRamStatus_init
 						(int) pRec->inp.value.vmeio.card );
 		pRec->dpvt = (void *) pDpvt;
 
+		scanIoInit (&pDpvt->ioscanpvt);
+
 		status = drvPmacDpramRequest ( pRec->inp.value.vmeio.card,
 				pRec->inp.value.vmeio.signal,
 				pRec->inp.value.vmeio.parm,
@@ -853,8 +856,6 @@ LOCAL long devPmacRamStatus_init
 				pRec->inp.value.vmeio.parm);
 			return (status);
 		}
-
-		scanIoInit (&pDpvt->ioscanpvt);
 
 		break;
 

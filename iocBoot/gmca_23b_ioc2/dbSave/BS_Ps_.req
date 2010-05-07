@@ -12,3 +12,5 @@ file drv1.req DRV1=$(P)BS:D
 file drv1.req DRV1=$(P)BS:PT
 file drv1.req DRV1=$(P)BS:YW
 
+$(P)BS:PT:RqsPosMem1
+$(P)BS:PT:RqsPosMem2

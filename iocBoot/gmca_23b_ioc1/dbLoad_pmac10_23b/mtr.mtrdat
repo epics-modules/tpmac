@@ -1,11 +1,11 @@
-file $(TPMAC)/pmacDb/mtrdat.db
+file "$(TPMAC)/pmacDb/mtrdat.db"
 {
 	pattern { assy, mtr, desc, C, m, S, asloPos, asloVel, prec }
 #		  m =   1   2   3   4   5   6   7   8 ... /motor number; not used in the DB/
 #		  S =   0  12  24  36  48  60  72  84 ...
 #--------------------------------------
 # pmac10:
-        { 23b:WS:Av:,  23b:WS:mt:,   "mtr white slit top",      0,  1,   0, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:WS:Av:,  23b:WS:mt:,   "mtr white slit top",      0,  1,	0,  3.2552e-04, 3.2552e-04, 0 }
         { 23b:WS:Av:,  23b:WS:mb:,   "mtr white slit bottom",   0,  2,  12, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:WS:Ah:,  23b:WS:mo:,   "mtr white slit outboard", 0,  3,  24, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:WS:Ah:,  23b:WS:mi:,   "mtr white slit inboard",  0,  4,  36, 3.2552e-04, 3.2552e-04, 0 }
@@ -16,13 +16,12 @@ file $(TPMAC)/pmacDb/mtrdat.db
         { 23b:VC:Vy:,  23b:VC:my2:,  "mtr VCM y2",              0,  9,  96, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:VC:Be:,  23b:VC:mbe:,  "mtr VCM bender",          0, 10, 108, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:Ps:,  23b:MO:mz:,   "mtr mono trolley-Z",      0, 11, 120, 3.2552e-04, 3.2552e-04, 0 }
-# The default is 1/(32*Ix08)=1/(32*96)=3.2552E-04; for rotary 1/(32*500)=6.2500e-05
-#       { 23b:MO:En:,  23b:MO:mr:,   "mtr mono rotary",         0, 12, 132, 3.2552e-04, 3.2552e-04, 3 }
-        { 23b:MO:En:,  23b:MO:mr:,   "mtr mono rotary",         0, 12, 132, 6.2500e-05, 6.2500e-05, 3 }
+# The default is 1/(32*Ix08)=1/(32*96)=3.2552E-04; for rotary 1/(32*125)=2.5e-04
+        { 23b:MO:En:,  23b:MO:mr:,   "mtr mono rotary",         0, 12, 132, 2.5000e-04, 2.5000e-04, 5 }
         { 23b:MO:En:,  23b:MO:mt2:,  "mtr mono T2",             0, 13, 144, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:En:,  23b:MO:mt1:,  "mtr mono T1",             0, 14, 156, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:Tn1:, 23b:MO:mr1:,  "mtr mono roll cryst-1",   0, 17, 192, 3.2552e-04, 3.2552e-04, 0 }
-        { 23b:MO:Tn2:, 23b:MO:mp2:,  "mtr mono tune cryst-2",  0,  18, 204, 3.2552e-04, 3.2552e-04, 0 }
+        { 23b:MO:Tn2:, 23b:MO:mp2:,  "mtr mono tune cryst-2",   0, 18, 204, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:Tn2:, 23b:MO:mr2:,  "mtr mono roll cryst-2",   0, 19, 216, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:Tn2:, 23b:MO:mw2:,  "mtr mono yaw cryst-2",    0, 20, 228, 3.2552e-04, 3.2552e-04, 0 }
         { 23b:MO:Be:,  23b:MO:mb1:,  "mtr mono bender 1",       0, 21, 240, 3.2552e-04, 3.2552e-04, 0 }
@@ -36,10 +35,11 @@ file "$(TPMAC)/pmacDb/mtrdat_out.db"
 #		  S =   0  12  24  36  48  60  72  84 ... / 12*(m-1)/
 #--------------------------------------
 # pmac10:
-        { 23b:pmac10:re1:,           "pmac10: RON905_1",        0, 23, 264, 3.2552e-04, 3.2552e-04, 3 }
-        { 23b:pmac10:re2:,           "pmac10: RON905_2",        0, 24, 276, 3.2552e-04, 3.2552e-04, 3 }
-        { 23b:pmac10:re3:,           "pmac10: RON905_3",        0, 25, 288, 3.2552e-04, 3.2552e-04, 3 }
-        { 23b:pmac10:re4:,           "pmac10: RON905_4",        0, 26, 300, 3.2552e-04, 3.2552e-04, 3 }
+        { 23b:pmac10:re1:,           "pmac10: RON905_1",        0, 25, 288, 3.2552e-04, 3.2552e-04, 3 }
+        { 23b:pmac10:re2:,           "pmac10: RON905_2",        0, 26, 300, 3.2552e-04, 3.2552e-04, 3 }
+        { 23b:pmac10:re3:,           "pmac10: RON905_3",        0, 27, 312, 3.2552e-04, 3.2552e-04, 3 }
+        { 23b:pmac10:re4:,           "pmac10: RON905_4",        0, 28, 324, 3.2552e-04, 3.2552e-04, 3 }
+        { 23b:pmac10:reS:,           "pmac10: RON905_S",        0, 31, 360, 3.2552e-04, 3.2552e-04, 3 }
         { 23b:pmac10:mo:,            "pmac10: motor output",    0, 32, 372, 3.2552e-04, 3.2552e-04, 0 }
 }
 

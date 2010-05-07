@@ -1,42 +1,42 @@
-file $(TPMAC)/miDb/MI_Calibrate.db
+file "$(TPMAC)/miDb/MI_Calibrate.db"
 {
 	pattern { assy, d1, d2 }
 # pmac11:
         { 23o:KB:Hy:, 23o:KB:HY1:, 23o:KB:HY2: }
         { 23o:KB:Vy:, 23o:KB:VY1:, 23o:KB:VY2: }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_LimAmp.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_LimAmp.db"
 {
  	pattern { assy, x1, x2, d1, d2 }
 # pmac11:
         { 23o:KB:Hy:, 23o:KB:HY:, 23o:KB:HA:, 23o:KB:HY1:, 23o:KB:HY2: }
         { 23o:KB:Vy:, 23o:KB:VL:, 23o:KB:VW:, 23o:KB:VY1:, 23o:KB:VY2: }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_Tsub.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_Tsub.db"
 {
- 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, x1, prec_x1, x2, prec_x2, d1, prec_d1, d2, prec_d2, m1, m2, val, nla, tsub }
 # pmac11:
-  { 23o:KB:Hy:, 23o:KB:HY:, 23o:KB:HA:, 23o:KB:HY1:, 23o:KB:HY2:, 23o:KB:mhy1:, 23o:KB:mhy2:, RqsPos, 0, tsubMISt }
-  { 23o:KB:Hy:, 23o:KB:HY:, 23o:KB:HA:, 23o:KB:HY1:, 23o:KB:HY2:, 23o:KB:mhy1:, 23o:KB:mhy2:, RqsBkl, 1, tsubMISt }
-  { 23o:KB:Vy:, 23o:KB:VL:, 23o:KB:VW:, 23o:KB:VY1:, 23o:KB:VY2:, 23o:KB:mvy1:, 23o:KB:mvy2:, RqsPos, 0, tsubMISt }
-  { 23o:KB:Vy:, 23o:KB:VL:, 23o:KB:VW:, 23o:KB:VY1:, 23o:KB:VY2:, 23o:KB:mvy1:, 23o:KB:mvy2:, RqsBkl, 1, tsubMISt }
+  { 23o:KB:Hy:, 23o:KB:HY:, 3, 23o:KB:HA:, 3, 23o:KB:HY1:, 3, 23o:KB:HY2:, 3, 23o:KB:mhy1:, 23o:KB:mhy2:, RqsPos, 0, tsubMISt }
+  { 23o:KB:Hy:, 23o:KB:HY:, 3, 23o:KB:HA:, 3, 23o:KB:HY1:, 3, 23o:KB:HY2:, 3, 23o:KB:mhy1:, 23o:KB:mhy2:, RqsBkl, 1, tsubMISt }
+  { 23o:KB:Vy:, 23o:KB:VL:, 3, 23o:KB:VW:, 3, 23o:KB:VY1:, 3, 23o:KB:VY2:, 3, 23o:KB:mvy1:, 23o:KB:mvy2:, RqsPos, 0, tsubMISt }
+  { 23o:KB:Vy:, 23o:KB:VL:, 3, 23o:KB:VW:, 3, 23o:KB:VY1:, 3, 23o:KB:VY2:, 3, 23o:KB:mvy1:, 23o:KB:mvy2:, RqsBkl, 1, tsubMISt }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_TsubRbk.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_TsubRbk.db"
 {
-  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+  pattern { assy, x1, prec_x1, desc_x1, egu_x1, x2, prec_x2, desc_x2, egu_x2, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
 # pmac11:
-  { 23o:KB:Hy:, 23o:KB:HY:, "H-mirror Y",    "(mm)", 23o:KB:HA:, "H-mirror Angle", "(mrad)", 23o:KB:HY1:, "H-mirror Y1", "(mm)", 23o:KB:HY2:, "H-mirror Y2", "(mm)", 23o:KB:mhy1:,  23o:KB:mhy2:,  ActPos, 0, tsubMISt }
-  { 23o:KB:Vy:, 23o:KB:VL:, "V-mirror Lane", "(mm)", 23o:KB:VW:, "V-mirror Yaw",   "(mrad)", 23o:KB:VY1:, "V-mirror Y1", "(mm)", 23o:KB:VY2:, "V-mirror Y2", "(mm)", 23o:KB:mvy1:,  23o:KB:mvy2:,  ActPos, 0, tsubMISt }
+  { 23o:KB:Hy:, 23o:KB:HY:, 3, "H-mirror Y",    "(mm)", 23o:KB:HA:, 3, "H-mirror Angle", "(mrad)", 23o:KB:HY1:, 3, "H-mirror Y1", "(mm)", 23o:KB:HY2:, 3, "H-mirror Y2", "(mm)", 23o:KB:mhy1:,  23o:KB:mhy2:,  ActPos, 0, tsubMISt }
+  { 23o:KB:Vy:, 23o:KB:VL:, 3, "V-mirror Lane", "(mm)", 23o:KB:VW:, 3, "V-mirror Yaw",   "(mrad)", 23o:KB:VY1:, 3, "V-mirror Y1", "(mm)", 23o:KB:VY2:, 3, "V-mirror Y2", "(mm)", 23o:KB:mvy1:,  23o:KB:mvy2:,  ActPos, 0, tsubMISt }
 }
-#----------------------------------------------------------------------------  
+#----------------------------------------------------------------------------
 file "$(TPMAC)/miDb/MI_TsubSpeed.db"
 {
-  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+  pattern { assy, x1, prec_x1, egu_x1, x2, prec_x2, egu_x2, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, m1, m2, tsub }
 # pmac11:
-  { 23o:KB:Hy:, 23o:KB:HY:, "(mm/s)", 23o:KB:HA:, "(mrad/s)", 23o:KB:HY1:, "(mm/s)", 23o:KB:HY2:, "(mm/s)", 23o:KB:mhy1:,  23o:KB:mhy2:, tsubMISt }
-  { 23o:KB:Vy:, 23o:KB:VL:, "(mm/s)", 23o:KB:VW:, "(mrad/s)", 23o:KB:VY1:, "(mm/s)", 23o:KB:VY2:, "(mm/s)", 23o:KB:mvy1:,  23o:KB:mvy2:, tsubMISt }
+  { 23o:KB:Hy:, 23o:KB:HY:, 3, "(mm/s)", 23o:KB:HA:, 3, "(mrad/s)", 23o:KB:HY1:, 3, "(mm/s)", 23o:KB:HY2:, 3, "(mm/s)", 23o:KB:mhy1:, 23o:KB:mhy2:, tsubMISt }
+  { 23o:KB:Vy:, 23o:KB:VL:, 3, "(mm/s)", 23o:KB:VW:, 3, "(mrad/s)", 23o:KB:VY1:, 3, "(mm/s)", 23o:KB:VY2:, 3, "(mm/s)", 23o:KB:mvy1:, 23o:KB:mvy2:, tsubMISt }
 }
 

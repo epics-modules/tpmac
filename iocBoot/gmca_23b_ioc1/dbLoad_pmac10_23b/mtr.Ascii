@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/AsciiMtr.db
+file "$(TPMAC)/pmacDb/AsciiMtr.db"
 {
 	pattern { mtr, C, x }
 #				mtr = 1 2 3 4 5 6 7 8
@@ -24,14 +24,15 @@ file $(TPMAC)/pmacDb/AsciiMtr.db
         { 23b:MO:mw2:,     0, 20 }
         { 23b:MO:mb1:,     0, 21 }
         { 23b:MO:mb2:,     0, 22 }
-        { 23b:pmac10:re1:, 0, 23 }
-        { 23b:pmac10:re2:, 0, 24 }
-        { 23b:pmac10:re3:, 0, 25 }
-        { 23b:pmac10:re4:, 0, 26 }
+        { 23b:pmac10:re1:, 0, 25 }
+        { 23b:pmac10:re2:, 0, 26 }
+        { 23b:pmac10:re3:, 0, 27 }
+        { 23b:pmac10:re4:, 0, 28 }
+        { 23b:pmac10:reS:, 0, 31 }
         { 23b:pmac10:mo:,  0, 32 }
 }
 #----------------------------------------------------------------------------
-file $(TPMAC)/pmacDb/IxMtrMv.db
+file "$(TPMAC)/pmacDb/IxMtrMv.db"
 {
 	pattern { mtr, C, x }
 #				mtr = 1 2 3 4 5 6 7 8
@@ -62,7 +63,7 @@ file $(TPMAC)/pmacDb/IxMtrMv.db
 #       { 23b:pmac10:mo:,  0, 32 }	# not used
 }
 #----------------------------------------------------------------------------
-file $(TPMAC)/pmacDb/OpnLp.db
+file "$(TPMAC)/pmacDb/OpnLp.db"
 {
 	pattern { mtr, C, M }
 #				mtr = 1 2 3 4 5 6 7 8

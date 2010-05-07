@@ -1,0 +1,11 @@
+%
+% BURT Request File
+%
+% $(P)GO:StB:  Goniometer support (type: XYPs)
+%
+
+file assy.req ASSY=$(P)GO:StB
+file mtr1.req MTR1=$(P)GO:msh
+file mtr1.req MTR1=$(P)GO:msv
+file drv1.req DRV1=$(P)GO:SH
+file drv1.req DRV1=$(P)GO:SV

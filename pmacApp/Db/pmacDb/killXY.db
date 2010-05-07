@@ -1,0 +1,21 @@
+record(sseq, "$(pcs)Kill") {
+  field(DESC, "Kill all assembly motors")
+  field(PRIO, "HIGH")
+  field(STR1, "K")
+  field(LNK1, "$(m1)StrCmd.VAL PP MS")
+  field(STR2, "K")
+  field(LNK2, "$(m2)StrCmd.VAL PP MS")
+}
+
+% record(stringout, "$(m1)Kill") {
+%   field(DTYP, "Soft Channel")
+%   field(OUT, "$(m1)StrCmd PP MS")
+%   field(VAL, "K")
+% }
+%
+% record(stringout, "$(m2)Kill") {
+%   field(DTYP, "Soft Channel")
+%   field(OUT, "$(m2)StrCmd PP MS")
+%   field(VAL, "K")
+% }
+

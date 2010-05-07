@@ -10,5 +10,6 @@ file "$(TPMAC)/pmacDb/Acc65E.db"
 # -- it may be $10F0, $10F1,... $10FF.
 # See a manual at http://www.gmca.aps.anl.gov/makarov/TPMAC2/Accessory_65E.html
 #
+######  { 23i:pmac21:acc65e:, 1, $10F0, $7842C }
         { 23i:pmac21:acc65e:, 1, $10F0, $10F0  }
 }

@@ -14,8 +14,9 @@ drvPmacDebug
 # 24-bit PMAC settings:
 # DPRAM address range is A24 0xF0700000 - 0xF0703FFF
 # MBOX  address range is A24 0xF07FA000 - 0xF07FA1FF
-  pmacVmeConfig (0, 0x7FA000, 0x700000, 0xa1, 6)
-  pmacVmeConfig (1, 0x6FA000, 0x600000, 0xa5, 5)
+
+  pmacVmeConfig (0, 0x6FA000, 0x600000, 0xc1, 5)
+  pmacVmeConfig (1, 0x7FA000, 0x700000, 0xc5, 6)
 
 ### Configure PMAC-VME Driver
 ### This uses MAILBOX:
@@ -23,6 +24,15 @@ drvPmacDebug
 ### This uses DPRAM ASCII:
   pmacAsynConfig( 0, "PMAC_MBX_PORT_" )
 
+# 	args:	(1) EPICS VME Card #
+#		(2) DPRAM Servo Fixed Buffer Scan Rate
+# 			(ticks, 0=default, -1=disabled, -2=interrupt)
+# 		(3) DPRAM Background Fixed Buffer Scan Rate
+#			(ticks, 0=default, -1=disabled, -2=interrupt)
+#		(4) DPRAM Background Variable Buffer Scan Rate
+#			(ticks, 0=default, -1=disabled, -2=interrupt)
+# 		(5) Mailbox Registers Disable
+#			(0=default, 0=enable/-1=disable)
 # pmacDrvConfig (
 #	int		cardNumber,
 #	int		scanMtrRate,

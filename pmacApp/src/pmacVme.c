@@ -574,7 +574,7 @@ PMAC_LOCAL char pmacMbxIn
     
     terminator = 0;
     terminext = 0;
-    errmsg[0] = NULL;
+    errmsg[0] = '\0';
 
     for (i = 0; (i < PMAC_BASE_MBX_REGS_IN) && (terminator == 0); i++)
     {
@@ -583,7 +583,7 @@ PMAC_LOCAL char pmacMbxIn
 	if (chr == PMAC_TERM_CR || chr == PMAC_TERM_ACK || chr == PMAC_TERM_BELL)
 	{
 	    terminator = chr;
-	    readbuf[i] = NULL;
+	    readbuf[i] = '\0';
 	    if (terminator == PMAC_TERM_BELL)
 	    {
 		for (j=0, i++; (i < PMAC_BASE_MBX_REGS_IN) && (terminext == 0); j++, i++)
@@ -592,7 +592,7 @@ PMAC_LOCAL char pmacMbxIn
 		    if (chr == PMAC_TERM_CR)
 		    {
 			terminext = chr;
-			errmsg[j] = NULL;
+			errmsg[j] = '\0';
 		    }
 		    else
 		    {

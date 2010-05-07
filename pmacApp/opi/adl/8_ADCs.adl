@@ -5,10 +5,10 @@ file {
 }
 display {
 	object {
-		x=156
-		y=410
-		width=368
-		height=231
+		x=337
+		y=54
+		width=370
+		height=215
 	}
 	clr=14
 	bclr=18
@@ -90,12 +90,12 @@ display {
 "text update" {
 	object {
 		x=231
-		y=8
+		y=34
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)1.VAL"
+		chan="$(P):ai1.VAL"
 		clr=60
 		bclr=19
 	}
@@ -105,12 +105,12 @@ display {
 bar {
 	object {
 		x=27
-		y=8
+		y=34
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)1.VAL"
+		chan="$(P):ai1.VAL"
 		clr=60
 		bclr=19
 	}
@@ -122,12 +122,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=35
+		y=56
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)2.VAL"
+		chan="$(P):ai2.VAL"
 		clr=60
 		bclr=19
 	}
@@ -137,12 +137,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=35
+		y=56
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)2.VAL"
+		chan="$(P):ai2.VAL"
 		clr=60
 		bclr=19
 	}
@@ -154,12 +154,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=62
+		y=78
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)3.VAL"
+		chan="$(P):ai3.VAL"
 		clr=60
 		bclr=19
 	}
@@ -169,12 +169,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=62
+		y=78
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)3.VAL"
+		chan="$(P):ai3.VAL"
 		clr=60
 		bclr=19
 	}
@@ -186,12 +186,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=89
+		y=100
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)4.VAL"
+		chan="$(P):ai4.VAL"
 		clr=60
 		bclr=19
 	}
@@ -201,12 +201,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=89
+		y=100
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)4.VAL"
+		chan="$(P):ai4.VAL"
 		clr=60
 		bclr=19
 	}
@@ -218,12 +218,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=120
+		y=122
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)5.VAL"
+		chan="$(P):ai5.VAL"
 		clr=60
 		bclr=19
 	}
@@ -233,12 +233,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=120
+		y=122
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)5.VAL"
+		chan="$(P):ai5.VAL"
 		clr=60
 		bclr=19
 	}
@@ -250,12 +250,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=147
+		y=144
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)6.VAL"
+		chan="$(P):ai6.VAL"
 		clr=60
 		bclr=19
 	}
@@ -265,12 +265,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=147
+		y=144
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)6.VAL"
+		chan="$(P):ai6.VAL"
 		clr=60
 		bclr=19
 	}
@@ -282,12 +282,12 @@ bar {
 "text update" {
 	object {
 		x=231
-		y=174
+		y=166
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)7.VAL"
+		chan="$(P):ai7.VAL"
 		clr=60
 		bclr=19
 	}
@@ -297,12 +297,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=174
+		y=166
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)7.VAL"
+		chan="$(P):ai7.VAL"
 		clr=60
 		bclr=19
 	}
@@ -314,12 +314,12 @@ bar {
 "text update" {
 	object {
 		x=232
-		y=201
+		y=188
 		width=131
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)8.VAL"
+		chan="$(P):ai8.VAL"
 		clr=60
 		bclr=19
 	}
@@ -329,12 +329,12 @@ bar {
 bar {
 	object {
 		x=27
-		y=201
+		y=188
 		width=194
-		height=22
+		height=18
 	}
 	monitor {
-		chan="$(P)8.VAL"
+		chan="$(P):ai8.VAL"
 		clr=60
 		bclr=19
 	}
@@ -346,9 +346,9 @@ bar {
 text {
 	object {
 		x=9
-		y=10
+		y=34
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -358,9 +358,9 @@ text {
 text {
 	object {
 		x=9
-		y=37
+		y=56
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -370,9 +370,9 @@ text {
 text {
 	object {
 		x=9
-		y=64
+		y=78
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -382,9 +382,9 @@ text {
 text {
 	object {
 		x=9
-		y=91
+		y=100
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -396,7 +396,7 @@ text {
 		x=9
 		y=122
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -406,9 +406,9 @@ text {
 text {
 	object {
 		x=9
-		y=149
+		y=144
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -418,9 +418,9 @@ text {
 text {
 	object {
 		x=9
-		y=176
+		y=166
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
@@ -430,12 +430,52 @@ text {
 text {
 	object {
 		x=9
-		y=203
+		y=188
 		width=9
-		height=20
+		height=18
 	}
 	"basic attribute" {
 		clr=15
 	}
 	textix="8"
+}
+rectangle {
+	object {
+		x=0
+		y=0
+		width=370
+		height=26
+	}
+	"basic attribute" {
+		clr=18
+	}
+}
+text {
+	object {
+		x=6
+		y=5
+		width=300
+		height=16
+	}
+	"basic attribute" {
+		clr=60
+	}
+	textix="$(P)   ADC"
+}
+"related display" {
+	object {
+		x=316
+		y=7
+		width=45
+		height=18
+	}
+	display[0] {
+		label="More"
+		name="8_ADCs_comment.adl"
+		args="P=$(P),BL=$(BL),SAVE_DIR=$(SAVE_DIR),PMAC=$(PMAC)"
+		policy="replace display"
+	}
+	clr=14
+	bclr=15
+	label="More"
 }

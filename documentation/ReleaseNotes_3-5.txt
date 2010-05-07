@@ -1,0 +1,94 @@
+		     ***** Release 3-5 *****
+
+The main motivation for this release is the addition of new IP driver
+produced by Pete Leicester and Nick Reese at the DIAMOND Light Source. This
+driver should allow communicating with Ethernet based Delta Tau controllers.
+Below is the message from Nick:
+
+----
+For some time I have been meaning to forward the following to you. It
+contains an asyn interpose driver for an asynIPPort interface for the
+Delta Tau PMAC controllers. It should be placed in the pmacApp directory
+and, if properly configured, should allow you to control a number of the
+Ethernet based Delta Tau controllers.
+
+The other thing we are working on is a asynMotor record interface to the
+various axes of a PMAC co-ordinate system. This will enable you to, for
+example, control a monochrometer in pure energy units through an EPICS
+motor record. This works, but we are trying to work out the finer points
+of save/restore etc before releasing it.
+
+[...] it should be clear that the new IP driver (and all the asyn Drivers)
+are only useful for your PMAC ASCII interface and cannot provide a PMAC
+DPRAM interface over the network. This is so obvious it should go without
+saying, but I'll say it anyway. However, I really want to keep the code
+base together, and your site is the logical distribution point.
+
+Cheers,
+
+Nick Rees
+Principal Software Engineer           Phone: +44 (0)1235-778430
+Diamond Light Source                  Fax:   +44 (0)1235-446713
+----
+
+The core part of the distribution (the MAILBOX and DPRAM communication
+drivers for PMAC2-VME Ulltralite) did not change with this release.
+However, now the driver has been tested to operate with both Tornado-2.0
+and Tornado-2.2.
+
+The databases and tsub routines underwent minor changes and bug fixes.
+
+Some convenient GUI tools have been added to the Tcl/Tk part including
+"Motors List", "Assemblies List" and a new frontend to homing. Homing
+itself is implemented as a bunch of Perl/Pezca scripts that are not
+included into this distro, but may be available on request along with
+the fast scanning software that is also based on PMAC drivers.
+
+-- Sergey Stepanov
+
+
+------------------------------------------------------------
+		     ***** Release 3-4 *****
+
+Compared to 3-3, release 3-4 is basically a bug fix. The only updated
+part is pmacApp/src where a long-standing bug from the initial 1996
+implementation has been finally nailed down and fixed. The bug related
+to improper mutexing was causing pmacMbox task to crash occasionally,
+especially under high IOC load.
+
+-- Oleg Makarov
+
+
+------------------------------------------------------------
+		     ***** Release 3-3 *****
+
+New features introduced in the 3-3 release:
+
+1) added get_enum_str() function to the statusRecord.c.
+this allows to query BI00-BI31 fields of the status record for debugging.
+examples:
+
+ioc1>dbgf "23d:CCD:ml:SvoSts.BI16"
+DBR_STRING:          ON
+value = 0 = 0x0
+ioc1>
+
+gmca@px0:/home/gmca 1 > caget 23d:CCD:ml:SvoSts.BI16
+23d:CCD:ml:SvoSts.BI16         ON
+gmca@px0:/home/gmca 2 >
+
+
+
+2) improved DPRAM-ASCII part of the PMAC driver by removing
+unnecessary queue from drvPmacMbxTask() in the drvPmac.c.
+Epics record get processed by the drvPmacMbxTask(), this eliminated
+errors with intermixing PMAC responses under higher IOC load.
+
+
+3) improved efficiency of pmacAscReadMeISR() in the pmacDriver.c
+- replaced two VME bus reads of byte size by one of uint16 size,
+- removed useless line at the end of pmacAscReadMeISR:
+  control = getReg( *dpramAsciiInControl );
+
+4) added support for ACC-59E in the file devPmacMbx.c. Currently the supoort
+corresponds to the bipolar configuration of DAC only.

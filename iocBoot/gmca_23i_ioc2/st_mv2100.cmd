@@ -16,19 +16,19 @@
   startup   = "/ioc/xxx2/iocBoot/iocgmca2"
   appbin    = "/ioc/xxx2/bin/vxWorks-ppc603"
 
-  putenv ("AUTOSAVE=/ioc/autosave/4-1-1/asApp/Db")
-  putenv ("CALC=/ioc/calc/2-5/calcApp/Db")
+  putenv ("AUTOSAVE=/ioc/autosave/4-3/asApp/Db")
+  putenv ("CALC=/ioc/calc/2-6-3/calcApp/Db")
   putenv ("DAC128V=/ioc/dac128V/2-3/dac128VApp/Db")
   putenv ("GMCA=/ioc/gmca/1-0/gmcaApp/Db")
-  putenv ("IP330=/ioc/ip330/2-3/ip330App/Db")
-  putenv ("IPUNIDIG=/ioc/ipUnidig/2-3/ipUnidigApp/Db")
-  putenv ("MCA=/ioc/mca/6-5/mcaApp/Db")
+  putenv ("IP330=/ioc/ip330/2-5/ip330App/Db")
+  putenv ("IPUNIDIG=/ioc/ipUnidig/2-5/ipUnidigApp/Db")
+  putenv ("MCA=/ioc/mca/6-10/mcaApp/Db")
   putenv ("QUADEM=/ioc/quadEM/2-2/quadEMApp/Db")
-  putenv ("SCAN=/ioc/sscan/2-5-1/sscanApp/Db")
-  putenv ("STD=/ioc/std/2-5/stdApp/Db")
-  putenv ("TPMAC=/ioc/tpmac/2-3/pmacApp/Db")
-  putenv ("VME=/ioc/vme/2-4-1/vmeApp/Db")
-  putenv ("VXSTATS=/ioc/vxStats/1-7-2c/db")
+  putenv ("SSCAN=/ioc/sscan/2-5-6/sscanApp/Db")
+  putenv ("STD=/ioc/std/2-5-4/stdApp/Db")
+  putenv ("TPMAC=/ioc/tpmac/3-4/pmacApp/Db")
+  putenv ("VME=/ioc/vme/2-4-4/vmeApp/Db")
+  putenv ("VXSTATS=/ioc/vxStats/1-7-2e/db")
   putenv ("EPICS_TS_NTP_INET=164.54.210.2")
 # putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
   putenv ("EPICS_CA_ADDR_LIST=164.54.210.2 164.54.210.138")
@@ -43,15 +43,15 @@
 ################################################################################
 ### Load EPICS base software
   cd appbin
-  ld < oam.munch
+  ld < xxx.munch
 
 ### Increase size of buffer for error logging from default 1256
   errlogInit(5000)
 ################################################################################
 ### Register all support components
   cd startup
-  dbLoadDatabase("../../dbd/iocoamVX.dbd")
-  iocoamVX_registerRecordDeviceDriver(pdbbase)
+  dbLoadDatabase("../../dbd/iocxxxVX.dbd")
+  iocxxxVX_registerRecordDeviceDriver(pdbbase)
 
   iocLogDisable=1
 
@@ -156,7 +156,7 @@
 ### crate-resident scan.  This executes 1D, 2D, 3D, and 4D scans, and caches
 ### 1D data, but it doesn`t store anything to disk.  (See 'saveData' below
 ### for that.)
-  dbLoadRecords("$(SCAN)/scan.db","P=23i:2:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
+  dbLoadRecords("$(SSCAN)/scan.db","P=23i:2:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
 
 ###############################################################################
 ### Struck 7201 multichannel scaler (same as SIS 3806 multichannel scaler)
@@ -190,7 +190,10 @@ STR7201Config(0, 32, 4000, 1, 1)
   scalerVS_Setup(1, 0x2000, 0xCE, 5)
 # devScaler_VSDebug=5
 # scalerRecordDebug=0
-  dbLoadRecords("$(STD)/scaler.db","P=23i:,S=scaler3,C=0, DTYP=Joerger VS, FREQ=10000000")
+  dbLoadRecords("$(STD)/scaler32.db","P=23i:,S=scaler3,C=0, DTYP=Joerger VS, FREQ=10000000")
+
+### Reduce delay before starting autocount (info from Tim Mooney):
+  scaler_wait_time=1
 
 ###############################################################################
 ### Acromag AVME9440 setup parameters:
@@ -271,11 +274,12 @@ STR7201Config(0, 32, 4000, 1, 1)
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### BluIce soft databases:
   dbLoadTemplate("bluiceCollect.substitutions")
+  dbLoadTemplate("bluiceConfig.substitutions")
   dbLoadTemplate("bluiceScan.substitutions")
   dbLoadTemplate("bluiceHutch.substitutions")
 
 ### Robot databases:
-# dbLoadRecords("../../db/robot.db","bln=23i:")
+  dbLoadRecords("../../db/robot.db","bln=23i:")
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ###############################################################################
@@ -318,12 +322,25 @@ STR7201Config(0, 32, 4000, 1, 1)
   taskDelay 30
   dbpf ("23i:pmac20:StrCmd","msclrf32")
 
+  taskDelay 30
+  dbpf ("23i:pmac21:StrCmd","msclrf0")
+  taskDelay 30
+  dbpf ("23i:pmac21:StrCmd","msclrf32")
+
+  taskDelay 30
+     dbpf ("23i:SH:mp:OpenPos.PROC", "1")
+  taskDelay 30
+     dbpf ("23i:SH:mp:ClosePos.PROC","1")
+  taskDelay 30
+
+
 ### run demo for digital I/O
 # taskDelay 60
 # seq &acc_11E, "name=ACC11E, unit=23i:pmac20"
 
-  seq &frame_vx,"name=BluIce,frm=23i:FPE"
-# seq &robot, "name=SMR, unit=23i:"
+# seq &frame_vx,"name=BluIce,frm=23i:FPE"
+
+  seq &robot, "name=SMR, unit=23i:"
 
 
 ### Disable Telnet:

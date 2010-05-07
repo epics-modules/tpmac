@@ -18,32 +18,32 @@ file "$(TPMAC)/xDb/X_LimAmp.db"
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xDb/X_Tsub.db"
 {
-	pattern { assy, d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, m1, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
 # nla=0/1 correspond to absolute/relative conversion.
 # pmac21:
-        { 23i:RB:Rr:,  23i:RB:RA:,  23i:RB:mra:, RqsPos, 0, tsubXPs }
-        { 23i:RB:Rr:,  23i:RB:RA:,  23i:RB:mra:, RqsBkl, 1, tsubXPs }
-        { 23i:FLU:Di:, 23i:FLU:D:,  23i:FLU:md:, RqsPos, 0, tsubXPs }
-        { 23i:FLU:Di:, 23i:FLU:D:,  23i:FLU:md:, RqsBkl, 1, tsubXPs }
-        { 23i:PIN:St:, 23i:PIN:P:,  23i:PIN:mp:, RqsPos, 0, tsubXPs }
-        { 23i:PIN:St:, 23i:PIN:P:,  23i:PIN:mp:, RqsBkl, 1, tsubXPs }
+        { 23i:RB:Rr:,  23i:RB:RA:,  3, 23i:RB:mra:, RqsPos, 0, tsubXPs }
+        { 23i:RB:Rr:,  23i:RB:RA:,  3, 23i:RB:mra:, RqsBkl, 1, tsubXPs }
+        { 23i:FLU:Di:, 23i:FLU:D:,  3, 23i:FLU:md:, RqsPos, 0, tsubXPs }
+        { 23i:FLU:Di:, 23i:FLU:D:,  3, 23i:FLU:md:, RqsBkl, 1, tsubXPs }
+        { 23i:PIN:St:, 23i:PIN:P:,  3, 23i:PIN:mp:, RqsPos, 0, tsubXPs }
+        { 23i:PIN:St:, 23i:PIN:P:,  3, 23i:PIN:mp:, RqsBkl, 1, tsubXPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xDb/X_TsubRbk.db"
 {
-	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, desc_d1, egu_d1, m1, val, nla, tsub }
 # pmac21:
-        { 23i:RB:Rr:,  23i:RB:RA:,  "robot rotation" , "(degr)", 23i:RB:mra:, ActPos, 0, tsubXPs }
-        { 23i:FLU:Di:, 23i:FLU:D:,  "flu.det.distnce", "(mm)",   23i:FLU:md:, ActPos, 0, tsubXPs }
-        { 23i:PIN:St:, 23i:PIN:P:,  "pin diode suprt", "(mm)",   23i:PIN:mp:, ActPos, 0, tsubXPs }
+        { 23i:RB:Rr:,  23i:RB:RA:, 3, "robot rotation" , "(degr)", 23i:RB:mra:, ActPos, 0, tsubXPs }
+        { 23i:FLU:Di:, 23i:FLU:D:, 3, "flu.det.distnce", "(mm)",   23i:FLU:md:, ActPos, 0, tsubXPs }
+        { 23i:PIN:St:, 23i:PIN:P:, 3, "pin diode suprt", "(mm)",   23i:PIN:mp:, ActPos, 0, tsubXPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/xDb/X_TsubSpeed.db"
 {
-  pattern { assy, d1, egu_d1, m1, tsub }
+  pattern { assy, d1, prec_d1, egu_d1, m1, tsub }
 # pmac21:
-        { 23i:RB:Rr:,  23i:RB:RA:,  "(degr/s)", 23i:RB:mra:, tsubXPs }
-        { 23i:FLU:Di:, 23i:FLU:D:,  "(mm/s)",   23i:FLU:md:, tsubXPs }
-        { 23i:PIN:St:, 23i:PIN:P:,  "(mm/s)",   23i:PIN:mp:, tsubXPs }
+        { 23i:RB:Rr:,  23i:RB:RA:, 3, "(degr/s)", 23i:RB:mra:, tsubXPs }
+        { 23i:FLU:Di:, 23i:FLU:D:, 3, "(mm/s)",   23i:FLU:md:, tsubXPs }
+        { 23i:PIN:St:, 23i:PIN:P:, 3, "(mm/s)",   23i:PIN:mp:, tsubXPs }
 }

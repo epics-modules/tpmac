@@ -978,7 +978,7 @@ text {
 		height=14
 	}
 	monitor {
-		chan="$(ax3)ActPos"
+		chan="$(ax4)ActPos"
 		clr=32
 		bclr=14
 	}

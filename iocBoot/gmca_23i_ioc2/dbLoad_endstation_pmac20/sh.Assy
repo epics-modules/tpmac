@@ -14,24 +14,24 @@ file "$(TPMAC)/shDb/SH_LimAmp.db"
 #----------------------------------------------------------------------------
 file "$(TPMAC)/shDb/SH_Tsub.db"
 {
-	pattern { assy, d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, m1, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
 # nla=0/1 correspond to absolute/relative conversion.
 # pmac20:
-	{ 23i:SH:Ps:,  23i:SH:P:,   23i:SH:mp:,  RqsPos, 0, tsubSHPs }
-	{ 23i:SH:Ps:,  23i:SH:P:,   23i:SH:mp:,  RqsBkl, 1, tsubSHPs }
+	{ 23i:SH:Ps:,  23i:SH:P:, 3, 23i:SH:mp:, RqsPos, 0, tsubSHPs }
+	{ 23i:SH:Ps:,  23i:SH:P:, 3, 23i:SH:mp:, RqsBkl, 1, tsubSHPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/shDb/SH_TsubRbk.db"
 {
-	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, desc_d1, egu_d1, m1, val, nla, tsub }
 # pmac20:
-	{ 23i:SH:Ps:,  23i:SH:P:,   "shutter pos.",    "(degr)", 23i:SH:mp:,  ActPos, 0, tsubSHPs }
+	{ 23i:SH:Ps:, 23i:SH:P:, 3, "shutter pos.", "(degr)", 23i:SH:mp:, ActPos, 0, tsubSHPs }
 }
 #----------------------------------------------------------------------------
 file "$(TPMAC)/shDb/SH_TsubSpeed.db"
 {
-  pattern { assy, d1, egu_d1, m1, tsub }
+  pattern { assy, d1, prec_d1, egu_d1, m1, tsub }
 # pmac20:
-        { 23i:SH:Ps:,  23i:SH:P:,   "(degr/s)", 23i:SH:mp:,  tsubSHPs }
+        { 23i:SH:Ps:, 23i:SH:P:, 3, "(degr/s)", 23i:SH:mp:, tsubSHPs }
 }

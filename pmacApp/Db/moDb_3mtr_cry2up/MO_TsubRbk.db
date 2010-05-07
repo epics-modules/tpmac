@@ -14,7 +14,7 @@ record(tsub, "$(assy)$(val)TsubMtr") {
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
-  field(IPA2, "$(assy)mirrAng NPP MS")
+  field(IPA2, "$(assy)mirrAng PP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
   field(IPB0, "$(d2)Offset NPP MS")
@@ -37,31 +37,31 @@ record(fanout, "$(m3)$(val)FLNK") {
 }
 
 record(ai, "$(d1)$(val)") {
-  field(PREC, "4")
+  field(PREC, "$(prec_d1)")
   field(EGU, "$(egu_d1)")
   field(DESC, "$(desc_d1)")
 }
 
 record(ai, "$(d2)$(val)") {
-  field(PREC, "2")
+  field(PREC, "$(prec_d2)")
   field(EGU, "$(egu_d2)")
   field(DESC, "$(desc_d2)")
 }
 
 record(ai, "$(d3)$(val)") {
-  field(PREC, "2")
+  field(PREC, "$(prec_d3)")
   field(EGU, "$(egu_d3)")
   field(DESC, "$(desc_d3)")
 }
 
 record(ai, "$(x1)$(val)") {
-  field(PREC, "5")
+  field(PREC, "$(prec_x1)")
   field(EGU, "$(egu_x1)")
   field(DESC, "$(desc_x1)")
 }
 
 record(ai, "$(x2)$(val)") {
-  field(PREC, "5")
+  field(PREC, "$(prec_x2)")
   field(EGU, "$(egu_x2)")
   field(DESC, "$(desc_x2)")
 }

@@ -13,8 +13,38 @@ file MO_Tn2_.req P=23i:
 file WS_Ah_.req  P=23i:
 file WS_Av_.req  P=23i:
 %
-file keithleys.req P=23i:
+% file keithleys.req P=23i:
 %
 %
 % file scanrec.req REC=23i:3:scan1
 %
+
+file DAC128_single.req P=23i:,D=1,N=1
+file DAC128_single.req P=23i:,D=1,N=2
+file DAC128_single.req P=23i:,D=1,N=3
+file DAC128_single.req P=23i:,D=1,N=4
+file DAC128_single.req P=23i:,D=1,N=5
+file DAC128_single.req P=23i:,D=1,N=6
+file DAC128_single.req P=23i:,D=1,N=7
+file DAC128_single.req P=23i:,D=1,N=8
+
+file DAC128_single.req P=23i:,D=2,N=1
+file DAC128_single.req P=23i:,D=2,N=2
+file DAC128_single.req P=23i:,D=2,N=3
+file DAC128_single.req P=23i:,D=2,N=4
+file DAC128_single.req P=23i:,D=2,N=5
+file DAC128_single.req P=23i:,D=2,N=6
+file DAC128_single.req P=23i:,D=2,N=7
+file DAC128_single.req P=23i:,D=2,N=8
+file DAC128_single.req P=23i:,D=2,N=9
+file DAC128_single.req P=23i:,D=2,N=10
+file DAC128_single.req P=23i:,D=2,N=11
+file DAC128_single.req P=23i:,D=2,N=12
+file DAC128_single.req P=23i:,D=2,N=13
+file DAC128_single.req P=23i:,D=2,N=14
+file DAC128_single.req P=23i:,D=2,N=15
+file DAC128_single.req P=23i:,D=2,N=16
+
+file digital_IO_16_desc.req P=23i:bo0:ch
+% file digital_IO_24_desc.req P=23i:pmac20:acc65e:bo
+% file digital_IO_24_desc.req P=23i:pmac21:acc65e:bo

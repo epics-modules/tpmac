@@ -5,9 +5,9 @@ file {
 }
 display {
 	object {
-		x=252
-		y=505
-		width=490
+		x=247
+		y=134
+		width=570
 		height=68
 	}
 	clr=14
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=490
+		width=570
 		height=22
 	}
 	"basic attribute" {
@@ -112,7 +112,7 @@ text {
 }
 text {
 	object {
-		x=392
+		x=472
 		y=5
 		width=95
 		height=16
@@ -123,72 +123,61 @@ text {
 	textix="$(bl)"
 	align="horiz. right"
 }
-composite {
+text {
 	object {
-		x=3
+		x=45
 		y=47
-		width=377
+		width=97
 		height=20
 	}
-	"composite name"=""
-	children {
-		text {
-			object {
-				x=3
-				y=47
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Mailbox"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=107
-				y=47
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Servo"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=211
-				y=47
-				width=97
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Backgr"
-			align="horiz. centered"
-		}
-		text {
-			object {
-				x=315
-				y=47
-				width=65
-				height=20
-			}
-			"basic attribute" {
-				clr=63
-			}
-			textix="Var"
-			align="horiz. centered"
-		}
+	"basic attribute" {
+		clr=63
 	}
+	textix="Mailbox"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=187
+		y=47
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Servo"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=291
+		y=47
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Backgr"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=395
+		y=47
+		width=65
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Var"
+	align="horiz. centered"
 }
 composite {
 	object {
-		x=4
+		x=83
 		y=28
 		width=481
 		height=15
@@ -197,7 +186,7 @@ composite {
 	children {
 		byte {
 			object {
-				x=4
+				x=83
 				y=28
 				width=97
 				height=15
@@ -211,7 +200,7 @@ composite {
 		}
 		byte {
 			object {
-				x=108
+				x=187
 				y=28
 				width=97
 				height=15
@@ -225,7 +214,7 @@ composite {
 		}
 		byte {
 			object {
-				x=212
+				x=291
 				y=28
 				width=97
 				height=15
@@ -239,7 +228,7 @@ composite {
 		}
 		byte {
 			object {
-				x=316
+				x=395
 				y=28
 				width=65
 				height=15
@@ -252,7 +241,7 @@ composite {
 		}
 		text {
 			object {
-				x=387
+				x=466
 				y=28
 				width=98
 				height=14
@@ -262,5 +251,22 @@ composite {
 			}
 			textix="$(pmac1)"
 		}
+	}
+}
+"text update" {
+	object {
+		x=5
+		y=29
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac1)mbx:ClockStatus"
+		clr=60
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
 	}
 }

@@ -1,4 +1,4 @@
-file $(TPMAC)/xDb/X_Calibrate.db
+file "$(TPMAC)/xDb/X_Calibrate.db"
 {
         pattern { assy, d1 }
 # pmac10:
@@ -6,8 +6,8 @@ file $(TPMAC)/xDb/X_Calibrate.db
         { 23b:MO:Ps:,   23b:MO:Z:   }
         { 23b:MO:Tn1:,  23b:MO:R1:  }
 }
-#---------------------------------------------------------------------------- 
-file $(TPMAC)/xDb/X_LimAmp.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_LimAmp.db"
 {
  	pattern { assy, d1 }
 # pmac10:
@@ -15,35 +15,35 @@ file $(TPMAC)/xDb/X_LimAmp.db
         { 23b:MO:Ps:,   23b:MO:Z:   }
         { 23b:MO:Tn1:,  23b:MO:R1:  }
 }
-#---------------------------------------------------------------------------- 
-file $(TPMAC)/xDb/X_Tsub.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_Tsub.db"
 {
-	pattern { assy, d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, m1, val, nla, tsub }
 # tsub's are C programs implementing conversion between drives <-> motors <-> axes.
-# nla=0/1 correspond to absolute/relative conversion. 
+# nla=0/1 correspond to absolute/relative conversion.
 # pmac10:
-        { 23b:VC:Be:,  23b:VC:BE:,  23b:VC:mbe:, RqsPos, 0, tsubXPs }
-        { 23b:VC:Be:,  23b:VC:BE:,  23b:VC:mbe:, RqsBkl, 1, tsubXPs }
-        { 23b:MO:Ps:,  23b:MO:Z:,   23b:MO:mz:,  RqsPos, 0, tsubXPs }
-        { 23b:MO:Ps:,  23b:MO:Z:,   23b:MO:mz:,  RqsBkl, 1, tsubXPs }
-        { 23b:MO:Tn1:, 23b:MO:R1:,  23b:MO:mr1:, RqsPos, 0, tsubXPs }
-        { 23b:MO:Tn1:, 23b:MO:R1:,  23b:MO:mr1:, RqsBkl, 1, tsubXPs }
+        { 23b:VC:Be:,  23b:VC:BE:, 3, 23b:VC:mbe:, RqsPos, 0, tsubXPs }
+        { 23b:VC:Be:,  23b:VC:BE:, 3, 23b:VC:mbe:, RqsBkl, 1, tsubXPs }
+        { 23b:MO:Ps:,  23b:MO:Z:,  3, 23b:MO:mz:,  RqsPos, 0, tsubXPs }
+        { 23b:MO:Ps:,  23b:MO:Z:,  3, 23b:MO:mz:,  RqsBkl, 1, tsubXPs }
+        { 23b:MO:Tn1:, 23b:MO:R1:, 3, 23b:MO:mr1:, RqsPos, 0, tsubXPs }
+        { 23b:MO:Tn1:, 23b:MO:R1:, 3, 23b:MO:mr1:, RqsBkl, 1, tsubXPs }
 }
-#---------------------------------------------------------------------------- 
-file $(TPMAC)/xDb/X_TsubRbk.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xDb/X_TsubRbk.db"
 {
-	pattern { assy, d1, desc_d1, egu_d1, m1, val, nla, tsub }
+	pattern { assy, d1, prec_d1, desc_d1, egu_d1, m1, val, nla, tsub }
 # pmac10:
-        { 23b:VC:Be:,  23b:VC:BE:,  "VCM Bender",             "(mm)",   23b:VC:mbe:, ActPos, 0, tsubXPs }
-        { 23b:MO:Ps:,  23b:MO:Z:,   "DCM Z",                  "(mm)",   23b:MO:mz:,  ActPos, 0, tsubXPs }
-        { 23b:MO:Tn1:, 23b:MO:R1:,  "DCM Crystal-1 Roll",     "(mm)",   23b:MO:mr1:, ActPos, 0, tsubXPs }
+        { 23b:VC:Be:,  23b:VC:BE:, 3, "VCM Bender",         "(mm)", 23b:VC:mbe:, ActPos, 0, tsubXPs }
+        { 23b:MO:Ps:,  23b:MO:Z:,  3, "DCM Z",              "(mm)", 23b:MO:mz:,  ActPos, 0, tsubXPs }
+        { 23b:MO:Tn1:, 23b:MO:R1:, 3, "DCM Crystal-1 Roll", "(mm)", 23b:MO:mr1:, ActPos, 0, tsubXPs }
 }
-#---------------------------------------------------------------------------- 
+#----------------------------------------------------------------------------
 file "$(TPMAC)/xDb/X_TsubSpeed.db"
 {
-  pattern { assy, d1, egu_d1, m1, tsub }
+  pattern { assy, d1, prec_d1, egu_d1, m1, tsub }
 # pmac10:
-        { 23b:VC:Be:,  23b:VC:BE:,  "(mm/s)",   23b:VC:mbe:,  tsubXPs }
-        { 23b:MO:Ps:,  23b:MO:Z:,   "(mm/s)",   23b:MO:mz:,   tsubXPs }
-        { 23b:MO:Tn1:, 23b:MO:R1:,  "(mrad/s)", 23b:MO:mr1:,  tsubXPs }
+        { 23b:VC:Be:,  23b:VC:BE:, 3, "(mm/s)",   23b:VC:mbe:,  tsubXPs }
+        { 23b:MO:Ps:,  23b:MO:Z:,  3, "(mm/s)",   23b:MO:mz:,   tsubXPs }
+        { 23b:MO:Tn1:, 23b:MO:R1:, 3, "(mrad/s)", 23b:MO:mr1:,  tsubXPs }
 }

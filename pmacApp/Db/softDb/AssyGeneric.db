@@ -1,3 +1,14 @@
+#############################################################################
+# NOTE: this is the original version of AssyGeneric.db. It does not allow PMAC
+# motors to be scanned with EPICS Scan Record in the step or table scanning
+# modes (fly mode is OK) because the Scan Record would not wait for motion to
+# execute. See the DB files named:
+#                  AssyGeneric_scanrec_vXX.db
+#                   bkgfix1pcs_scanrec_vXX.db
+# if you need to use PMAC motors with EPICS Scan Record in the step or table
+# scanning modes.
+# -- Sergey Stepanov
+#############################################################################
 record(fanout, "$(assy)AutoStartFLNK") {
   field(SDIS, "$(assy)AutoStart.VAL PP MS")
   field(LNK1, "$(assy)Start.PROC PP MS")

@@ -2,5 +2,10 @@ These are databases common for different assemblies. They are grouped in the
 "pmac" directory because all of them talk to PMAC hardware either through
 PMAC mailbox (ASCII driver) or dual-ported RAM (DPRAM driver).
 
+NOTE: if you plan to use PMAC motors with Scan Record in the step-scan mode,
+then substitute AssyGeneric.db with AssyGeneric_scanrec.db and bkgfix1pcs.db
+with bkgfix1pcs_scanrec.db or otherwise scan record will not wait for motion
+to execute.
+
 -- Sergey
 

@@ -1,0 +1,93 @@
+### Shutter control and readback support DB
+### ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### This DB is for a fast endstation shutter that is a
+### fast motor controlled by PMAC. This motor should be
+### controllable from both EPICS and directly from PMAC
+### (the later is needed for precise synchronization of
+### shuuter with gonio head).
+### For this shutter we have two motion programs "prgOpen"
+### and "prgClose" that read the shutter destinations from
+### DP:"DPopen" and DP:"DPclose" respectively. Then, the
+### shutter readback Tsub assignes the shutter status $(m1)bo:rbk
+### to be either "Open" or "Close" depending on whether the
+### shutter motor current position is closer to $(m1)OpenPos
+### or $(m1)ClosePos.
+### See shDb/SH_TsubRbk.db for more details.
+
+### DP:"DPopen" should map to Q76 of shutter PCS
+  record(longout, "$(m1)OpenPos") {
+  field(DESC, "Shutter Open Position")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(pcsOffset) @DP:$60455")
+}
+
+### DP:"DPopen" should map to Q77 of shutter PCS
+record(longout, "$(m1)ClosePos") {
+  field(DESC, "Shutter Close Position")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(OUT, "#C$(C) S$(pcsOffset) @DP:$60456")
+}
+
+### This is the opened/closed readback
+record(bo, "$(m1)bo:rbk") {
+  field(DESC, "Shutter Readback Status")
+  field(DOL, "0")
+  field(ZNAM,"Closed")
+  field(ONAM,"Open")
+  field(OSV, "MAJOR")
+}
+
+### This is the command to open/close itself:
+record(bo, "$(m1)bo") {
+  field(DESC, "Shutter Open/Close command")
+  field(DOL, "0")
+  field(ZNAM,"Closed")
+  field(ONAM,"Open")
+  field(OSV, "MAJOR")
+  field(FLNK, "$(m1)boFan.PROC PP MS")
+}
+
+record(fanout, "$(m1)boFan") {
+  field(LNK1, "$(m1)goClose.PROC PP MS")
+  field(LNK2, "$(m1)goOpen.PROC PP MS")
+}
+
+record(stringout, "$(m1)goClose") {
+  field(SDIS, "$(m1)CloseSDIS.VAL PP MS")
+  field(DTYP, "Soft Channel")
+  field(OUT, "$(m1)StrCmd PP MS")
+# field(VAL, "&16B4R")
+  field(VAL, "&$(pcs)B$(prgClose)R")
+}
+
+record(stringout, "$(m1)goOpen") {
+  field(SDIS, "$(m1)OpenSDIS.VAL PP MS")
+  field(DTYP, "Soft Channel")
+  field(OUT, "$(m1)StrCmd PP MS")
+# field(VAL, "&16B2R")
+  field(VAL, "&$(pcs)B$(prgOpen)R")
+}
+
+record(calc, "$(m1)CloseSDIS") {
+  field(CALC, "(A#0)")
+  field(INPA, "$(m1)bo.VAL NPP MS")
+}
+
+### Generic:
+# record(calc, "$(m1)OpenSDIS") {
+#  field(CALC, "(A=0)")
+#  field(INPA, "$(m1)bo.VAL NPP MS")
+# }
+
+### GMCA-specific: do not open shutter if there is no beamstop or pin diode in place:
+### Here PIN:P:RqsPosMem1.VAL is pin diode-IN PV
+record(calc, "$(m1)OpenSDIS") {
+  field(CALC, "A=0||((B=0||C=0)&&(ABS(D-E)>0.2||F=1))")
+  field(INPA, "$(m1)bo.VAL NPP MS")
+  field(INPB, "$(BL)pmac21:acc65e:bi21.VAL NPP MS")
+  field(INPC, "$(BL)pmac21:acc65e:bo14.VAL NPP MS")
+  field(INPD, "$(BL)PIN:P:ActPos.VAL NPP MS")
+  field(INPE, "$(BL)PIN:P:RqsPosMem1.VAL NPP MS")
+  field(INPF, "$(BL)PIN:St:RunPrg.VAL NPP MS")
+}
+

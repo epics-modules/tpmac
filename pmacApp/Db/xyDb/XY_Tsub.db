@@ -44,17 +44,17 @@ record(ao, "$(m1)$(val)") {
   field(FLNK, "$(assy)$(val)TsubMtr.PROC PP MS")
 }
 
-record(ao, "$(d1)$(val)") {
-  field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
-  field(PREC, "3")
-}
-
 record(ao, "$(m2)$(val)") {
   field(FLNK, "$(assy)$(val)TsubMtr.PROC PP MS")
 }
 
+record(ao, "$(d1)$(val)") {
+  field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
+  field(PREC, "$(prec_d1)")
+}
+
 record(ao, "$(d2)$(val)") {
   field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_d2)")
 }
 

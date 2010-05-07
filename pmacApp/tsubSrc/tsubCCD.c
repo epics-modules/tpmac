@@ -174,9 +174,9 @@ long tsubCCDStMtr
                                                           pRec->name,pRec->nla,Co);
 		pRec->oa =((pRec->oa1)*(pRec->p+pRec->k)                      /* d(D) =[dX*(X+Lh)+dHu*(Hu+Lv)]/Du */
                          + (pRec->ob1)*(pRec->q+pRec->j))
-                         / Du; 
+                         / Du;
 		pRec->ob = RAD2DEG(((pRec->oa)*Co-pRec->oa1)                  /* d(2Q)=[d(D)*cos(2Q+2a)-dX]/(Hu+Lv) */
-                                   /(pRec->q+pRec->j));    
+                                   /(pRec->q+pRec->j));
 	}
 	return (0);
 }
@@ -259,7 +259,7 @@ long tsubCCDStDrv
 		}
 		if (tsubCCDDebug > 2) printf("+++tsub=%s(nla=%1.0f): sin(2Q+2a)=%g\n",
                                                           pRec->name,pRec->nla,Si);
-		pRec->oa = Du;		                                      /*  D = Du-Lh */
+		pRec->oa = D;		                                      /*  D = Du-Lh */
 		pRec->ob = RAD2DEG(asin(Si)-TwoAlpha);                        /* 2Q = asin(sin(2Q+2a)) - 2*angleVFM */
 	}
 	else                    /* ------- Relative motion --------- */
@@ -295,9 +295,9 @@ long tsubCCDStDrv
                                                           pRec->name,pRec->nla,Co);
 		pRec->oa =((pRec->a)*(pRec->p+pRec->k)                        /* d(D) =[dX*(X+Lh)+dHu*(Hu+Lv)]/Du */
                          + (pRec->b)*(pRec->q+pRec->j))
-                         / Du; 
+                         / Du;
 		pRec->ob = RAD2DEG(((pRec->oa)*Co-pRec->a)                   /* d(2Q)=[d(D)*cos(2Q+2a)-dX]/(Hu+Lv) */
-                                   /(pRec->q+pRec->j));    
+                                   /(pRec->q+pRec->j));
 	}
 	return (0);
 }

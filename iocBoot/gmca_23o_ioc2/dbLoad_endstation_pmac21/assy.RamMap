@@ -20,10 +20,10 @@ file "$(TPMAC)/pmacDb/Ram08XY3.db"
 {
         pattern { assy, C, S }
 # pmac21:
-        { 23o:COL:St:, 1,   0 }
-        { 23o:XY:P1:,  1,   8 }
-        { 23o:HS:Av:,  1,  42 }
-        { 23o:HS:Ah:,  1,  50 }
+        { 23o:HS:Av:,  1,   0 }
+        { 23o:HS:Ah:,  1,   8 }
+        { 23o:COL:St:, 1,  42 }
+        { 23o:XY:P1:,  1,  50 }
         { 23o:XY:P2:,  1,  58 }
         { 23o:XY:P3:,  1,  66 }
         { 23o:XY:P4:,  1,  74 }

@@ -1,0 +1,10 @@
+%
+% BURT Request File
+%
+% $(P)CCD:LpB:  CCD lateral position for BM line
+%
+
+file assy.req ASSY=$(P)CCD:LpB
+file mtr1.req MTR1=$(P)CCD:ml
+file drv1.req DRV1=$(P)CCD:DL
+

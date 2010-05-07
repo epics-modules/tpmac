@@ -12,3 +12,22 @@ file drv1.req DRV1=$(P)COL:V
 
 $(P)COL:V:RqsPosMem1
 $(P)COL:V:RqsPosMem2
+$(P)COL:V:RqsPosMem3
+$(P)COL:V:RqsPosMem4
+
+$(P)COL:V:RqsPosMem1.DESC
+$(P)COL:V:RqsPosMem2.DESC
+$(P)COL:V:RqsPosMem3.DESC
+$(P)COL:V:RqsPosMem4.DESC
+
+$(P)COL:H:RqsPosMem1
+$(P)COL:H:RqsPosMem2
+$(P)COL:H:RqsPosMem3
+$(P)COL:H:RqsPosMem4
+
+$(P)COL:H:RqsPosMem1.DESC
+$(P)COL:H:RqsPosMem2.DESC
+$(P)COL:H:RqsPosMem3.DESC
+$(P)COL:H:RqsPosMem4.DESC
+
+$(P)COL:St:ActivePreset

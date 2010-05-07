@@ -1,4 +1,5 @@
 record(mbbo, "$(assy)Motion") {
+  field(PINI, "YES")
   field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
   field(ZRST, "None")
   field(ONST, "Slew")

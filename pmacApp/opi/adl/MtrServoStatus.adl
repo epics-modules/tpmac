@@ -113,9 +113,9 @@ rectangle {
 }
 text {
 	object {
-		x=516
+		x=534
 		y=4
-		width=120
+		width=150
 		height=18
 	}
 	"basic attribute" {

@@ -1,0 +1,54 @@
+file "$(TPMAC)/pmacDb/Ram05X3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+#
+# Here "S" is shift which depends on how much memory was
+# occupied by previous sets of motors in this PMAC.
+# The values of shifts are:
+#  5 for  5X3   (1 motor)
+#  8 for  8XY3  (2 motors)
+# 11 for 11XYZ3 (3 motors)
+#
+# pmac20:
+        { 23b:CCD:LpB:, 2,   0 }
+        { 23b:GO:Om:,   2,  16 }
+        { 23b:JET:Ps:,  2,  48 }
+        { 23b:BD:DhB:,  2,  53 }
+        { 23b:TV:V1:,   2, 101 }
+        { 23b:TV:V2:,   2, 106 }
+        { 23b:SH:Ps:,   2, 111 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/shutter.db"
+{
+  pattern { m1, C, pcs, pcsOffset, prgOpen, prgClose }
+# pmac20:
+        { 23b:SH:mp:,   2, 16, 111,  2, 4 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/Ram08XY3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+# pmac20:
+        { 23b:GO:Cr:,   2, 32 }
+        { 23b:GO:StB:,  2, 40 }
+        { 23b:BD:Dv:,   2, 58 }
+        { 23b:GS:StB:,  2, 66 }
+        { 23b:GS:Av:,   2, 74 }
+        { 23b:GS:Ah:,   2, 82 }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/Ram11XYZ3.db"
+{
+	pattern { assy, C, S }
+#                               pcs = 1  2  3  4  5  6  7  8
+#				S   =   offset
+# pmac20:
+        { 23b:CCD:StB:, 2,   5 }
+        { 23b:GO:Kp:,   2,  21 }
+        { 23b:BS:Ps:,   2,  90 }
+}

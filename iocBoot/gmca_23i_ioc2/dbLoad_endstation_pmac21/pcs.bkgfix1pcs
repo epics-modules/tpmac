@@ -8,14 +8,14 @@ file "$(TPMAC)/pmacDb/bkgfix1pcs.db"
 # pcs == _p_mac _c_oordinate _s_ystem
 #
 # pmac21:
-        { 23i:COL:St:,  1,   0 }
-        { 23i:XY:P1:,   1,  32 }
+        { 23i:HS:Av:,	1,   0 }
+        { 23i:HS:Ah:,	1,  32 }
         { 23i:RB:Rd:,   1,  64 }
         { 23i:RB:Rr:,   1,  96 }
         { 23i:FLU:Di:,  1, 128 }
         { 23i:PIN:St:,  1, 160 }
-        { 23i:HS:Av:,   1, 192 }
-        { 23i:HS:Ah:,   1, 224 }
+        { 23i:COL:St:,  1, 192 }
+        { 23i:XY:P1:,	1, 224 }
         { 23i:XY:P2:,   1, 256 }
         { 23i:XY:P3:,   1, 288 }
         { 23i:XY:P4:,   1, 320 }

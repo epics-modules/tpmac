@@ -1,13 +1,13 @@
 
 file {
 	name="/home/gmca/epics/pmacApp/adl/PmacClock_view.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
-		x=374
-		y=220
-		width=405
+		x=372
+		y=171
+		width=470
 		height=80
 	}
 	clr=14
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=405
+		width=470
 		height=26
 	}
 	"basic attribute" {
@@ -112,7 +112,7 @@ text {
 }
 text {
 	object {
-		x=282
+		x=345
 		y=4
 		width=120
 		height=16
@@ -125,7 +125,7 @@ text {
 }
 text {
 	object {
-		x=10
+		x=57
 		y=33
 		width=80
 		height=16
@@ -138,7 +138,7 @@ text {
 }
 text {
 	object {
-		x=110
+		x=198
 		y=33
 		width=80
 		height=16
@@ -151,7 +151,7 @@ text {
 }
 text {
 	object {
-		x=210
+		x=302
 		y=33
 		width=80
 		height=16
@@ -164,9 +164,9 @@ text {
 }
 text {
 	object {
-		x=310
+		x=396
 		y=33
-		width=80
+		width=70
 		height=16
 	}
 	"basic attribute" {
@@ -177,9 +177,9 @@ text {
 }
 byte {
 	object {
-		x=10
+		x=85
 		y=55
-		width=80
+		width=95
 		height=12
 	}
 	monitor {
@@ -187,12 +187,13 @@ byte {
 		clr=14
 		bclr=32
 	}
+	sbit=23
 }
 byte {
 	object {
-		x=110
+		x=190
 		y=55
-		width=80
+		width=95
 		height=12
 	}
 	monitor {
@@ -200,12 +201,13 @@ byte {
 		clr=14
 		bclr=32
 	}
+	sbit=23
 }
 byte {
 	object {
-		x=210
+		x=295
 		y=55
-		width=80
+		width=95
 		height=12
 	}
 	monitor {
@@ -213,17 +215,35 @@ byte {
 		clr=14
 		bclr=32
 	}
+	sbit=23
 }
 byte {
 	object {
-		x=310
+		x=400
 		y=55
-		width=80
+		width=60
 		height=12
 	}
 	monitor {
 		chan="$(pmac)var:SvoTm"
 		clr=14
 		bclr=32
+	}
+}
+"text update" {
+	object {
+		x=4
+		y=54
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac)mbx:ClockStatus"
+		clr=31
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
 	}
 }

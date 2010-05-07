@@ -1,0 +1,37 @@
+file "$(TPMAC)/xyzDb/XYZ_Calibrate.db"
+{
+	pattern { assy, d1, d2, d3 }
+# pmac21:
+  { 23b:RB:Rd:, 23b:RB:RX:, 23b:RB:RY:, 23b:RB:RZ: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_LimAmp.db"
+{
+ 	pattern { assy, d1, d2, d3 }
+# pmac21:
+  { 23b:RB:Rd:, 23b:RB:RX:, 23b:RB:RY:, 23b:RB:RZ: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_Tsub.db"
+{
+ 	pattern { assy, d1, prec_d1, d2, prec_d2, d3, prec_d3, m1, m2, m3, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac21:
+  { 23b:RB:Rd:, 23b:RB:RX:, 3, 23b:RB:RY:, 3, 23b:RB:RZ:, 3, 23b:RB:mrx:, 23b:RB:mry:, 23b:RB:mrz:, RqsPos, 0, tsubXYZPs }
+  { 23b:RB:Rd:, 23b:RB:RX:, 3, 23b:RB:RY:, 3, 23b:RB:RZ:, 3, 23b:RB:mrx:, 23b:RB:mry:, 23b:RB:mrz:, RqsBkl, 1, tsubXYZPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_TsubRbk.db"
+{
+ 	pattern { assy, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, d3, prec_d3, desc_d3, egu_d3, m1, m2, m3, val, nla, tsub }
+# pmac21:
+  { 23b:RB:Rd:, 23b:RB:RX:, 3, "Dewar X", "(mm)", 23b:RB:RY:, 3, "Dewar Y", "(mm)", 23b:RB:RZ:, 3, "Dewar Z", "(mm)", 23b:RB:mrx:, 23b:RB:mry:, 23b:RB:mrz:, ActPos, 0, tsubXYZPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_TsubSpeed.db"
+{
+  pattern { assy, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, d3, prec_d3, egu_d3, m1, m2, m3, tsub }
+# pmac21:
+  { 23b:RB:Rd:, 23b:RB:RX:, 3, "(mm/s)", 23b:RB:RY:, 3, "(mm/s)", 23b:RB:RZ:, 3, "(mm/s)", 23b:RB:mrx:, 23b:RB:mry:, 23b:RB:mrz:, tsubXYZPs }
+}

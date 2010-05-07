@@ -1,6 +1,9 @@
 file bluiceRuns.req P=$(P)bi:runs:
 file bluiceScan.req P=$(P)bi:SCAN:
 file bluiceHutch.req P=$(P)bi:
+file bluiceConfig.req P=$(P)bi:
+% this is currently in the keithey IOC:
+% file "bluiceScreening.req", P=$(P)scr:
 
 file bluiceRun.req P=$(P)bi:r0:
 file bluiceRun.req P=$(P)bi:r1:

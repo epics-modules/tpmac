@@ -1,13 +1,13 @@
 
 file {
 	name="/home/gmca/epics/pmacApp/adl/PmacClock.adl"
-	version=030004
+	version=030101
 }
 display {
 	object {
-		x=459
-		y=382
-		width=405
+		x=370
+		y=280
+		width=470
 		height=130
 	}
 	clr=14
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=405
+		width=470
 		height=26
 	}
 	"basic attribute" {
@@ -112,7 +112,7 @@ text {
 }
 text {
 	object {
-		x=282
+		x=346
 		y=4
 		width=120
 		height=16
@@ -127,7 +127,7 @@ text {
 	object {
 		x=8
 		y=98
-		width=150
+		width=180
 		height=24
 	}
 	control {
@@ -140,9 +140,9 @@ text {
 }
 "text update" {
 	object {
-		x=165
+		x=197
 		y=101
-		width=150
+		width=180
 		height=18
 	}
 	monitor {
@@ -156,111 +156,7 @@ text {
 }
 text {
 	object {
-		x=10
-		y=33
-		width=80
-		height=16
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Mailbox"
-	align="horiz. centered"
-}
-text {
-	object {
-		x=110
-		y=33
-		width=80
-		height=16
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Servo"
-	align="horiz. centered"
-}
-text {
-	object {
-		x=210
-		y=33
-		width=80
-		height=16
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Background"
-	align="horiz. centered"
-}
-text {
-	object {
-		x=310
-		y=33
-		width=80
-		height=16
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Variable"
-	align="horiz. centered"
-}
-byte {
-	object {
-		x=10
-		y=55
-		width=80
-		height=12
-	}
-	monitor {
-		chan="$(pmac)mbx:SvoTm"
-		clr=14
-		bclr=32
-	}
-}
-byte {
-	object {
-		x=110
-		y=55
-		width=80
-		height=12
-	}
-	monitor {
-		chan="$(pmac)svo:SvoTm"
-		clr=14
-		bclr=32
-	}
-}
-byte {
-	object {
-		x=210
-		y=55
-		width=80
-		height=12
-	}
-	monitor {
-		chan="$(pmac)bkg:SvoTm"
-		clr=14
-		bclr=32
-	}
-}
-byte {
-	object {
-		x=310
-		y=55
-		width=80
-		height=12
-	}
-	monitor {
-		chan="$(pmac)var:SvoTm"
-		clr=14
-		bclr=32
-	}
-}
-text {
-	object {
-		x=45
+		x=60
 		y=77
 		width=80
 		height=16
@@ -273,7 +169,7 @@ text {
 }
 text {
 	object {
-		x=200
+		x=244
 		y=77
 		width=80
 		height=16
@@ -286,7 +182,7 @@ text {
 }
 "message button" {
 	object {
-		x=325
+		x=391
 		y=100
 		width=75
 		height=20
@@ -298,4 +194,128 @@ text {
 	}
 	label="Save PMAC"
 	press_msg="save"
+}
+text {
+	object {
+		x=57
+		y=32
+		width=80
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Mailbox"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=198
+		y=32
+		width=80
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Servo"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=302
+		y=32
+		width=80
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Background"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=396
+		y=32
+		width=70
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Variable"
+	align="horiz. centered"
+}
+byte {
+	object {
+		x=85
+		y=54
+		width=95
+		height=12
+	}
+	monitor {
+		chan="$(pmac)mbx:SvoTm"
+		clr=14
+		bclr=32
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=190
+		y=54
+		width=95
+		height=12
+	}
+	monitor {
+		chan="$(pmac)svo:SvoTm"
+		clr=14
+		bclr=32
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=295
+		y=54
+		width=95
+		height=12
+	}
+	monitor {
+		chan="$(pmac)bkg:SvoTm"
+		clr=14
+		bclr=32
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=400
+		y=54
+		width=60
+		height=12
+	}
+	monitor {
+		chan="$(pmac)var:SvoTm"
+		clr=14
+		bclr=32
+	}
+}
+"text update" {
+	object {
+		x=4
+		y=53
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac)mbx:ClockStatus"
+		clr=31
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
+	}
 }

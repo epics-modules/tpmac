@@ -1,0 +1,12 @@
+file "$(TPMAC)/pmacDb/Acc59E.db"
+{
+	pattern { P, C, CH }
+        { 23i:pmac21:59e:, 1, 1 }
+        { 23i:pmac21:59e:, 1, 2 }
+        { 23i:pmac21:59e:, 1, 3 }
+        { 23i:pmac21:59e:, 1, 4 }
+        { 23i:pmac21:59e:, 1, 5 }
+        { 23i:pmac21:59e:, 1, 6 }
+        { 23i:pmac21:59e:, 1, 7 }
+        { 23i:pmac21:59e:, 1, 8 }
+}

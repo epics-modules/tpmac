@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/RqsTwkMem.db
+file "$(TPMAC)/softDb/RqsTwkMem.db"
 {
 	pattern { pref, prec }
 # "prec" is "precision": the number of digits after comma

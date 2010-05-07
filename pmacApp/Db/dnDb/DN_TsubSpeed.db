@@ -47,25 +47,25 @@ record(bo, "$(assy)speedSDIS") {
 #! }
 
 record(ao, "$(d1)speed") {
-  field(PREC, "3")
+  field(PREC, "$(prec_d1)")
   field(EGU, "$(egu_d1)")
   field(FLNK, "$(d1)speedIndx.PROC PP MS")
 }
 
 record(ao, "$(d2)speed") {
-  field(PREC, "3")
+  field(PREC, "$(prec_d2)")
   field(EGU, "$(egu_d2)")
   field(FLNK, "$(d2)speedIndx.PROC PP MS")
 }
 
 record(ao, "$(x1)speed") {
-  field(PREC, "3")
+  field(PREC, "$(prec_x1)")
   field(EGU, "$(egu_x1)")
   field(FLNK, "$(x1)speedIndx.PROC PP MS")
 }
 
 record(ao, "$(x2)speed") {
-  field(PREC, "3")
+  field(PREC, "$(prec_x2)")
   field(EGU, "$(egu_x2)")
   field(FLNK, "$(x2)speedIndx.PROC PP MS")
 }

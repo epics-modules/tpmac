@@ -1,42 +1,42 @@
-file $(TPMAC)/miDb/MI_Calibrate.db
+file "$(TPMAC)/miDb/MI_Calibrate.db"
 {
 	pattern { assy, d1, d2 }
 # pmac10:
   	{ 23b:VC:Vy:, 23b:VC:Y1:, 23b:VC:Y2: }
   	{ 23b:MO:Be:, 23b:MO:B1:, 23b:MO:B2: }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_LimAmp.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_LimAmp.db"
 {
  	pattern { assy, x1, x2, d1, d2 }
 # pmac10:
         { 23b:VC:Vy:, 23b:VC:VL:, 23b:VC:VW:, 23b:VC:Y1:, 23b:VC:Y2: }
         { 23b:MO:Be:, 23b:MO:BE:, 23b:MO:BT:, 23b:MO:B1:, 23b:MO:B2: }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_Tsub.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_Tsub.db"
 {
- 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, x1, prec_x1, x2, prec_x2, d1, prec_d1, d2, prec_d2, m1, m2, val, nla, tsub }
 # pmac10:
-  { 23b:VC:Vy:, 23b:VC:VL:, 23b:VC:VW:, 23b:VC:Y1:, 23b:VC:Y2:, 23b:VC:my1:, 23b:VC:my2:, RqsPos, 0, tsubMISt }
-  { 23b:VC:Vy:, 23b:VC:VL:, 23b:VC:VW:, 23b:VC:Y1:, 23b:VC:Y2:, 23b:VC:my1:, 23b:VC:my2:, RqsBkl, 1, tsubMISt }
-  { 23b:MO:Be:, 23b:MO:BE:, 23b:MO:BT:, 23b:MO:B1:, 23b:MO:B2:, 23b:MO:mb1:, 23b:MO:mb2:, RqsPos, 0, tsubMISt }
-  { 23b:MO:Be:, 23b:MO:BE:, 23b:MO:BT:, 23b:MO:B1:, 23b:MO:B2:, 23b:MO:mb1:, 23b:MO:mb2:, RqsBkl, 1, tsubMISt }
+  { 23b:VC:Vy:, 23b:VC:VL:, 3, 23b:VC:VW:, 3, 23b:VC:Y1:, 3, 23b:VC:Y2:, 3, 23b:VC:my1:, 23b:VC:my2:, RqsPos, 0, tsubMISt }
+  { 23b:VC:Vy:, 23b:VC:VL:, 3, 23b:VC:VW:, 3, 23b:VC:Y1:, 3, 23b:VC:Y2:, 3, 23b:VC:my1:, 23b:VC:my2:, RqsBkl, 1, tsubMISt }
+  { 23b:MO:Be:, 23b:MO:BE:, 3, 23b:MO:BT:, 3, 23b:MO:B1:, 3, 23b:MO:B2:, 3, 23b:MO:mb1:, 23b:MO:mb2:, RqsPos, 0, tsubMISt }
+  { 23b:MO:Be:, 23b:MO:BE:, 3, 23b:MO:BT:, 3, 23b:MO:B1:, 3, 23b:MO:B2:, 3, 23b:MO:mb1:, 23b:MO:mb2:, RqsBkl, 1, tsubMISt }
 }
-#----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_TsubRbk.db
+#----------------------------------------------------------------------------
+file "$(TPMAC)/miDb/MI_TsubRbk.db"
 {
-  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+  pattern { assy, x1, prec_x1, desc_x1, egu_x1, x2, prec_x2, desc_x2, egu_x2, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
 # pmac10:
-  { 23b:VC:Vy:, 23b:VC:VL:, "VCM Lane",      "(mm)", 23b:VC:VW:, "VCM Yaw",       "(mrad)", 23b:VC:Y1:, "VCM Y1",            "(mm)", 23b:VC:Y2:, "VCM Y2",            "(mm)", 23b:VC:my1:,  23b:VC:my2:,  ActPos, 0, tsubMISt }
-  { 23b:MO:Be:, 23b:MO:BE:, "DCM X2 Bend",   "(mm)", 23b:MO:BT:, "DCM X2 Twist",  "(mm)",   23b:MO:B1:, "DCM X2 Bender m1",  "(mm)", 23b:MO:B2:, "DCM X2 Bender m2",  "(mm)", 23b:MO:mb1:,  23b:MO:mb2:,  ActPos, 0, tsubMISt }
+  { 23b:VC:Vy:, 23b:VC:VL:, 3, "VCM Lane",    "(mm)", 23b:VC:VW:, 3, "VCM Yaw",      "(mrad)", 23b:VC:Y1:, 3, "VCM Y1",           "(mm)", 23b:VC:Y2:, 3, "VCM Y2",           "(mm)", 23b:VC:my1:,  23b:VC:my2:,  ActPos, 0, tsubMISt }
+  { 23b:MO:Be:, 23b:MO:BE:, 3, "DCM X2 Bend", "(mm)", 23b:MO:BT:, 3, "DCM X2 Twist", "(mm)",   23b:MO:B1:, 3, "DCM X2 Bender m1", "(mm)", 23b:MO:B2:, 3, "DCM X2 Bender m2", "(mm)", 23b:MO:mb1:,  23b:MO:mb2:,  ActPos, 0, tsubMISt }
 }
-#----------------------------------------------------------------------------  
+#----------------------------------------------------------------------------
 file "$(TPMAC)/miDb/MI_TsubSpeed.db"
 {
-  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+  pattern { assy, x1, prec_x1, egu_x1, x2, prec_x2, egu_x2, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, m1, m2, tsub }
 # pmac10:
-  { 23b:VC:Vy:, 23b:VC:VL:, "(mm/s)", 23b:VC:VW:, "(mrad/s)", 23b:VC:Y1:, "(mm/s)", 23b:VC:Y2:, "(mm/s)", 23b:VC:my1:,  23b:VC:my2:, tsubMISt }
-  { 23b:MO:Be:, 23b:MO:BE:, "(mm/s)", 23b:MO:BT:, "(mm/s)",   23b:MO:B1:, "(mm/s)", 23b:MO:B2:, "(mm/s)", 23b:MO:mb1:,  23b:MO:mb2:, tsubMISt }
+  { 23b:VC:Vy:, 23b:VC:VL:, 3, "(mm/s)", 23b:VC:VW:, 3, "(mrad/s)", 23b:VC:Y1:, 3, "(mm/s)", 23b:VC:Y2:, 3, "(mm/s)", 23b:VC:my1:,  23b:VC:my2:, tsubMISt }
+  { 23b:MO:Be:, 23b:MO:BE:, 3, "(mm/s)", 23b:MO:BT:, 3, "(mm/s)",   23b:MO:B1:, 3, "(mm/s)", 23b:MO:B2:, 3, "(mm/s)", 23b:MO:mb1:,  23b:MO:mb2:, tsubMISt }
 }
 

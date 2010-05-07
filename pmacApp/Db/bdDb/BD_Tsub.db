@@ -82,12 +82,12 @@ record(ao, "$(m1)$(val)") {
 
 record(ao, "$(d1)$(val)") {
   field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_d1)")
 }
 
 record(ao, "$(x1)$(val)") {
   field(FLNK, "$(assy)$(val)TsubAxs.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_x1)")
 }
 
 record(ao, "$(m2)$(val)") {
@@ -96,11 +96,11 @@ record(ao, "$(m2)$(val)") {
 
 record(ao, "$(d2)$(val)") {
   field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_d2)")
 }
 
 record(ao, "$(x2)$(val)") {
   field(FLNK, "$(assy)$(val)TsubAxs.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_x2)")
 }
 

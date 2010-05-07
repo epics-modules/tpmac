@@ -90,28 +90,28 @@ record(ao, "$(m1)RqsBkl") {
   field(FLNK, "$(assy)RqsBklTsubMtr.PROC PP MS")
 }
 
-record(ao, "$(d1)RqsBkl") {
-  field(FLNK, "$(assy)RqsBklTsubDrv.PROC PP MS")
-  field(PREC, "4")
-}
-
 record(ao, "$(m2)RqsBkl") {
   field(FLNK, "$(assy)RqsBklTsubMtr.PROC PP MS")
 }
 
+record(ao, "$(d1)RqsBkl") {
+  field(FLNK, "$(assy)RqsBklTsubDrv.PROC PP MS")
+  field(PREC, "$(prec_d1)")
+}
+
 record(ao, "$(d2)RqsBkl") {
   field(FLNK, "$(assy)RqsBklTsubDrv.PROC PP MS")
-  field(PREC, "2")
+  field(PREC, "$(prec_d2)")
 }
 
 record(ao, "$(x1)RqsBkl") {
   field(FLNK, "$(assy)RqsBklTsubAxs1.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x1)")
 }
 
 record(ao, "$(x2)RqsBkl") {
   field(FLNK, "$(assy)RqsBklTsubAxs2.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x2)")
 }
 
 record(calc, "$(assy)RqsBklSDISx1") {

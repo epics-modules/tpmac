@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/LimTransfer.db
+file "$(TPMAC)/softDb/LimTransfer.db"
 {
 	pattern { drv, mtr }
 #--------------------------------------

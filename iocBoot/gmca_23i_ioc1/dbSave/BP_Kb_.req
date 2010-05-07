@@ -7,3 +7,10 @@ file assy.req ASSY=$(P)BP:Kb
 file mtr1.req MTR1=$(P)BP:mkb
 file drv1.req DRV1=$(P)BP:KBZ
 
+$(P)BP:KBZ:RqsPosMem1
+$(P)BP:KBZ:RqsPosMem2
+$(P)BP:KBZ:RqsPosMem3
+
+$(P)BP:KBZ:RqsPosMem1.DESC
+$(P)BP:KBZ:RqsPosMem2.DESC
+$(P)BP:KBZ:RqsPosMem3.DESC

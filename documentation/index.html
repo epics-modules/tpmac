@@ -78,7 +78,7 @@ constitute quite essential part of the module -- one can expect loading about
 100 EPICS DB records per PMAC motion axis. Due to the complexity and
 flexibility of PMAC where one deals with coordinated motions of 1,2,3,4,...
 and etc. motors a generic solution like
-<a href="http://www.aps.anl.gov/upd/people/sluiter/epics/modules/mechanism/motor/">Motor
+<a href="http://www.aps.anl.gov/bcda/synApps/motor/">Motor
 Record</a> used with the OMS-58 controller would not be able to access much of
 PMAC functionality.<br>&nbsp;
 
@@ -149,7 +149,7 @@ illustrated on Fig.2.</p>
 
 <p>Fig.3 shows the MEDM screen for XY-positioner coordinate system which is a
 two-level DB. Here "X1" and "Y1" are drives and "mtr x1" and "mtr y1" are
-motors. Fig.4 presents the MEDM screen for a slit which is a tree-level
+motors. Fig.4 presents the MEDM screen for a slit which is a three-level
 database. Here "Z-center" and "Z-size" are axes (combined motions), "Z-top"
 and "Z-bottom" are drives, and "top" and "btm" are motors.</p>
 
@@ -198,14 +198,60 @@ enable/disable signals from "motors" to "axes" and "drives".
   <td><b>Notes</b></td>
 </tr>
 <tr align="center" valign="top">
+  <td><nobr>3-7</nobr></td>
+  <td><nobr>05/2010</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-7.zip">tpmac3-7.zip</a></nobr></td>
+  <td ALIGN="left">A small fix to statusRecord.c allowing for compilation with EPICS base 3.14.11.
+Added support for waveform PVs and a mechanism to post PMAC error messages previoulsy only
+available on IOC console into a waveform PVs. A patch by <a href="mailto:jlmuir@anl.gov">Lewis
+Muir</a> to devPmacRam.c avoiding potential crash on IOC reboots. See
+<a href="ReleaseNotes_3-7.txt">Release Notes</a> for additional details.
+</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>3-6</nobr></td>
+  <td><nobr>02/2009</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-6.zip">tpmac3-6.zip</a></nobr></td>
+  <td ALIGN="left">New versions of pmacAsynCoordSrc, pmacAsynIPPort and pmacAsynMotorSrc by
+<a href="mailto:matthew.pearson@diamond.ac.uk">Matthew Pearson</a> and
+<a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> from the
+<a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>. Also, a few patches
+to databases including those to AssyGeneric_scanrec.db and bkgfix1pcs_scanrec.db
+by <a href="mailto:jlmuir@anl.gov">Lewis Muir</a>. See
+<a href="ReleaseNotes_3-6.txt">Release Notes</a> for details.
+</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>3-5</nobr></td>
+  <td><nobr>03/2008</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-5.zip">tpmac3-5.zip</a></nobr></td>
+  <td ALIGN="left">The main motivation for this release is the addition of new
+IP driver produced by <a href="mailto:peter.leicester@diamond.ac.uk">Pete Leicester</a>
+and <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at the
+<a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>. This driver
+should allow communicating with Ethernet based Delta Tau controllers. See
+<a href="ReleaseNotes_3-5.txt">Release Notes</a> for details.
+</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>3-4</nobr></td>
+  <td><nobr>06/2007</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-4.zip">tpmac3-4.zip</a></nobr></td>
+  <td ALIGN="left">Fixed a long-standing bug from the initial 1996
+implementation. The bug related to improper mutexing was causing pmacMbox
+task to crash occasionally, especially under high IOC load. Respectively,
+the only updated directory in this release compared to 3-3 is pmacApp/src.
+</td>
+</tr>
+<tr align="center" valign="top">
   <td><nobr>3-3</nobr></td>
   <td><nobr>12/2006</nobr></td>
   <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-3.zip">tpmac3-3.zip</a></nobr></td>
   <td ALIGN="left">Switched to <a href="http://www.aps.anl.gov/epics/">EPICS asyn driver</a> for
       communicating with PMAC and replaced PMAC Mailbox communications by PMAC
       DPRAM ASCII communications. The new driver is mostly due to
-      <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at
-      <a href="http://www.diamond.ac.uk">Diamond Light Source</a>.
+      <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at the
+      <a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>.
       Also, added the support for PMAC ADC/DAC (ACC-59E) and Digital IO (ACC-65E),
       revised some DBs, Tcl/Tk menus and MEDM screens.</td>
 </tr>
@@ -226,8 +272,8 @@ enable/disable signals from "motors" to "axes" and "drives".
   <td><nobr>2-0</nobr></td>
   <td><nobr>05/2003</nobr></td>
   <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac2-0.zip">tpmac2-0.zip</a></nobr></td>
-  <td ALIGN="left">The first release supporting Turbo PMAC2 Ultraligh (as distinct from PMAC1
-   supported by initial driver writthen by Tom Coleman)</a></td>
+  <td ALIGN="left">The first release supporting Turbo PMAC2 Ultralite (as distinct from PMAC1
+   supported by initial driver written by Tom Coleman)</a></td>
 </tr>
 </tbody>
 </table>
@@ -242,7 +288,13 @@ enable/disable signals from "motors" to "axes" and "drives".
   <th>Required for</th>
 </tr>
 <tr align="center">
-  <td>3-3</td>
+  <td>3-5, 3-6, 3-7</td>
+  <td>EPICS base</td>
+  <td ALIGN="center">3.14.8 and up, asyn 4.9 and up, Tornado 2.0 or 2.2</td>
+  <td>Base support</td>
+</tr>
+<tr align="center">
+  <td>3-3, 3-4</td>
   <td>EPICS base</td>
   <td ALIGN="center">3.14.8 and asyn 4.6</td>
   <td>Base support</td>
@@ -356,14 +408,15 @@ href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a>
 
 <ul>
 
-<li> <a href="EPICS_driver_tpmac2.html">Notes
-on PMAC board preparation before using it with EPICS</a>.
+<li> <a href="EPICS_driver_tpmac2.html">Notes on PMAC board preparation
+before using it with EPICS</a>.
 
-<li> <a href="preparing4epics.html">Notes
-on installing SBC-BIO-GMCA-LS-style EPICS support for PMAC VME boards</a>.
+<li> <a href="preparing4epics.html">Notes on installing SBC-BIO-GMCA-LS-style
+EPICS support for PMAC VME boards</a>.
 
-<li> <a href="tpmac2_driver.html">A short
-overview of Turbo PMAC2-VME Ultralite features</a>.
+<li> <a href="tpmac2_driver.html">A short overview of Turbo PMAC2-VME
+Ultralite features</a> (details can be found in the
+<a href="http://www.deltatau.com/fmenu/PMAC%20CATALOG.PDF">Delta Tau PMAC Catalog</a>).
 
 <li>Old notes on <a href="PMAC1_configure.html">configuring
 PMAC1 to work with EPICS driver</a>.
@@ -371,12 +424,15 @@ PMAC1 to work with EPICS driver</a>.
 <li>Old notes on <a href="PMAC1_tune.html">tuning
 PMAC1 motors servo loops under EPICS</a>.
 
-<li><a href="http://www.deltatau.com/fmenu/fmenu.htm">PMAC manuals</a> and
-<a href="http://www.deltatau.com/products/catalogs/catalogs.htm">PMAC Reference
-Guides</a> at Delta Tau web site.
+<li><a href="http://www.deltatau.com/fmenu/TURBO%20SRM.PDF">Turbo PMAC Software Reference Manual</a>
+at the Delta Tau web site.
 
-<li><a href="ftp://ftp.deltatau.com/PMACEXEProgram/main.htm">PMAC software by
-Delta Tau</a> download page.
+<li><a href="http://www.deltatau.com/fmenu/fmenu.htm">All PMAC manuals</a> and
+<a href="http://www.deltatau.com/common/support/technotes/technotes.asp?connectionStr=release">PMAC
+Technical Notes</a> at the Delta Tau web site.
+
+<li><a href="http://www.deltatau.com/common/products/software.asp?node=id500&connectionStr=release">PMAC
+software by Delta Tau</a> download page.
 
 </ul>
 

@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/AsciiPcs.db
+file "$(TPMAC)/pmacDb/AsciiPcs.db"
 {
 	pattern { pcs, C, x }
 #				pcs =   1   2   3   4   5   6   7   8
@@ -16,4 +16,5 @@ file $(TPMAC)/pmacDb/AsciiPcs.db
         { 23o:HD:Up:,  0,  9 }
         { 23o:HD:Dn:,  0, 10 }
         { 23o:BP:Hd1:, 0, 11 }
+        { 23o:BP:Hd3:, 0, 12 }
 }

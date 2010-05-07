@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/AsciiMtr.db
+file "$(TPMAC)/pmacDb/AsciiMtr.db"
 {
 	pattern { mtr, C, x }
 #				mtr = 1 2 3 4 5 6 7 8
@@ -23,7 +23,7 @@ file $(TPMAC)/pmacDb/AsciiMtr.db
 ####    { 23o:pmac11:mo:,  1, 32 }	#macro needs to be installed
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/IxMtrMv.db
+file "$(TPMAC)/pmacDb/IxMtrMv.db"
 {
 	pattern { mtr, C, x }
 #				mtr = 1 2 3 4 5 6 7 8
@@ -48,7 +48,7 @@ file $(TPMAC)/pmacDb/IxMtrMv.db
 ####    { 23o:pmac11:mo:,  1, 32 }       # not used
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/pmacDb/OpnLp.db
+file "$(TPMAC)/pmacDb/OpnLp.db"
 {
 	pattern { mtr, C, M }
 #				mtr = 1 2 3 4 5 6 7 8

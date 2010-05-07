@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/Load05X3.db
+file "$(TPMAC)/softDb/Load05X3.db"
 {
 	pattern { assy, m1, C, pcs }
 #                              pcs =   1   2   3   4   5   6   7   8
@@ -9,7 +9,7 @@ file $(TPMAC)/softDb/Load05X3.db
         { 23b:MO:Tn1:, 23b:MO:mr1:,  0,  8 }
 }
 #----------------------------------------------------------------------------
-file $(TPMAC)/softDb/Load08XY3.db
+file "$(TPMAC)/softDb/Load08XY3.db"
 {
 	pattern { assy, m1, m2, C, pcs }
 #				   pcs =   1   2   3   4   5   6   7   8
@@ -24,10 +24,10 @@ file $(TPMAC)/softDb/Load08XY3.db
 file "$(TPMAC)/softDb/Load11XYZ3_mono.db"
 {
 	pattern { assy, m1, m2, m3, C, pcs }
-        { 23b:MO:En:,  23b:MO:mr:,   23b:MO:mt1:,   23b:MO:mt2:,  0,  7 }
+        { 23b:MO:En:,  23b:MO:mr:,   23b:MO:mt2:,   23b:MO:mt1:,  0,  7 }
 }
 #----------------------------------------------------------------------------
-file $(TPMAC)/softDb/Load11XYZ3.db
+file "$(TPMAC)/softDb/Load11XYZ3.db"
 {
 	pattern { assy, m1, m2, m3, C, pcs }
 #				       pcs =   1   2   3   4   5   6   7   8

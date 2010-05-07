@@ -1,0 +1,43 @@
+file "$(TPMAC)/xyzDb/XYZ_Calibrate.db"
+{
+	pattern { assy, d1, d2, d3 }
+# pmac20:
+  { 23b:GO:Kp:, 23b:GO:KP:, 23b:GO:PH:, 23b:GO:CZ: }
+  { 23b:BS:Ps:, 23b:BS:D:,  23b:BS:PT:, 23b:BS:YW: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_LimAmp.db"
+{
+ 	pattern { assy, d1, d2, d3 }
+# pmac20:
+  { 23b:GO:Kp:, 23b:GO:KP:, 23b:GO:PH:, 23b:GO:CZ: }
+  { 23b:BS:Ps:, 23b:BS:D:,  23b:BS:PT:, 23b:BS:YW: }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_Tsub.db"
+{
+ 	pattern { assy, d1, prec_d1, d2, prec_d2, d3, prec_d3, m1, m2, m3, val, nla, tsub }
+# tsub's are C programs implementing conversion between drives <-> motors <-> axes.
+# nla=0/1 correspond to absolute/relative conversion.
+# pmac20:
+  { 23b:GO:Kp:, 23b:GO:KP:, 3, 23b:GO:PH:, 3, 23b:GO:CZ:, 3, 23b:GO:mkp:, 23b:GO:mph:, 23b:GO:mcz:, RqsPos, 0, tsubXYZPs }
+  { 23b:GO:Kp:, 23b:GO:KP:, 3, 23b:GO:PH:, 3, 23b:GO:CZ:, 3, 23b:GO:mkp:, 23b:GO:mph:, 23b:GO:mcz:, RqsBkl, 1, tsubXYZPs }
+  { 23b:BS:Ps:, 23b:BS:D:,  3, 23b:BS:PT:, 3, 23b:BS:YW:, 3, 23b:BS:md:,  23b:BS:mpt:, 23b:BS:myw:, RqsPos, 0, tsubXYZPs }
+  { 23b:BS:Ps:, 23b:BS:D:,  3, 23b:BS:PT:, 3, 23b:BS:YW:, 3, 23b:BS:md:,  23b:BS:mpt:, 23b:BS:myw:, RqsBkl, 1, tsubXYZPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_TsubRbk.db"
+{
+ 	pattern { assy, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, d3, prec_d3, desc_d3, egu_d3, m1, m2, m3, val, nla, tsub }
+# pmac20:
+  { 23b:GO:Kp:, 23b:GO:KP:, 3, "Kappa",       "(degr)", 23b:GO:PH:, 3, "Phi",      "(degr)", 23b:GO:CZ:, 3, "Xtal-Z (phi-slide)", "(mm)",   23b:GO:mkp:, 23b:GO:mph:, 23b:GO:mcz:, ActPos, 0, tsubXYZPs }
+  { 23b:BS:Ps:, 23b:BS:D:,  3, "BS distance", "(mm)",   23b:BS:PT:, 3, "BS pitch", "(mrad)", 23b:BS:YW:, 3, "BS yaw",             "(mrad)", 23b:BS:md:,  23b:BS:mpt:, 23b:BS:myw:, ActPos, 0, tsubXYZPs }
+}
+#----------------------------------------------------------------------------
+file "$(TPMAC)/xyzDb/XYZ_TsubSpeed.db"
+{
+  pattern { assy, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, d3, prec_d3, egu_d3, m1, m2, m3, tsub }
+# pmac20:
+  { 23b:GO:Kp:, 23b:GO:KP:, 3, "(degr/s)", 23b:GO:PH:, 3, "(degr/s)", 23b:GO:CZ:, 3, "(mm/s)",   23b:GO:mkp:, 23b:GO:mph:, 23b:GO:mcz:, tsubXYZPs }
+  { 23b:BS:Ps:, 23b:BS:D:,  3, "(mm/s)",   23b:BS:PT:, 3, "(mrad/s)", 23b:BS:YW:, 3, "(mrad/s)", 23b:BS:md:,  23b:BS:mpt:, 23b:BS:myw:, tsubXYZPs }
+}

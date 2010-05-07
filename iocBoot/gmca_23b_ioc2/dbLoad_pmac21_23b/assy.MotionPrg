@@ -1,0 +1,23 @@
+file "$(TPMAC)/softDb/MotionPrg.db"
+{
+#            assembly, Slew,Backlash,Position
+        pattern { assy, prg0, prg1, prg2 }
+#
+# pmac21:
+        { 23b:HS:Av:,  30, 31, 32 }
+        { 23b:HS:Ah:,  30, 31, 32 }
+        { 23b:RB:Rd:,  70, 71, 72 }
+        { 23b:RB:Rr:,  10, 11, 12 }
+        { 23b:FLU:Di:, 10, 11, 12 }
+        { 23b:PIN:St:, 10, 11, 12 }
+        { 23b:COL:St:, 30, 31, 32 }
+        { 23b:XY:P1:,  30, 31, 32 }
+        { 23b:XY:P2:,  30, 31, 32 }
+        { 23b:XY:P3:,  30, 31, 32 }
+        { 23b:XY:P4:,  30, 31, 32 }
+        { 23b:XY:P5:,  30, 31, 32 }
+        { 23b:XY:P6:,  30, 31, 32 }
+        { 23b:XY:P7:,  30, 31, 32 }
+        { 23b:XY:P8:,  30, 31, 32 }
+        { 23b:XY:P9:,  30, 31, 32 }
+}

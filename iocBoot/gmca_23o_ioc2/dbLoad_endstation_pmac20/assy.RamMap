@@ -20,6 +20,13 @@ file "$(TPMAC)/pmacDb/Ram05X3.db"
         { 23o:SH:Ps:,  0, 120 }
 }
 #----------------------------------------------------------------------------
+file "$(TPMAC)/pmacDb/shutter.db"
+{
+  pattern { m1, C, pcs, pcsOffset, prgOpen, prgClose }
+# pmac20:
+        { 23o:SH:mp:, 0, 16, 120,  2, 4 }
+}
+#----------------------------------------------------------------------------
 file "$(TPMAC)/pmacDb/Ram08XY3.db"
 {
 	pattern { assy, C, S }

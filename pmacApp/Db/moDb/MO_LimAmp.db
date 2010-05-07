@@ -20,7 +20,16 @@ record(fanout, "$(assy)dAmpEnaFLNK") {
   field(LNK4, "$(x2)AmpEna.PROC PP MS")
 }
 
-record(calc,"$(x1)NgLimSet") {
+record(bi, "$(x1)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x1)NgLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x1)NgLimCALC") {
   field(CALC,"(D>0)?(A+C):(A+B)")
   field(INPA,"$(d1)PsLimSet.VAL NPP MS")
   field(INPB,"$(d2)PsLimSet.VAL NPP MS")
@@ -28,7 +37,16 @@ record(calc,"$(x1)NgLimSet") {
   field(INPD,"$(assy)BeamOffset.VAL NPP MS")
 }
 
-record(calc,"$(x1)PsLimSet") {
+record(bi, "$(x1)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x1)PsLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x1)PsLimCALC") {
   field(CALC,"(D>0)?(A+C):(A+B)")
   field(INPA,"$(d1)NgLimSet.VAL NPP MS")
   field(INPB,"$(d2)NgLimSet.VAL NPP MS")
@@ -36,23 +54,59 @@ record(calc,"$(x1)PsLimSet") {
   field(INPD,"$(assy)BeamOffset.VAL NPP MS")
 }
 
-record(calc,"$(x2)NgLimSet") {
+record(bi, "$(x2)NgLimSet") {
+  field(DESC, "NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x2)NgLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x2)NgLimCALC") {
   field(CALC,"(A>0)?1:0")
   field(INPA,"$(x1)PsLimSet.VAL NPP MS")
 }
 
-record(calc,"$(x2)PsLimSet") {
+record(bi, "$(x2)PsLimSet") {
+  field(DESC, "PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped") 
+# field(PINI, "YES")
+  field(INP, "$(x2)PsLimCALC.VAL PP MS")
+}  
+
+record(calc,"$(x2)PsLimCALC") {
   field(CALC,"(A>0)?1:0")
   field(INPA,"$(x1)NgLimSet.VAL NPP MS")
 }
 
-record(calc,"$(x1)AmpEna") {
+record(bi, "$(x1)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(x1)AmpEnaCALC.VAL PP MS")
+} 
+
+record(calc,"$(x1)AmpEnaCALC") {
   field(CALC,"((A>0)&&(B>0))?1:0")
   field(INPA,"$(d1)AmpEna.VAL NPP MS")
   field(INPB,"$(d2)AmpEna.VAL NPP MS")
 }
 
-record(calc,"$(x2)AmpEna") {
+record(bi, "$(x2)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+# field(PINI, "YES")
+  field(INP, "$(x2)AmpEnaCALC.VAL PP MS")
+} 
+
+record(calc,"$(x2)AmpEnaCALC") {
   field(CALC,"(A>0)?1:0")
   field(INPA,"$(x1)AmpEna.VAL NPP MS")
 }

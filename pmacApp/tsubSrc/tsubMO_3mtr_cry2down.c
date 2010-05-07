@@ -29,11 +29,7 @@ double coQB, siQB;                      /* added by Sergey 2001/04/20 */
 /* =========================================== - Energy Initialization
  * tsubMOEn - Energy Initialization
  */
-long tsubMOEn
-(
-	struct tsubRecord *pRec
-)
-{
+long tsubMOEn (struct tsubRecord *pRec) {
  	return (0);
 }
 
@@ -47,15 +43,10 @@ long tsubMOEn
  *	b  = m2:ActPos
  *	c  = m3:ActPos
  */
-long tsubMOEnSync
-(
-	struct tsubRecord *	pRec
-)
-{
+long tsubMOEnSync (struct tsubRecord *	pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
-
 	return (0);
 }
 
@@ -65,9 +56,9 @@ long tsubMOEnSync
  *	oa = x1  (=E)      a = m1
  *	ob = x2  (=L)      b = m2
  *	oa1 = d1 (=QB)     c = m3
- *	ob1 = d2 (=t2)     g = ESinTheta  
- *	oc1 = d3 (=tx)     h = EvLambda   
- *	oa2 = m1_int       i = BeamOffset 
+ *	ob1 = d2 (=t2)     g = ESinTheta
+ *	oc1 = d3 (=tx)     h = EvLambda
+ *	oa2 = m1_int       i = BeamOffset
  *	oa3 = m1_fra       a0 = d1:Offset
  *	                   a1 = d1:Scale
  *	                   a2 = mirrAng
@@ -79,51 +70,35 @@ long tsubMOEnSync
  *	                   p = x1:ActPos (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnMtr
-(
-	struct tsubRecord *pRec
-)
-{
-	if (pRec->nla == 0.0)		/* -Absolute Motion- */
-	{
+long tsubMOEnMtr (struct tsubRecord *pRec) {
+	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0 + 2.0*pRec->a2;     /* d1=m1*scale1+offset1+2*mirrAng */
 		pRec->ob1 = pRec->b * pRec->b1 + pRec->b0;		      /* d2=m2*scale2+offset2 */
 		pRec->oc1 = pRec->c * pRec->c1 + pRec->c0;		      /* d3=m3*scale3+offset3 */
 		siQB = SIND(pRec->oa1);                                       /* sin(QB)              */
-		if ( siQB != 0.0 )
-		{
-			pRec->oa = pRec->g / siQB;                            /* E=EsinTheta/sin(QB)  */
-		}
-		if ( pRec->oa != 0.0 )
-		{
-			pRec->ob = pRec->h / pRec->oa;                        /* L=EvLambda/E         */
-		}
+		if (siQB != 0.0)     pRec->oa = pRec->g / siQB;               /* E=EsinTheta/sin(QB)  */
+		if (pRec->oa != 0.0) pRec->ob = pRec->h / pRec->oa;           /* L=EvLambda/E         */
                 pRec->oa2 = (long)(pRec->a);                                  /* m1_int */
 		pRec->oa3 = pRec->a - pRec->oa2;                              /* m1_fra */
 	}
-	else				/* -Relative Motion- */
-	{
+	else {				/* ----------Relative Motion--------- */
 		pRec->oa1 = pRec->a * pRec->a1;                               /* d1=m1*scale1         */
 		pRec->ob1 = pRec->b * pRec->b1;                               /* d2=m2*scale2         */
 		pRec->oc1 = pRec->c * pRec->c1;                               /* d3=m3*scale3         */
 		siQB = SIND(pRec->m);                                         /* sin(QB)              */
 		coQB = COSD(pRec->m);                                         /* cos(QB)              */
-		if ( siQB != 0.0 )
-		{
+		if (siQB != 0.0) {
 			pRec->oa = -1.0 * pRec->g * coQB * DEG2RAD(pRec->oa1) /* dE=-EsinTheta*cos(QB)*dQ/sin^2(QB) */
 			         / (siQB*siQB);
 		}
-		else
-		{
+		else {
 			pRec->oa = 0.0;                                        /* dE=0.               */
 		}
-		if ( pRec->p != 0.0 )                                          /* if E#0              */
-		{
+		if (pRec->p != 0.0) {                                          /* if E#0              */
 			pRec->ob = -1.0 * pRec->h * pRec->oa                   /* dL=-EvLambda*dE/E^2 */
 				 / (pRec->p * pRec->p);
 		}
-		else
-		{
+		else {
 			pRec->ob = 0.0;                                        /* dL=0.               */
 		}
 	}
@@ -132,12 +107,12 @@ long tsubMOEnMtr
 
 /* =========================================== - Energy Drives
  * tsubMOEnDrv - Energy Drives
- *	oa = x1  (=E)      a = d1   (=QB) 
- *	ob = x2  (=L)      b = d2   (=t2) 
- *	oa0 = m1           c = d3   (=tx) 
- *	ob0 = m2           g = ESinTheta  
- *	oc0 = m3           h = EvLambda   
- *      oa2 = m1_int       i = BeamOffset 
+ *	oa = x1  (=E)      a = d1   (=QB)
+ *	ob = x2  (=L)      b = d2   (=t2)
+ *	oa0 = m1           c = d3   (=tx)
+ *	ob0 = m2           g = ESinTheta
+ *	oc0 = m3           h = EvLambda
+ *      oa2 = m1_int       i = BeamOffset
  *      oa3 = m1_fra       a0 = d1:Offset
  *                         a1 = d1:Scale
  *	                   a2 = mirrAng
@@ -149,57 +124,36 @@ long tsubMOEnMtr
  *	                   p = x1:ActPos (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnDrv
-(
-	struct tsubRecord *pRec
-)
-{
+long tsubMOEnDrv (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) ||
-	     (pRec->c1 == 0.0) )
-	{
-		return (-1);
-	}
-	if (pRec->nla == 0.0)		/* -Absolute Motion- */
-	{
+	     (pRec->c1 == 0.0) )  return (-1);
+	if (pRec->nla == 0.0) {		/* ---------Absolute Motion---------- */
 		pRec->oa0 = (pRec->a - pRec->a0 - 2.0*pRec->a2) / pRec->a1;   /* m1=(d1-offset1-2*mirrAng)/scale1 */
 		pRec->ob0 = (pRec->b - pRec->b0) / pRec->b1;                  /* m2=(d2-offset2)/scale2 */
 		pRec->oc0 = (pRec->c - pRec->c0) / pRec->c1;                  /* m3=(d3-offset3)/scale3 */
 		siQB = SIND(pRec->a);                                         /* sin(QB)                */
-		if ( siQB != 0.0 )
-		{
-			pRec->oa = pRec->g / siQB;                            /* E=EsinTheta/sin(QB)    */
-		}
-		if ( pRec->oa != 0.0 )
-		{
-			pRec->ob = pRec->h / pRec->oa;                        /* L=EvLambda/E           */
-		}
+		if (siQB != 0.0)     pRec->oa = pRec->g / siQB;               /* E=EsinTheta/sin(QB)    */
+		if (pRec->oa != 0.0) pRec->ob = pRec->h / pRec->oa;           /* L=EvLambda/E           */
                 pRec->oa2 = (long)(pRec->oa0);                                /* m1_int */
 		pRec->oa3 = pRec->oa0 - pRec->oa2;                            /* m1_fra */
 	}
-	else				/* -Relative Motion- */
-	{
+	else {				/* ---------Relative Motion---------- */
 		pRec->oa0 = (pRec->a) / pRec->a1;                             /* m1=d1/scale1           */
 		pRec->ob0 = (pRec->b) / pRec->b1;                             /* m2=d2/scale2           */
 		pRec->oc0 = (pRec->c) / pRec->c1;                             /* m3=d3/scale3           */
 		siQB = SIND(pRec->m);                                         /* sin(QB)                */
 		coQB = COSD(pRec->m);                                         /* cos(QB)                */
-		if ( siQB != 0.0 )
-		{
+		if (siQB != 0.0) {
 			pRec->oa = -1.0 * pRec->g * coQB * DEG2RAD(pRec->a)   /* dE=-EsinTheta*cos(QB)*dQ/sin^2(QB) */
 			         / (siQB*siQB);
-		}
-		else
-		{
+		} else {
 			pRec->oa = 0.0;                                       /* dE=0.                  */
 		}
-		if ( pRec->p != 0.0 )                                         /* if E#0                 */
-		{
+		if (pRec->p != 0.0) {                                         /* if E#0                 */
 			pRec->ob = -1.0 * pRec->h * pRec->oa                  /* dL=-EvLambda*dE/E^2    */
 			         / (pRec->p * pRec->p);
-		}
-		else
-		{
+		} else {
 			pRec->ob = 0.0;                                       /* dL=0.                  */
 		}
 	}
@@ -208,12 +162,12 @@ long tsubMOEnDrv
 
 /* =========================================== - Energy Axes
  * tsubMOEnAxs - Energy Axes
- *	oa0 = m1           a = x1          
- *	oa1 = d1 (=QB)     b = x2          
- *	ob0 = m2           f = TrolleyFlag 
- *	ob1 = d2 (=t2)     g = ESinTheta   
- *	oc0 = m3           h = EvLambda    
- *	oc1 = d3 (=tx)     i = BeamOffset  
+ *	oa0 = m1           a = x1
+ *	oa1 = d1 (=QB)     b = x2
+ *	ob0 = m2           f = TrolleyFlag
+ *	ob1 = d2 (=t2)     g = ESinTheta
+ *	oc0 = m3           h = EvLambda
+ *	oc1 = d3 (=tx)     i = BeamOffset
  *	oa2 = m1_int       a0 = d1:Offset
  *	oa3 = m1_fra       a1 = d1:Scale
  *	                   a2 = mirrAng
@@ -222,78 +176,58 @@ long tsubMOEnDrv
  *	                   c0 = d3:Offset
  *	                   c1 = d3:Scale
  *                         m = d1:ActPos     (QB:ActPos)
+ *                         n = d2:RqsPos     (T2:RqsPos)
+ *                         o = d3:RqsPos     (Tx:RqsPos)
  *                         p = x1:ActPos     (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs
-(
-	struct tsubRecord *pRec
-)
-{
+long tsubMOEnAxs (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) ||
              (pRec->b1 == 0.0) ||
-	     (pRec->c1 == 0.0) )
-	{
-		return (-1);
-	}
+	     (pRec->c1 == 0.0) ) return (-1);
 
-	if (pRec->nla == 0.0)  	/* ------------Absolute Motion--------------- */
-	{
-		if ( pRec->a != 0.0 )                                         /* if E#0                 */
-		{
+	if (pRec->nla == 0.0) { /* ------------Absolute Motion--------------- */
+		if (pRec->a != 0.0) {                                         /* if E#0                 */
 		        siQB = pRec->g / pRec->a;                             /* sin(QB)                */
                         if      (siQB > 1.0)  pRec->oa1 = 90.0;
                         else if (siQB < -1.0) pRec->oa1 = -90.0;
 			else                  pRec->oa1 = RAD2DEG (asin(siQB)); /* QB=asin(EsinTheta/E) */
 		}
 		pRec->oa0 = (pRec->oa1 - pRec->a0 - 2.0*pRec->a2) / pRec->a1; /* m1=(d1-offset1-2*mirrAng)/scale1 */
+                pRec->oa2 = (long)(pRec->oa0);                                /* m1_int */
+		pRec->oa3 = pRec->oa0 - pRec->oa2;                            /* m1_fra */
 		siQB = SIND(pRec->oa1);                                       /* sin(QB)                */
 		coQB = COSD(pRec->oa1);                                       /* cos(QB)                */
 
                 /* Trolley-Y (Crystal2 T2): */
-		if ( pRec->f != 0 && pRec->f != 3 && coQB != 0.0 )            /* if TrolleyFlag # 0 or 3*/
-		{
+		if (pRec->f != 0 && pRec->f != 3 && coQB != 0.0) {            /* if TrolleyFlag # 0 or 3*/
 		   	pRec->ob1 = pRec->i / (2.0 * coQB);                   /* d2=t2=BeamOffset/[2*cos(QB)]  */
-			pRec->ob0 = (pRec->ob1 - pRec->b0) / pRec->b1;        /* m2=(d2-offset2)/scale2        */
+		} else {
+		   	pRec->ob1 = pRec->n;                                  /* d2=d2  */
 		}
                 /* Trolley-X (Crystal2 Tx): */
-		if ( pRec->f != 0 && pRec->f != 2 && siQB != 0.0 )            /* if TrolleyFlag # 0 or 2*/
-		{
-		   	pRec->oc1 = pRec->i / (-2.0 * siQB);                  /* d3=tx=BeamOffset/[-2*sin(QB)] */ 
-			pRec->oc0 = (pRec->oc1 - pRec->c0) / pRec->c1;        /* m3=(d3-offset3)/scale3        */
+		if (pRec->f != 0 && pRec->f != 2 && siQB != 0.0) {            /* if TrolleyFlag # 0 or 2*/
+		   	pRec->oc1 = pRec->i / (-2.0 * siQB);                  /* d3=tx=BeamOffset/[-2*sin(QB)] */
+		} else {
+		   	pRec->oc1 = pRec->o;                                  /* d3=d3  */
 		}
-                pRec->oa2 = (long)(pRec->oa0);                                /* m1_int */
-		pRec->oa3 = pRec->oa0 - pRec->oa2;                            /* m1_fra */
+		pRec->ob0 = (pRec->ob1 - pRec->b0) / pRec->b1;                /* m2=(d2-offset2)/scale2        */
+		pRec->oc0 = (pRec->oc1 - pRec->c0) / pRec->c1;                /* m3=(d3-offset3)/scale3        */
 	}
-
-	else	/* --------------------Relative Motion----------------------- */
-	{
-		if ( pRec->p != 0.0 )                                         /* if E#0                */
-		{
+	else {	/* --------------------Relative Motion----------------------- */
+		if (pRec->p != 0.0) {                                         /* if E#0                */
 			siQB = pRec->g / pRec->p;                             /* sin(QB)=(EsinTheta/E) */
-			if ( siQB > 1.0 ) {
-				 siQB = 1.0;
-				 coQB = 0.0;
-			}
-			if ( siQB < -1.0 ) {
-				 siQB = -1.0;
-				 coQB =  0.0;
-			}
-			else {
-				 coQB = sqrt( 1.0 - siQB*siQB );
-			}
-			if ( coQB != 0.0 )
-			{
+			if      (siQB > 1.0)  {siQB = 1.0;  coQB = 0.0;}
+			else if (siQB < -1.0) {siQB = -1.0; coQB = 0.0;}
+			else                  {coQB = sqrt(1.0 - siQB*siQB);}
+			if (coQB != 0.0) {
 				pRec->oa1 = -1.0 * pRec->g * RAD2DEG(pRec->a) /* d1=d(QB)=-EsinTheta*dE/[E^2*cos(QB)]    */
 					  / ( pRec->p * pRec->p * coQB );
 			}
-			else
-			{
+			else {
 				pRec->oa1 = 0.0;                              /* d1=d(QB)=0.         */
 			}
-		}
-		else                                                          /* if E=0              */
-		{
+		} else {                                                      /* if E=0              */
 			siQB = SIND(pRec->m);                                 /* take QB=QB_actual   */
 			coQB = COSD(pRec->m);                                 /* take QB=QB_actual   */
 		  	pRec->oa1 = 0.0;                                      /* d1=d(QB)=0.         */
@@ -301,27 +235,21 @@ long tsubMOEnAxs
 		pRec->oa0 = pRec->oa1 / pRec->a1;                             /* m1 = d1 / d1:Scale  */
 
                 /* Trolley-Y (Crystal2 T2): */
-		if (  pRec->f != 0 && pRec->f != 3 && coQB != 0.0 )           /* if TrolleyFlag # 0 or 3*/
-		{
+		if (pRec->f != 0 && pRec->f != 3 && coQB != 0.0) {            /* if TrolleyFlag # 0 or 3*/
 			pRec->ob1 = pRec->i * siQB * DEG2RAD(pRec->oa1)       /* d2=d(t2)=BeamOffset*sin(QB)*dQ  */
 				  / (2.0 * coQB * coQB);                      /*         /(2*cos^2(QB))          */
-		}
-		else
-		{
+		} else {
 			pRec->ob1 = 0.0;                                      /* d2=d(t2)=0.         */
 		}
-		pRec->ob0 = pRec->ob1 / pRec->b1;                             /* m2=d2/scale2        */
 
                 /* Trolley-X (Crystal2 Tx): */
-		if (  pRec->f != 0 && pRec->f != 2 && siQB != 0.0 )           /* if TrolleyFlag # 0 or 2*/
-		{
+		if (pRec->f != 0 && pRec->f != 2 && siQB != 0.0) {            /* if TrolleyFlag # 0 or 2*/
 			pRec->oc1 = pRec->i * coQB * DEG2RAD(pRec->oa1)       /* d3=d(tx)=BeamOffset*cos(QB)*dQ  */
-				  / (2.0 * siQB * siQB);                      /*         /(2*sin^2(QB))                  */ 
-		}
-		else
-		{
+				  / (2.0 * siQB * siQB);                      /*         /(2*sin^2(QB))                  */
+		} else {
 			pRec->oc1 = 0.0;                                      /* d3=d(tx)=0.         */
 		}
+		pRec->ob0 = pRec->ob1 / pRec->b1;                             /* m2=d2/scale2        */
 		pRec->oc0 = pRec->oc1 / pRec->c1;                             /* m3=d3/scale3        */
 	}
 	return (0);
@@ -333,25 +261,12 @@ long tsubMOEnAxs
  *	a = E                p = x1:ActPos
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs1
-(
-	struct tsubRecord *pRec
-)
-{
-	if (pRec->nla == 0.0)		/* -Absolute Motion- */
-	{
-		if ( pRec->a != 0.0 )
-		{
-			pRec->oa = pRec->h / pRec->a;                         /* L=EvLambda/E        */
-		}
-	}
-	else				/* -Relative Motion- */
-	{
-		if ( pRec->p != 0.0 )
-		{
-			pRec->oa = -1.0 * pRec->h * pRec->a                   /* dL=-EvLambda*dE/E^2 */
+long tsubMOEnAxs1 (struct tsubRecord *pRec) {
+	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
+		if (pRec->a != 0.0) pRec->oa = pRec->h / pRec->a;             /* L=EvLambda/E        */
+	} else {			/* ----------Relative Motion--------- */
+		if (pRec->p != 0.0) pRec->oa = -1.0 * pRec->h * pRec->a       /* dL=-EvLambda*dE/E^2 */
 					     / (pRec->p * pRec->p);
-		}
 	}
 	return (0);
 }
@@ -362,25 +277,12 @@ long tsubMOEnAxs1
  *	a = L                q = x2:ActPos
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs2
-(
-	struct tsubRecord *pRec
-)
-{
-	if (pRec->nla == 0.0)		/* --------Absolute Motion-------- */
-	{
-		if (pRec->a != 0.0)
-		{
-			pRec->oa = pRec->h / pRec->a;                         /* E=EvLambda/L        */
-		}
-	}
-	else				/* --------Relative Motion-------- */
-	{
-		if ( pRec->q != 0.0 )
-		{
-			pRec->oa = -1.0 * pRec->h * pRec->a                   /* dE=-EvLambda*dL/L^2 */
+long tsubMOEnAxs2 (struct tsubRecord *pRec) {
+	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
+		if (pRec->a != 0.0) pRec->oa = pRec->h / pRec->a;             /* E=EvLambda/L        */
+	} else {			/* ----------Relative Motion--------- */
+		if (pRec->q != 0.0) pRec->oa = -1.0 * pRec->h * pRec->a       /* dE=-EvLambda*dL/L^2 */
 					     / (pRec->q * pRec->q);
-		}
 	}
 	return (0);
 }
@@ -416,11 +318,7 @@ long tsubMOEnAxs2
  *      p = x1:ActPos (E:ActPos)
  *      nla = Index of input (m1=1, m2=2, m3=3, d1=11, d2=12, d3=13, x1=21, x2=22)
  */
-long tsubMOEnSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+long tsubMOEnSpeed (struct tsubRecord *	pRec) {
 	double prcn = 0.0;
 	double m1, m2, m3, d1, d2, d3, x1, x2;
 	long ifail = 0;
@@ -429,7 +327,7 @@ long tsubMOEnSpeed
  * The SDIS has to be re-enabled before next tsub record call */
    	pRec->oj = 1;                                      /* sdis=1 */
 
-  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: called with n=%f \n",pRec->nla); 
+  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: called with n=%f \n",pRec->nla);
 
 	siQB = SIND(pRec->m);                              /* sin(QB) */
 	coQB = COSD(pRec->m);                              /* cos(QB) */
@@ -447,46 +345,39 @@ long tsubMOEnSpeed
            return (-1);
 	}
 
-	if      (pRec->nla ==  1.0)  /* ------------------------- m1 speed changed */
-	{
-	   if ( pRec->a0 == 0.0 ) prcn = 1.0;              /* if 0, then set to max */
-	   else prcn = fabs( pRec->a0 / pRec->a );         /* prcn=m1/m1_max */
+	if      (pRec->nla ==  1.0) { /* ------------------------ m1 speed changed */
+	   if (pRec->a0 == 0.0) prcn = 1.0;                /* if 0, then set to max */
+	   else prcn = fabs(pRec->a0 / pRec->a);           /* prcn=m1/m1_max */
 	}
-	else if (pRec->nla ==  2.0)  /* ------------------------- m2 speed changed */
-	{
-	   if ( pRec->b0 == 0.0 ) prcn = 1.0;              /* if 0, then set to max */
-	   else prcn = fabs( pRec->b0 / pRec->b );         /* prcn=m2/m2_max */
+	else if (pRec->nla ==  2.0) { /* ------------------------ m2 speed changed */
+	   if (pRec->b0 == 0.0) prcn = 1.0;                /* if 0, then set to max */
+	   else prcn = fabs(pRec->b0 / pRec->b);           /* prcn=m2/m2_max */
 	}
-	else if (pRec->nla ==  3.0)  /* ------------------------- m3 speed changed */
-	{
-	   if ( pRec->c0 == 0.0 ) prcn = 1.0;              /* if 0, then set to max */
-	   else prcn = fabs( pRec->c0 / pRec->c );         /* prcn=m3/m3_max */
+	else if (pRec->nla ==  3.0) { /* ------------------------ m3 speed changed */
+	   if (pRec->c0 == 0.0) prcn = 1.0;                /* if 0, then set to max */
+	   else prcn = fabs(pRec->c0 / pRec->c);           /* prcn=m3/m3_max */
 	}
-	else if (pRec->nla == 11.0) /* ------------------------- d1 speed changed */
-	{
-	   if ( pRec->a1  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
-	   if ( pRec->a1 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
+	else if (pRec->nla == 11.0) { /* ------------------------ d1 speed changed */
+	   if (pRec->a1  < 0.0) ifail = -1;                /* x,d speeds are always > 0 */
+	   if (pRec->a1 <= 0.0) prcn = 1.0;                /* if 0, then set to max */
 /* m speed must have same sign as m_max */
 	   else prcn = fabs( pRec->a1 / (1000.0 * pRec->a * pRec->a3) );
 	}
-	else if (pRec->nla == 12.0) /* ------------------------- d2 speed changed */
-	{
-	   if ( pRec->b1  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
-	   if ( pRec->b1 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
+	else if (pRec->nla == 12.0) { /* ------------------------ d2 speed changed */
+	   if (pRec->b1  < 0.0) ifail = -1;                /* x,d speeds are always > 0 */
+	   if (pRec->b1 <= 0.0) prcn = 1.0;                /* if 0, then set to max */
 /* m speed must have same sign as m_max */
 	   else prcn = fabs( pRec->b1 / (1000.0 * pRec->b * pRec->b3) );
 	}
-	else if (pRec->nla == 13.0) /* ------------------------- d3 speed changed */
-	{
-	   if ( pRec->c1  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
-	   if ( pRec->c1 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
+	else if (pRec->nla == 13.0) { /* ------------------------ d3 speed changed */
+	   if (pRec->c1  < 0.0) ifail = -1;                /* x,d speeds are always > 0 */
+	   if (pRec->c1 <= 0.0) prcn = 1.0;                /* if 0, then set to max */
 /* m speed must have same sign as m_max */
 	   else prcn = fabs( pRec->c1 / (1000.0 * pRec->c * pRec->c3) );
 	}
-	else if (pRec->nla == 21.0) /* ------------------------- x1 speed changed */
-	{
-	   if ( pRec->a2  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
-	   if ( pRec->a2 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
+	else if (pRec->nla == 21.0) { /* ------------------------ x1 speed changed */
+	   if (pRec->a2  < 0.0) ifail = -1;                /* x,d speeds are always > 0 */
+	   if (pRec->a2 <= 0.0) prcn = 1.0;                /* if 0, then set to max */
 	   else {
 /* d1=dQ/dt=m1*scale1 */
 	     d1 = fabs( 1000.0 * pRec->a * pRec->a3 );
@@ -495,10 +386,9 @@ long tsubMOEnSpeed
              prcn = fabs( pRec->a2 / x1 );
 	   }
 	}
-	else if (pRec->nla == 22.0) /* ------------------------- x2 speed changed */
-	{
-	   if ( pRec->b2  < 0.0 ) ifail = -1;              /* x,d speeds are always > 0 */
-	   if ( pRec->b2 <= 0.0 ) prcn = 1.0;              /* if 0, then set to max */
+	else if (pRec->nla == 22.0) { /* ------------------------ x2 speed changed */
+	   if (pRec->b2  < 0.0) ifail = -1;                /* x,d speeds are always > 0 */
+	   if (pRec->b2 <= 0.0) prcn = 1.0;                /* if 0, then set to max */
 	   else {
 /* d1=dQ/dt=m1*scale1 */
 	     d1 = fabs( 1000.0 * pRec->a * pRec->a3 );
@@ -509,12 +399,11 @@ long tsubMOEnSpeed
              prcn = fabs( pRec->b2 / x2 );
 	   }
 	}
-	else
-	{
+	else {
 	   return (-1);
 	}
 
-	if ( prcn < 0.0 || prcn > 1.0 ) {
+	if (prcn < 0.0 || prcn > 1.0) {
 /* If **anything** is wrong set speed to normal */
           ifail = -1;
 	  prcn = 1.0;
@@ -544,7 +433,7 @@ long tsubMOEnSpeed
 	pRec->oc1 = d3;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3); 
+  	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3);
 	return (ifail);
 }
 

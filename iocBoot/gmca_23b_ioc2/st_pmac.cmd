@@ -13,8 +13,8 @@ drvPmacDebug
 # For 24-bit PMAC settings:
 # DPRAM address range is A24 0xF0700000 - 0xF0703FFF
 # MBOX  address range is A24 0xF07FA000 - 0xF07FA1FF
-  pmacVmeConfig (0, 0x6FA000, 0x600000, 0xa5, 6)
-  pmacVmeConfig (1, 0x7FA000, 0x700000, 0xa1, 1)
+  pmacVmeConfig (2, 0x6FA000, 0x600000, 0xF5, 6)
+  pmacVmeConfig (3, 0x7FA000, 0x700000, 0xF1, 1)
 
 ### Configure PMAC-VME Driver
 # 	args:	(1) EPICS VME Card #
@@ -39,8 +39,8 @@ drvPmacDebug
 #	int		scanVarRate,
 #	char *		asynMbxPort)
 
-  pmacDrvConfig (0, 0, 0, 0, "PMAC_MBX_PORT_0" )
-  pmacDrvConfig (1, 0, 0, 0, "PMAC_MBX_PORT_1" )
+  pmacDrvConfig (2, 0, 0, 0, "PMAC_MBX_PORT_2" )
+  pmacDrvConfig (3, 0, 0, 0, "PMAC_MBX_PORT_3" )
 
 #asynSetTraceIOMask("PMAC_MBX_PORT_0", -1, 1 )
 #asynSetTraceMask("PMAC_MBX_PORT_0",-1,0x9)
@@ -51,68 +51,69 @@ drvPmacDebug
 #============================
 
 ### PMAC Databases
-  dbLoadTemplate ("dbLoad_endstation_pmac20/pmac.Ascii")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/pmac.acc65e")
+  dbLoadTemplate ("dbLoad_pmac20_23b/pmac.Ascii")
+  dbLoadTemplate ("dbLoad_pmac20_23b/pmac.acc65e")
 
 ### Motor Databases
-  dbLoadTemplate ("dbLoad_endstation_pmac20/mtr.mtrdat")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/mtr.Ascii")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/mtr.RqsTwkMem")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/mtr.LimTransfer")
+  dbLoadTemplate ("dbLoad_pmac20_23b/mtr.mtrdat")
+  dbLoadTemplate ("dbLoad_pmac20_23b/mtr.Ascii")
+  dbLoadTemplate ("dbLoad_pmac20_23b/mtr.RqsTwkMem")
+  dbLoadTemplate ("dbLoad_pmac20_23b/mtr.LimTransfer")
 
 ### Coordinate System Databases
-  dbLoadTemplate ("dbLoad_endstation_pmac20/pcs.bkgfix1pcs")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/pcs.CtlPnlPcs")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/pcs.AsciiPcs")
+  dbLoadTemplate ("dbLoad_pmac20_23b/pcs.bkgfix1pcs")
+  dbLoadTemplate ("dbLoad_pmac20_23b/pcs.CtlPnlPcs")
+  dbLoadTemplate ("dbLoad_pmac20_23b/pcs.AsciiPcs")
 
 ### Assembly Databases:
 
 ### Common assembly:
-  dbLoadTemplate ("dbLoad_endstation_pmac20/assy.AssyGeneric")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/assy.MotionPrg")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/assy.RamMap")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/assy.Load")
+  dbLoadTemplate ("dbLoad_pmac20_23b/assy.AssyGeneric")
+  dbLoadTemplate ("dbLoad_pmac20_23b/assy.MotionPrg")
+  dbLoadTemplate ("dbLoad_pmac20_23b/assy.RamMap")
+  dbLoadTemplate ("dbLoad_pmac20_23b/assy.Load")
 
 #### Different Assembly Types:
-  dbLoadTemplate ("dbLoad_endstation_pmac20/ccdSt.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/bd.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/hs.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/sh.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/x.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/xy.Assy")
-  dbLoadTemplate ("dbLoad_endstation_pmac20/xyz.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/ccdSt.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/bd.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/hs.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/sh.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/a.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/x.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/xy.Assy")
+  dbLoadTemplate ("dbLoad_pmac20_23b/xyz.Assy")
 
 
 ### PMAC Templates for pmac21
 #============================
 
 ### PMAC Databases
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pmac.Ascii")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pmac.acc65e")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pmac.acc59e")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pmac.Ascii")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pmac.acc65e")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pmac.acc59e")
 
 ### Motor Databases
-   dbLoadTemplate ("dbLoad_endstation_pmac21/mtr.mtrdat")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/mtr.Ascii")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/mtr.RqsTwkMem")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/mtr.LimTransfer")
+   dbLoadTemplate ("dbLoad_pmac21_23b/mtr.mtrdat")
+   dbLoadTemplate ("dbLoad_pmac21_23b/mtr.Ascii")
+   dbLoadTemplate ("dbLoad_pmac21_23b/mtr.RqsTwkMem")
+   dbLoadTemplate ("dbLoad_pmac21_23b/mtr.LimTransfer")
 
 ### Coordinate System Databases
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pcs.bkgfix1pcs")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pcs.CtlPnlPcs")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/pcs.AsciiPcs")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pcs.bkgfix1pcs")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pcs.CtlPnlPcs")
+   dbLoadTemplate ("dbLoad_pmac21_23b/pcs.AsciiPcs")
 
 ### Assembly Databases:
 
 ### Common assembly:
-   dbLoadTemplate ("dbLoad_endstation_pmac21/assy.AssyGeneric")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/assy.MotionPrg")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/assy.RamMap")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/assy.Load")
+   dbLoadTemplate ("dbLoad_pmac21_23b/assy.AssyGeneric")
+   dbLoadTemplate ("dbLoad_pmac21_23b/assy.MotionPrg")
+   dbLoadTemplate ("dbLoad_pmac21_23b/assy.RamMap")
+   dbLoadTemplate ("dbLoad_pmac21_23b/assy.Load")
 
 #### Different Assembly Types:
-   dbLoadTemplate ("dbLoad_endstation_pmac21/hs.Assy")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/x.Assy")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/xy.Assy")
-   dbLoadTemplate ("dbLoad_endstation_pmac21/xyz.Assy")
+   dbLoadTemplate ("dbLoad_pmac21_23b/hs.Assy")
+   dbLoadTemplate ("dbLoad_pmac21_23b/x.Assy")
+   dbLoadTemplate ("dbLoad_pmac21_23b/xy.Assy")
+   dbLoadTemplate ("dbLoad_pmac21_23b/xyz.Assy")
 

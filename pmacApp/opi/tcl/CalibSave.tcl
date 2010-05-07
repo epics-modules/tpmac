@@ -2,42 +2,62 @@
 #! wish82.exe -f
 
 #-----------------------------------------------------------------------------------------
+#  This is a GUI frontend to BURT software aimed at saving/resotring motors calibrations
+#
+#    Original version: Thomas Coleman, ANL
+#  Current maintainer: Sergey Stepanov, ANL
+#
+#  Version 1.1: added grouped save/restore to/from a set of files
+#  Version 2.0: added file dates on the buttons.
+#-----------------------------------------------------------------------------------------
 proc pDoitCoord {coordname} {
 #   puts stdout "pDoitCoord: coordname=${coordname}"
     flush stdout
     global sCmd burtRestore burtSave burtDIR requestDIR Beamline
     set operand ${Beamline}_${coordname}
     switch -exact ${sCmd} {
-	Quit {
-	    exit
-	}
-	Restore {
+       Quit {
+          exit
+       }
+       Restore {
 # This replaces all ":" by "_" to make the files PC-friendly:
-	    regsub -all : ${operand} _ snapFile
-#	    puts "${burtRestore} -f ${burtDIR}${snapFile}.snap"
-#	    exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap
-	    if { [ catch {exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap} err ] } {
+          regsub -all : ${operand} _ snapFile
+#	  puts "${burtRestore} -f ${burtDIR}${snapFile}.snap"
+#	  exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap
+          if { [ catch {exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap} err ] } {
 # Ignore styrings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
-	      if { [ string match *SIGCHLD* $err ] == 0 } {
+	     if { [ string match *SIGCHLD* $err ] == 0 } {
 	        puts "exec: '$err'"
 	        tk_messageBox -message $err -type ok -icon error -title "Application Error"
-	      }
-	    }
-	}
-	Save {
+	     }
+	  }
+       }
+       Save {
 # This replaces all ":" by "_" to make the files PC-friendly:
-	    regsub -all : ${operand} _ snapFile
-	    regsub  ${Beamline}_ ${snapFile} {} requestFile
-# 	    puts "${burtSave} -f ${requestDIR}${requestFile}.req -o ${burtDIR}${snapFile}.snap -DBEAMLINE=${Beamline}"
-#	    exec  ${burtSave} -f ${requestDIR}${requestFile}.req -o ${burtDIR}${snapFile}.snap -DBEAMLINE=${Beamline}
-	    if { [ catch {exec ${burtSave} -f ${requestDIR}${requestFile}.req -o ${burtDIR}${snapFile}.snap -DBEAMLINE=${Beamline}} err ] } {
+          regsub -all : ${operand} _ snapFile
+          regsub  ${Beamline}_ ${snapFile} {} requestFile
+          set snapFile    ${burtDIR}${snapFile}.snap
+          set requestFile ${requestDIR}${requestFile}.req
+#         puts "${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}"
+#         exec  ${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}
+	  if { [ catch {exec ${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}} err ] } {
 # Ignore styrings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
-	      if { [ string match *SIGCHLD* $err ] == 0 } {
-	        puts "exec: '$err'"
-	        tk_messageBox -message $err -type ok -icon error -title "Application Error"
-	      }
-	    }
-	}
+             if { [ string match *SIGCHLD* $err ] == 0 } {
+                puts "exec: '$err'"
+                tk_messageBox -message $err -type ok -icon error -title "Application Error"
+             }
+          }
+          if {[file exists $snapFile]} {
+             file stat $snapFile snapStat
+             set datestamp [clock format $snapStat(mtime) -format "%Y/%m/%d"]
+          } else {
+             set datestamp "       No file"
+          }
+	  set lbl ${Beamline}:${coordname}
+	  set len [string length $lbl]
+	  for {set i $len} {$i <= 16} {incr i} {set lbl "${lbl} ";}
+          .bFunc$coordname configure -text "${lbl} ${datestamp}"
+       }
     }
 }
 
@@ -137,8 +157,18 @@ if { $argc != 0 && $argc != 1 }  {
 # 3. Loop over coordinate systems in a PMAC:
 	    	foreach coord $coordlist {
 		    set coordname [lindex $coord 1]
-		    button .bFunc$coordname -text $bln$coordname          \
-		    -command "pDoitCoord $coordname"
+		    set snapFile ${burtDIR}${bln}${coordname}.snap
+	            regsub -all : ${snapFile} _ snapFile
+                    if {[file exists $snapFile]} {
+		      file stat $snapFile snapStat
+		      set datestamp [clock format $snapStat(mtime) -format "%Y/%m/%d"]
+		    } else {
+		      set datestamp "       No file"
+		    }
+		    set lbl ${bln}${coordname}
+		    set len [string length $lbl]
+		    for {set i $len} {$i <= 16} {incr i} {set lbl "${lbl} ";}
+		    button .bFunc$coordname -text "${lbl} ${datestamp}" -command "pDoitCoord $coordname"
 		    pack .bFunc$coordname -in .fPmac$pmacname -side top -fill x
 	    	}
 # 3. End of loop over coordinate systems in a PMAC

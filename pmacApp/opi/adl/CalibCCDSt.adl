@@ -789,7 +789,7 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="Hu + L*tan(2Q_eff) + dH/cos(2Q_eff) - Dh"
+	textix="Hu + L*tan(2Q_eff) + dH/cos(2Q_eff) - dH"
 }
 text {
 	object {

@@ -1,0 +1,12 @@
+$(P)edgeEnergy  
+$(P)edgeCutoff  
+$(P)time	 
+$(P)roiLow	 
+$(P)roiHigh	 
+$(P)adcGain	 
+$(P)adcOffset   
+$(P)optADCGain  
+$(P)optADCOffset
+$(P)startScan   
+$(P)stopScan	 
+$(P)endScan	 

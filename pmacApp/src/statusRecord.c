@@ -27,7 +27,7 @@
  * Modification Log:
  * -----------------
  * .01  11-11-91        jba     Moved set and reset of alarm stat and sevr to macros
- * .02  02-05-92	jba	Changed function arguments from paddr to precord 
+ * .02  02-05-92	jba	Changed function arguments from paddr to precord
  * .03  02-28-92        jba     Changed get_precision,get_graphic_double,get_control_double
  * .04  02-28-92	jba	ANSI C changes
  * .05  04-10-92        jba     pact now used to test for asyn processing, not status
@@ -91,6 +91,11 @@ static long get_precision();
 static long get_enum_str();
 #define get_enum_strs   NULL
 #define put_enum_str    NULL
+/* Changed for EPICS-3.14.11 where YES/NO are no longer defined in EPICS includes */
+#if !defined(YES) || !defined(NO)
+#define YES 1
+#define NO 0
+#endif
 
 rset statusRSET={
 	RSETNUMBER,
@@ -132,7 +137,6 @@ static long get_enum_str(paddr,pstring)
     struct dbAddr *paddr;
     char	  *pstring;
 {
-    struct statusRecord	*pstatus=(struct statusRecord *)paddr->precord;
     int                 index;
     unsigned short      *pfield = (unsigned short *)paddr->pfield;
     index = dbGetFieldIndex(paddr);
@@ -155,7 +159,7 @@ static long init_record(pstatus,pass)
     struct statusdset *pdset;
     long status;
 
-    if (pass==0) 
+    if (pass==0)
     {
       pstatus->vers = VERSION;
       return(0);

@@ -13,8 +13,8 @@ drvPmacDebug
 # For 24-bit PMAC settings:
 # DPRAM address range is A24 0xF0700000 - 0xF0703FFF
 # MBOX  address range is A24 0xF07FA000 - 0xF07FA1FF
-  pmacVmeConfig (0, 0x6FA000, 0x600000, 0xa5, 6)
-  pmacVmeConfig (1, 0x7FA000, 0x700000, 0xa1, 1)
+  pmacVmeConfig (0, 0x6FA000, 0x600000, 0xF5, 6)
+  pmacVmeConfig (1, 0x7FA000, 0x700000, 0xF1, 1)
 
 ### Configure PMAC-VME Driver
 ### This uses MAILBOX:

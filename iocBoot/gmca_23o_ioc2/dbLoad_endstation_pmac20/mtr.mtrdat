@@ -11,7 +11,7 @@ file "$(TPMAC)/pmacDb/mtrdat.db"
  	{ 23o:GO:Om:,  23o:GO:mom:,  "mtr gonio omega",     0,  5,  48, 3.2552e-04, 3.2552e-04, 2}
  	{ 23o:GO:Kp:,  23o:GO:mkp:,  "mtr gonio kappa",     0,  6,  60, 3.2552e-04, 3.2552e-04, 0}
  	{ 23o:GO:Kp:,  23o:GO:mph:,  "mtr gonio phi",       0,  7,  72, 3.2552e-04, 3.2552e-04, 0}
- 	{ 23o:GO:Cr:,  23o:GO:mcz:,  "mtr cr.stage Z",      0,  8,  84, 3.2552e-04, 3.2552e-04, 0}
+ 	{ 23o:GO:Kp:,  23o:GO:mcz:,  "mtr cr.stage Z",      0,  8,  84, 3.2552e-04, 3.2552e-04, 0}
  	{ 23o:GO:Cr:,  23o:GO:mcx:,  "mtr cr.stage X",      0,  9,  96, 3.2552e-04, 3.2552e-04, 0}
   	{ 23o:GO:Cr:,  23o:GO:mcy:,  "mtr cr.stage Y",      0, 10, 108, 3.2552e-04, 3.2552e-04, 0}
   	{ 23o:GO:St:,  23o:GO:msh:,  "mtr gonio horiz.",    0, 11, 120, 3.2552e-04, 3.2552e-04, 0}

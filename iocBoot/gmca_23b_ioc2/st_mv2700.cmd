@@ -2,14 +2,16 @@
 ###
 ### vxWorks startup script
   loginUserAdd "gmca", "RceeQSdRSb"
-  loginUserDelete "vw5"
+# loginUserDelete "vw5"
 ### Set shell prompt
   shellPromptSet "23b:ioc2> "
 
 ### This is routeAdd, hostAdd, hostShow, nfsMount...
 #  < ../nfsCommands
-  nfsAuthUnixSet "bl3dl380upper", 500, 100
-  nfsMount("bl3dl380upper", "/home/gmca/epics_synApps/synApps_5_1", "/ioc")
+# nfsAuthUnixSet "bl3dl380upper", 500, 100
+# nfsMount("bl3dl380upper", "/home/gmca/epics_synApps/synApps_5_2", "/ioc")
+  nfsAuthUnixSet "bl3dl380lower", 500, 100
+  nfsMount("bl3dl380lower", "/home/gmca/epics_synApps/synApps_5_2", "/ioc")
 
 ### Add gateway to be visible from 23ID-in network:
 # routeAdd     "destaddr",      "gateaddr"
@@ -20,28 +22,30 @@
 # routeShow
 
   startup   = "/ioc/xxx2/iocBoot/iocgmca2"
-  appbin    = "/ioc/xxx2/bin/vxWorks-ppc603"
+  appbin    = "/ioc/xxx2/bin/vxWorks-ppc604"
   location  = "23-BM"
   engineer  = "O.Makarov"
 
-  putenv ("AUTOSAVE=/ioc/autosave/4-2/asApp/Db")
-  putenv ("CALC=/ioc/calc/2-6-1/calcApp/Db")
-  putenv ("DAC128V=/ioc/dac128V/2-3/dac128VApp/Db")
   putenv ("GMCA=/ioc/gmca/1-0/gmcaApp/Db")
-  putenv ("IP330=/ioc/ip330/2-3/ip330App/Db")
-  putenv ("IPUNIDIG=/ioc/ipUnidig/2-3/ipUnidigApp/Db")
-  putenv ("MCA=/ioc/mca/6-7/mcaApp/Db")
-  putenv ("SCAN=/ioc/sscan/2-5-2/sscanApp/Db")
-  putenv ("STD=/ioc/std/2-5-2/stdApp/Db")
-# putenv ("TPMAC=/ioc/tpmac/3-2/pmacApp/Db")
-  putenv ("TPMAC=/ioc/tpmac/3-3/pmacApp/Db")
-  putenv ("VME=/ioc/vme/2-4-2/vmeApp/Db")
-  putenv ("VXSTATS=/ioc/vxStats/1-7-2c/db")
+  putenv ("AUTOSAVE=/ioc/autosave/4-3/asApp/Db")
+  putenv ("CALC=/ioc/calc/2-6-3/calcApp/Db")
+# putenv ("DAC128V=/ioc/dac128V/2-3/dac128VApp/Db")
+# putenv ("IP330=/ioc/ip330/2-4/ip330App/Db")
+# putenv ("IPUNIDIG=/ioc/ipUnidig/2-4/ipUnidigApp/Db")
+  putenv ("MCA=/ioc/mca/6-9dls3/mcaApp/Db")
+# putenv ("QUADEM=/ioc/quadEM/2-3/quadEMApp/Db")
+  putenv ("SCAN=/ioc/sscan/2-5-3/sscanApp/Db")
+  putenv ("STD=/ioc/std/2-5-4/stdApp/Db")
+  putenv ("TPMAC=/ioc/tpmac/3-4/pmacApp/Db")
+  putenv ("VME=/ioc/vme/2-4-4/vmeApp/Db")
+  putenv ("VXSTATS=/ioc/vxStats/1-7-2e/db")
+
   putenv ("EPICS_TS_NTP_INET=164.54.210.2")
-# putenv ("EPICS_CA_AUTO_ADDR_LIST=NO")
-# putenv ("EPICS_CA_ADDR_LIST=164.54.210.2 164.54.210.140 164.54.210.154 164.54.210.155 164.54.210.180")
-# putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
-# printf "EPICS_CA_ADDR_LIST=%s\n",getenv("EPICS_CA_ADDR_LIST")
+### 215=bl3ws6 (directnet) 217=bl3ioc1 218=bl3ioc2 219=keithley3 220=mar3
+### putenv ("EPICS_CA_ADDR_LIST=164.54.210.2 164.54.210.215 164.54.210.217")
+  putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
+  putenv ("EPICS_CA_AUTO_ADDR_LIST=YES")
+  printf "EPICS_CA_ADDR_LIST=%s\n",getenv("EPICS_CA_ADDR_LIST")
 ################################################################################
 
 ### If the VxWorks kernel was built using the project facility, the following must
@@ -65,10 +69,11 @@
 
 ################################################################################
 ### IP stuff:
- < st_ip.cmd
+# < st_ip.cmd
+
 ################################################################################
 ### NIM BIN stuff - fluorescent detector, HVPS, etc.:
-  < st_icb.cmd
+ < st_icb.cmd
 
 ##############################################################################
 ### save_restore setup
@@ -127,12 +132,8 @@
 ###				   /* or single-ended=1 */
 ###)
 ### base address 0x0000; address range: 0x0000 - 0x03ff, interrupt level 5
-#   xy542Configure(0, 0xff0000, 0x60, 2, 1, 0)
+#   xy542Configure(0, 0xff0000, 0x??, 2, 1, 0)
 #   dbLoadTemplate("../../db/XY542.substitutions")
-
-### Sergey (Keithley-500 amplifier database):
-### - now works with Oleg's state notation program
-##SS  dbLoadRecords("../../db/keithley.db","bln=23b:2:")
 
 ###############################################################################
 ### Scan-support software
@@ -156,12 +157,16 @@
 ###               int 1=enable initial software channel advance in MCS external advance mode)
   STR7201Config(0, 32, 4000, 1, 1)
   dbLoadRecords("$(MCA)/Struck32.db", "P=23b:s1:,M=c")
+
 ### In the following make sure to use: P=23b:s1, M=mca#, CHANS=1024 (or CHANS=2048)
 # dbLoadTemplate("mcs_2048.substitutions")
   dbLoadTemplate("mcs_4000.substitutions")
 
 ### Struck Scaler working as a Joerger (16 inputs only):
   dbLoadRecords("$(MCA)/STR7201scaler.db", "P=23b:,S=scaler1,C=0")
+
+### Reduce delay before starting autocount (info from Tim Mooney):
+  scaler_wait_time=1
 
 ###############################################################################
 ### Joerger VS
@@ -172,12 +177,15 @@
   scalerVS_Setup(1, 0x2000, 0xCE, 5)
 # devScaler_VSDebug=5
 # scalerRecordDebug=0
-  dbLoadRecords("$(STD)/scaler.db","P=23b:,S=scaler3,C=0, DTYP=Joerger VS, FREQ=10000000")
+  dbLoadRecords("$(STD)/scaler32.db","P=23b:,S=scaler3,C=0, DTYP=Joerger VS, FREQ=10000000, OUT=#C0 S0 @")
+
+### Reduce delay before starting autocount (info from Tim Mooney):
+  scaler_wait_time=1
 
 ###############################################################################
 ### Acromag AVME9440 setup parameters:
 ### devAvem9440Config (ncards,a16base,intvecbase)
-  devAvme9440Config(1, 0x2800, 0x78)
+  devAvme9440Config(1, 0x2800, 0xE0)
 
 ### Acromag 9440 digital IO records:
 ### - Outpot Channels 0--15 can provide digital output
@@ -197,12 +205,14 @@ dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23b:2")
 ###vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### Load PMAC databases:
    < st_pmac.cmd
+
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ### Robot databases:
   dbLoadRecords("../../db/robot.db","bln=23b:")
 
 ### Blu-Ice Databases
   dbLoadTemplate("bluiceCollect.substitutions")
+  dbLoadTemplate("bluiceConfig.substitutions")
   dbLoadTemplate("bluiceScan.substitutions")
   dbLoadTemplate("bluiceHutch.substitutions")
 
@@ -233,8 +243,6 @@ dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23b:2")
   create_monitor_set("auto_settings.req", 18000, "P=23b:ioc2")
   create_triggered_set("auto_settings.req", "23b:ioc2:saveTrigger.PROC", "P=23b:ioc2")
 
-###medm -x -attach -macro P=23b:ioc2 /home/gmca/epics_synApps/synApps_5_1/autosave/4-1-1/asApp/op/adl/save_restoreStatus.adl &
-
 # Reset Macro (now moved to home script based on I39 status):
 # < st_clearmacro.cmd
 
@@ -260,13 +268,16 @@ dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23b:2")
      dbpf ("23b:pmac21:StrCmd","msclrf32")
   taskDelay 30
 
-  seq &frame_vx,"name=BluIce,frm=23b:FPE"
+### Disable BeamStop-Out if fast shuter is open:
+    dbpf ("23b:BS:PT:RqsPosRcl2.SDIS","23b:SH:mp:bo:rbk PP MS")
 
-  GO_SH_mount=(double)-0.1
+### This is now moved into the DB -- Sergey:
+# seq &frame_vx,"name=BluIce,frm=23b:FPE"
+
   seq &robot, "name=SMR, unit=23b:"
 
 ### Disable Telnet:
-  ts tTelnetd
+# ts tTelnetd
 ######################## 23b:ioc2: ALL DONE! #################################
 ### Enter ^X or "reboot" to reboot!
 ### Debugging: dbcar(0,5), i, dbgrep

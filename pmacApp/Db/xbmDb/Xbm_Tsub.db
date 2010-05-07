@@ -39,7 +39,7 @@ record(ao, "$(m1)$(val)") {
 
 record(ao, "$(d1)$(val)") {
   field(FLNK, "$(assy)$(val)TsubDrv.PROC PP MS")
-  field(PREC, "3")
+  field(PREC, "$(prec_d1)")
 }
 
 record(calc, "$(assy)$(val)SDISd") {

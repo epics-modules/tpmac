@@ -1,0 +1,109 @@
+#############################################################################
+# NOTE: AssyGeneric_scanrec.db is modification to AssyGeneric.db by Tim Mooney.
+# Use it in conjunction with ../pmacDb/bkgfix1pcs_scanrec.db if you plan to
+# use PMAC motors with Scan Record in the step-scan mode. In that case simply
+# replace:
+#       AssyGeneric_scanrec.db -> AssyGeneric.db
+#       bkgfix1pcs_scanrec.db  -> bkgfix1pcs.db
+# -- or otherwise scan record will not wait for motion to execute.
+#############################################################################
+
+record(fanout, "$(assy)AutoStartFLNK") {
+  field(SDIS, "$(assy)AutoStart.VAL PP MS")
+  field(LNK1, "$(assy)Start.PROC PP MS")
+}
+
+# Modified for ca_put_callback(): added LNK2 to set busy record  -Tim Mooney
+record(fanout, "$(assy)Start") {
+  field(DISV, "0")
+  field(SDIS, "$(assy)Ready.VAL PP MS")
+  field(LNK1, "$(assy)Run.PROC PP MS")
+  field(LNK2, "$(assy)SetBusy.PROC PP")
+  field(DESC, "$(desc)")
+}
+
+# Begin - Added for ca_put_callback()  -Tim Mooney
+record(bo, "$(assy)SetBusy") {
+  field(DOL, "1")
+  field(OUT, "$(assy)Busy PP")
+}
+
+record(busy, "$(assy)Busy") {
+}
+# End - Added for ca_put_callback()
+
+record(bi, "$(assy)Ready") {
+  field(DESC, "Ready")
+  field(INP, "$(assy)ReadyCALC.VAL PP MS")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "NotReady")
+  field(ONAM, "Ready")
+  field(PINI, "YES")
+}
+
+# A: RunPrg: 0=Idle, 1=Running                       (bkgfix1pcs.db)
+# B: Motion: 0=None, 1=Slew, 2=Backlash, 3=Position  (MotionPrg.db)
+#
+record(calc, "$(assy)ReadyCALC") {
+  field(CALC, "(A=0)&&(B#0)")
+  field(INPA, "$(assy)RunPrg.VAL NPP MS")
+  field(INPB, "$(assy)Motion.VAL NPP MS")
+}
+
+record(fanout, "$(assy)ChangedFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)Load.PROC PP MS")
+}
+
+record(fanout, "$(assy)LoadFLNK") {
+  field(LNK1, "$(assy)Ready.PROC PP MS")
+  field(LNK2, "$(assy)AutoStartFLNK.PROC PP MS")
+}
+
+record(bo, "$(assy)AutoStart") {
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Auto")
+  field(ONAM, "Man")
+}
+
+record(fanout, "$(assy)ScaleFanD") {
+  field(LNK1, "$(assy)RqsPosTsubMtr.PROC PP MS")
+  field(LNK2, "$(assy)RqsBklTsubMtr.PROC PP MS")
+  field(LNK3, "$(assy)ActPosTsubMtr.PROC PP MS")
+}
+
+#---------------------------------------------------------------
+# Added by Sergey on 2005/12/21 for BluIce. This is a timeout trigger.
+# The timout value has to be calculated externally and loaded into
+# TmoTrigger.DLY1 before pushing "Start" (or before entering RqsPos if
+# Autostart=On). One also has to set TimeOut.VAL to 0 before starting
+# motion.
+# After the timeout interval, the TmoTrigger copies DOL1 (==1) into
+# LNK1 (==TimeOut.VAL). In order to catch that event one has to
+# monitor either TimeOut.PROC or the change of TimeOut.VAL from 0 to 1.
+#
+# The seq record fields (the record can work with up to 10 imput-output pairs).
+# SELM=Select Mechanism (All, Specified, Mask),
+# SELN=Link Selection (for Specified or Mask),
+# DOL1=Input Link-1,
+# DLY1=Delay-1,
+# LNK1=Output Link-1
+#
+# For more info on Sequence Record (seq) see:
+# http://www.aps.anl.gov/asd/controls/epics/EpicsDocumentation/AppDevManuals/RecordRef/Recordref-34.html
+#
+# Removed by Sergey on 2006/05/08 (not implemented in BluIce)
+#
+# record(seq, "$(assy)TmoTrigger") {
+#   field(SELM, "Specified")
+#   field(SELN, "1")
+#   field(DOL1, "1")
+#   field(DLY1, "0")
+#   field(LNK1, "$(assy)TimeOut PP MS")
+# }
+#
+# record(ao, "$(assy)TimeOut") {
+#   field(PINI, "YES")
+#   field(DOL, "0.0")
+# }

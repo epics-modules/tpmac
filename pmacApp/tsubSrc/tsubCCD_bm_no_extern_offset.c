@@ -238,7 +238,7 @@ long tsubCCDStDrv
 		}
 		if (tsubCCDDebug > 2) printf("+++tsub=%s(nla=%1.0f): sin(2Q)=%g\n",
                                                           pRec->name,pRec->nla,Si);
-		pRec->oa = Du;		                                      /*  D = Du-Lh */
+		pRec->oa = D;		                                      /*  D = Du-Lh */
 		pRec->ob = RAD2DEG(asin(Si));                                 /* 2Q = asin(sin(2Q)) */
 	}
 	else                    /* ------- Relative motion --------- */

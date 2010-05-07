@@ -1,0 +1,15 @@
+
+Directories:
+
+pmacAsynCoordSrc
+pmacAsynIPPort
+pmacAsynMotorSrc
+
+Contain sources that are fully developed at the DIAMOND Light Source. If you
+want to include these sources, please modify Makefile in this directory.
+Also, please direct all questions about building and using them to Matthew
+Pearson <matthew.pearson@diamond.ac.uk> and Nick Rees <nick.rees@diamond.ac.uk>.
+
+See also RELEASE_NOTES in the respective directories.
+
+-- Sergey & Oleg

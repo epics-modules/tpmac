@@ -5,9 +5,9 @@ file {
 }
 display {
 	object {
-		x=253
-		y=337
-		width=490
+		x=242
+		y=495
+		width=570
 		height=136
 	}
 	clr=14
@@ -91,7 +91,7 @@ rectangle {
 	object {
 		x=0
 		y=0
-		width=490
+		width=570
 		height=22
 	}
 	"basic attribute" {
@@ -112,7 +112,7 @@ text {
 }
 text {
 	object {
-		x=392
+		x=472
 		y=5
 		width=95
 		height=16
@@ -123,389 +123,424 @@ text {
 	textix="$(bl)"
 	align="horiz. right"
 }
+text {
+	object {
+		x=45
+		y=114
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Mailbox"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=187
+		y=114
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Servo"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=291
+		y=114
+		width=97
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Backgr"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=395
+		y=114
+		width=65
+		height=20
+	}
+	"basic attribute" {
+		clr=63
+	}
+	textix="Var"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=467
+		y=28
+		width=98
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(pmac1)"
+}
+byte {
+	object {
+		x=83
+		y=28
+		width=97
+		height=15
+	}
+	monitor {
+		chan="$(pmac1)mbx:SvoTm"
+		clr=60
+		bclr=14
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=187
+		y=28
+		width=97
+		height=15
+	}
+	monitor {
+		chan="$(pmac1)svo:SvoTm"
+		clr=60
+		bclr=14
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=291
+		y=28
+		width=97
+		height=15
+	}
+	monitor {
+		chan="$(pmac1)bkg:SvoTm"
+		clr=60
+		bclr=14
+	}
+	sbit=23
+}
+byte {
+	object {
+		x=395
+		y=28
+		width=65
+		height=15
+	}
+	monitor {
+		chan="$(pmac1)var:SvoTm"
+		clr=60
+		bclr=14
+	}
+}
 composite {
 	object {
-		x=3
-		y=114
-		width=377
-		height=20
+		x=83
+		y=50
+		width=482
+		height=15
 	}
 	"composite name"=""
 	children {
 		text {
 			object {
-				x=3
-				y=114
-				width=97
-				height=20
+				x=467
+				y=50
+				width=98
+				height=14
 			}
 			"basic attribute" {
-				clr=63
+				clr=14
 			}
-			textix="Mailbox"
-			align="horiz. centered"
+			textix="$(pmac2)"
 		}
-		text {
+		byte {
 			object {
-				x=107
-				y=114
+				x=83
+				y=50
 				width=97
-				height=20
+				height=15
 			}
-			"basic attribute" {
-				clr=63
+			monitor {
+				chan="$(pmac2)mbx:SvoTm"
+				clr=60
+				bclr=14
 			}
-			textix="Servo"
-			align="horiz. centered"
+			sbit=23
 		}
-		text {
+		byte {
 			object {
-				x=211
-				y=114
+				x=187
+				y=50
 				width=97
-				height=20
+				height=15
 			}
-			"basic attribute" {
-				clr=63
+			monitor {
+				chan="$(pmac2)svo:SvoTm"
+				clr=60
+				bclr=14
 			}
-			textix="Backgr"
-			align="horiz. centered"
+			sbit=23
 		}
-		text {
+		byte {
 			object {
-				x=315
-				y=114
+				x=291
+				y=50
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac2)bkg:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=395
+				y=50
 				width=65
-				height=20
+				height=15
 			}
-			"basic attribute" {
-				clr=63
+			monitor {
+				chan="$(pmac2)var:SvoTm"
+				clr=60
+				bclr=14
 			}
-			textix="Var"
-			align="horiz. centered"
 		}
 	}
 }
 composite {
 	object {
-		x=3
-		y=28
+		x=83
+		y=72
 		width=482
-		height=81
+		height=15
 	}
 	"composite name"=""
 	children {
-		composite {
+		text {
 			object {
-				x=3
-				y=28
-				width=482
-				height=15
-			}
-			"composite name"=""
-			children {
-				text {
-					object {
-						x=387
-						y=28
-						width=98
-						height=14
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="$(pmac1)"
-				}
-				byte {
-					object {
-						x=3
-						y=28
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac1)mbx:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=107
-						y=28
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac1)svo:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=211
-						y=28
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac1)bkg:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=315
-						y=28
-						width=65
-						height=15
-					}
-					monitor {
-						chan="$(pmac1)var:SvoTm"
-						clr=60
-						bclr=14
-					}
-				}
-			}
-		}
-		composite {
-			object {
-				x=3
-				y=50
-				width=482
-				height=15
-			}
-			"composite name"=""
-			children {
-				text {
-					object {
-						x=387
-						y=50
-						width=98
-						height=14
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="$(pmac2)"
-				}
-				byte {
-					object {
-						x=3
-						y=50
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac2)mbx:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=107
-						y=50
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac2)svo:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=211
-						y=50
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac2)bkg:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=315
-						y=50
-						width=65
-						height=15
-					}
-					monitor {
-						chan="$(pmac2)var:SvoTm"
-						clr=60
-						bclr=14
-					}
-				}
-			}
-		}
-		composite {
-			object {
-				x=3
+				x=467
 				y=72
-				width=482
-				height=15
+				width=98
+				height=14
 			}
-			"composite name"=""
-			children {
-				text {
-					object {
-						x=387
-						y=72
-						width=98
-						height=14
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="$(pmac3)"
-				}
-				byte {
-					object {
-						x=3
-						y=72
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac3)mbx:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=107
-						y=72
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac3)svo:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=211
-						y=72
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac3)bkg:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=315
-						y=72
-						width=65
-						height=15
-					}
-					monitor {
-						chan="$(pmac3)var:SvoTm"
-						clr=60
-						bclr=14
-					}
-				}
+			"basic attribute" {
+				clr=14
 			}
+			textix="$(pmac3)"
 		}
-		composite {
+		byte {
 			object {
-				x=3
-				y=94
-				width=482
+				x=83
+				y=72
+				width=97
 				height=15
 			}
-			"composite name"=""
-			children {
-				byte {
-					object {
-						x=3
-						y=94
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac4)mbx:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=107
-						y=94
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac4)svo:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=211
-						y=94
-						width=97
-						height=15
-					}
-					monitor {
-						chan="$(pmac4)bkg:SvoTm"
-						clr=60
-						bclr=14
-					}
-					sbit=23
-				}
-				byte {
-					object {
-						x=315
-						y=94
-						width=65
-						height=15
-					}
-					monitor {
-						chan="$(pmac4)var:SvoTm"
-						clr=60
-						bclr=14
-					}
-				}
-				text {
-					object {
-						x=387
-						y=94
-						width=98
-						height=14
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="$(pmac4)"
-				}
+			monitor {
+				chan="$(pmac3)mbx:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=187
+				y=72
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac3)svo:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=291
+				y=72
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac3)bkg:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=395
+				y=72
+				width=65
+				height=15
+			}
+			monitor {
+				chan="$(pmac3)var:SvoTm"
+				clr=60
+				bclr=14
 			}
 		}
-	}}
-	
+	}
+}
+composite {
+	object {
+		x=83
+		y=94
+		width=482
+		height=15
+	}
+	"composite name"=""
+	children {
+		byte {
+			object {
+				x=83
+				y=94
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac4)mbx:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=187
+				y=94
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac4)svo:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=291
+				y=94
+				width=97
+				height=15
+			}
+			monitor {
+				chan="$(pmac4)bkg:SvoTm"
+				clr=60
+				bclr=14
+			}
+			sbit=23
+		}
+		byte {
+			object {
+				x=395
+				y=94
+				width=65
+				height=15
+			}
+			monitor {
+				chan="$(pmac4)var:SvoTm"
+				clr=60
+				bclr=14
+			}
+		}
+		text {
+			object {
+				x=467
+				y=94
+				width=98
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="$(pmac4)"
+		}
+	}
+}
+"text update" {
+	object {
+		x=5
+		y=29
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac1)mbx:ClockStatus"
+		clr=60
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=4
+		y=51
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac2)mbx:ClockStatus"
+		clr=60
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=4
+		y=73
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac3)mbx:ClockStatus"
+		clr=60
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=4
+		y=95
+		width=74
+		height=13
+	}
+	monitor {
+		chan="$(pmac4)mbx:ClockStatus"
+		clr=60
+		bclr=14
+	}
+	clrmod="alarm"
+	align="horiz. centered"
+	limits {
+	}
+}

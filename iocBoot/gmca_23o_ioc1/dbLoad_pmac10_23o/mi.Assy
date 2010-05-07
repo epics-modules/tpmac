@@ -1,4 +1,4 @@
-file $(TPMAC)/miDb/MI_Calibrate.db
+file "$(TPMAC)/miDb/MI_Calibrate.db"
 {
 	pattern { assy, d1, d2 }
 # pmac10:
@@ -6,7 +6,7 @@ file $(TPMAC)/miDb/MI_Calibrate.db
         { 23o:HD:Dn:, 23o:HD:DY1:, 23o:HD:DY2: }
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_LimAmp.db
+file "$(TPMAC)/miDb/MI_LimAmp.db"
 {
  	pattern { assy, x1, x2, d1, d2 }
 # pmac10:
@@ -14,29 +14,29 @@ file $(TPMAC)/miDb/MI_LimAmp.db
         { 23o:HD:Dn:, 23o:HD:DY:, 23o:HD:DA:, 23o:HD:DY1:, 23o:HD:DY2: }
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_Tsub.db
+file "$(TPMAC)/miDb/MI_Tsub.db"
 {
- 	pattern { assy, x1, x2, d1, d2, m1, m2, val, nla, tsub }
+ 	pattern { assy, x1, prec_x1, x2, prec_x2, d1, prec_d1, d2, prec_d2, m1, m2, val, nla, tsub }
 # pmac10:
-  { 23o:HD:Up:, 23o:HD:UY:, 23o:HD:UA:, 23o:HD:UY1:, 23o:HD:UY2:, 23o:HD:muy1:, 23o:HD:muy2:, RqsPos, 0, tsubMISt }
-  { 23o:HD:Up:, 23o:HD:UY:, 23o:HD:UA:, 23o:HD:UY1:, 23o:HD:UY2:, 23o:HD:muy1:, 23o:HD:muy2:, RqsBkl, 1, tsubMISt }
-  { 23o:HD:Dn:, 23o:HD:DY:, 23o:HD:DA:, 23o:HD:DY1:, 23o:HD:DY2:, 23o:HD:mdy1:, 23o:HD:mdy2:, RqsPos, 0, tsubMISt }
-  { 23o:HD:Dn:, 23o:HD:DY:, 23o:HD:DA:, 23o:HD:DY1:, 23o:HD:DY2:, 23o:HD:mdy1:, 23o:HD:mdy2:, RqsBkl, 1, tsubMISt }
+  { 23o:HD:Up:, 23o:HD:UY:, 3, 23o:HD:UA:, 3, 23o:HD:UY1:, 3, 23o:HD:UY2:, 3, 23o:HD:muy1:, 23o:HD:muy2:, RqsPos, 0, tsubMISt }
+  { 23o:HD:Up:, 23o:HD:UY:, 3, 23o:HD:UA:, 3, 23o:HD:UY1:, 3, 23o:HD:UY2:, 3, 23o:HD:muy1:, 23o:HD:muy2:, RqsBkl, 1, tsubMISt }
+  { 23o:HD:Dn:, 23o:HD:DY:, 3, 23o:HD:DA:, 3, 23o:HD:DY1:, 3, 23o:HD:DY2:, 3, 23o:HD:mdy1:, 23o:HD:mdy2:, RqsPos, 0, tsubMISt }
+  { 23o:HD:Dn:, 23o:HD:DY:, 3, 23o:HD:DA:, 3, 23o:HD:DY1:, 3, 23o:HD:DY2:, 3, 23o:HD:mdy1:, 23o:HD:mdy2:, RqsBkl, 1, tsubMISt }
 }
 #----------------------------------------------------------------------------  
-file $(TPMAC)/miDb/MI_TsubRbk.db
+file "$(TPMAC)/miDb/MI_TsubRbk.db"
 {
-  pattern { assy, x1, desc_x1, egu_x1, x2, desc_x2, egu_x2, d1, desc_d1, egu_d1, d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
+  pattern { assy, x1, prec_x1, desc_x1, egu_x1, x2, prec_x2, desc_x2, egu_x2, d1, prec_d1, desc_d1, egu_d1, d2, prec_d2, desc_d2, egu_d2, m1, m2, val, nla, tsub }
 # pmac10:
-  { 23o:HD:Up:, 23o:HD:UY:, "HDM1 Y",        "(mm)", 23o:HD:UA:, "HDM1 Angle",     "(mrad)", 23o:HD:UY1:, "HDM1 Y1",     "(mm)", 23o:HD:UY2:, "HDM1 Y2",     "(mm)", 23o:HD:muy1:,  23o:HD:muy2:,  ActPos, 0, tsubMISt }
-  { 23o:HD:Dn:, 23o:HD:DY:, "HDM2 Y",        "(mm)", 23o:HD:DA:, "HDM2 Angle",     "(mrad)", 23o:HD:DY1:, "HDM2 Y1",     "(mm)", 23o:HD:DY2:, "HDM2 Y2",     "(mm)", 23o:HD:mdy1:,  23o:HD:mdy2:,  ActPos, 0, tsubMISt }
+  { 23o:HD:Up:, 23o:HD:UY:, 3, "HDM1 Y", "(mm)", 23o:HD:UA:, 3, "HDM1 Angle", "(mrad)", 23o:HD:UY1:, 3, "HDM1 Y1", "(mm)", 23o:HD:UY2:, 3, "HDM1 Y2", "(mm)", 23o:HD:muy1:, 23o:HD:muy2:, ActPos, 0, tsubMISt }
+  { 23o:HD:Dn:, 23o:HD:DY:, 3, "HDM2 Y", "(mm)", 23o:HD:DA:, 3, "HDM2 Angle", "(mrad)", 23o:HD:DY1:, 3, "HDM2 Y1", "(mm)", 23o:HD:DY2:, 3, "HDM2 Y2", "(mm)", 23o:HD:mdy1:, 23o:HD:mdy2:, ActPos, 0, tsubMISt }
 }
 #----------------------------------------------------------------------------  
 file "$(TPMAC)/miDb/MI_TsubSpeed.db"
 {
-  pattern { assy, x1, egu_x1, x2, egu_x2, d1, egu_d1, d2, egu_d2, m1, m2, tsub }
+  pattern { assy, x1, prec_x1, egu_x1, x2, prec_x2, egu_x2, d1, prec_d1, egu_d1, d2, prec_d2, egu_d2, m1, m2, tsub }
 # pmac10:
-  { 23o:HD:Up:, 23o:HD:UY:, "(mm/s)", 23o:HD:UA:, "(mrad/s)", 23o:HD:UY1:, "(mm/s)", 23o:HD:UY2:, "(mm/s)", 23o:HD:muy1:,  23o:HD:muy2:, tsubMISt }
-  { 23o:HD:Dn:, 23o:HD:DY:, "(mm/s)", 23o:HD:DA:, "(mrad/s)", 23o:HD:DY1:, "(mm/s)", 23o:HD:DY2:, "(mm/s)", 23o:HD:mdy1:,  23o:HD:mdy2:, tsubMISt }  
+  { 23o:HD:Up:, 23o:HD:UY:, 3, "(mm/s)", 23o:HD:UA:, 3, "(mrad/s)", 23o:HD:UY1:, 3, "(mm/s)", 23o:HD:UY2:, 3, "(mm/s)", 23o:HD:muy1:,  23o:HD:muy2:, tsubMISt }
+  { 23o:HD:Dn:, 23o:HD:DY:, 3, "(mm/s)", 23o:HD:DA:, 3, "(mrad/s)", 23o:HD:DY1:, 3, "(mm/s)", 23o:HD:DY2:, 3, "(mm/s)", 23o:HD:mdy1:,  23o:HD:mdy2:, tsubMISt }  
 }
 

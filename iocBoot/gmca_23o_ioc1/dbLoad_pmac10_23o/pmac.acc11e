@@ -1,4 +1,4 @@
-file $(TPMAC)/pmacDb/Acc11E.db
+file "$(TPMAC)/pmacDb/Acc11E.db"
 {
 	pattern { pmac, C }
 

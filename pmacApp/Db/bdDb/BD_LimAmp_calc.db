@@ -1,0 +1,78 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(d2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(d2)PsLimSet.PROC PP MS")
+  field(FLNK, "$(assy)xLimFLNK.PROC PP MS")
+}
+
+#! First process x2 because of the x1 dependency on x2:
+
+record(fanout, "$(assy)xLimFLNK") {
+  field(LNK1, "$(x2)NgLimSet.PROC PP MS")
+  field(LNK2, "$(x2)PsLimSet.PROC PP MS")
+  field(LNK3, "$(x1)NgLimSet.PROC PP MS")
+  field(LNK4, "$(x1)PsLimSet.PROC PP MS")
+}
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+  field(LNK2, "$(d2)AmpEna.PROC PP MS")
+  field(LNK3, "$(x1)AmpEna.PROC PP MS")
+  field(LNK4, "$(x2)AmpEna.PROC PP MS")
+}
+
+#! x2=(d1-d2)/BaseLength
+
+record(calc,"$(x2)NgLimSet") {
+  field(CALC,"E>0?(A+D):(C+B)")
+  field(INPA,"$(d1)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d1)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)BaseLength.VAL NPP MS")
+}
+
+#! x2=(d1-d2)/BaseLength
+
+record(calc,"$(x2)PsLimSet") {
+  field(CALC,"E>0?(C+B):(A+D)")
+  field(INPA,"$(d1)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d1)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)BaseLength.VAL NPP MS")
+}
+
+#! x1=d2-x2*RotOrigin
+
+record(calc,"$(x1)NgLimSet") {
+  field(CALC,"E>0?(A+D):(A+C)")
+  field(INPA,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPC,"$(x2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(x2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)RotOrigin.VAL NPP MS")
+}
+
+#! x1=d2-x2*RotOrigin
+
+record(calc,"$(x1)PsLimSet") {
+  field(CALC,"E>0?(B+C):(B+D)")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(x2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(x2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)RotOrigin.VAL NPP MS")
+}
+
+record(calc,"$(x1)AmpEna") {
+  field(CALC,"((A>0)&&(B>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+}
+
+record(calc,"$(x2)AmpEna") {
+  field(CALC,"((A>0)&&(B>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+}
+

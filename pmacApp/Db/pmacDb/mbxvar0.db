@@ -6,3 +6,25 @@ record(longin, "$(pmac)mbx:SvoTm") {
 # field(EGUF, "4.0e+09")
 # field(HOPR, "4.0e+09")
 }
+
+### Sergey 2007/04/05: detect Mailbox activity:
+
+record(longin, "$(pmac)mbx:SvoTmPrv") {
+  field(INP, "$(pmac)mbx:SvoTm.VAL NPP MS")
+}
+
+record(calc, "$(pmac)mbx:SvoTmDif") {
+  field(CALC, "(B#A)")
+  field(INPA, "$(pmac)mbx:SvoTmPrv.VAL NPP MS")
+  field(INPB, "$(pmac)mbx:SvoTmPrv.VAL PP MS")
+}
+
+
+record(bi, "$(pmac)mbx:ClockStatus") {
+  field(DESC, "pmac MailBox Clock Status")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Stopped")
+  field(ONAM, "Running")
+  field(SCAN, "5 second")
+  field(INP, "$(pmac)mbx:SvoTmDif.VAL PP MS")
+}

@@ -1,0 +1,152 @@
+#############################################################################
+# NOTE: bkgfix1pcs_scanrec_v3.db differs from bkgfix1pcs_scanrec_v2.db  by
+# the flag it is watching to report to the Scan Record that motion is
+# finished: it relies on the RunPrg flag instead of InPos flag. This version
+# is obviously faster, but if in-positioning is slow it may cause the Scan
+# Record to start measurements when motor is still positioning around the
+# destination.
+# -- Sergey Stepanov
+#############################################################################
+# NOTE: bkgfix1pcs_scanrec_v2.db is a patch to bkgfix1pcs_scanrec_v1.db
+# suggested by Lewis Muir <jlmuir@anl.gov>. Use it in conjunction with
+# ../softDb/AssyGeneric_scanrec_v2.db
+# The rational for the change according to Lewis is:
+# When performing an sscan module step scan of a tpmac drive, sometimes
+# the (assy)Busy record does not get set to Done, and so the sscan record
+# waits indefinitely for the move to complete.  The move has completed,
+# but the (assy)Busy record doesn't reflect this.
+#
+# I tracked down the problem to the fact that for some moves (maybe small
+# ones that complete very quickly?), (pcs)PrgExeSts is never processed
+# (verified by setting its TPRO field to 1) and hence (pcs)InPos is never
+# processed.  This makes Tim Mooney's (pcs)ClearBusy record not work
+# right since it never sees (pcs)InPos transition to 0 (Moving) and then
+# to 1 (Positioned) - so it never sets (assy)Busy to Done and so the step
+# scan waits indefinitely.
+#
+# Attached is a patch against tpmac 3-5 to fix this problem.  The fix uses
+# a software-only "in-position" indicator that gets set to 0 (Moving) at
+# the start of the move and 1 (Positioned) 0.25 sec later.  0.25 sec was
+# chosen because in the cases where (pcs)InPos did process, it always
+# seemed to process within 0.1 sec of having started the move, so 0.25 sec
+# seemed safe.
+#
+# The idea is that if (pcs)InPos has not transitioned to 0 (Moving)
+# within 0.25 sec of starting the move, it never will.  In this case, the
+# software-only "in-position" indicator is observed by the (pcs)ClearBusy
+# record and it sets (assy)Busy to Done after 0.25 sec.  If, however,
+# (pcs)InPos does transition to 0 (Moving) within 0.25 sec of starting
+# the move, (pcs)ClearBusy will track it for determining when the move
+# completes.
+#
+# The downside of this patch is that every move will take a minimum of
+# 0.25 sec.  The upside is that step scans will work correctly - the sscan
+# module will not lock up.
+#
+# A cleaner fix would be for (pcs)InPos to transition to 0 (Moving) and
+# then to 1 (Positioned) for every move (even if the move takes a very
+# short time).  I didn't look at the C code, but perhaps there's a way to
+# force (pcs)PrgExeSts to update right after starting the motion program,
+# and again once the motion program completes.  Or maybe that won't work,
+# and a separate flag would be needed that gets set to 0 (Moving) before
+# starting the motion program and get set to 1 (Positioned) after the
+# motion program completes (maybe even the motion program itself sets it
+# as its last instruction).
+#
+#############################################################################
+# NOTE: bkgfix1pcs_scanrec_v1.db is a modification to bkgfix1pcs_simple.db by
+# Tim Mooney. Use it in conjunction with ../softDb/AssyGeneric_scanrec_v1.db
+# if you plan to use PMAC motors with Scan Record in the step-scan mode. In
+# that case simply replace:
+#       AssyGeneric_noscan.db -> AssyGeneric_scanrec_v1.db
+#        bkgfix1pcs_noscan.db ->  bkgfix1pcs_scanrec_v1.db
+# -- or otherwise the Scan Record would not wait for motion to execute.
+#############################################################################
+
+record(status, "$(pcs)Sts1") {
+  field(DESC, "Status Word 1")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$601AC")
+  field(LK00, "$(pcs)RunPrg.PROC PP MS")
+}
+
+record(status, "$(pcs)PrgExeSts") {
+  field(DESC, "Program Execution Status")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "PMAC-VME DPRAM")
+  field(INP, "#C$(C) S$(S) @DP:$601BF")
+  field(LK17, "$(pcs)InPos.PROC PP MS")
+  field(LK19, "$(pcs)FatalFolErr.PROC PP MS")
+  field(LK20, "$(pcs)AmpFltErr.PROC PP MS")
+  field(LK22, "$(pcs)RunTmErr.PROC PP MS")
+}
+
+# record(bi, "$(pcs)InPos") {
+#   field(DESC, "In Position")
+#   field(INP, "$(pcs)PrgExeSts.BI17 NPP MS")
+#   field(ZSV, "MINOR")
+#   field(ZNAM, "Moving")
+#   field(ONAM, "Positioned")
+# }
+
+record(bi, "$(pcs)InPos") {
+  field(DESC, "In Position")
+  field(INP, "$(pcs)InPosCALC.VAL PP MS")
+  field(ZSV, "MINOR")
+  field(ZNAM, "Moving")
+  field(ONAM, "Positioned")
+}
+
+# Added this record for ca_put_callback()  -Tim Mooney
+record(calcout, "$(pcs)ClearBusy") {
+  field(INPA, "$(pcs)RunPrg CP")
+  field(INPB, "$(pcs)SwInPos CP")
+  field(CALC, "(A==0)&&B")
+  field(OCAL, "0")
+  field(OOPT, "Transition To Non-zero")
+  field(DOPT, "Use OCAL")
+  field(OUT, "$(pcs)Busy CA")
+}
+
+record(calc, "$(pcs)InPosCALC") {
+  field(CALC, "(A#0)&&(B=0)")
+  field(INPA, "$(pcs)PrgExeSts.BI17 NPP MS")
+  field(INPB, "$(pcs)RunPrg.VAL NPP MS")
+}
+
+record(bi, "$(pcs)RunPrg") {
+  field(DESC, "Running Program")
+  field(INP, "$(pcs)Sts1.BI00 NPP MS")
+  field(OSV, "MINOR")
+  field(ZNAM, "Idle")
+  field(ONAM, "Running")
+  field(FLNK, "$(pcs)InPos.PROC PP MS")
+}
+
+record(bi, "$(pcs)AmpFltErr") {
+  field(DESC, "Amplifier Fault Error")
+  field(INP, "$(pcs)PrgExeSts.BI20 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fault")
+}
+
+record(bi, "$(pcs)RunTmErr") {
+  field(DESC, "Run-Time Error")
+  field(INP, "$(pcs)PrgExeSts.BI22 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Error")
+}
+
+record(bi, "$(pcs)FatalFolErr") {
+  field(DESC, "Fatal Following Error")
+  field(INP, "$(pcs)PrgExeSts.BI19 NPP MS")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Fatal")
+}
+

@@ -8,3 +8,10 @@ file assy.req ASSY=$(P)BP:Mo
 file mtr1.req MTR1=$(P)BP:mmo
 file drv1.req DRV1=$(P)BP:MOZ
 
+$(P)BP:MOZ:RqsPosMem1
+$(P)BP:MOZ:RqsPosMem2
+$(P)BP:MOZ:RqsPosMem3
+
+$(P)BP:MOZ:RqsPosMem1.DESC
+$(P)BP:MOZ:RqsPosMem2.DESC
+$(P)BP:MOZ:RqsPosMem3.DESC

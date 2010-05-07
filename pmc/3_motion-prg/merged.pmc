@@ -1,27 +1,4 @@
 CLOSE
-;
-;=======================================================================
-; Programs 2 and 4 for shutter:
-;
-OPEN PROG 2 CLEAR
-TA(0)
-TS(10)
-FRAX(X)	;specify feedrate axes -- is not used here
-F30000
-LINEAR
-ABS
-X(0)	;goto RqsPos
-CLOSE
-
-OPEN PROG 4 CLEAR
-TA(0)
-TS(10)
-FRAX(X)	;specify feedrate axes -- is not used here
-LINEAR
-F30000
-ABS
-X(42)	;goto RqsPos
-CLOSE
 
 ;=======================================================================
 ; Program-10: one motor, slew
@@ -40,15 +17,15 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 10 CLEAR
-TA(M(Q71+0))	;set acceleration time
-TS(M(Q72+0))	;set s-curve part of acceleration time
-FRAX(X)	;specify feedrate axis
-F0          	;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)
-X(Q1)		;goto RqsPos
-DWELL0
+  TA(M(Q71+0))	;set acceleration time
+  TS(M(Q72+0))	;set s-curve part of acceleration time
+  FRAX(X)	;specify feedrate axis
+  F0          	;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)
+  X(Q1)		;goto RqsPos
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -69,18 +46,18 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 11 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axis
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)	;RqsPos
-Q4=M(Q74+0)		;RqsBkl
-X(Q1-Q4)		;goto RqsPos-RqsBkl
-DWELL0
-X(Q1)			;goto RqsPos
-DWELL0
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axis
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;RqsPos
+  Q4=M(Q74+0)		;RqsBkl
+  X(Q1-Q4)		;goto RqsPos-RqsBkl
+  DWELL0
+  X(Q1)			;goto RqsPos
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -106,23 +83,23 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 12 CLEAR
-TA(M(Q71+0))	;set acceleration time
-TS(M(Q72+0))	;set s-curve part of acceleration time
-FRAX(X)	;specify feedrate axis
-F0		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)			;RqsPos
-Q4=M(Q74+0)				;RqsBkl
-Q7=Q1-M(Q70*100+5047)			;RqsPos-DesPos
-If (Q4 > 0 And Q7 < 0 Or Q4 < 0 And Q7 > 0)
-  X(Q1-Q4)				;goto RqsPos-RqsBkl
+  TA(M(Q71+0))	;set acceleration time
+  TS(M(Q72+0))	;set s-curve part of acceleration time
+  FRAX(X)	;specify feedrate axis
+  F0		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)			;RqsPos
+  Q4=M(Q74+0)				;RqsBkl
+  Q7=Q1-M(Q70*100+5047)			;RqsPos-DesPos
+  IF(Q4>0 AND Q7<0  OR  Q4<0 AND Q7>0)
+    X(Q1-Q4)				;goto RqsPos-RqsBkl
+    DWELL0
+    X(Q1)				;goto RqsPos
+  ELSE
+    X(Q1)				;goto RqsPos
+  ENDIF
   DWELL0
-  X(Q1)				;goto RqsPos
-Else
-  X(Q1)				;goto RqsPos
-EndIf
-DWELL0
 ; DELAY 100
 CLOSE
 
@@ -146,18 +123,18 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 30 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))  	;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))  	;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
 ;;FRAX(Y)		;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
-X(Q1)Y(Q2)		;goto ${m1}RqsPos & ${m2}RqsPos
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
+  X(Q1)Y(Q2)		;goto ${m1}RqsPos & ${m2}RqsPos
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -181,22 +158,22 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 31 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)               ;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)               ;specify feedrate axes
 ;;FRAX(Y)               ;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
-Q4=M(Q74+0)		;${m1}RqsBkl
-Q5=M(Q77+0)		;${m2}RqsBkl
-X(Q1-Q4)Y(Q2-Q5)	;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl
-DWELL0
-X(Q1)Y(Q2)		;goto ${m1}RqsPos & ${m2}RqsPos
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
+  Q4=M(Q74+0)		;${m1}RqsBkl
+  Q5=M(Q77+0)		;${m2}RqsBkl
+  X(Q1-Q4)Y(Q2-Q5)	;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl
+  DWELL0
+  X(Q1)Y(Q2)		;goto ${m1}RqsPos & ${m2}RqsPos
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -225,40 +202,40 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 32 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
 ;;FRAX(Y)		;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)				;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)				;${m2}RqsPos
-Q4=M(Q74+0)                                   ;${m1}RqsBkl
-Q5=M(Q77+0)					;${m2}RqsBkl
-Q7=Q1-M(Q70*100+5047)				;${m1}RqsPos-${m1}DesPos
-Q8=Q2-M(Q70*100+5048)				;${m2}RqsPos-${m2}DesPos
-If (Q4 > 0 And Q7 < 0 Or Q4 < 0 And Q7 > 0)
-  If (Q5 > 0 And Q8 < 0 Or Q5 < 0 And Q8 > 0)
-    X(Q1-Q4)Y(Q2-Q5)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl
-    DWELL0
-    X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
-  Else
-    X(Q1-Q4)Y(Q2)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos
-    DWELL0
-    X(Q1)					;goto ${m1}RqsPos
-  EndIf
-Else
-  If (Q5 > 0 And Q8 < 0 Or Q5 < 0 And Q8 > 0)
-    X(Q1)Y(Q2-Q5)				;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl
-    DWELL0
-    Y(Q2)					;goto ${m2}RqsPos
-  Else
-    X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
-  EndIf
-EndIf
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)				;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)				;${m2}RqsPos
+  Q4=M(Q74+0)                                   ;${m1}RqsBkl
+  Q5=M(Q77+0)					;${m2}RqsBkl
+  Q7=Q1-M(Q70*100+5047)				;${m1}RqsPos-${m1}DesPos
+  Q8=Q2-M(Q70*100+5048)				;${m2}RqsPos-${m2}DesPos
+  IF(Q4>0 AND Q7<0  OR  Q4<0 AND Q7>0)
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      X(Q1-Q4)Y(Q2-Q5)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl
+      DWELL0
+      X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
+    ELSE
+      X(Q1-Q4)Y(Q2)				;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos
+      DWELL0
+      X(Q1)					;goto ${m1}RqsPos
+    ENDIF
+  ELSE
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      X(Q1)Y(Q2-Q5)				;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl
+      DWELL0
+      Y(Q2)					;goto ${m2}RqsPos
+    ELSE
+      X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
+    ENDIF
+  ENDIF
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -285,23 +262,23 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 70 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
 ;;FRAX(Y)		;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
 ;;FRAX(Z)		;specify feedrate axes
 ;;FRAX(X,Z)		;specify feedrate axes
 ;;FRAX(Y,Z)		;specify feedrate axes
 ;;FRAX(X,Y,Z)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
-Q3=M(Q79+0)+M(Q81+0)	;${m3}RqsPos
-X(Q1)Y(Q2)Z(Q3)	;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
+  Q3=M(Q79+0)+M(Q81+0)	;${m3}RqsPos
+  X(Q1)Y(Q2)Z(Q3)	;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+  DWELL0
 ; DELAY 100
 
 CLOSE
@@ -329,28 +306,28 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 71 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
 ;;FRAX(Y)		;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
 ;;FRAX(Z)		;specify feedrate axes
 ;;FRAX(X,Z)		;specify feedrate axes
 ;;FRAX(Y,Z)		;specify feedrate axes
 ;;FRAX(X,Y,Z)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
-Q3=M(Q79+0)+M(Q81+0)	;${m3}RqsPos
-Q4=M(Q74+0)		;${m1}RqsBkl
-Q5=M(Q77+0)		;${m2}RqsBkl
-Q6=M(Q80+0)		;${m3}RqsBkl
-X(Q1-Q4)Y(Q2-Q5)Z(Q3-Q6)	;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
-DWELL0
-X(Q1)Y(Q2)Z(Q3)               ;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)	;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)	;${m2}RqsPos
+  Q3=M(Q79+0)+M(Q81+0)	;${m3}RqsPos
+  Q4=M(Q74+0)		;${m1}RqsBkl
+  Q5=M(Q77+0)		;${m2}RqsBkl
+  Q6=M(Q80+0)		;${m3}RqsBkl
+  X(Q1-Q4)Y(Q2-Q5)Z(Q3-Q6)	;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
+  DWELL0
+  X(Q1)Y(Q2)Z(Q3)               ;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+  DWELL0
 ; DELAY 100
 CLOSE
 
@@ -382,73 +359,71 @@ CLOSE
 CLOSE
 ;
 OPEN PROG 72 CLEAR
-TA(M(Q71+0))		;set acceleration time
-TS(M(Q72+0))		;set s-curve part of acceleration time
-FRAX(X)		;specify feedrate axes
+  TA(M(Q71+0))		;set acceleration time
+  TS(M(Q72+0))		;set s-curve part of acceleration time
+  FRAX(X)		;specify feedrate axes
 ;;FRAX(Y)		;specify feedrate axes
 ;;FRAX(X,Y)		;specify feedrate axes
 ;;FRAX(Z)		;specify feedrate axes
 ;;FRAX(X,Z)		;specify feedrate axes
 ;;FRAX(Y,Z)		;specify feedrate axes
 ;;FRAX(X,Y,Z)		;specify feedrate axes
-F0          		;set feedrate (speed)  -- is not used here
-LINEAR
-ABS
-Q1=M(Q73+0)+M(Q75+0)				;${m1}RqsPos
-Q2=M(Q76+0)+M(Q78+0)				;${m2}RqsPos
-Q3=M(Q79+0)+M(Q81+0)				;${m3}RqsPos
-Q4=M(Q74+0)                                   ;${m1}RqsBkl
-Q5=M(Q77+0)					;${m2}RqsBkl
-Q6=M(Q80+0)					;${m3}RqsBkl
-Q7=Q1-M(Q70*100+5047)				;${m1}RqsPos-${m1}DesPos
-Q8=Q2-M(Q70*100+5048)				;${m2}RqsPos-${m2}DesPos
-Q9=Q3-M(Q70*100+5049)				;${m3}RqsPos-${m3}DesPos
-If (Q4 > 0 And Q7 < 0 Or Q4 < 0 And Q7 > 0)
-  If (Q5 > 0 And Q8 < 0 Or Q5 < 0 And Q8 > 0)
-    If (Q6 > 0 And Q9 < 0 Or Q6 < 0 And Q9 > 0)
-      X(Q1-Q4)Y(Q2-Q5)Z(Q3-Q6)		;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
-      DWELL0
-      X(Q1)Y(Q2)Z(Q3)				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
-    Else
-      X(Q1-Q4)Y(Q2-Q5)Z(Q3)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
-      DWELL0
-      X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
-    EndIf
-  Else
-    If (Q6 > 0 And Q9 < 0 Or Q6 < 0 And Q9 > 0)
-      X(Q1-Q4)Y(Q2)Z(Q3-Q6)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
-      DWELL0
-      X(Q1)Z(Q3)				;goto ${m1}RqsPos & ${m3}RqsPos
-    Else
-      X(Q1-Q4)Y(Q2)Z(Q3)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos
-      DWELL0
-      X(Q1)					;goto ${m1}RqsPos
-    EndIf
-  EndIf
-Else
-  If (Q5 > 0 And Q8 < 0 Or Q5 < 0 And Q8 > 0)
-    If (Q6 > 0 And Q9 < 0 Or Q6 < 0 And Q9 > 0)
-      X(Q1)Y(Q2-Q5)Z(Q3-Q6)			;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
-      DWELL0
-      Y(Q2)Z(Q3)				;goto ${m2}RqsPos & ${m3}RqsPos
-    Else
-      X(Q1)Y(Q2-Q5)Z(Q3)			;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
-      DWELL0
-      Y(Q2)					;goto ${m2}RqsPos
-    EndIf
-  Else
-    If (Q6 > 0 And Q9 < 0 Or Q6 < 0 And Q9 > 0)
-      X(Q1)Y(Q2)Z(Q3-Q6)			;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
-      DWELL0
-      Z(Q3)					;goto ${m3}RqsPos
-    Else
-      X(Q1)Y(Q2)Z(Q3)				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
-    EndIf
-  EndIf
-EndIf
-DWELL0
+  F0          		;set feedrate (speed)  -- is not used here
+  LINEAR
+  ABS
+  Q1=M(Q73+0)+M(Q75+0)				;${m1}RqsPos
+  Q2=M(Q76+0)+M(Q78+0)				;${m2}RqsPos
+  Q3=M(Q79+0)+M(Q81+0)				;${m3}RqsPos
+  Q4=M(Q74+0)                                   ;${m1}RqsBkl
+  Q5=M(Q77+0)					;${m2}RqsBkl
+  Q6=M(Q80+0)					;${m3}RqsBkl
+  Q7=Q1-M(Q70*100+5047)				;${m1}RqsPos-${m1}DesPos
+  Q8=Q2-M(Q70*100+5048)				;${m2}RqsPos-${m2}DesPos
+  Q9=Q3-M(Q70*100+5049)				;${m3}RqsPos-${m3}DesPos
+  IF(Q4>0 AND Q7<0  OR  Q4<0 AND Q7>0)
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      IF(Q6>0 AND Q9<0  OR  Q6<0 AND Q9>0)
+        X(Q1-Q4)Y(Q2-Q5)Z(Q3-Q6)		;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        X(Q1)Y(Q2)Z(Q3)				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+      ELSE
+        X(Q1-Q4)Y(Q2-Q5)Z(Q3)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
+        DWELL0
+        X(Q1)Y(Q2)				;goto ${m1}RqsPos & ${m2}RqsPos
+      ENDIF
+    ELSE
+      IF(Q6>0 AND Q9<0  OR  Q6<0 AND Q9>0)
+        X(Q1-Q4)Y(Q2)Z(Q3-Q6)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        X(Q1)Z(Q3)				;goto ${m1}RqsPos & ${m3}RqsPos
+      ELSE
+        X(Q1-Q4)Y(Q2)Z(Q3)			;goto ${m1}RqsPos-${m1}RqsBkl & ${m2}RqsPos & ${m3}RqsPos
+        DWELL0
+        X(Q1)					;goto ${m1}RqsPos
+      ENDIF
+    ENDIF
+  ELSE
+    IF(Q5>0 AND Q8<0  OR  Q5<0 AND Q8>0)
+      IF(Q6>0 AND Q9<0  OR  Q6<0 AND Q9>0)
+        X(Q1)Y(Q2-Q5)Z(Q3-Q6)			;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        Y(Q2)Z(Q3)				;goto ${m2}RqsPos & ${m3}RqsPos
+      ELSE
+        X(Q1)Y(Q2-Q5)Z(Q3)			;goto ${m1}RqsPos & ${m2}RqsPos-${m2}RqsBkl & ${m3}RqsPos
+        DWELL0
+        Y(Q2)					;goto ${m2}RqsPos
+      ENDIF
+    ELSE
+      IF(Q6>0 AND Q9<0  OR  Q6<0 AND Q9>0)
+        X(Q1)Y(Q2)Z(Q3-Q6)			;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos-${m3}RqsBkl
+        DWELL0
+        Z(Q3)					;goto ${m3}RqsPos
+      ELSE
+        X(Q1)Y(Q2)Z(Q3)				;goto ${m1}RqsPos & ${m2}RqsPos & ${m3}RqsPos
+      ENDIF
+    ENDIF
+  ENDIF
+  DWELL0
 ; DELAY 100
 CLOSE
-
-
 

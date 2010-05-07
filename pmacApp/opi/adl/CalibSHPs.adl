@@ -8,7 +8,7 @@ display {
 		x=276
 		y=55
 		width=615
-		height=180
+		height=260
 	}
 	clr=14
 	bclr=4
@@ -85,6 +85,17 @@ display {
 		3cb420,
 		289315,
 		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=0
+		y=148
+		width=615
+		height=26
+	}
+	"basic attribute" {
+		clr=56
 	}
 }
 rectangle {
@@ -354,32 +365,6 @@ text {
 	limits {
 	}
 }
-text {
-	object {
-		x=90
-		y=90
-		width=170
-		height=14
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Shutter closed position"
-	align="horiz. right"
-}
-text {
-	object {
-		x=90
-		y=118
-		width=170
-		height=14
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Shutter opened position"
-	align="horiz. right"
-}
 "text update" {
 	object {
 		x=387
@@ -458,7 +443,7 @@ text {
 composite {
 	object {
 		x=0
-		y=154
+		y=234
 		width=615
 		height=26
 	}
@@ -467,7 +452,7 @@ composite {
 		rectangle {
 			object {
 				x=0
-				y=154
+				y=234
 				width=615
 				height=26
 			}
@@ -478,7 +463,7 @@ composite {
 		composite {
 			object {
 				x=5
-				y=160
+				y=240
 				width=230
 				height=16
 			}
@@ -487,7 +472,7 @@ composite {
 				text {
 					object {
 						x=5
-						y=160
+						y=240
 						width=45
 						height=16
 					}
@@ -500,7 +485,7 @@ composite {
 				"text update" {
 					object {
 						x=50
-						y=160
+						y=240
 						width=110
 						height=16
 					}
@@ -515,7 +500,7 @@ composite {
 				text {
 					object {
 						x=155
-						y=160
+						y=240
 						width=40
 						height=16
 					}
@@ -528,7 +513,7 @@ composite {
 				"text update" {
 					object {
 						x=195
-						y=160
+						y=240
 						width=40
 						height=16
 					}
@@ -545,7 +530,7 @@ composite {
 		text {
 			object {
 				x=260
-				y=160
+				y=240
 				width=150
 				height=16
 			}
@@ -557,7 +542,7 @@ composite {
 		"message button" {
 			object {
 				x=447
-				y=158
+				y=238
 				width=163
 				height=20
 			}
@@ -570,4 +555,175 @@ composite {
 			press_msg="1"
 		}
 	}
+}
+polyline {
+	object {
+		x=0
+		y=147
+		width=614
+		height=2
+	}
+	"basic attribute" {
+		clr=14
+		width=2
+	}
+	"dynamic attribute" {
+		chan="$(m1)bo"
+	}
+	points {
+		(1,148)
+		(613,148)
+	}
+}
+text {
+	object {
+		x=10
+		y=154
+		width=180
+		height=16
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Verify M-variables:"
+}
+"message button" {
+	object {
+		x=230
+		y=181
+		width=100
+		height=20
+	}
+	control {
+		chan="$(assy)StrCmd"
+		clr=54
+		bclr=6
+	}
+	label="$(MvarClosed) data"
+	press_msg="$(MvarClosed)"
+}
+text {
+	object {
+		x=90
+		y=90
+		width=170
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Shutter closed position"
+	align="horiz. right"
+}
+text {
+	object {
+		x=90
+		y=118
+		width=170
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Shutter opened position"
+	align="horiz. right"
+}
+text {
+	object {
+		x=50
+		y=181
+		width=170
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Shutter closed position"
+	align="horiz. right"
+}
+text {
+	object {
+		x=50
+		y=209
+		width=170
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Shutter opened position"
+	align="horiz. right"
+}
+"message button" {
+	object {
+		x=340
+		y=181
+		width=140
+		height=20
+	}
+	control {
+		chan="$(assy)StrCmd"
+		clr=54
+		bclr=6
+	}
+	label="$(MvarClosed) definition"
+	press_msg="$(MvarClosed)->"
+}
+"message button" {
+	object {
+		x=230
+		y=206
+		width=100
+		height=20
+	}
+	control {
+		chan="$(assy)StrCmd"
+		clr=54
+		bclr=6
+	}
+	label="$(MvarOpened) data"
+	press_msg="$(MvarOpened)"
+}
+"message button" {
+	object {
+		x=341
+		y=206
+		width=140
+		height=20
+	}
+	control {
+		chan="$(assy)StrCmd"
+		clr=54
+		bclr=6
+	}
+	label="$(MvarOpened) definition"
+	press_msg="$(MvarOpened)->"
+}
+"text entry" {
+	object {
+		x=508
+		y=194
+		width=100
+		height=20
+	}
+	control {
+		chan="$(assy)StrRsp"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=483
+		y=194
+		width=22
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="->"
+	align="horiz. right"
 }

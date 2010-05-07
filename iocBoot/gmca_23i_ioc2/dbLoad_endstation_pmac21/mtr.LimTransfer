@@ -12,20 +12,20 @@ file "$(TPMAC)/softDb/LimTransfer.db"
 # Drives <- Motors
 #
 # pmac21:
-        { 23i:COL:H:,  23i:COL:mh:  }
- 	{ 23i:COL:V:,  23i:COL:mv:  }
- 	{ 23i:XY:X1:,  23i:XY:mx1:  }
-        { 23i:XY:Y1:,  23i:XY:my1:  }
+        { 23i:HS:ZT:,  23i:HS:mt:   }
+        { 23i:HS:ZB:,  23i:HS:mb:   }
+        { 23i:HS:YO:,  23i:HS:mo:   }
+        { 23i:HS:YI:,  23i:HS:mi:   }
         { 23i:RB:RX:,  23i:RB:mrx:  }
         { 23i:RB:RY:,  23i:RB:mry:  }
         { 23i:RB:RZ:,  23i:RB:mrz:  }
         { 23i:RB:RA:,  23i:RB:mra:  }
         { 23i:FLU:D:,  23i:FLU:md:  }
         { 23i:PIN:P:,  23i:PIN:mp:  }
-        { 23i:HS:ZT:,  23i:HS:mt:   }
-        { 23i:HS:ZB:,  23i:HS:mb:   }
-        { 23i:HS:YO:,  23i:HS:mo:   }
-        { 23i:HS:YI:,  23i:HS:mi:   }
+        { 23i:COL:H:,  23i:COL:mh:  }
+ 	{ 23i:COL:V:,  23i:COL:mv:  }
+ 	{ 23i:XY:X1:,  23i:XY:mx1:  }
+        { 23i:XY:Y1:,  23i:XY:my1:  }
  	{ 23i:XY:X2:,  23i:XY:mx2:  }
         { 23i:XY:Y2:,  23i:XY:my2:  }
  	{ 23i:XY:X3:,  23i:XY:mx3:  }

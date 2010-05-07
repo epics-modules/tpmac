@@ -1,0 +1,134 @@
+# CA stands for Channel Access Link
+# Process passive TRUE (PP) or process passive FALSE (NPP).
+# Maximize severity (MS or NMS), is TRUE or FALSE. It determines if alarm
+# severity is propagated across links.
+# (see examples in scan.db and
+# - "EPICS IOC Application Developer's Guide", Chapter 4.
+# - "EPICS Record Reference Manual", Chapter 1.
+
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d2)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d2)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d3)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d3)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)S") {
+  field(DESC, "Beam shift at sample")
+  field(DOL, "0.0")
+  field(PREC, "3")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)dH") {
+  field(DESC, "CCD US-DS pivot height diff.")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "25.0")
+  field(PREC, "3")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)L") {
+  field(DESC, "CCD US to DS pivot distance")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "200.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)Lv") {
+  field(DESC, "CCD window center-top dist.")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)Lh") {
+  field(DESC, "CCD front to US pivot dist.")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)Dms") {
+  field(DESC, "Sample to mirror distance")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1000.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)sV") {
+  field(DESC, "Beam V-shift at mirror")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "0.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)bV") {
+  field(DESC, "Beam V-angle correction")
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "0.0")
+  field(PREC, "3")
+  field(EGU, "(mrad)")
+}
+
+record(ai, "$(assy)aV") {
+  field(DESC, "VFM angle")
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(INP, "$(angleVFM)ActPos CA NMS")
+  field(SCAN, "2 second")
+# field(PINI, "yes")
+  field(PREC, "3")
+  field(EGU, "(mrad)")
+}
+
+record(bo, "$(assy)mLink") {
+# field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(FLNK, "$(assy)ActPosTsubMtr.PROC PP MS")
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Mirr.Unlink")
+  field(ONAM, "Mirr.Link")
+}
+
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "500")
+}
+

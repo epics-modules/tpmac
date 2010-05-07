@@ -7,3 +7,12 @@ file assy.req ASSY=$(P)BP:Hd1
 file mtr1.req MTR1=$(P)BP:mh1z
 file drv1.req DRV1=$(P)BP:H1Z
 
+$(P)BP:H1Z:RqsPosMem1
+$(P)BP:H1Z:RqsPosMem2
+$(P)BP:H1Z:RqsPosMem3
+$(P)BP:H1Z:RqsPosMem4
+
+$(P)BP:H1Z:RqsPosMem1.DESC
+$(P)BP:H1Z:RqsPosMem2.DESC
+$(P)BP:H1Z:RqsPosMem3.DESC
+$(P)BP:H1Z:RqsPosMem4.DESC

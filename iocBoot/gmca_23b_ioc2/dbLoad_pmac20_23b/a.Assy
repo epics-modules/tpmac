@@ -1,0 +1,8 @@
+file "$(TPMAC)/xDb/rollover.db"
+{
+  pattern { assy, val, rollover }
+# pmac20:
+        { 23b:GO:Om:, ActPos, 1515520}
+        { 23b:GO:Om:, RqsBkl, 1515520}
+        { 23b:GO:Om:, RqsPos, 1515520}
+}

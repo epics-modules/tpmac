@@ -5,7 +5,7 @@ menuMain "MOTION" "motion.xbm"
 #  proc menuPMC (pmac)
 
 proc menuPMC {widget bln pmc} {
-  global medm varyFont errorFile adlPMAC adlSTD adlGMCA tclGMCA Beamline burtSTD acc65eList xterm sp
+  global medm varyFont errorFile adlPMAC adlSTD adlGMCA tclGMCA2 Beamline burtSTD acc65eList acc59eList xterm sp
   set thisMenu "${widget}.m${pmc}"
   ${widget} add cascade -label "${bln}${pmc}" -menu ${thisMenu}
   menu ${thisMenu}
@@ -21,24 +21,33 @@ proc menuPMC {widget bln pmc} {
     ${thisMenu} add separator
   }
   menuMedm ${thisMenu} "Motor#32 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}mo:,mtrNo=32,node=-1
+  set optcmd "exec ${xterm} ${tclGMCA2}pezca23id unlink32.pl ${pmc} &"
+  ${thisMenu} add command -label "Motor#32 Unlink from PCS" -command "${optcmd}"
 
-  if { ${pmc} == "pmac20:" || ${pmc} == "pmac21:" } {
-    menuMedm ${thisMenu} "Acc 59e DAC"          ${adlPMAC}8_DACs.adl      P=${bln}${pmc}59e:ao
-    menuMedm ${thisMenu} "Acc 59e ADC"          ${adlPMAC}8_ADCs.adl      P=${bln}${pmc}59e:ai
+  if { [ info exists acc59eList ] } {
+    set acc59e [ lsearch $acc59eList "${pmc}" ]
+    if {$acc59e != -1} {
+      regsub {:$} $pmc {} p
+      menuMedm ${thisMenu} "Acc 59e DAC"          ${adlPMAC}8_DACs_comment.adl      P=${bln}${pmc}59e,BL=${Beamline},SAVE_DIR=${burtSTD},PMAC=${p}
+      menuMedm ${thisMenu} "Acc 59e ADC"          ${adlPMAC}8_ADCs_comment.adl      P=${bln}${pmc}59e,BL=${Beamline},SAVE_DIR=${burtSTD},PMAC=${p}
+    }
   }
-  set acc65e [ lsearch $acc65eList "${pmc}" ]
-  if {$acc65e != -1} {
-#   Remove ":" at the end of "pmacXX:" and place the stripped string into $p:
-    regsub {:$} $pmc {} p
-    ${thisMenu} add separator
-#   menuMedm ${thisMenu} "Digital I/O"                   ${adlGMCA}Acc_11E.adl           pmac=${bln}${pmc}
-    menuMedm ${thisMenu} "Digital I/O (single word)"     ${adlGMCA}Acc_65E.adl           pmac=${bln}${pmc}
-    menuMedm ${thisMenu} "Digital I/O (individual bits)" ${adlSTD}digital_IO_pmac24.adl  P=${bln}${pmc}acc65e,BL=${Beamline},SAVE_DIR=${burtSTD},PMAC=${p}
+  if { [ info exists acc65eList ] } {
+    set acc65e [ lsearch $acc65eList "${pmc}" ]
+    if {$acc65e != -1} {
+###   Remove ":" at the end of "pmacXX:" and place the stripped string into $p:
+      regsub {:$} $pmc {} p
+      ${thisMenu} add separator
+#     menuMedm ${thisMenu} "Digital I/O"                   ${adlGMCA}Acc_11E.adl           pmac=${bln}${pmc}
+      menuMedm ${thisMenu} "Digital I/O (single word)"     ${adlGMCA}Acc_65E.adl           pmac=${bln}${pmc}
+      menuMedm ${thisMenu} "Digital I/O (individual bits)" ${adlSTD}digital_IO_pmac24.adl  P=${bln}${pmc}acc65e,BL=${Beamline},SAVE_DIR=${burtSTD},PMAC=${p}
+    }
   }
   ${thisMenu} add separator
 # Remove ":" at the end of "pmacXX:" and place the stripped string into $p:
   regsub {:$} $pmc {} p
-  set optcmd "exec ${xterm} mtrBackup.pl ${p} 32 NONINTERACTIVE &"
+  set optcmd "exec ${xterm} ${tclGMCA2}pezca23id mtrBackup.pl ${p} 32 NONINTERACTIVE &"
+# set optcmd "exec ${xterm} ${tclGMCA2}pezca23id mtrBackup.pl ${p} 32 &"
   ${thisMenu} add command -label "Dump all motors parametes" -command "${optcmd}"
 
 return $thisMenu
@@ -100,7 +109,8 @@ proc menuPCS {widget bln cmp asy dpram comment} {
   set thisMenu "${widget}.m${asy}"
   ${widget} add cascade -label "${bln}${cmp}${asy} ${comment}" -menu ${thisMenu}
   menu ${thisMenu}
-  menuMedm ${thisMenu} "View Status"        ${adlPMAC}Bckgnd1.adl  pcs=${bln}${cmp}${asy}
+  menuMedm ${thisMenu} "View Detailed Status" ${adlPMAC}PrgExeStatus.adl  pcs=${bln}${cmp}${asy}
+  menuMedm ${thisMenu} "View Short Status"    ${adlPMAC}Bckgnd1.adl       pcs=${bln}${cmp}${asy}
   ${thisMenu} add separator
 # menuMedm ${thisMenu} "Program Parameters" ${adlPMAC}MotProgParams.adl assy=${bln}${cmp}${asy}
   menuMedm ${thisMenu} "Debug DPRAM"        ${adlPMAC}Ram${dpram}.adl   assy=${bln}${cmp}${asy}
@@ -251,15 +261,40 @@ proc menuUNT {widget bln cmp unit} {
 	         append macro ",x1St=${bln}${cmp}D:"
 	         append macro ",x2St=${bln}${cmp}2Q:"
      }
+  } elseif {$cmp == "SH:" && $asy == "Ps:"} {
+     global shutterOpenedMvar shutterClosedMvar
+	         append macro ",MvarOpened=${shutterOpenedMvar}"
+	         append macro ",MvarClosed=${shutterClosedMvar}"
   }
   menuMedm ${thisMenu} "Calibrate" ${adlMTR}Calib${calib}.adl  ${macro}
   menuMedm ${thisMenu} "Configure" ${adlMTR}Config${calib}.adl ${macro}
   if {$cmp == "COL:" && $asy == "St:"} {
-    append macro ",ax1=${bln}${cmp}V:,header=Collimator Vertical Setup"
+#   append macro ",ax1=${bln}${cmp}V:,header=Collimator Vertical Setup"
+#   menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
+#   set macro1 "${macro},ax1=${bln}${cmp}V:,header=Collimator Vertical Presets"
+#   menuMedm ${thisMenu} "Setup Vertical Presets" ${adlMTR}Setup_4presets.adl ${macro1}
+#   set macro1 "${macro},ax1=${bln}${cmp}H:,header=Collimator Horizontal Presets"
+#   menuMedm ${thisMenu} "Setup Horizontal Presets" ${adlMTR}Setup_4presets.adl ${macro1}
+    append macro ",ax1=${bln}${cmp}H:,ax2=${bln}${cmp}V:,header=Collimator Positions Presets"
+    menuMedm ${thisMenu} "Setup Presets" ${adlMTR}Setup_4presets_XY.adl ${macro}
+  } elseif {$cmp == "BS:" && $asy == "Ps:"} {
+    append macro ",ax1=${bln}${cmp}PT:,header=BeamStop In/Out Setup"
     menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
   } elseif {$cmp == "PIN:" && $asy == "St:"} {
     append macro ",ax1=${bln}${cmp}P:,header=Pin Diode In/Out Setup"
     menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
+  } elseif {$cmp == "BP:" && $asy == "Mo:"} {
+    append macro ",ax1=${bln}${cmp}MOZ:,header=Mono BPM presets"
+    menuMedm ${thisMenu} "Setup Position Presets" ${adlMTR}Setup_3presets.adl ${macro}
+  } elseif {$cmp == "BP:" && $asy == "Hd1:"} {
+    append macro ",ax1=${bln}${cmp}H1Z:,header=HDM1 BPM presets"
+    menuMedm ${thisMenu} "Setup Position Presets" ${adlMTR}Setup_4presets.adl ${macro}
+  } elseif {$cmp == "BP:" && $asy == "Hd3:"} {
+    append macro ",ax1=${bln}${cmp}H3Z:,header=HDM1a BPM presets"
+    menuMedm ${thisMenu} "Setup Position Presets" ${adlMTR}Setup_4presets.adl ${macro}
+  } elseif {$cmp == "BP:" && $asy == "Kb:"} {
+    append macro ",ax1=${bln}${cmp}KBZ:,header=KBM BPM presets"
+    menuMedm ${thisMenu} "Setup Position Presets" ${adlMTR}Setup_3presets.adl ${macro}
   }
 ## }
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -296,8 +331,59 @@ proc menuCMP {widget bln component} {
 
   menu ${thisMenu}
 
-if {$cmp == "SH:"} {
+if {$cmp == "MO:"} {
+  if {$ID != "none"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Mono.adl assy=${bln}${cmp},xx=${ID}
+    ${thisMenu} add separator
+  } else {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}MonoBM.adl assy=${bln}${cmp}
+    ${thisMenu} add separator
+  }
+} elseif {$cmp == "HD:"} {
+    menuMedm ${thisMenu} "Horiz.Deflecting Mirrors Everything" ${adlMTR}MirrorHDM.adl assy=${bln}${cmp}
+    ${thisMenu} add separator
+} elseif {$cmp == "KB:"} {
+    menuMedm ${thisMenu} "Horiz.Mirror Everything" ${adlMTR}MirrorHKB.adl assy=${bln}${cmp}
+    menuMedm ${thisMenu} "Vert. Mirror Everything" ${adlMTR}MirrorVKB.adl assy=${bln}${cmp}
+    ${thisMenu} add separator
+} elseif {$cmp == "WS:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=White
+    ${thisMenu} add separator
+} elseif {$cmp == "CS:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Monochromatic
+    ${thisMenu} add separator
+} elseif {$cmp == "GS:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
+    ${thisMenu} add separator
+} elseif {$cmp == "BD:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Delivery.adl assy=${bln}${cmp}
+    ${thisMenu} add separator
+} elseif {$cmp == "GO:"} {
+    if { $bln != "23b:" } {
+      menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_ID.adl  assy=${bln}${cmp},Beamline=${Beamline},st=St
+#     menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_ID.adl assy=${bln}${cmp},Beamline=${Beamline},st=St
+    } else {
+      menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_BM.adl  assy=${bln}${cmp},Beamline=${Beamline},st=StB
+#     menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_BM.adl assy=${bln}${cmp},Beamline=${Beamline},st=StB
+    }
+    ${thisMenu} add separator
+} elseif {$cmp == "RB:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Robot.adl assy=${bln}${cmp}
+    ${thisMenu} add separator
+} elseif {$cmp == "SH:"} {
     menuMedm ${thisMenu} "Shutter Control"         ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:
+    ${thisMenu} add separator
+} elseif {$cmp == "HS:"} {
+    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Huber
+    ${thisMenu} add separator
+} elseif {$cmp == "BP:" } {
+    menuMedm ${thisMenu} "Mono BPM Presets"        ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Mo:,ax1=${bln}${cmp}MOZ:
+    if { $bln == "23o:" } {
+      menuMedm ${thisMenu} "HDM1 BPM Presets"      ${adlMTR}Move1_4presets.adl assy=${bln}${cmp}Hd1:,ax1=${bln}${cmp}H1Z:
+    }
+    if { $bln == "23i:" || $bln == "23o:"} {
+      menuMedm ${thisMenu} "KBM  BPM Presets"      ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Kb:,ax1=${bln}${cmp}KBZ:
+    }
     ${thisMenu} add separator
 }
 
@@ -348,7 +434,7 @@ proc menuPMACS {widget bln} {
 #  proc menuBURT (backup/restore menu)
 
 proc menuBURT {widget} {
-  global Beamline snapdir wish tclGMCA errorFile
+  global Beamline snapdir wish tclGMCA tclGMCA2 errorFile
 
   set thisMenu "${widget}.mburt"
   ${widget} add cascade -label "Backup/Restore positions" -menu ${thisMenu}
@@ -358,10 +444,10 @@ proc menuBURT {widget} {
   ${thisMenu} add command -label "Backup motor positions" -command {\
     set dateStamp [clock format [clock seconds] -format {%Y-%m-%d-%H%M}]; \
     set initialFile "${Beamline}-${dateStamp}.snap"; \
-    set snapFile [tk_getSaveFile -title {Backup Positions: Specify SNAP File} -initialdir ${snapdir} -initialfile ${initialFile} -filetypes {{SNAP {.snap}} {ALL {*}}} -defaultextension {.snap}]; \
+    set snapFile [tk_getSaveFile -title {Backup Positions: Specify SNAP File} -initialdir ${snapdir} -initialfile ${initialFile} -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}} -defaultextension {.snap}]; \
     if {$snapFile != ""} {\
       if {[file exists $snapFile] == 1} {tk_messageBox -message "Overwriting is not allowed!" -type ok -icon error -title "File Exists"; \
-      } else {eval "exec ${xterm} mtrPositionsBackup.pl ${snapFile} ${Beamline} &";} \
+      } else {eval "exec ${xterm} ${tclGMCA2}pezca23id mtrPositionsBackup.pl ${snapFile} ${Beamline} &";} \
     } \
   }
 
@@ -374,9 +460,13 @@ proc menuBURT {widget} {
 
 set thisMenu .mbMOTION.m
 menu ${thisMenu}
-# menuMedm ${thisMenu} "All motors at a glance" ${adlMTR}Glance${Beamline}.adl bl=${bln},id=${ID}
-# ${thisMenu} add separator
+menuMedm ${thisMenu} "All motors at a glance" ${adlMTR}Glance${Beamline}.adl bl=${bln},id=${ID}
+${thisMenu} add command -label "Motors assignment" \
+      -command "exec ${wish} -f ${tclGMCA}listMotors2.tcl ${Beamline} $errorFile & "
+${thisMenu} add command -label "Assemblies assignment" \
+      -command "exec ${wish} -f ${tclGMCA}listAssemblies.tcl ${Beamline} $errorFile & "
 
+${thisMenu} add separator
 foreach component $ComponentList {menuCMP ${thisMenu} ${bln} ${component}}
 
 ${thisMenu} add separator
@@ -386,11 +476,50 @@ menuPMACS  ${thisMenu} $bln
 ${thisMenu} add separator
 menuBURT ${thisMenu}
 if { ${SYSTEM} == "LINUX" } {
+  if { ($Beamline == "23i" && ($HOST == "bl1ws3" || $HOST == "bl1dl380lower" || $HOST == "bl1dl380upper")) \
+    || ($Beamline == "23o" && ($HOST == "bl2ws3" || $HOST == "bl2dl380lower" || $HOST == "bl2dl380upper")) \
+    || ($Beamline == "23b" && ($HOST == "bl3ws3" || $HOST == "bl3dl380lower" || $HOST == "bl3dl380upper")) \
+    || ($Beamline == "23d" &&  $HOST == "px0") \
+    || $HOST == "www" } {
+# To make colored text, use, e.g:  -foreground Red
     ${thisMenu} add command -label "Backup/Restore calibrations" \
        -command "exec ${wish} -f ${tclGMCA}CalibSave.tcl ${Beamline} $errorFile & "
+  }
 }
 
+if { ( $Beamline == "23i" && $HOST == "keithley1" )     || \
+     ( $Beamline == "23i" && $HOST == "bl1ws2" )        || \
+     ( $Beamline == "23i" && $HOST == "bl1ws3" )        || \
+     ( $Beamline == "23i" && $HOST == "bl1dl380upper" ) || \
+     ( $Beamline == "23o" && $HOST == "keithley2" )     || \
+     ( $Beamline == "23o" && $HOST == "bl2ws2" )        || \
+     ( $Beamline == "23o" && $HOST == "bl2ws3" )        || \
+     ( $Beamline == "23o" && $HOST == "bl2dl380upper" ) || \
+     ( $Beamline == "23b" && $HOST == "keithley3" )     || \
+     ( $Beamline == "23b" && $HOST == "bl3ws2" )        || \
+     ( $Beamline == "23b" && $HOST == "bl3ws3" )        || \
+     ( $Beamline == "23b" && $HOST == "bl3dl380upper" ) || \
+     ( $Beamline == "23d" && $HOST == "px0" )           || \
+     ( $HOST == "www" ) } {
   ${thisMenu} add separator
   ${thisMenu} add command -label "Home Motors" \
-      -command "exec ${wish} -f ${tclGMCA}homing.tcl ${Beamline} $errorFile & "
+      -command "exec ${wish} -f ${tclGMCA}homing_v3.tcl ${Beamline} $errorFile & "
+}
+
+if { ( $Beamline == "23i" && $HOST == "bl1ws3" )        || \
+     ( $Beamline == "23o" && $HOST == "bl2ws3" )        || \
+     ( $Beamline == "23b" && $HOST == "bl3ws3" )        || \
+     ( $Beamline == "23d" && $HOST == "px0" )           || \
+     ( $HOST == "www" ) } {
+  ${thisMenu} add separator
+  ${thisMenu} add command -label "Calibrate Mono" \
+      -command "exec ${wish} -f ${tclGMCA}calibrateMono.tcl ${Beamline} & "
+}
+
+### Sergey, 2006/09/18: we do not support xxx anymore since we stopped compiling et_wish:
+#if { ${SYSTEM} != "WIN32" } {
+#  ${thisMenu} add separator
+#  ${thisMenu} add command -label "Open Ixxx (new)" \
+#     -command "exec ${et} -f ${tclMTR}Ixxx${Beamline}_new.tcl $errorFile &"
+#}
 

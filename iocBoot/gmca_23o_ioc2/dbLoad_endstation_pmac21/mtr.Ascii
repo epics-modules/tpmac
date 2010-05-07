@@ -4,20 +4,20 @@ file "$(TPMAC)/pmacDb/AsciiMtr.db"
 #		mtr =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 #		  x =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 # pmac21:
-        { 23o:COL:mh:,    1,  1 }
-        { 23o:COL:mv:,    1,  2 }
-        { 23o:XY:mx1:,    1,  3 }
-        { 23o:XY:my1:,    1,  4 }
+        { 23o:HS:mt:,	  1,  1 }
+        { 23o:HS:mb:,	  1,  2 }
+        { 23o:HS:mo:,	  1,  3 }
+        { 23o:HS:mi:,	  1,  4 }
         { 23o:RB:mrx:,    1,  5 }
         { 23o:RB:mry:,    1,  6 }
         { 23o:RB:mrz:,    1,  7 }
         { 23o:RB:mra:,    1,  8 }
         { 23o:FLU:md:,    1,  9 }
         { 23o:PIN:mp:,    1, 10 }
-        { 23o:HS:mt:,     1, 11 }
-        { 23o:HS:mb:,     1, 12 }
-        { 23o:HS:mo:,     1, 13 }
-        { 23o:HS:mi:,     1, 14 }
+        { 23o:COL:mh:,    1, 11 }
+        { 23o:COL:mv:,    1, 12 }
+        { 23o:XY:mx1:,    1, 13 }
+        { 23o:XY:my1:,    1, 14 }
         { 23o:XY:mx2:,    1, 15 }
         { 23o:XY:my2:,    1, 16 }
  	{ 23o:XY:mx3:,    1, 17 }
@@ -43,20 +43,20 @@ file "$(TPMAC)/pmacDb/IxMtrMv.db"
 #		mtr =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 #		  x =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 # pmac21:
-        { 23o:COL:mh:,    1,  1 }
-        { 23o:COL:mv:,    1,  2 }
-        { 23o:XY:mx1:,    1,  3 }
-        { 23o:XY:my1:,    1,  4 }
+        { 23o:HS:mt:,	  1,  1 }
+        { 23o:HS:mb:,	  1,  2 }
+        { 23o:HS:mo:,	  1,  3 }
+        { 23o:HS:mi:,	  1,  4 }
         { 23o:RB:mrx:,    1,  5 }
         { 23o:RB:mry:,    1,  6 }
         { 23o:RB:mrz:,    1,  7 }
         { 23o:RB:mra:,    1,  8 }
         { 23o:FLU:md:,    1,  9 }
         { 23o:PIN:mp:,    1, 10 }
-        { 23o:HS:mt:,     1, 11 }
-        { 23o:HS:mb:,     1, 12 }
-        { 23o:HS:mo:,     1, 13 }
-        { 23o:HS:mi:,     1, 14 }
+        { 23o:COL:mh:,    1, 11 }
+        { 23o:COL:mv:,    1, 12 }
+        { 23o:XY:mx1:,    1, 13 }
+        { 23o:XY:my1:,    1, 14 }
         { 23o:XY:mx2:,    1, 15 }
         { 23o:XY:my2:,    1, 16 }
  	{ 23o:XY:mx3:,    1, 17 }
@@ -82,20 +82,20 @@ file "$(TPMAC)/pmacDb/OpnLp.db"
 #		mtr =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 #		  M =  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 # pmac21:
-        { 23o:COL:mh:,    1,  1 }
-        { 23o:COL:mv:,    1,  2 }
-        { 23o:XY:mx1:,    1,  3 }
-        { 23o:XY:my1:,    1,  4 }
+        { 23o:HS:mt:,	  1,  1 }
+        { 23o:HS:mb:,	  1,  2 }
+        { 23o:HS:mo:,	  1,  3 }
+        { 23o:HS:mi:,	  1,  4 }
         { 23o:RB:mrx:,    1,  5 }
         { 23o:RB:mry:,    1,  6 }
         { 23o:RB:mrz:,    1,  7 }
         { 23o:RB:mra:,    1,  8 }
         { 23o:FLU:md:,    1,  9 }
         { 23o:PIN:mp:,    1, 10 }
-        { 23o:HS:mt:,     1, 11 }
-        { 23o:HS:mb:,     1, 12 }
-        { 23o:HS:mo:,     1, 13 }
-        { 23o:HS:mi:,     1, 14 }
+        { 23o:COL:mh:,    1, 11 }
+        { 23o:COL:mv:,    1, 12 }
+        { 23o:XY:mx1:,    1, 13 }
+        { 23o:XY:my1:,    1, 14 }
         { 23o:XY:mx2:,    1, 15 }
         { 23o:XY:my2:,    1, 16 }
  	{ 23o:XY:mx3:,    1, 17 }

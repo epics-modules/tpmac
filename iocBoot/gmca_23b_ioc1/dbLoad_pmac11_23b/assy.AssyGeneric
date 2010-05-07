@@ -1,4 +1,4 @@
-file $(TPMAC)/softDb/AssyGeneric.db
+file "$(TPMAC)/softDb/AssyGeneric.db"
 {
 	pattern { assy, desc, assembly_no, assembly_type, shift }
 # ATTENTION:                  "assembly_no","assembly_type" are not used in the db, these are just comments 

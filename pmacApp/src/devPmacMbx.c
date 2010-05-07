@@ -95,6 +95,7 @@ OWNED RIGHTS.
 #include	<link.h>
 #include	<module_types.h>
 #include	<callback.h>
+#include	<cantProceed.h>
 
 #include	<aiRecord.h>
 #include	<biRecord.h>
@@ -109,6 +110,7 @@ OWNED RIGHTS.
 #include	<mbboRecord.h>
 #include	<stringinRecord.h>
 #include	<stringoutRecord.h>
+#include	<waveformRecord.h>
 #ifdef LOAD_RECORD
 #include	<loadRecord.h>
 #endif
@@ -116,6 +118,7 @@ OWNED RIGHTS.
 /* local includes */
 
 #include	<drvPmac.h>
+#include	<pmacError.h>
 #include "recGbl.h"
 #include "epicsExport.h"
 /*
@@ -259,6 +262,16 @@ typedef struct  /* PMAC_DSET_SO */
 	DEVSUPFUN	write;
 } PMAC_DSET_SO;
 
+typedef struct  /* PMAC_DSET_WF */
+{
+	long		number;
+	DEVSUPFUN	report;
+	DEVSUPFUN	init;
+	DEVSUPFUN	init_record;
+	DEVSUPFUN	get_ioint_info;
+	DEVSUPFUN	write;
+} PMAC_DSET_WF;
+
 #ifdef LOAD_RECORD
 typedef struct  /* PMAC_DSET_LOAD */
 {
@@ -317,6 +330,9 @@ LOCAL long devPmacMbxSi_read();
 
 LOCAL long devPmacMbxSo_init();
 LOCAL long devPmacMbxSo_write();
+
+LOCAL long devPmacMbxWf_init();
+LOCAL long devPmacMbxWf_write();
 
 #ifdef LOAD_RECORD
 LOCAL long devPmacMbxLoad_init();
@@ -452,6 +468,16 @@ PMAC_DSET_SO devPmacMbxSo =
 	devPmacMbxSo_write
 };
 
+PMAC_DSET_WF devPmacMbxWf =
+{
+	5,
+	NULL,
+	devPmacMbx_init,
+	devPmacMbxWf_init,
+	NULL,
+	devPmacMbxWf_write
+};
+
 #ifdef LOAD_RECORD
 PMAC_DSET_LOAD devPmacMbxLoad =
 {
@@ -474,6 +500,7 @@ epicsExportAddress(dset,devPmacMbxMbbi);
 epicsExportAddress(dset,devPmacMbxMbbo);
 epicsExportAddress(dset,devPmacMbxSi);
 epicsExportAddress(dset,devPmacMbxSo);
+epicsExportAddress(dset,devPmacMbxWf);
 
 
 /*
@@ -905,8 +932,7 @@ LOCAL long devPmacMbxSo_init
 				pRec->out.value.vmeio.card, pRec->out.value.vmeio.parm,0,0);
 		)
 
-		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec,
-						(int) pRec->out.value.vmeio.card );
+		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec, (int) pRec->out.value.vmeio.card );
 		break;
 
 	default :
@@ -915,6 +941,58 @@ LOCAL long devPmacMbxSo_init
 		return(S_db_badField);
 	}
 
+	return (status);
+
+}
+
+/*******************************************************************************
+ *
+ * devPmacMbxWf_init - EPICS PMAC device support waveform init
+ *
+ */
+LOCAL long devPmacMbxWf_init
+(
+	struct waveformRecord *pRec,
+	int pass
+)
+{
+	char *	MyName = "devPmacMbxWf_init";
+	long status = 0;
+
+	if (pass==0){
+            if (pRec->nelm <= 0)
+        	pRec->nelm = 1;
+            if (pRec->ftvl > DBF_ENUM) pRec->ftvl = DBF_UCHAR;
+            pRec->bptr = callocMustSucceed(pRec->nelm, dbValueSize(pRec->ftvl), "waveform calloc failed");
+	    pRec->val = pRec->bptr;
+            if (pRec->nelm == 1) {
+        	pRec->nord = 1;
+            } else {
+        	pRec->nord = 0;
+            }
+            return 0;
+	}
+
+	switch (pRec->inp.type) {
+	case (VME_IO) :
+
+		PMAC_DEBUG
+		(	1,
+			PMAC_MESSAGE ("%s: name %s card %d parm %s\n", MyName, pRec->name,
+				pRec->inp.value.vmeio.card, pRec->inp.value.vmeio.parm,0,0);
+		)
+
+		pRec->dpvt = (void *) devPmacMbxDpvtInit ( (struct dbCommon *) pRec, (int) pRec->inp.value.vmeio.card );
+		/* signal 2 is for PMAC error messages; tell PMAC driver where to report error message */
+		if (pRec->inp.value.vmeio.signal == 2) {drvPmacStrErr (pRec);}
+		break;
+
+	default :
+		recGblRecordError(S_db_badField,(void *)pRec, "devPmacMbxWf_init: Illegal OUT field");
+		return(S_db_badField);
+	}
+	
+ 
 	return (status);
 
 }
@@ -1031,9 +1109,9 @@ static long devPmacMbxAi_read
 			PMAC_MESSAGE ("%s: TPRO=%d\n", MyName, pRec->tpro,0,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1083,9 +1161,9 @@ LOCAL long devPmacMbxBi_read
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1135,9 +1213,9 @@ LOCAL long devPmacMbxLi_read
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1187,9 +1265,9 @@ LOCAL long devPmacMbxMbbi_read
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1240,9 +1318,9 @@ LOCAL long devPmacMbxStatus_read
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1311,9 +1389,9 @@ LOCAL long devPmacMbxAo_write
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1360,9 +1438,9 @@ LOCAL long devPmacMbxBo_write
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 }
@@ -1408,9 +1486,9 @@ LOCAL long devPmacMbxLo_write
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1457,9 +1535,9 @@ LOCAL long devPmacMbxMbbo_write
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1515,9 +1593,9 @@ LOCAL long devPmacMbxSi_read
 			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacMbxScan (pMbxIo);
 
-		pRec->pact = TRUE;
 		return (0);
 	}
 
@@ -1546,7 +1624,6 @@ LOCAL long devPmacMbxSo_write
 		(	2,
 			PMAC_MESSAGE ("%s: %s response [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
-
 		switch (pRec->out.value.vmeio.signal)
 		{
 		case (1):
@@ -1557,25 +1634,40 @@ LOCAL long devPmacMbxSo_write
 		default:
 			break;
 		}
-		return (0);
+
+	} else {
+
+		switch (pRec->out.value.vmeio.signal)
+		{
+		case (1):
+			pRec->pact = TRUE;
+			sprintf (pMbxIo->command,"%s%s", pRec->out.value.vmeio.parm, pRec->val);
+
+			PMAC_TRACE
+			(	2,
+				PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
+			)
+
+			drvPmacMbxScan (pMbxIo);
+			break;
+		default:
+			PMAC_MESSAGE ("%s: %s s[%d] not supported\n", MyName, pRec->name, pRec->out.value.vmeio.signal,0,0,0);
+			break;
+		}
+
 	}
 
-	else
-	{
-
-		sprintf (pMbxIo->command,"%s%s", pRec->out.value.vmeio.parm, pRec->val);
-
-		PMAC_TRACE
-		(	2,
-			PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
-		)
-
-		drvPmacMbxScan (pMbxIo);
-
-		pRec->pact = TRUE;
 		return (0);
-	}
+}
 
+/*******************************************************************************
+ *
+ * devPmacMbxWf_write - EPICS PMAC device support stringout write
+ *
+ */
+LOCAL long devPmacMbxWf_write ( struct waveformRecord *pRec)
+{
+	return (0); /* Nothing to do, data are written in the drvPmacMbxTask (), drvPmac.c */
 }
 
 #ifdef LOAD_RECORD
@@ -1621,9 +1713,9 @@ LOCAL long devPmacMbxLoad_proc
 			PMAC_MESSAGE ("%s: %s upload [%s]\n", MyName, pRec->name, pMbxIo->response,0,0,0);
 		)
 
+		pRec->pact = TRUE;
 		drvPmacFldScan (pMbxIo);
 
-		pRec->pact = TRUE;
 
  		return (0);
 	}

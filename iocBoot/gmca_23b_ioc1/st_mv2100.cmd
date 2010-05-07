@@ -1,11 +1,18 @@
+### See also: bootShow, bootChange
+###
 ### vxWorks startup script
   loginUserAdd "gmca", "RceeQSdRSb"
   loginUserDelete "vw5"
+### Set shell prompt
   shellPromptSet "23b:ioc1> "
 
 ### This is routeAdd, hostAdd, hostShow, nfsMount...
-  nfsAuthUnixSet "bl3dl380upper", 500, 100
-  nfsMount("bl3dl380upper", "/home/gmca/epics_synApps/synApps_5_1", "/ioc")
+#  < ../nfsCommands
+# nfsAuthUnixSet "bl3dl380upper", 500, 100
+# nfsMount("bl3dl380upper", "/home/gmca/epics_synApps/synApps_5_2", "/ioc")
+  nfsAuthUnixSet "bl3dl380lower", 500, 100
+  nfsMount("bl3dl380lower", "/home/gmca/epics_synApps/synApps_5_2", "/ioc")
+
 
 ### Add gateway to be visible from 23ID-in network:
 ### routeAdd     "destaddr",      "gateaddr"
@@ -15,20 +22,17 @@
 # routeAdd  "164.54.210.64",  "164.54.210.193"
 # routeShow
 
-  startup   = "/ioc/xxx1/iocBoot/iocgmca1"
-  appbin    = "/ioc/xxx1/bin/vxWorks-ppc603"
   location  = "23-BM"
   engineer  = "O.Makarov"
 
-  putenv ("AUTOSAVE=/ioc/autosave/4-2/asApp/Db")
-  putenv ("GMCA=/ioc/gmca/1-0/gmcaApp/Db")
-  putenv ("STD=/ioc/std/2-5-2/stdApp/Db")
-  #putenv ("TPMAC=/ioc/tpmac/2-3/pmacApp/Db")
-  putenv ("TPMAC=/ioc/tpmac/3-2/pmacApp/Db")
-  putenv ("CALC=/ioc/calc/2-6-1/calcApp/Db")
-  putenv ("SSCAN=/ioc/sscan/2-5-2/sscanApp/Db")
-  putenv ("VXSTATS=/ioc/vxStats/1-7-2c/db")
+  < iocEnv
+
   putenv ("EPICS_TS_NTP_INET=164.54.210.2")
+  putenv ("EPICS_CA_AUTO_ADDR_LIST=YES")
+### 215=bl3ws6 (directnet) 217=bl3ioc1 218=bl3ioc2 219=keithley3 220=mar3
+# putenv ("EPICS_CA_ADDR_LIST=164.54.210.2 164.54.210.215 164.54.210.218")
+  putenv ("EPICS_CA_ADDR_LIST=164.54.210.2")
+  printf "EPICS_CA_ADDR_LIST=%s\n",getenv("EPICS_CA_ADDR_LIST")
 
 ################################################################################
 
@@ -40,11 +44,19 @@
   cd appbin
   ld < xxx.munch
 
-
+### Increase size of buffer for error logging from default 1256
+  errlogInit(5000)
+################################################################################
 ### Register all support components
   cd startup
   dbLoadDatabase("../../dbd/iocxxxVX.dbd",0,0)
   iocxxxVX_registerRecordDeviceDriver(pdbbase)
+
+  iocLogDisable=1
+
+###############################################################################
+  dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23b:1")
+### medm -x -attach -macro P=23b:2 std/2-5-4/stdApp/op/adl/IOC_Status_full.adl
 
 ##############################################################################
 ### dbrestore setup
@@ -99,20 +111,20 @@
 ### for that.)
 # dbLoadRecords("$(SSCAN)/scan.db","P=23b:1:,MAXPTS1=2000,MAXPTS2=20,MAXPTS3=1,MAXPTS4=1,MAXPTSH=2000")
 
+#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+### Load Keithley-428 Current Amplifier databases:
+# < st_keithley.cmd
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ### Load PMAC databases:
   < st_pmac.cmd
+
+################################################################################
+### IP stuff:
+# < st_ip.cmd
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-###############################################################################
-
-  iocLogDisable=1
-
-###############################################################################
-  dbLoadRecords("$(VXSTATS)/vxStats-template.db", "IOCNAME=23b:1")
-### medm -x -attach -macro P=23b:2 std/2-5/stdApp/op/adl/IOC_Status_full.adl
 
   iocInit
 
@@ -125,22 +137,9 @@
   create_monitor_set("auto_settings.req", 18000, "P=23b:ioc1")
   create_triggered_set("auto_settings.req", "23b:ioc1:saveTrigger.PROC", "P=23b:ioc1")
 
-#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-### Start state notation language programs (Oleg, Sergey):
-# < st_seq.cmd
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-### Start PMAC clocks:
-#X# dbpf ("23b:pmac10:StrCmd","gather")
-#X# dbpf ("23b:pmac10:StrCmd","i55=1")
-#X# dbpf ("23b:pmac30:StrCmd","gather")
-#X# dbpf ("23b:pmac30:StrCmd","i55=1")
-
 ### For security reasons it is recommended to unmount the drive space,
 ### but then backup_restore fails. Therefore commented until further
 ### decision be made:
-#SEC  cd "px0:/home/gmca/epics_synApps/synApps_5_1/xxx1/iocBoot/iocgmca1"
-#SEC  nfsUnmount "/ioc"
 
 ### Clear Macro Faults:
   taskDelay 30
@@ -154,16 +153,10 @@
   taskDelay 30
 
 ### Disable Telnet:
-  ts tTelnetd
+# ts tTelnetd
 ############################# END 23b:ioc1 ##########################
 ### ALL DONE!
 ### Enter ^X or "reboot" to reboot!
 ### Debugging: dbcar(0,5), i, dbgrep
 ### Also use: memShow, bootChange, lkup, dbgrep, i, ts, tr
 ###
-
-### This is a workaround to suppress clock delays on PMAC:
-###   taskDelay 600
-###   pmacVmeDebug=1
-###   taskDelay 240
-###   pmacVmeDebug=0

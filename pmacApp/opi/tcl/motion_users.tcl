@@ -59,15 +59,19 @@ proc menuUNT {widget bln cmp unit} {
 # puts "${name}"
 # puts "${asy}"
 # puts "${axes}"
-  global medm varyFont errorFile adlMTR sp
+  global medm varyFont errorFile adlMTR sp Beamline
 
   set thisMenu "${widget}"
 
   set num [llength ${axes}]
   set macro [macroMOV ${bln} ${cmp} ${asy} ${axes}]
-# menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
-  menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
-# menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_short.adl ${macro}
+  if {$cmp == "COL:"} {
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move_collimator_users.adl  Beamline=${Beamline},${macro}
+  } else {
+#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
+#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_short.adl ${macro}
+  }
 }
 
 #***********************************************************
@@ -119,7 +123,22 @@ proc menuCMP {widget bln component} {
 
   menu ${thisMenu}
 
-  if {$cmp == "SH:"} {
+  if {$cmp == "MO:"} {
+    if {$ID != "none"} {
+      menuMedm ${thisMenu} "Everything"              ${adlMTR}Mono_users.adl assy=${bln}${cmp},xx=${ID}
+      ${thisMenu} add separator
+    } else {
+      menuMedm ${thisMenu} "Everything"              ${adlMTR}MonoBM_users.adl assy=${bln}${cmp}
+      ${thisMenu} add separator
+    }
+  } elseif {$cmp == "GS:"} {
+      menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
+      ${thisMenu} add separator
+  } elseif {$cmp == "GO:"} {
+      if { $bln != "23b:" } {set ST "St";} else {set ST "StB";}
+      menuMedm ${thisMenu} "Everything "             ${adlMTR}GonioOCS_USERS.adl Beamline=${Beamline},assy=${bln}${cmp},st=${ST}
+      ${thisMenu} add separator
+  } elseif {$cmp == "SH:"} {
       menuMedm ${thisMenu} "Shutter Control"         ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:
       ${thisMenu} add separator
   }
@@ -155,17 +174,17 @@ proc menuCLOCKS {widget bln} {
 #  proc menuBACKUP
 
 proc menuBACKUP {widget} {
-  global Beamline snapdir wish tclGMCA errorFile
+  global Beamline snapdir wish tclGMCA2 errorFile
 
   set thisMenu ${widget}
 
   ${thisMenu} add command -label "Backup motor positions" -command {\
     set dateStamp [clock format [clock seconds] -format {%Y-%m-%d-%H%M}]; \
     set initialFile "${Beamline}-${dateStamp}.snap"; \
-    set snapFile [tk_getSaveFile -title {Backup Positions: Specify SNAP File} -initialdir ${snapdir} -initialfile ${initialFile} -filetypes {{SNAP {.snap}} {ALL {*}}} -defaultextension {.snap}]; \
+    set snapFile [tk_getSaveFile -title {Backup Positions: Specify SNAP File} -initialdir ${snapdir} -initialfile ${initialFile} -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}} -defaultextension {.snap}]; \
     if {$snapFile != ""} {\
       if {[file exists $snapFile] == 1} {tk_messageBox -message "Overwriting is not allowed!" -type ok -icon error -title "File Exists"; \
-      } else {eval "exec ${xterm} mtrPositionsBackup.pl ${snapFile} ${Beamline} &";} \
+      } else {eval "exec ${xterm} ${tclGMCA2}pezca23id mtrPositionsBackup.pl ${snapFile} ${Beamline} &";} \
     } \
   }
 }
@@ -175,6 +194,9 @@ proc menuBACKUP {widget} {
 
 set thisMenu .mbMOTION.m
 menu ${thisMenu}
+menuMedm ${thisMenu} "All motors at a glance" ${adlMTR}Glance${Beamline}.adl bl=${bln},id=${ID}
+
+${thisMenu} add separator
 foreach component $ComponentUsers {menuCMP ${thisMenu} ${bln} ${component}}
 
 ${thisMenu} add separator

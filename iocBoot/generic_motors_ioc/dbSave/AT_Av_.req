@@ -1,0 +1,11 @@
+%
+% BURT Request File
+%
+% $(P)AT:Av:  WBATT Z Positioners
+%
+
+file assy.req ASSY=$(P)AT:Av
+file mtr1.req MTR1=$(P)AT:mz1
+file mtr1.req MTR1=$(P)AT:mz2
+file drv1.req DRV1=$(P)AT:Z1
+file drv1.req DRV1=$(P)AT:Z2

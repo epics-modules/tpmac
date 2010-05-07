@@ -35,7 +35,7 @@ record(tsub, "$(assy)RqsPosTsubMtr") {
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
-  field(IPA2, "$(assy)mirrAng NPP MS")
+  field(IPA2, "$(assy)mirrAng PP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
   field(IPB0, "$(d2)Offset NPP MS")
@@ -65,7 +65,7 @@ record(tsub, "$(assy)RqsPosTsubDrv") {
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
-  field(IPA2, "$(assy)mirrAng NPP MS")
+  field(IPA2, "$(assy)mirrAng PP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
   field(IPB0, "$(d2)Offset NPP MS")
@@ -95,8 +95,10 @@ record(tsub, "$(assy)RqsPosTsubAxs") {
   field(INPH, "$(assy)EvLambda NPP MS")
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
+  field(INPN, "$(d2)RqsPos NPP MS")
+  field(INPO, "$(d3)RqsPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
-  field(IPA2, "$(assy)mirrAng NPP MS")
+  field(IPA2, "$(assy)mirrAng PP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
   field(IPB0, "$(d2)Offset NPP MS")
@@ -129,27 +131,27 @@ record(ao, "$(m3)RqsPos") {
 
 record(ao, "$(d1)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
-  field(PREC, "4")
+  field(PREC, "$(prec_d1)")
 }
 
 record(ao, "$(d2)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
-  field(PREC, "2")
+  field(PREC, "$(prec_d2)")
 }
 
 record(ao, "$(d3)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubDrv.PROC PP MS")
-  field(PREC, "2")
+  field(PREC, "$(prec_d3)")
 }
 
 record(ao, "$(x1)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubAxs1.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x1)")
 }
 
 record(ao, "$(x2)RqsPos") {
   field(FLNK, "$(assy)RqsPosTsubAxs2.PROC PP MS")
-  field(PREC, "5")
+  field(PREC, "$(prec_x2)")
 }
 
 record(calc, "$(assy)RqsPosSDISx1") {
