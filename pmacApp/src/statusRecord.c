@@ -65,7 +65,6 @@
 #include        <errMdef.h>
 #include        <recSup.h>
 #include        <devSup.h>
-#include        <menuYesNo.h>
 
 #define GEN_SIZE_OFFSET
 #include	<statusRecord.h>
@@ -387,11 +386,11 @@ static long readValue(pstatus)
 	if (status)
 		return(status);
 
-	if (pstatus->simm == menuYesNoNO){
+	if (pstatus->simm == NO){
 		status=(*pdset->read_status)(pstatus);
 		return(status);
 	}
-	if (pstatus->simm == menuYesNoYES){
+	if (pstatus->simm == YES){
 		status = dbGetLink( &(pstatus->siol), DBR_LONG, &(pstatus->sval),
                                     &options, &nRequest );
 		if (status==0){
