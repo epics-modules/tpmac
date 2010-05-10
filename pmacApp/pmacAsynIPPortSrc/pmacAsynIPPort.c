@@ -59,6 +59,7 @@
 #include "pmacAsynIPPort.h"
 #include "asynInterposeEos.h"
 #include "drvAsynIPPort.h"
+#include "epicsThread.h"
 
 #include <netinet/in.h>
 
@@ -187,6 +188,10 @@ epicsShareFunc int pmacAsynIPConfigure(const char *portName, const char *hostInf
   if ((status = drvAsynIPPortConfigure(portName, hostInfo, 0, 0, 1)) != 0) {
     printf("pmacAsynIPConfigure: error from drvAsynIPPortConfigure. Port: %s\n", portName);
   }
+
+  /*Temporary fix (yes, really!) to cope with a change to Asyn port registration
+    that is not compatible with asynOctetSyncIO calls immediately afterwards (Asyn 4-12 onwards).*/
+  epicsThreadSleep(2.0);
 
   if ((status = pmacAsynIPPortConfigureEos(portName, 0)) != 0) {
     printf("pmacAsynIPConfigure: error from pmacAsynIPPortConfigureEos. Port: %s\n", portName);
