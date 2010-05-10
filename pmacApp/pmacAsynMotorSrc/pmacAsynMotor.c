@@ -1169,6 +1169,10 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
     PMACDRV_ID pDrv;
     PMACDRV_ID * ppLast = &(pFirstDrv);
 
+    /*Temporary fix (yes, really!) to cope with a change to Asyn port registration
+    that is not compatible with asynOctetSyncIO calls immediately afterwards (Asyn 4-12 onwards).*/
+    epicsThreadSleep(1.0);
+
     for ( pDrv = pFirstDrv;
           pDrv != NULL &&  (pDrv->card != card);
           pDrv = pDrv->pNext )
