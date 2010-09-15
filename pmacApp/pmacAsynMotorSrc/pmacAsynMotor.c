@@ -1405,7 +1405,7 @@ int pmacSetOpenLoopEncoderAxis(int card, int axis, int encoder_axis )
     if (pAxis)
     {
         pAxis->encoder_axis = encoder_axis;
-	drvPmacGetAxisStatus(pAxis, pAxis->pasynUser, 0);
+	drvPmacGetAxisStatus(pAxis, pAxis->pDrv->pasynUser, 0);
         status = MOTOR_AXIS_OK;
     }
 
