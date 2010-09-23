@@ -191,6 +191,7 @@ static PMACDRV_ID pFirstDrv = NULL;
 static int drvPmacLogMsg( void * param, const motorAxisLogMask_t logMask, const char *pFormat, ...);
 static motorAxisLogFunc drvPrint = drvPmacLogMsg;
 static motorAxisLogFunc drvPrintParam = NULL;
+static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUInt32 globalStatus );
 
 #define TRACE_FLOW    motorAxisTraceFlow
 #define TRACE_DRIVER  motorAxisTraceIODriver
@@ -462,6 +463,8 @@ static int processDeferredMoves(drvPmac_t *pDrv)
 static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double value )
 {
     int status = MOTOR_AXIS_OK;
+    double encRatio = 1.0;
+    int encposition = 0;
 
     if (pAxis == NULL) return MOTOR_AXIS_ERROR;
     else
@@ -490,6 +493,8 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
                 printf( "Set PMAC card %d, axis %d to position %f, offset %f, old position %f\n",
                         pAxis->pDrv->card, pAxis->axis, value, pAxis->enc_offset, position );
 #else
+		/*Set position on motor axis.*/
+		
                 int position = (int) floor(value*32/pAxis->scale + 0.5);
 
                 sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
@@ -508,6 +513,37 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
     	        
     	        sprintf( command, "#%dJ/", pAxis->axis);
 
+		if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+    	        {
+    	            status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+    	        }
+
+		/*Now set position on encoder axis, if one is in use.*/
+		
+		if (pAxis->encoder_axis) {
+		  motorParam->getDouble(pAxis->params, motorAxisEncoderRatio,  &encRatio);
+		  encposition = (int) floor((position*encRatio) + 0.5);
+		  
+		  sprintf( command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
+			   pAxis->encoder_axis,
+			   pAxis->encoder_axis, encposition, pAxis->encoder_axis, 
+			   pAxis->encoder_axis, encposition, pAxis->encoder_axis );
+		  
+		  pAxis->print( pAxis->logParam, TRACE_FLOW,
+				"Set card %d, encoder axis %d to position %f\n",
+				pAxis->pDrv->card, pAxis->encoder_axis, value );
+		  
+		  if ( command[0] != 0 && status == MOTOR_AXIS_OK)
+		  {
+		    status = motorAxisWriteRead( pAxis, command, sizeof(response), response, 0 );
+		  }
+		  
+		  sprintf( command, "#%dJ/", pAxis->encoder_axis);
+		  
+		  }
+
+		/*Now do an update, to get the new position from the controller.*/
+		drvPmacGetAxisStatus(pAxis, pAxis->pDrv->pasynUser, 0);
 #endif
                 break;
             }
