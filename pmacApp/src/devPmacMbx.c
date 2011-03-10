@@ -1637,6 +1637,9 @@ LOCAL long devPmacMbxSo_write
 
 	} else {
 
+
+	  /*MRP Commeted this change out because it broke I06 hexapod IOC databases. 9 March 2011*/
+	  /*
 		switch (pRec->out.value.vmeio.signal)
 		{
 		case (1):
@@ -1654,6 +1657,21 @@ LOCAL long devPmacMbxSo_write
 			PMAC_MESSAGE ("%s: %s s[%d] not supported\n", MyName, pRec->name, pRec->out.value.vmeio.signal,0,0,0);
 			break;
 		}
+
+	  */
+
+	  /*This is the old code from tpmac 3-5dls9.*/
+	  sprintf (pMbxIo->command,"%s%s", pRec->out.value.vmeio.parm, pRec->val);
+	  
+	  PMAC_TRACE
+	  (       2,
+		    PMAC_MESSAGE ("%s: %s command [%s]\n", MyName, pRec->name, pMbxIo->command,0,0,0);
+	  )
+	    
+	    drvPmacMbxScan (pMbxIo);
+	  
+	  pRec->pact = TRUE;
+	  
 
 	}
 
