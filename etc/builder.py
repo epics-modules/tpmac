@@ -3,18 +3,20 @@ from iocbuilder.arginfo import *
 from iocbuilder.modules.asyn import AsynPort, Asyn
 from iocbuilder.modules.motor import MotorLib, MotorSimLib
 
-__all__ = ['GeoBrick', 'CS']
+__all__ = ['GeoBrick']
 
-class tpmac(Device):
+class Tpmac(Device):
     Dependencies = (Asyn, MotorLib)
     AutoInstantiate = True  
 
 class DeltaTau(AsynPort):
-    Dependencies = (tpmac,)        
+	pass
 
 class GeoBrick(DeltaTau):
     LibFileList = ['pmacAsynIPPort', 'pmacAsynMotor']
     DbdFileList = ['pmacAsynIPPort', 'pmacAsynMotor']
+    Dependencies = (Tpmac,)    
+    UniqueName = "DeviceName"    
     
     _Cards = []
     
@@ -78,6 +80,8 @@ class _GeoBrickChannel:
 class PMAC(DeltaTau):
     LibFileList = ['pmacIoc', 'pmacAsynMotor']
     DbdFileList = ['pmacInclude', 'pmacAsynMotor']
+    Dependencies = (Tpmac,)            
+    UniqueName = "DeviceName"    
     
     _Cards = []
     
@@ -156,70 +160,20 @@ class PMAC_sim(PMAC):
             self.DeviceName(), self.Card+100, self.NAxes + 1)
                                                
 SetSimulation(PMAC, PMAC_sim)
-                                                                                                                                                                  
-class CS(DeltaTau):
-    Dependencies = (tpmac,)
-    LibFileList = [ 'pmacAsynCoord' ]
-    DbdFileList = [ 'pmacAsynCoord' ]
-    _CSs = []
-       
-    def __init__(self, DeviceName, Controller, CS, PLCNum = None, NAxes = 9, 
-        Program = 10, IdlePoll = 500, MovingPoll = 100):
 
-        self.PortName = Controller.PortName
-        # PLC number for position reporting
-        if PLCNum is None:
-            self.PLCNum = CS + 15        
-        else:
-            self.PLCNum = PLCNum
-        # reference for linking pmacAsynCoordCreate and drvAsynMotorConfigure
-        self.Ref = len(self._CSs)
-        self._CSs.append(self)       
-        # Store other attributes
-        self.NAxes = NAxes
-        self.IdlePoll = IdlePoll
-        self.MovingPoll = MovingPoll  
-        self.Program = Program
-        self.CS = CS
-        # init the AsynPort superclass
-        self.__super.__init__(DeviceName) 
-     
+class pmacSetAxisScale(Device):
+    """Apply an integer scale factor to an axis on the PMAC"""
+    def __init__(self, Controller, Axis, Scale):
+        # init the superclass
+        self.__super.__init__()
+        # store args
+        self.__dict__.update(locals())
+        self.Card = Controller.Card
+    def Initialise(self):
+        print "pmacSetAxisScale(%(Card)d, %(Axis)d, %(Scale)d)" % self.__dict__
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
-        DeviceName = Simple(
-            'CS Name (for asyn port that motor records are connected to)',
-            str),
         Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
-        CS         = Simple('CS number', int),
-        PLCNum     = Simple('PLC Number, defaults to CS + 15', int),
-        NAxes      = Simple('Number of axes', int),
-        Program    = Simple('Motion Program to run', int),
-        IdlePoll   = Simple('Idle Poll Period in ms', int),
-        MovingPoll = Simple('Moving Poll Period in ms', int))
-
-    def Initialise(self):
-        print '# Create CS (ControllerPort, Addr, CSNumber, CSRef, Prog)'
-        print 'pmacAsynCoordCreate("%(PortName)s", 0, %(CS)d, %(Ref)d, ' \
-            '%(Program)s)' % self.__dict__
-        print '# Configure CS (PortName, DriverName, CSRef, NAxes)'
-        print 'drvAsynMotorConfigure("%s", "pmacAsynCoord", %d, %d)' % (
-            self.DeviceName(), self.Ref, self.NAxes)                 
-        print '# Set Idle and Moving poll periods (CS_Ref, PeriodMilliSeconds)'
-        print 'pmacSetCoordIdlePollPeriod(%(Ref)d, %(IdlePoll)d)' % \
-            self.__dict__
-        print 'pmacSetCoordMovingPollPeriod(%(Ref)d, %(MovingPoll)d)' % \
-            self.__dict__
-
-class CS_sim(CS):
-    Dependencies = (MotorSimLib,)
-    LibFileList = ()
-    DbdFileList = ()      
-    
-    def InitialiseOnce(self):
-        print 'motorSimCreate( 200, 0, -150000, 150000, 3, %d, %d )' \
-            % (len(self._CSs), self.NAxes + 1)
-
-    def Initialise(self):
-        print 'drvAsynMotorConfigure("%s", "motorSim", %d, %d)' % (
-            self.DeviceName(), self.Ref+200, self.NAxes)  
-SetSimulation(CS, CS_sim)
+        Axis       = Simple('Axis number to apply scale to', int),
+        Scale      = Simple('Scale factor the cts will be multiplied by before being passed to motor record', int))   
+                                                                                                                                                                  
