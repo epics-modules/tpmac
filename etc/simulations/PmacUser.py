@@ -1,8 +1,8 @@
 from pkg_resources import require
 require('dls_simulationlib')
-#require('dls_motorcontrol')
+require('dls_pmaclib')
 import dls_simulationlib.simsocket
-import pmcpreprocessor
+from dls_pmaclib.dls_pmcpreprocessor import clsPmacParser
 from PmacParser import *
 from PmacUi import *
 import os, sys, math
@@ -11,7 +11,7 @@ class FileUser(PmacParser):
     def __init__(self, fileName, pmac, includePaths):
         getUi().output("Reading PMC file %s\n" % fileName)
         PmacParser.__init__(self, pmac)
-        p = pmcpreprocessor.clsPmacParser(includePaths = includePaths)
+        p = clsPmacParser(includePaths = includePaths)
         converted = p.parse(fileName, debug=True)
         if converted is not None:
             for line in p.output:
