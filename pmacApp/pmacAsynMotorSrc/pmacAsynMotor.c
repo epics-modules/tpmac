@@ -442,12 +442,13 @@ static int processDeferredMoves(drvPmac_t *pDrv)
 	char command[512] = "";
 	char response[32];
 
+	AXIS_HDL pAxis = NULL;
+
 	for ( i = 0; i < pDrv->nAxes; i++ )
 	{
-		AXIS_HDL pAxis = &(pDrv->axis[i]);
+		pAxis = &(pDrv->axis[i]);
 		
 		if (pAxis->deferred_move) {
-			pAxis->deferred_move = 0;
 			sprintf(command, "%s #%d%s%.2f", command, pAxis->axis,
 					pAxis->deferred_relative ? "J^" : "J=",
 					pAxis->deferred_position);
@@ -455,7 +456,18 @@ static int processDeferredMoves(drvPmac_t *pDrv)
 	}
 
 	status = motorAxisWriteRead( &pDrv->axis[0], command, sizeof(response), response, 0 );
-	/* XXX: Set motor params? Call callback? */
+
+	/* Clear deferred move flag.*/
+	for ( i = 0; i < pDrv->nAxes; i++ )
+	{
+	  pAxis = &(pDrv->axis[i]);
+	  if (pAxis->deferred_move) {
+	    pAxis->deferred_move = 0;
+	  }
+	}
+	
+	/* Signal the poller task.*/
+	epicsEventSignal(pAxis->pDrv->pollEventId);
 	
 	return status;
 }
