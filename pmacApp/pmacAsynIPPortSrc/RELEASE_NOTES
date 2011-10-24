@@ -1,6 +1,59 @@
               RELEASE NOTES for asyn version of tpmac module
 
 		            Matthew Pearson
+	                      24 Oct 11
+
+1. Changes to pmacAsynIPPort
+
+Fixed a problem readback large arrays that don't fit into a single packet.
+
+
+2. Changes to pmacAsynMotor
+
+* Removed include of motorSupport.dbd, so applications will need to include 
+this manually from now.
+
+* Made a fix to the deferred move implementation in the PMAC driver. 
+There was a race condition between turning off deferred moves and the poller thread, 
+which was causing some moves to return early when scanning with deferred moves.
+
+* Added amplifier fault bit check. The motor record MSTA problem bit will be set 
+if the amplifier fault is on.
+
+* Changed the set position logic to also set the encoder axis position, if one 
+is in use. This relies on the correct encoder ratio being set by asyn device support.
+
+* Added axis status poll when setting encoder axis number. 
+Changed it to use global pAsynUser.
+
+* Added pmacSetOpenLoopEncoderAxis axis configuration routine, to read back the 
+position from a different axis number.
+
+* Moved pmac abort (A cmd) earlier in command sequence so drive amps 
+have longer to start up
+
+* Changed definition on motorAxisMoving. 
+Now it is set desired_velocity_zero=0 & motor activated (ix00=1) & amplifier enabled. 
+The new check is for amplifier enabled. This is to prevent EPICS thinking an 
+axis is moving if it has been killed.
+
+* Redefined motor done. Now, if we are not in position but the amplifier 
+has been disabled then we have finished moving. This will catch fatal 
+following errors. In the same database update the fatal following error 
+flag should be set. This change is to prevent clients from hanging, 
+waiting for a motor to finish moving, in the case of fatal following errors.
+
+* Only send a J/ if the amplifier output is enabled. When we send a stop, 
+we don't want to power on axes that have been powered off for a reason.
+
+* Better feedback of axis status in the poller thread.
+
+
+
+
+              RELEASE NOTES for asyn version of tpmac module
+
+		            Matthew Pearson
 	                      11 Feb 09
 
 1. Changes to pmacAsynIPPort
