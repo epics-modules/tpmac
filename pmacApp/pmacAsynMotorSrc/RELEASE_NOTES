@@ -3,50 +3,13 @@
 		            Matthew Pearson
 	                      24 Oct 11
 
-1. Changes to pmacAsynIPPort
-
-Fixed a problem readback large arrays that don't fit into a single packet.
-
-
-2. Changes to pmacAsynMotor
+1. Changes to pmacAsynMotor
 
 * Removed include of motorSupport.dbd, so applications will need to include 
 this manually from now.
 
-* Made a fix to the deferred move implementation in the PMAC driver. 
-There was a race condition between turning off deferred moves and the poller thread, 
-which was causing some moves to return early when scanning with deferred moves.
-
-* Added amplifier fault bit check. The motor record MSTA problem bit will be set 
-if the amplifier fault is on.
-
-* Changed the set position logic to also set the encoder axis position, if one 
-is in use. This relies on the correct encoder ratio being set by asyn device support.
-
-* Added axis status poll when setting encoder axis number. 
-Changed it to use global pAsynUser.
-
 * Added pmacSetOpenLoopEncoderAxis axis configuration routine, to read back the 
 position from a different axis number.
-
-* Moved pmac abort (A cmd) earlier in command sequence so drive amps 
-have longer to start up
-
-* Changed definition on motorAxisMoving. 
-Now it is set desired_velocity_zero=0 & motor activated (ix00=1) & amplifier enabled. 
-The new check is for amplifier enabled. This is to prevent EPICS thinking an 
-axis is moving if it has been killed.
-
-* Redefined motor done. Now, if we are not in position but the amplifier 
-has been disabled then we have finished moving. This will catch fatal 
-following errors. In the same database update the fatal following error 
-flag should be set. This change is to prevent clients from hanging, 
-waiting for a motor to finish moving, in the case of fatal following errors.
-
-* Only send a J/ if the amplifier output is enabled. When we send a stop, 
-we don't want to power on axes that have been powered off for a reason.
-
-* Better feedback of axis status in the poller thread.
 
 
 
@@ -189,10 +152,7 @@ Where PORT is the asyn port and AXIS the motor axis #.
 c. Streams.
 
 You should be able to use streamDevice 2.0 and above to communicate
-other ascii commands to the underlying asynOctet port. However, at time
-this has been shown to exhibit a deadlock which we haven't traced down
-yet. However, this is much more flexible than the old tpmac ascii
-communication method and so we aim to fix it.
+other ascii commands to the underlying asynOctet port. 
 
 d. asynUploadFile
 
@@ -212,23 +172,19 @@ All responses are ignored, the terminators just being scanned for as a handshake
 
 3. Known problems/still to do
 
-a. Track down the cause of the dealock with streamDevice.
-b. Add support for driving coordinate systems through asynMotor. This
-   will probably be done as a separate asynMotor support library.
-c. Resolve the terminators for error notification. Currently,
+a. Resolve the terminators for error notification. Currently,
      - The DPRAM and MBX ASCII drivers return an error as <BELL>ERRnnn<CR><ACK>
      - The serial line returns an error as <BELL>ERRnnn<CR>
    We need to adopt a standard. I prefer the first since then all
    transactions are terminated with an <ACK>, but then the serial line
    driver needs an interpose interface to add the trailing <ACK>.
-d. Add asyn IP support for Ethernet PMAC's. (I hope CosyLab might do
-   this as an interpose interface for drvAsynIPPort. I cannot test
-   since I don't have any Ethernet PMACs).
-e. Add windows support. This should be a asyn port using the PMAC
+b. Add windows support. This should be a asyn port using the PMAC
    windows drivers.
-f. Add Linux PCI support. There is a Linux open/close/read/write
+c. Add Linux PCI support. There is a Linux open/close/read/write
    driver that should fit in fairly simply. It might need an interpose
    interface to handle terminators.
+d. Convert the Asyn PMAC drivers to use the CPP asynMotorController/Axis interface.
+e. Add Diamond standard templates for PMAC co-ordinate systems.
 
 Note for those implementing the asynOctet drivers they must emulate the
 syntax of the PMAC serial port. Basically the means that on write "\r"
