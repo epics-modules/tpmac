@@ -5,15 +5,17 @@
 /*             binary ouput on shutter status)                      */
 /*            This is for 1-motor assemblies -- Stepanov            */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubSHDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -23,11 +25,7 @@ volatile int tsubSHDebug = 0;
 /* ===========================================
  * tsubSHPs - Assembly-SHPs Initialization
  */
-long tsubSHPs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSHPs (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -37,13 +35,8 @@ long tsubSHPs
  *	oa = m1:RqsPos
  *	a  = m1:ActPos
  */
-long tsubSHPsSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSHPsSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
-
 	return (0);
 }
 
@@ -59,11 +52,7 @@ long tsubSHPsSync
  *      c  = "shutter close" coordinate
  *      o  = "shutter open"  coordinate
  */
-long tsubSHPsMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSHPsMtr (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0)
 	{
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0;         /* d1=m1*scale1+offset1 */
@@ -88,11 +77,7 @@ long tsubSHPsMtr
  *      c  = "shutter close" coordinate
  *      o  = "shutter open"  coordinate
  */
-long tsubSHPsDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSHPsDrv (struct tsubRecord *pRec) {
 	if ( pRec->a1 == 0.0 )
 	{
 		return (-1);
@@ -121,11 +106,7 @@ long tsubSHPsDrv
  *	a3 = d1:Scale
  *      nla = Index of input(m1=1, d1=11)
  */
-long tsubSHPsSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSHPsSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, d1;
 	long ifail = 0;
@@ -171,4 +152,20 @@ long tsubSHPsSpeed
   	if (tsubSHDebug > 1) printf ("tsubSHPsSpeed: m1=%5.2f\n",m1);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubSHPsRef[] = {
+    {"tsubSHPs",      (REGISTRYFUNCTION)tsubSHPs},
+    {"tsubSHPsSync",  (REGISTRYFUNCTION)tsubSHPsSync},
+    {"tsubSHPsMtr",   (REGISTRYFUNCTION)tsubSHPsMtr},
+    {"tsubSHPsDrv",   (REGISTRYFUNCTION)tsubSHPsDrv},
+    {"tsubSHPsSpeed", (REGISTRYFUNCTION)tsubSHPsSpeed}
+};
+
+static void tsubSHPsFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubSHPsRef,NELEMENTS(tsubSHPsRef));
+}
+epicsExportRegistrar(tsubSHPsFunc);
 

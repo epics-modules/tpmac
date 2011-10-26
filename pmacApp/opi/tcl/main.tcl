@@ -77,3 +77,57 @@ proc menuSeparator {widget} {
 ${widget} add separator
 }
 
+#***********************************************************
+#  proc menuCollimatorPresetsBURT (backup/restore collimator presets)
+
+proc menuCollimatorPresetsBURT {thisMenu} {
+  global Beamline burtSave burtRestore snapdir sp burtGMCA SYSTEM
+
+  if { ${SYSTEM} == "LINUX" }  {
+    ${thisMenu} add command -label "Backup collimator presets" -command {\
+      set dateStamp [clock format [clock seconds] -format {%Y-%m-%d-%H%M}]; \
+      set initialFile "${Beamline}_collimator_${dateStamp}.snap"; \
+      set snapFile [ \
+        tk_getSaveFile -title {Backup Collimator Presets: Specify SNAP File} \
+                       -initialdir "${snapdir}${sp}collimator_presets" \
+		       -initialfile ${initialFile} \
+                       -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}} \
+                       -defaultextension {.snap}]; \
+      if {$snapFile != ""} {\
+        if {[file exists $snapFile] == 1} { \
+          tk_messageBox -message "Overwriting is not allowed!" -type ok -icon error -title "File Exists"; \
+        } else { \
+          set requestFile "${burtGMCA}request${sp}COL_St_presets.req"; \
+          if { [ catch {exec ${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}} err ] } { \
+### Ignore strings like: "error waiting for process to exit: child process lost
+### (is SIGCHLD ignored or trapped?)"
+            if { [ string match *SIGCHLD* $err ] == 0 } { \
+              puts "exec: '$err'"; \
+              tk_messageBox -message $err -type ok -icon error -title "BURTsave Application Error"; \
+            } \
+          } \
+        } \
+      } \
+    }
+    ${thisMenu} add command -label "Restore collimator presets" -command {\
+      set snapFile [tk_getOpenFile -title {Choose Collimator Presets Snapshot} \
+                       -initialdir "${snapdir}${sp}collimator_presets" \
+		       -filetypes {{"SNAP files" {.snap}} {"ALL files" {*}}} \
+                       -defaultextension {.snap}]; \
+      if {$snapFile != ""} {\
+        if {[file exists $snapFile] != 1} { \
+          tk_messageBox -message "File does not exist!" -type ok -icon error -title "File Exists"; \
+        } else { \
+          if { [ catch {exec  ${burtRestore} -f ${snapFile}} err ] } { \
+### Ignore strings like: "error waiting for process to exit: child process lost
+### (is SIGCHLD ignored or trapped?)"
+            if { [ string match *SIGCHLD* $err ] == 0 } { \
+              puts "exec: '$err'"; \
+              tk_messageBox -message $err -type ok -icon error -title "BURTrestore Application Error"; \
+            } \
+          } \
+        } \
+      } \
+    }
+  }
+}

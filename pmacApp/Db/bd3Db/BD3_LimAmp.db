@@ -1,0 +1,128 @@
+record(fanout, "$(assy)dLimFLNK") {
+  field(LNK1, "$(d1)NgLimSet.PROC PP MS")
+  field(LNK2, "$(d1)PsLimSet.PROC PP MS")
+  field(LNK3, "$(d2)NgLimSet.PROC PP MS")
+  field(LNK4, "$(d2)PsLimSet.PROC PP MS")
+  field(LNK5, "$(d3)NgLimSet.PROC PP MS")
+  field(LNK6, "$(d3)PsLimSet.PROC PP MS")
+  field(FLNK, "$(assy)xLimFLNK.PROC PP MS")
+}
+
+#! First process x2 (angle) because of the x1 (height) dependency on x2 (angle):
+record(fanout, "$(assy)xLimFLNK") {
+  field(LNK1, "$(x2)NgLimSet.PROC PP MS")
+  field(LNK2, "$(x2)PsLimSet.PROC PP MS")
+  field(LNK3, "$(x1)NgLimSet.PROC PP MS")
+  field(LNK4, "$(x1)PsLimSet.PROC PP MS")
+}
+
+record(bi, "$(x2)NgLimSet") {
+  field(DESC, "Angle NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+  field(INP, "$(x2)NgLimCALC.VAL PP MS")
+}
+
+#! x2 = (d3-d2)L23
+record(calc,"$(x2)NgLimCALC") {
+  field(CALC,"E>0?(C+B):(D+A)")
+  field(INPA,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)L23.VAL NPP MS")
+}
+
+record(bi, "$(x2)PsLimSet") {
+  field(DESC, "Angle PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+  field(INP, "$(x2)PsLimCALC.VAL PP MS")
+}
+
+#! x2 = (d3-d2)L23
+record(calc,"$(x2)PsLimCALC") {
+  field(CALC,"E>0?(D+A):(C+B)")
+  field(INPA,"$(d2)NgLimSet.VAL NPP MS")
+  field(INPB,"$(d2)PsLimSet.VAL NPP MS")
+  field(INPC,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPD,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)L23.VAL NPP MS")
+}
+
+record(bi, "$(x1)NgLimSet") {
+  field(DESC, "Sample height NgLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+  field(INP, "$(x1)NgLimCALC.VAL PP MS")
+}
+
+#! x2 = d3 + x2*Ls3
+record(calc,"$(x1)NgLimCALC") {
+  field(CALC,"E>0?(A+C):(A+D)")
+  field(INPA,"$(d3)NgLimSet.VAL NPP MS")
+  field(INPC,"$(x2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(x2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)Ls3.VAL NPP MS")
+}
+
+record(bi, "$(x1)PsLimSet") {
+  field(DESC, "Sample Height PsLim Status")
+  field(OSV, "MAJOR")
+  field(ZNAM, "OK")
+  field(ONAM, "Tripped")
+  field(INP, "$(x1)PsLimCALC.VAL PP MS")
+}
+
+#! x2 = d3 + x2*Ls3
+record(calc,"$(x1)PsLimCALC") {
+  field(CALC,"E>0?(B+D):(B+C)")
+  field(INPB,"$(d3)PsLimSet.VAL NPP MS")
+  field(INPC,"$(x2)NgLimSet.VAL NPP MS")
+  field(INPD,"$(x2)PsLimSet.VAL NPP MS")
+  field(INPE,"$(assy)Ls3.VAL NPP MS")
+}
+
+#! ---------------Amplifiers-------------------
+
+record(fanout, "$(assy)dAmpEnaFLNK") {
+  field(LNK1, "$(d1)AmpEna.PROC PP MS")
+  field(LNK2, "$(d2)AmpEna.PROC PP MS")
+  field(LNK3, "$(d3)AmpEna.PROC PP MS")
+  field(LNK4, "$(x1)AmpEna.PROC PP MS")
+  field(LNK5, "$(x2)AmpEna.PROC PP MS")
+}
+
+record(bi, "$(x1)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(INP, "$(x1)AmpEnaCALC.VAL PP MS")
+}
+
+record(calc,"$(x1)AmpEnaCALC") {
+  field(CALC,"((A>0)&&(B>0)&&(C>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+  field(INPC,"$(d3)AmpEna.VAL NPP MS")
+}
+
+record(bi, "$(x2)AmpEna") {
+  field(DESC, "Amplifier Enable")
+  field(ZSV, "MAJOR")
+  field(ZNAM, "Disabled")
+  field(ONAM, "Enabled")
+  field(INP, "$(x2)AmpEnaCALC.VAL PP MS")
+}
+
+record(calc,"$(x2)AmpEnaCALC") {
+  field(CALC,"((A>0)&&(B>0)&&(C>0))?1:0")
+  field(INPA,"$(d1)AmpEna.VAL NPP MS")
+  field(INPB,"$(d2)AmpEna.VAL NPP MS")
+  field(INPC,"$(d3)AmpEna.VAL NPP MS")
+}
+

@@ -2,15 +2,17 @@
 
 /* tsubDN.c - Transformation Subroutines For Downstream Support */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 #define TSUB_DIAGNOSTIC tsubDNDebug
 
@@ -25,11 +27,7 @@ double FCDN = 1.0;
 /* ===========================================
  * tsubDNSt - Support Initialization
  */
-long tsubDNSt
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNSt (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -41,14 +39,9 @@ long tsubDNSt
  *	a  = m1:ActPos
  *	b  = m2:ActPos
  */
-long tsubDNStSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNStSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
-
 	return (0);
 }
 
@@ -69,11 +62,7 @@ long tsubDNStSync
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubDNStMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNStMtr (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) )
 	{
 		return (-1);
@@ -109,11 +98,7 @@ long tsubDNStMtr
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubDNStDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNStDrv (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) ||
 	     (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) )
@@ -152,11 +137,7 @@ long tsubDNStDrv
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubDNStAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNStAxs (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) )
 	{
 		return (-1);
@@ -200,11 +181,7 @@ long tsubDNStAxs
  *	l = RotOrigin
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12, x1=21, x2=22)
  */
-long tsubDNStSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubDNStSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2, r;
 	long ifail = 0;
@@ -301,4 +278,21 @@ long tsubDNStSpeed
   	if (tsubDNDebug > 1) printf ("tsubDNStSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubDNStRef[] = {
+    {"tsubDNSt",      (REGISTRYFUNCTION)tsubDNSt},
+    {"tsubDNStSync",  (REGISTRYFUNCTION)tsubDNStSync},
+    {"tsubDNStMtr",   (REGISTRYFUNCTION)tsubDNStMtr},
+    {"tsubDNStDrv",   (REGISTRYFUNCTION)tsubDNStDrv},
+    {"tsubDNStAxs",   (REGISTRYFUNCTION)tsubDNStAxs},
+    {"tsubDNStSpeed", (REGISTRYFUNCTION)tsubDNStSpeed}
+};
+
+static void tsubDNStFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubDNStRef,NELEMENTS(tsubDNStRef));
+}
+epicsExportRegistrar(tsubDNStFunc);
 

@@ -1,0 +1,12 @@
+
+For more IOC boot examples see these 6 directories:
+
+/synApps/xxx_gmca23.../iocBoot
+
+The 6 examples correspond to three GM/CA CAT beamlines at Sector 23 of the APS.
+Each beamline has two VME IOCs: IOC-1 controls beamline optics and IOC-2
+controls beamline endstation. Five of these IOCs contain two Turbo PMAC2
+UltraLite boards and one (xxx_gmca23i_ioc1) contains only one Turbo PMAC2
+UltraLite board.
+
+-- Sergey Stepanov,  2010.10.14

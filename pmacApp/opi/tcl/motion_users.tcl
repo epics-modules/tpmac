@@ -66,10 +66,10 @@ proc menuUNT {widget bln cmp unit} {
   set num [llength ${axes}]
   set macro [macroMOV ${bln} ${cmp} ${asy} ${axes}]
   if {$cmp == "COL:"} {
-    menuMedm ${thisMenu} ${name} ${adlMTR}Move_collimator_users.adl  Beamline=${Beamline},${macro}
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move_collimator_users_5presets.adl  Beamline=${Beamline},${macro}
   } else {
-#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
-    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
+#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
 #   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_short.adl ${macro}
   }
 }
@@ -97,14 +97,14 @@ proc menuUNT_older {widget bln cmp unit} {
   set num [llength ${axes}]
   if {$num > 0} {
     set macro [macroMOV ${bln} ${cmp} ${asy} ${axes}]
-#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
-    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
+#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
 #   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_short.adl ${macro}
   } else {
     set num [llength ${drives}]
     set macro [macroMOV ${bln} ${cmp} ${asy} ${drives}]
-#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
-    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
+    menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_large.adl ${macro}
+#   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_medium.adl ${macro}
 #   menuMedm ${thisMenu} ${name} ${adlMTR}Move${num}_short.adl ${macro}
   }
 }
@@ -113,7 +113,7 @@ proc menuUNT_older {widget bln cmp unit} {
 #  proc menuCMP (components menu: slits, mono, mirror...)
 
 proc menuCMP {widget bln component} {
-  global adlMTR ID Beamline
+  global adlMTR adlGMCA ID Beamline
   set name  [lindex $component 0]
   set cmp   [lindex $component 1]
   set units [lindex $component 2]
@@ -124,23 +124,33 @@ proc menuCMP {widget bln component} {
   menu ${thisMenu}
 
   if {$cmp == "MO:"} {
-    if {$ID != "none"} {
-      menuMedm ${thisMenu} "Everything"              ${adlMTR}Mono_users.adl assy=${bln}${cmp},xx=${ID}
-      ${thisMenu} add separator
-    } else {
-      menuMedm ${thisMenu} "Everything"              ${adlMTR}MonoBM_users.adl assy=${bln}${cmp}
-      ${thisMenu} add separator
-    }
+     if {$ID != "none"} {
+        menuMedm ${thisMenu} "Everything"           ${adlMTR}Mono_users.adl assy=${bln}${cmp},xx=${ID}
+        ${thisMenu} add separator
+     } else {
+        menuMedm ${thisMenu} "Everything"           ${adlMTR}MonoBM_users.adl assy=${bln}${cmp}
+        ${thisMenu} add separator
+     }
+  } elseif {$cmp == "HD:"} {
+     menuMedm ${thisMenu} "Kill / Enable KBM and HDM motors" ${adlGMCA}kill_kbm_hdm.adl P=${bln}
+     ${thisMenu} add separator
+  } elseif {$cmp == "KB:"} {
+     if { $bln == "23i:" } {
+        menuMedm ${thisMenu} "Kill / Enable KBM motors"         ${adlGMCA}kill_kbm.adl P=${bln}
+     } elseif { $bln == "23o:" } {
+        menuMedm ${thisMenu} "Kill / Enable KBM and HDM motors" ${adlGMCA}kill_kbm_hdm.adl P=${bln}
+     }
+     ${thisMenu} add separator
   } elseif {$cmp == "GS:"} {
-      menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
-      ${thisMenu} add separator
+     menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
+     ${thisMenu} add separator
   } elseif {$cmp == "GO:"} {
-      if { $bln != "23b:" } {set ST "St";} else {set ST "StB";}
-      menuMedm ${thisMenu} "Everything "             ${adlMTR}GonioOCS_USERS.adl Beamline=${Beamline},assy=${bln}${cmp},st=${ST}
-      ${thisMenu} add separator
+     if { $bln != "23b:" } {set ST "St";} else {set ST "StB";}
+     menuMedm ${thisMenu} "Everything "             ${adlMTR}GonioOCS_USERS.adl Beamline=${Beamline},assy=${bln}${cmp},st=${ST}
+     ${thisMenu} add separator
   } elseif {$cmp == "SH:"} {
-      menuMedm ${thisMenu} "Shutter Control"         ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:
-      ${thisMenu} add separator
+     menuMedm ${thisMenu} "Shutter Control"         ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:,BL=${bln}
+     ${thisMenu} add separator
   }
 
   foreach unit $units {menuUNT ${thisMenu} ${bln} ${cmp} ${unit}}

@@ -19,6 +19,7 @@
      if {[file exists "${CA_EXTENSIONS}/pkgIndex.tcl"]} {set CA_EXIST 1;}
   }
   if {$CA_EXIST} {
+#    puts "Using caTCL from ${CA_EXTENSIONS}"
      set auto_path [linsert $auto_path 0 $CA_EXTENSIONS]
      package require ca
 }

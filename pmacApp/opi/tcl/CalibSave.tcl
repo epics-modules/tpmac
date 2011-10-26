@@ -25,7 +25,7 @@ proc pDoitCoord {coordname} {
 #	  puts "${burtRestore} -f ${burtDIR}${snapFile}.snap"
 #	  exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap
           if { [ catch {exec  ${burtRestore} -f ${burtDIR}${snapFile}.snap} err ] } {
-# Ignore styrings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
+# Ignore strings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
 	     if { [ string match *SIGCHLD* $err ] == 0 } {
 	        puts "exec: '$err'"
 	        tk_messageBox -message $err -type ok -icon error -title "Application Error"
@@ -41,7 +41,7 @@ proc pDoitCoord {coordname} {
 #         puts "${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}"
 #         exec  ${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}
 	  if { [ catch {exec ${burtSave} -f ${requestFile} -o ${snapFile} -DBEAMLINE=${Beamline}} err ] } {
-# Ignore styrings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
+# Ignore strings like: "error waiting for process to exit: child process lost (is SIGCHLD ignored or trapped?)"
              if { [ string match *SIGCHLD* $err ] == 0 } {
                 puts "exec: '$err'"
                 tk_messageBox -message $err -type ok -icon error -title "Application Error"

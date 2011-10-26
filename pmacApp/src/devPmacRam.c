@@ -1230,6 +1230,9 @@ LOCAL long devPmacRamAi_read
 
 	/* Raw Value */
 	val = pDpvt->dpramData.ramDouble;
+	
+	/* this is for raw timer value */
+	if ((val >= -2147483648.0) && (val < 2147483647.1)) pRec->rval = (int) val;
 
 	/* Adjust Slope And Offset */
 	if (pRec->aslo != 0.0)
@@ -1253,7 +1256,7 @@ LOCAL long devPmacRamAi_read
 	{
 	    pRec->val = val;
 	}
-
+	
 	pRec->udf = FALSE;
 	return (2);
 }

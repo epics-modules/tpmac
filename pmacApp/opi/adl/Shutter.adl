@@ -1,14 +1,14 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/Shutter.adl"
-	version=030101
+	version=030104
 }
 display {
 	object {
 		x=466
 		y=250
 		width=272
-		height=125
+		height=135
 	}
 	clr=14
 	bclr=4
@@ -258,21 +258,6 @@ rectangle {
 	limits {
 	}
 }
-"text update" {
-	object {
-		x=4
-		y=4
-		width=170
-		height=18
-	}
-	monitor {
-		chan="$(mtr)ActPos.DESC"
-		clr=14
-		bclr=56
-	}
-	limits {
-	}
-}
 composite {
 	object {
 		x=7
@@ -336,7 +321,7 @@ composite {
 text {
 	object {
 		x=14
-		y=92
+		y=102
 		width=145
 		height=13
 	}
@@ -349,7 +334,7 @@ text {
 "text update" {
 	object {
 		x=166
-		y=92
+		y=102
 		width=100
 		height=13
 	}
@@ -365,7 +350,7 @@ text {
 "text update" {
 	object {
 		x=14
-		y=108
+		y=118
 		width=145
 		height=13
 	}
@@ -381,7 +366,7 @@ text {
 "text update" {
 	object {
 		x=166
-		y=108
+		y=118
 		width=100
 		height=13
 	}
@@ -397,7 +382,7 @@ text {
 "message button" {
 	object {
 		x=5
-		y=70
+		y=80
 		width=30
 		height=14
 	}
@@ -412,7 +397,7 @@ text {
 text {
 	object {
 		x=40
-		y=72
+		y=82
 		width=70
 		height=10
 	}
@@ -428,7 +413,7 @@ text {
 text {
 	object {
 		x=94
-		y=72
+		y=82
 		width=70
 		height=10
 	}
@@ -474,9 +459,9 @@ text {
 }
 "text update" {
 	object {
-		x=8
+		x=28
 		y=50
-		width=120
+		width=80
 		height=10
 	}
 	monitor {
@@ -490,9 +475,9 @@ text {
 }
 "text update" {
 	object {
-		x=145
+		x=165
 		y=50
-		width=120
+		width=80
 		height=10
 	}
 	monitor {
@@ -507,7 +492,7 @@ text {
 polyline {
 	object {
 		x=8
-		y=63
+		y=76
 		width=255
 		height=0
 	}
@@ -515,14 +500,14 @@ polyline {
 		clr=14
 	}
 	points {
-		(8,63)
-		(263,63)
+		(8,76)
+		(263,76)
 	}
 }
 polyline {
 	object {
 		x=8
-		y=87
+		y=97
 		width=255
 		height=0
 	}
@@ -530,14 +515,14 @@ polyline {
 		clr=14
 	}
 	points {
-		(8,87)
-		(263,87)
+		(8,97)
+		(263,97)
 	}
 }
 composite {
 	object {
 		x=186
-		y=72
+		y=82
 		width=58
 		height=10
 	}
@@ -546,7 +531,7 @@ composite {
 		composite {
 			object {
 				x=186
-				y=72
+				y=82
 				width=10
 				height=10
 			}
@@ -555,7 +540,7 @@ composite {
 				oval {
 					object {
 						x=186
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -566,7 +551,7 @@ composite {
 				oval {
 					object {
 						x=186
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -583,7 +568,7 @@ composite {
 		composite {
 			object {
 				x=202
-				y=72
+				y=82
 				width=10
 				height=10
 			}
@@ -592,7 +577,7 @@ composite {
 				oval {
 					object {
 						x=202
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -603,7 +588,7 @@ composite {
 				oval {
 					object {
 						x=202
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -620,7 +605,7 @@ composite {
 		composite {
 			object {
 				x=234
-				y=72
+				y=82
 				width=10
 				height=10
 			}
@@ -629,7 +614,7 @@ composite {
 				oval {
 					object {
 						x=234
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -640,7 +625,7 @@ composite {
 				oval {
 					object {
 						x=234
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -657,7 +642,7 @@ composite {
 		composite {
 			object {
 				x=218
-				y=72
+				y=82
 				width=10
 				height=10
 			}
@@ -666,7 +651,7 @@ composite {
 				oval {
 					object {
 						x=218
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -677,7 +662,7 @@ composite {
 				oval {
 					object {
 						x=218
-						y=72
+						y=82
 						width=10
 						height=10
 					}
@@ -696,7 +681,7 @@ composite {
 "message button" {
 	object {
 		x=5
-		y=107
+		y=117
 		width=42
 		height=16
 	}
@@ -707,4 +692,60 @@ composite {
 	}
 	label="Abort"
 	press_msg="1"
+}
+rectangle {
+	object {
+		x=0
+		y=23
+		width=137
+		height=50
+	}
+	"basic attribute" {
+		clr=20
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="(A=0||B=0)&&(ABS(C-D)>0.2||E=1)"
+		chan="$(BL)pmac21:acc65e:bi21.VAL"
+		chanB="$(BL)pmac21:acc65e:bo14.VAL"
+		chanC="$(BL)PIN:P:ActPos.VAL"
+		chanD="$(BL)PIN:P:RqsPosMem1.VAL"
+		chanE="$(BL)PIN:St:RunPrg.VAL"
+	}
+}
+text {
+	object {
+		x=27
+		y=63
+		width=80
+		height=8
+	}
+	"basic attribute" {
+		clr=20
+	}
+	"dynamic attribute" {
+		vis="calc"
+		calc="(A=0||B=0)&&(ABS(C-D)>0.2||E=1)"
+		chan="$(BL)pmac21:acc65e:bi21.VAL"
+		chanB="$(BL)pmac21:acc65e:bo14.VAL"
+		chanC="$(BL)PIN:P:ActPos.VAL"
+		chanD="$(BL)PIN:P:RqsPosMem1.VAL"
+		chanE="$(BL)PIN:St:RunPrg.VAL"
+	}
+	textix="BS & PIN OUT"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=4
+		y=5
+		width=155
+		height=18
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(BL) shutter"
 }

@@ -3,15 +3,17 @@
 /* tsubHS.c - Transformation Subroutines For Huber Slits */
 /*            This is for 2 individual blades - Stepanov */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 void msleep_ms( unsigned long milliseconds );
 
@@ -23,11 +25,7 @@ volatile int tsubHSDebug = 0;
 /* ===========================================
  * tsubHSAp - Initialization
  */
-long tsubHSAp
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSAp (struct tsubRecord *pRec) {
  	return (0);
 }
 
@@ -39,14 +37,9 @@ long tsubHSAp
  *	a  = m1:ActPos
  *	b  = m2:ActPos
  */
-long tsubHSApSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSApSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
-
 	return (0);
 }
 
@@ -66,11 +59,7 @@ long tsubHSApSync
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubHSApMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSApMtr (struct tsubRecord *pRec) {
 	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
 
 	if (pRec->nla == 0.0)
@@ -103,11 +92,7 @@ long tsubHSApMtr
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubHSApDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSApDrv (struct tsubRecord *pRec) {
 	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
 
 	if ( (pRec->a1 == 0.0) ||
@@ -145,11 +130,7 @@ long tsubHSApDrv
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubHSApAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSApAxs (struct tsubRecord *pRec) {
 	double inv = 1. - 2. * pRec->i;		/* either 1 or -1 */
 
 	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) || (inv == 0.0) )
@@ -195,11 +176,7 @@ long tsubHSApAxs
  *      i = Invert (0 -> +1   1 -> -1, implemented as 1-2i)
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12, x1=21, x2=22)
  */
-long tsubHSApSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubHSApSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2;
 	double inv = 1. - 2. * pRec->i;
@@ -290,4 +267,21 @@ long tsubHSApSpeed
   	if (tsubHSDebug > 1) printf ("tsubHSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubHSApRef[] = {
+    {"tsubHSAp",      (REGISTRYFUNCTION)tsubHSAp},
+    {"tsubHSApSync",  (REGISTRYFUNCTION)tsubHSApSync},
+    {"tsubHSApMtr",   (REGISTRYFUNCTION)tsubHSApMtr},
+    {"tsubHSApDrv",   (REGISTRYFUNCTION)tsubHSApDrv},
+    {"tsubHSApAxs",   (REGISTRYFUNCTION)tsubHSApAxs},
+    {"tsubHSApSpeed", (REGISTRYFUNCTION)tsubHSApSpeed}
+};
+
+static void tsubHSApFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubHSApRef,NELEMENTS(tsubHSApRef));
+}
+epicsExportRegistrar(tsubHSApFunc);
 

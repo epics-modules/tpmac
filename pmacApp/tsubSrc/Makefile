@@ -6,13 +6,24 @@ include $(TOP)/configure/CONFIG
 #=============================
 USR_CFLAGS += -DDEBUG
 
-# build a support library
-OBJLIB_vxWorks += tsub
+### build a support library
+LIBRARY_IOC += tsub
 
-# Tsub sources
+### tsub record
+OBJLIB_SRCS  += tsubRecord.c
+
+### tsubRecord.h will be created from tsubRecord.dbd
+DBDINC += tsubRecord
+
+### install <name>.dbd into <top>/dbd
+DBD += tsubInclude.dbd
+
+### Tsub functions sources
 OBJLIB_SRCS  += tsubSeq.c
 OBJLIB_SRCS  += tsubBD.c
-OBJLIB_SRCS  += tsubCCD.c
+OBJLIB_SRCS  += tsubBD3.c
+OBJLIB_SRCS  += tsubCCD2009.c
+# OBJLIB_SRCS  += tsubCCD.c
 # OBJLIB_SRCS  += tsubCCD_bm_no_extern_offset.c
 OBJLIB_SRCS  += tsubCS.c
 # OBJLIB_SRCS  += tsubDN.c
@@ -24,11 +35,16 @@ OBJLIB_SRCS  += tsubMO_2mtr_cry2down.c
 # OBJLIB_SRCS  += tsubMO_3mtr_cry2down.c
 OBJLIB_SRCS  += tsubSH.c
 OBJLIB_SRCS  += tsubTB.c
+# OBJLIB_SRCS  += tsubA.c
 OBJLIB_SRCS  += tsubX.c
 # OBJLIB_SRCS  += tsubX_bm_extern_offset.c
 OBJLIB_SRCS  += tsubXY.c
 OBJLIB_SRCS  += tsubXYZ.c
+OBJLIB_SRCS  += tsubXYZ_frac.c
 OBJLIB_SRCS  += tsubAcc65e.c
+OBJLIB_SRCS  += tsubCollimator.c
+
+tsub_SRCS += $(OBJLIB_SRCS)
 
 include $(TOP)/configure/RULES
 #----------------------------------------

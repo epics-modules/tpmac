@@ -1,0 +1,86 @@
+# CA stands for Channel Access Link
+# Process passive TRUE (PP) or process passive FALSE (NPP).
+# Maximize severity (MS or NMS), is TRUE or FALSE. It determines if alarm
+# severity is propagated across links.
+# (see examples in scan.db and
+# - "EPICS IOC Application Developer's Guide", Chapter 4.
+# - "EPICS Record Reference Manual", Chapter 1.
+
+record(ao, "$(d1)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d1)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d2)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d2)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(d3)Scale") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(DOL, "1.0e-05")
+  field(PREC, "6")
+}
+
+record(ao, "$(d3)Offset") {
+  field(FLNK, "$(assy)ScaleFanD.PROC PP MS")
+  field(PREC, "5")
+}
+
+record(ao, "$(assy)Lm1") {
+  field(DESC, "drv1 to mirror distance")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)L12") {
+  field(DESC, "drv1 to drv2 distance")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)L23") {
+  field(DESC, "drv2 to drv3 distance")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)Ls3") {
+  field(DESC, "sample to drv3 distance")
+  field(DOL, "100.0")
+  field(PREC, "5")
+  field(EGU, "(mm)")
+}
+
+record(ao, "$(assy)ANGLE") {
+  field(DESC, "Overal DS angle: mirr-smpl")
+  field(DOL, "0.0")
+  field(PREC, "3")
+  field(EGU, "(mrad)")
+}
+
+record(longout, "$(assy)AccelTime") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "1000")
+}
+
+record(longout, "$(assy)AccelCurve") {
+  field(FLNK, "$(assy)ChangedFLNK.PROC PP MS")
+  field(DOL, "500")
+}
+

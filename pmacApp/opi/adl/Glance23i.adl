@@ -1,0 +1,9568 @@
+
+file {
+	name="/home/gmca/epics/mtrApp/adl/Glance23i.adl"
+	version=030104
+}
+display {
+	object {
+		x=273
+		y=33
+		width=511
+		height=880
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=0
+		y=0
+		width=511
+		height=26
+	}
+	"basic attribute" {
+		clr=56
+	}
+}
+text {
+	object {
+		x=4
+		y=4
+		width=220
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(bl) Motors at a glance"
+}
+"text update" {
+	object {
+		x=1059
+		y=216
+		width=127
+		height=17
+	}
+	monitor {
+		chan="$(bl)MO1:S:ActPos.EGU"
+		clr=14
+		bclr=3
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=348
+		y=5
+		width=160
+		height=16
+	}
+	monitor {
+		chan="S:IOC:timeOfDayForm1SI"
+		clr=14
+		bclr=61
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=188
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:E:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=188
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="E:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=189
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:E:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=204
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:L:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=204
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="L:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=206
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:L:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=148
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:Z:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=148
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Z:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=115
+		y=164
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:Y:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=164
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Y:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=150
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:Z:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=200
+		y=166
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:Y:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=228
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:R1:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=228
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="R1:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=230
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:R1:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=103
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)WS:YC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=103
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=119
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)WS:YS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=119
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=105
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)WS:YC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=121
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)WS:YS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=63
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)WS:ZC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=63
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=79
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)WS:ZS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=79
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=65
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)WS:ZC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=81
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)WS:ZS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=374
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CS:YC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=374
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=390
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CS:YS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=390
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=376
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CS:YC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=392
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CS:YS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=334
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CS:ZC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=334
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=350
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CS:ZS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=350
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=336
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CS:ZC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=352
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CS:ZS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=252
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)MO:P2:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=252
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="P2:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=254
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)MO:P2:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=281
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BP:MOZ:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=281
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="MOZ:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=283
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BP:MOZ:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=305
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BP:KBZ:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=305
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="KBZ:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=307
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BP:KBZ:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=59
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)WS:Av:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=99
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)WS:Ah:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=144
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)MO:Ps:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=184
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)MO:En:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=224
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)MO:Tn1:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=248
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)MO:Tn2:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=277
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)BP:Mo:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=301
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)BP:Kb:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=330
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)CS:Av:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=370
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)CS:Ah:InPos"
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=475
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:HY:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=475
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HY:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=491
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:HA:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=491
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HA:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=477
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:HY:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=493
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:HA:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=419
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:HL:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=419
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HL:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=421
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:HL:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=435
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:HW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=435
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HW:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=437
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:HW:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=451
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:HR:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=451
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HR:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=453
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:HR:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=415
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)KB:Hz:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=471
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)KB:Hy:InPos"
+	}
+}
+"text update" {
+	object {
+		x=114
+		y=571
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:VL:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=571
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VL:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=114
+		y=587
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:VW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=81
+		y=587
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VW:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=199
+		y=573
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:VL:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=199
+		y=589
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:VW:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=515
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:VZ:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=515
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VZ:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=517
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:VZ:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=531
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:VA:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=531
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VA:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=533
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:VA:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=115
+		y=547
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)KB:VR:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=82
+		y=547
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VR:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=200
+		y=549
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)KB:VR:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=511
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)KB:Vz:InPos"
+	}
+}
+rectangle {
+	object {
+		x=80
+		y=566
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)KB:Vy:InPos"
+	}
+}
+composite {
+	object {
+		x=31
+		y=30
+		width=217
+		height=22
+	}
+	"composite name"=""
+	children {
+		"text update" {
+			object {
+				x=116
+				y=34
+				width=80
+				height=14
+			}
+			monitor {
+				chan="ID$(id):Energy"
+				clr=32
+				bclr=14
+			}
+			align="horiz. right"
+			limits {
+			}
+		}
+		text {
+			object {
+				x=63
+				y=33
+				width=50
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Energy:"
+			align="horiz. right"
+		}
+		rectangle {
+			object {
+				x=61
+				y=30
+				width=187
+				height=22
+			}
+			"basic attribute" {
+				clr=14
+				fill="outline"
+				width=2
+			}
+			"dynamic attribute" {
+				clr="alarm"
+				vis="if not zero"
+				chan="ID$(id):Busy"
+			}
+		}
+		text {
+			object {
+				x=202
+				y=37
+				width=40
+				height=12
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="(keV)"
+		}
+		text {
+			object {
+				x=31
+				y=35
+				width=25
+				height=12
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="ID:"
+		}
+	}
+}
+"message button" {
+	object {
+		x=31
+		y=74
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)WS:Av:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=111
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)WS:Ah:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=157
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Ps:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=196
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)MO:En:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=227
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Tn1:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=251
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Tn2:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=285
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)BP:Mo:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=307
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)BP:Kb:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=344
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)CS:Av:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=380
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)CS:Ah:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=439
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Hz:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=484
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Hy:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=536
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Vz:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=31
+		y=578
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Vy:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+rectangle {
+	object {
+		x=62
+		y=82
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:ZS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=82
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:ZS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=82
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:ZS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=103
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:YC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=103
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:YC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=103
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:YC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=122
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:YS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=122
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:YS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=122
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:YS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=151
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Z:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=151
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Z:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=151
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:Z:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=166
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Y:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=166
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Y:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=166
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:Y:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=189
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:E:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=189
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:E:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=189
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:E:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=207
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:L:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=207
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:L:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=207
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:L:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=230
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:R1:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=230
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:R1:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=230
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:R1:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=253
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:P2:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=253
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:P2:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=253
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:P2:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=283
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:MOZ:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=283
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:MOZ:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=283
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BP:MOZ:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=308
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:KBZ:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=308
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:KBZ:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=308
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BP:KBZ:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=336
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:ZC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=336
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:ZC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=336
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:ZC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=353
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:ZS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=353
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:ZS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=353
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:ZS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=374
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:YC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=374
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:YC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=374
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:YC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=392
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:YS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=392
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:YS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=392
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:YS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=420
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HL:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=420
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HL:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=420
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:HL:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=438
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HW:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=438
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HW:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=438
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:HW:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=455
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HR:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=455
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HR:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=455
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:HR:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=477
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HY:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=477
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HY:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=477
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:HY:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=495
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HA:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=495
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:HA:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=495
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:HA:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=516
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VZ:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=516
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VZ:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=516
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:VZ:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=534
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VA:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=534
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VA:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=534
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:VA:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=551
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VR:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=551
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VR:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=551
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:VR:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=573
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VL:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=573
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VL:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=573
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:VL:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=62
+		y=591
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VW:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=591
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:VW:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=591
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:VW:AmpEna"
+	}
+}
+"message button" {
+	object {
+		x=4
+		y=74
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)WS:Av:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=111
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)WS:Ah:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=157
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Ps:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=196
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)MO:En:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=227
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Tn1:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=251
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)MO:Tn2:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=285
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)BP:Mo:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=307
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)BP:Kb:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=344
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)CS:Av:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=380
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)CS:Ah:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=439
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Hz:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=484
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Hy:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=536
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Vz:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=4
+		y=578
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)KB:Vy:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=62
+		y=65
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:ZC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=74
+		y=65
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:ZC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=68
+		y=65
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:ZC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=75
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:Av:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=75
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:Av:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=112
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)WS:Ah:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=112
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)WS:Ah:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=158
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Ps:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=158
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:Ps:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=197
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:En:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=197
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:En:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=228
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Tn1:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=228
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:Tn1:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=252
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)MO:Tn2:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=252
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)MO:Tn2:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=286
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:Mo:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=286
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BP:Mo:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=308
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BP:Kb:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=308
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BP:Kb:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=346
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:Av:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=346
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:Av:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=381
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CS:Ah:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=381
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CS:Ah:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=440
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:Hz:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=440
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:Hz:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=486
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:Hy:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=486
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:Hy:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=538
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:Vz:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=538
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:Vz:Homed"
+	}
+}
+rectangle {
+	object {
+		x=18
+		y=579
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)KB:Vy:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=24
+		y=579
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)KB:Vy:Homed"
+	}
+}
+text {
+	object {
+		x=17
+		y=61
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="WS:"
+}
+text {
+	object {
+		x=17
+		y=144
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="MO:"
+}
+text {
+	object {
+		x=17
+		y=274
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="BP:"
+}
+text {
+	object {
+		x=17
+		y=330
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="CS:"
+}
+text {
+	object {
+		x=17
+		y=417
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="KB:"
+}
+"text update" {
+	object {
+		x=374
+		y=370
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:YW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=370
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YW:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=372
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:YW:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=386
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:X:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=386
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="X:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=388
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:X:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=402
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:PT:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=402
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="PT:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=404
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:PT:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=59
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CCD:D:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=59
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="D:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=61
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CCD:D:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=75
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CCD:2Q:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=75
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="2Q:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=77
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CCD:2Q:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=104
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:OM:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=104
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="OM:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=106
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:OM:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=184
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:CX:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=184
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="CX:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=186
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:CX:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=200
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:CY:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=200
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="CY:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=202
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:CY:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=128
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:KP:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=128
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="KP:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=130
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:KP:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=144
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:PH:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=144
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="PH:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=146
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:PH:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=160
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:CZ:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=160
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="CZ:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=162
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:CZ:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=224
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:SH:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=224
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="SH:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=226
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:SH:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=240
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:SW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=240
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="SW:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=242
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:SW:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=256
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GO:SV:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=256
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="SV:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=258
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GO:SV:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=373
+		y=285
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BD:HD:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=340
+		y=285
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HD:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=373
+		y=301
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BD:HA:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=340
+		y=301
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="HA:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=458
+		y=287
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BD:HD:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=458
+		y=303
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BD:HA:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=373
+		y=325
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BD:VD:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=340
+		y=325
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VD:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=373
+		y=341
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BD:VA:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=340
+		y=341
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VA:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=458
+		y=327
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BD:VD:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=458
+		y=343
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BD:VA:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=426
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:ZC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=426
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=428
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:YC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=442
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:ZS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=442
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=444
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:ZS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=466
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:YC:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=466
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YC:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=468
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:ZC:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=482
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)GS:YS:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=482
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YS:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=484
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)GS:YS:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=511
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BS:D:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=511
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="D:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=513
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BS:D:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=527
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BS:PT:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=527
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="PT:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=529
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BS:PT:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=543
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)BS:YW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=543
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="YW:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=545
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)BS:YW:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=625
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)SH:P:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=625
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="P:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=627
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)SH:P:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=572
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)TV:ZM1:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=572
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZM1:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=574
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)TV:ZM1:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=596
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)TV:ZM2:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=596
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ZM2:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=598
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)TV:ZM2:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=55
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)CCD:St:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=100
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GO:Om:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=124
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GO:Kp:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=180
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GO:Cr:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=220
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GO:St:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=281
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)BD:Dh:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=321
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)BD:Dv:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=366
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GS:St:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=422
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GS:Av:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=462
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)GS:Ah:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=507
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)BS:Ps:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=568
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)TV:V1:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=592
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)TV:V2:InPos"
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=621
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)SH:Ps:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=38
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:DL:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=38
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CCD:DL:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=60
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:D:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=60
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:D:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=60
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CCD:D:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=79
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:2Q:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=79
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:2Q:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=79
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CCD:2Q:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=128
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:KP:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=128
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:KP:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=128
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:KP:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=146
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:PH:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=146
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:PH:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=146
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:PH:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=163
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CZ:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=163
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CZ:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=163
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:CZ:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=185
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CX:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=185
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CX:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=185
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:CX:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=204
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CY:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=204
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:CY:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=204
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:CY:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=224
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SH:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=224
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SH:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=224
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:SH:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=241
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SW:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=241
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SW:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=241
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:SW:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=259
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SV:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=259
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:SV:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=259
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:SV:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=287
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:HD:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=287
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:HD:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=287
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:HD:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=304
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:HA:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=304
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:HA:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=304
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:HA:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=327
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:VD:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=327
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:VD:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=327
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:VD:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=344
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:VA:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=344
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:VA:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=344
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:VA:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=373
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YW:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=373
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YW:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=373
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:YW:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=389
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:X:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=389
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:X:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=389
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:X:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=405
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:PT:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=405
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:PT:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=405
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:PT:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=428
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:ZC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=428
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:ZC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=428
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:ZC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=445
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:ZS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=445
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:ZS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=445
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:ZS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=469
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YC:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=469
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YC:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=469
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:YC:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=486
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YS:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=486
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:YS:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=486
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:YS:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=513
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:D:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=513
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:D:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=513
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BS:D:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=530
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:PT:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=530
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:PT:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=530
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BS:PT:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=547
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:YW:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=547
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:YW:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=547
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BS:YW:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=575
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:ZM1:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=575
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:ZM1:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=575
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)TV:ZM1:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=599
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:ZM2:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=599
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:ZM2:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=599
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)TV:ZM2:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=627
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)SH:P:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=627
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)SH:P:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=627
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)SH:P:AmpEna"
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=35
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)CCD:DL:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=35
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="DL:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=37
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)CCD:DL:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=31
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)CCD:Lp:InPos"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=38
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:DL:PsLimSet"
+	}
+}
+composite {
+	object {
+		x=318
+		y=108
+		width=18
+		height=10
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=318
+				y=108
+				width=4
+				height=10
+			}
+			"basic attribute" {
+				clr=20
+				width=2
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(bl)GO:OM:NgLimSet"
+			}
+		}
+		rectangle {
+			object {
+				x=332
+				y=108
+				width=4
+				height=10
+			}
+			"basic attribute" {
+				clr=20
+				width=2
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(bl)GO:OM:PsLimSet"
+			}
+		}
+		rectangle {
+			object {
+				x=325
+				y=108
+				width=4
+				height=10
+			}
+			"basic attribute" {
+				clr=30
+				width=2
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(bl)GO:OM:AmpEna"
+			}
+		}
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=40
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)CCD:Lp:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=67
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)CCD:St:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=108
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Om:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=147
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Kp:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=193
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Cr:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=242
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GO:St:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=295
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)BD:Dh:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=332
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)BD:Dv:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=390
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GS:St:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=434
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GS:Av:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=476
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)GS:Ah:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=531
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)BS:Ps:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=574
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)TV:V1:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=596
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)TV:V2:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=290
+		y=632
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)SH:Ps:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=263
+		y=40
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)CCD:Lp:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=67
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)CCD:St:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=107
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Om:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=147
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Kp:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=193
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GO:Cr:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=242
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GO:St:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=295
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)BD:Dh:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=332
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)BD:Dv:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=390
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GS:St:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=434
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GS:Av:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=476
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)GS:Ah:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=531
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)BS:Ps:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=574
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)TV:V1:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=596
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)TV:V2:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=263
+		y=632
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)SH:Ps:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+text {
+	object {
+		x=271
+		y=30
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="CCD:"
+}
+text {
+	object {
+		x=271
+		y=97
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="GO:"
+}
+text {
+	object {
+		x=271
+		y=283
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="BD:"
+}
+text {
+	object {
+		x=271
+		y=368
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="GS:"
+}
+text {
+	object {
+		x=271
+		y=509
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="BS:"
+}
+text {
+	object {
+		x=271
+		y=565
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="TV:"
+}
+text {
+	object {
+		x=271
+		y=618
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="SH:"
+}
+rectangle {
+	object {
+		x=277
+		y=41
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:Lp:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=41
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CCD:Lp:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=68
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)CCD:St:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=68
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)CCD:St:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=108
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:Om:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=108
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:Om:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=148
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:Kp:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=148
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:Kp:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=194
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:Cr:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=194
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:Cr:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=243
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GO:St:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=243
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GO:St:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=296
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:Dh:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=296
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:Dh:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=333
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BD:Dv:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=333
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BD:Dv:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=391
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:St:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=391
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:St:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=435
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:Av:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=435
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:Av:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=477
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)GS:Ah:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=477
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)GS:Ah:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=532
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)BS:Ps:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=532
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)BS:Ps:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=575
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:V1:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=575
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)TV:V1:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=597
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)TV:V2:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=597
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)TV:V2:Homed"
+	}
+}
+rectangle {
+	object {
+		x=277
+		y=633
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)SH:Ps:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=633
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)SH:Ps:Homed"
+	}
+}
+polyline {
+	object {
+		x=2
+		y=55
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(2,55)
+		(247,55)
+	}
+}
+polyline {
+	object {
+		x=2
+		y=140
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(2,140)
+		(247,140)
+	}
+}
+polyline {
+	object {
+		x=2
+		y=273
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(2,273)
+		(247,273)
+	}
+}
+polyline {
+	object {
+		x=2
+		y=326
+		width=244
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(2,326)
+		(246,326)
+	}
+}
+polyline {
+	object {
+		x=1
+		y=411
+		width=244
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(1,411)
+		(245,411)
+	}
+}
+polyline {
+	object {
+		x=261
+		y=96
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(261,96)
+		(506,96)
+	}
+}
+polyline {
+	object {
+		x=261
+		y=277
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(261,277)
+		(506,277)
+	}
+}
+polyline {
+	object {
+		x=263
+		y=362
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(263,362)
+		(508,362)
+	}
+}
+polyline {
+	object {
+		x=263
+		y=503
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(263,503)
+		(508,503)
+	}
+}
+polyline {
+	object {
+		x=263
+		y=564
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(263,564)
+		(508,564)
+	}
+}
+polyline {
+	object {
+		x=263
+		y=617
+		width=245
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(263,617)
+		(508,617)
+	}
+}
+polyline {
+	object {
+		x=263
+		y=646
+		width=246
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(263,646)
+		(509,646)
+	}
+}
+rectangle {
+	object {
+		x=100
+		y=859
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+}
+rectangle {
+	object {
+		x=100
+		y=839
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+}
+text {
+	object {
+		x=111
+		y=838
+		width=77
+		height=12
+	}
+	"basic attribute" {
+		clr=20
+	}
+	textix="Limit hit"
+}
+text {
+	object {
+		x=111
+		y=858
+		width=77
+		height=12
+	}
+	"basic attribute" {
+		clr=30
+	}
+	textix="Amplifier off"
+}
+rectangle {
+	object {
+		x=12
+		y=839
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+}
+rectangle {
+	object {
+		x=12
+		y=859
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+}
+text {
+	object {
+		x=22
+		y=838
+		width=67
+		height=12
+	}
+	"basic attribute" {
+		clr=22
+	}
+	textix="Manual Mode"
+}
+text {
+	object {
+		x=22
+		y=858
+		width=67
+		height=12
+	}
+	"basic attribute" {
+		clr=12
+	}
+	textix="Not homed"
+}
+rectangle {
+	object {
+		x=4
+		y=832
+		width=190
+		height=44
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+	}
+}
+"text update" {
+	object {
+		x=375
+		y=798
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)COL:H:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=342
+		y=798
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="H:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=460
+		y=800
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)COL:H:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=340
+		y=794
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)COL:St:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=801
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)COL:H:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=801
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)COL:H:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=801
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)COL:H:AmpEna"
+	}
+}
+"text update" {
+	object {
+		x=375
+		y=814
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)COL:V:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=342
+		y=814
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="V:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=460
+		y=816
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)COL:V:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=817
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)COL:V:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=817
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)COL:V:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=817
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)COL:V:AmpEna"
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=808
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)COL:St:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=263
+		y=808
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)COL:St:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+text {
+	object {
+		x=271
+		y=797
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="COL:"
+}
+rectangle {
+	object {
+		x=277
+		y=808
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)COL:St:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=808
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)COL:St:Homed"
+	}
+}
+polyline {
+	object {
+		x=265
+		y=790
+		width=242
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(265,790)
+		(507,790)
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=654
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)RB:RX:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=654
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="X:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=656
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)RB:RX:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=670
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)RB:RY:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=670
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Y:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=672
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)RB:RY:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=374
+		y=686
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)RB:RZ:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=686
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Z:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=688
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)RB:RZ:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=650
+		width=167
+		height=54
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)RB:Rd:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=654
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RX:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=654
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RX:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=654
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:RX:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=672
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RY:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=672
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RY:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=672
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:RY:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=689
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RZ:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=689
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RZ:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=689
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:RZ:AmpEna"
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=674
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)RB:Rd:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"text update" {
+	object {
+		x=374
+		y=710
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)RB:RA:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=710
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="A:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=712
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)RB:RA:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=706
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)RB:Rr:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=712
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RA:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=712
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:RA:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=712
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:RA:AmpEna"
+	}
+}
+polyline {
+	object {
+		x=265
+		y=731
+		width=243
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(265,731)
+		(508,731)
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=711
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)RB:Rr:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+text {
+	object {
+		x=271
+		y=734
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="FLD:"
+}
+"text update" {
+	object {
+		x=374
+		y=739
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)FLU:D:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=739
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="X:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=741
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)FLU:D:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=735
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)FLU:Di:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=741
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)FLU:D:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=741
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)FLU:D:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=741
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)FLU:D:AmpEna"
+	}
+}
+polyline {
+	object {
+		x=265
+		y=760
+		width=242
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(265,760)
+		(507,760)
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=745
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)FLU:Di:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+text {
+	object {
+		x=271
+		y=653
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="RB:"
+}
+text {
+	object {
+		x=271
+		y=764
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="PIN:"
+}
+"text update" {
+	object {
+		x=374
+		y=769
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)PIN:P:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=341
+		y=769
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="A:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=459
+		y=771
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)PIN:P:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=339
+		y=765
+		width=167
+		height=22
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)PIN:St:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=771
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)PIN:P:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=771
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)PIN:P:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=771
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)PIN:P:AmpEna"
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=776
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)PIN:St:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=263
+		y=674
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)RB:Rd:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=277
+		y=674
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:Rd:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=674
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:Rd:Homed"
+	}
+}
+"message button" {
+	object {
+		x=263
+		y=711
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)RB:Rr:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=277
+		y=711
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)RB:Rr:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=711
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)RB:Rr:Homed"
+	}
+}
+"message button" {
+	object {
+		x=263
+		y=745
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)FLU:Di:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=277
+		y=745
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)FLU:Di:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=745
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)FLU:Di:Homed"
+	}
+}
+"message button" {
+	object {
+		x=263
+		y=776
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)PIN:St:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=277
+		y=776
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)PIN:St:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=776
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)PIN:St:Homed"
+	}
+}
+polyline {
+	object {
+		x=265
+		y=835
+		width=242
+		height=0
+	}
+	"basic attribute" {
+		clr=14
+	}
+	points {
+		(265,835)
+		(507,835)
+	}
+}
+"text update" {
+	object {
+		x=375
+		y=843
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)XY:X3:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=342
+		y=843
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="X:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=460
+		y=845
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)XY:X3:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=375
+		y=859
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(bl)XY:Y3:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=342
+		y=859
+		width=30
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Y:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=460
+		y=861
+		width=40
+		height=12
+	}
+	monitor {
+		chan="$(bl)XY:Y3:ActPos.EGU"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=340
+		y=839
+		width=167
+		height=38
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+	"dynamic attribute" {
+		clr="alarm"
+		vis="if zero"
+		chan="$(bl)XY:P3:InPos"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=843
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)XY:X3:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=843
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)XY:X3:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=843
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)XY:X3:AmpEna"
+	}
+}
+rectangle {
+	object {
+		x=322
+		y=862
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)XY:Y3:NgLimSet"
+	}
+}
+rectangle {
+	object {
+		x=334
+		y=862
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=20
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)XY:Y3:PsLimSet"
+	}
+}
+rectangle {
+	object {
+		x=328
+		y=862
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=30
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)XY:Y3:AmpEna"
+	}
+}
+"message button" {
+	object {
+		x=290
+		y=851
+		width=30
+		height=12
+	}
+	control {
+		chan="$(bl)XY:P3:Abort"
+		clr=20
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+text {
+	object {
+		x=271
+		y=837
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="XY3:"
+}
+"message button" {
+	object {
+		x=263
+		y=851
+		width=12
+		height=12
+	}
+	control {
+		chan="$(bl)XY:P3:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+rectangle {
+	object {
+		x=277
+		y=851
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=22
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if not zero"
+		chan="$(bl)XY:P3:AutoStart"
+	}
+}
+rectangle {
+	object {
+		x=283
+		y=851
+		width=4
+		height=10
+	}
+	"basic attribute" {
+		clr=12
+		width=2
+	}
+	"dynamic attribute" {
+		vis="if zero"
+		chan="$(bl)XY:P3:Homed"
+	}
+}

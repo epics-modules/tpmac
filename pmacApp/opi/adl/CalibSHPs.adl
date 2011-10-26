@@ -1,7 +1,7 @@
 
 file {
 	name="/home/gmca/epics/mtrApp/adl/CalibSHPs.adl"
-	version=030101
+	version=030104
 }
 display {
 	object {
@@ -337,9 +337,9 @@ text {
 }
 "text entry" {
 	object {
-		x=270
+		x=190
 		y=87
-		width=100
+		width=42
 		height=20
 	}
 	control {
@@ -352,9 +352,9 @@ text {
 }
 "text entry" {
 	object {
-		x=270
+		x=190
 		y=116
-		width=100
+		width=42
 		height=20
 	}
 	control {
@@ -367,14 +367,14 @@ text {
 }
 "text update" {
 	object {
-		x=387
+		x=382
 		y=106
 		width=80
 		height=14
 	}
 	monitor {
 		chan="$(m1)bo:rbk"
-		clr=16
+		clr=61
 		bclr=14
 	}
 	clrmod="alarm"
@@ -384,7 +384,7 @@ text {
 }
 "message button" {
 	object {
-		x=479
+		x=474
 		y=117
 		width=120
 		height=20
@@ -399,7 +399,7 @@ text {
 }
 "message button" {
 	object {
-		x=479
+		x=474
 		y=89
 		width=120
 		height=20
@@ -604,28 +604,28 @@ text {
 }
 text {
 	object {
-		x=90
+		x=17
 		y=90
-		width=170
+		width=261
 		height=14
 	}
 	"basic attribute" {
 		clr=14
 	}
-	textix="Shutter closed position"
+	textix="Shutter closed position           Tmr"
 	align="horiz. right"
 }
 text {
 	object {
-		x=90
+		x=17
 		y=118
-		width=170
+		width=260
 		height=14
 	}
 	"basic attribute" {
 		clr=14
 	}
-	textix="Shutter opened position"
+	textix="Shutter opened position           Tmr"
 	align="horiz. right"
 }
 text {
@@ -726,4 +726,36 @@ text {
 	}
 	textix="->"
 	align="horiz. right"
+}
+"text update" {
+	object {
+		x=285
+		y=89
+		width=85
+		height=18
+	}
+	monitor {
+		chan="$(m1)CloseTmr"
+		clr=35
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=285
+		y=116
+		width=85
+		height=18
+	}
+	monitor {
+		chan="$(m1)OpenTmr"
+		clr=35
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
+	}
 }

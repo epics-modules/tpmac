@@ -3,15 +3,17 @@
 /*  tsubXYZ.c - Transformation Subroutines for XYZ positioners   */
 /*             This is for 3-motors assemblies -- S. Stepanov  */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubXYZDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -20,11 +22,7 @@ volatile int tsubXYZDebug = 0;
 /* ===========================================
  * tsubXYZPs - Assembly-XYZ Initialization
  */
-long tsubXYZPs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXYZPs (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -38,15 +36,10 @@ long tsubXYZPs
  *	b  = m2:ActPos
  *	c  = m3:ActPos
  */
-long tsubXYZPsSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXYZPsSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
-
 	return (0);
 }
 
@@ -67,11 +60,7 @@ long tsubXYZPsSync
  *	c1 = d3:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXYZPsMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXYZPsMtr (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0)
 	{
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0;         /* d1=m1*scale1+offset1 */
@@ -103,11 +92,7 @@ long tsubXYZPsMtr
  *	c1 = d3:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXYZPsDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXYZPsDrv (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) ||
 	     (pRec->c1 == 0.0) )
@@ -152,11 +137,7 @@ long tsubXYZPsDrv
  *	c3 = d3:Scale
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12)
  */
-long tsubXYZPsSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXYZPsSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, m3, d1, d2, d3;
 	long ifail = 0;
@@ -238,4 +219,20 @@ long tsubXYZPsSpeed
         if (tsubXYZDebug > 1) printf ("tsubXYZPsSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubXYZPsRef[] = {
+    {"tsubXYZPs",      (REGISTRYFUNCTION)tsubXYZPs},
+    {"tsubXYZPsSync",  (REGISTRYFUNCTION)tsubXYZPsSync},
+    {"tsubXYZPsMtr",   (REGISTRYFUNCTION)tsubXYZPsMtr},
+    {"tsubXYZPsDrv",   (REGISTRYFUNCTION)tsubXYZPsDrv},
+    {"tsubXYZPsSpeed", (REGISTRYFUNCTION)tsubXYZPsSpeed}
+};
+
+static void tsubXYZPsFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubXYZPsRef,NELEMENTS(tsubXYZPsRef));
+}
+epicsExportRegistrar(tsubXYZPsFunc);
 

@@ -1,0 +1,2180 @@
+
+file {
+	name="/home/gmca/epics/mtrApp/adl/GonioOCS.adl"
+	version=030101
+}
+display {
+	object {
+		x=166
+		y=356
+		width=615
+		height=155
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=0
+		y=0
+		width=615
+		height=20
+	}
+	"basic attribute" {
+		clr=56
+	}
+}
+text {
+	object {
+		x=6
+		y=3
+		width=170
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Goniometer - $(assy)"
+}
+text {
+	object {
+		x=0
+		y=90
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="ActPos"
+	align="horiz. right"
+}
+text {
+	object {
+		x=0
+		y=110
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="RqsPos"
+	align="horiz. right"
+}
+text {
+	object {
+		x=0
+		y=132
+		width=40
+		height=12
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Tweak"
+	align="horiz. right"
+}
+"related display" {
+	object {
+		x=2
+		y=23
+		width=18
+		height=18
+	}
+	display[0] {
+		label="More Controls"
+		name="GonioOCS_ID_big.adl"
+		args="assy=$(assy),Beamline=$(Beamline),st=$(st)"
+		policy="replace display"
+	}
+	clr=14
+	bclr=15
+}
+rectangle {
+	object {
+		x=44
+		y=22
+		width=98
+		height=130
+	}
+	"basic attribute" {
+		clr=9
+		fill="outline"
+		width=2
+	}
+}
+"message button" {
+	object {
+		x=46
+		y=24
+		width=45
+		height=20
+	}
+	control {
+		chan="$(assy)Om:Abort"
+		clr=24
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+composite {
+	object {
+		x=93
+		y=24
+		width=50
+		height=21
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=93
+				y=24
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(assy)Om:AutoStart"
+			}
+			textix="Manual"
+		}
+		text {
+			object {
+				x=93
+				y=33
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(assy)Om:Motion"
+			}
+			textix="Disabled"
+		}
+	}
+}
+"text entry" {
+	object {
+		x=53
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)OM:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=68
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)OM:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=117
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)OM:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=52
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)OM:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=53
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)OM:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=53
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)OM:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=53
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)OM:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=341
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)SH:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=356
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)SH:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=405
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SH:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=340
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SH:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=341
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SH:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=335
+		y=22
+		width=273
+		height=130
+	}
+	"basic attribute" {
+		clr=9
+		fill="outline"
+		width=2
+	}
+}
+"message button" {
+	object {
+		x=340
+		y=24
+		width=45
+		height=20
+	}
+	control {
+		chan="$(assy)$(st):Abort"
+		clr=24
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"text entry" {
+	object {
+		x=429
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)SW:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=444
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)SW:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=493
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SW:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=428
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SW:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=429
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SW:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=341
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SH:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=429
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SW:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=341
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)SH:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=429
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)SW:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=521
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)SV:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=536
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)SV:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=585
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SV:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=520
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)SV:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=521
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SV:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=521
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)SV:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=521
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)SV:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"related display" {
+	object {
+		x=567
+		y=2
+		width=45
+		height=18
+	}
+	display[0] {
+		label="Gonio Omega"
+		name="Move1_large.adl"
+		args="assy=$(assy)Om:, ax1=$(assy)OM:"
+	}
+	display[1] {
+		label="Gonio Crystal XY"
+		name="Move2_large.adl"
+		args="assy=$(assy)Cr:, ax1=$(assy)CX:, ax2=$(assy)CY: "
+	}
+	display[2] {
+		label="Gonio Support"
+		name="Move3_large.adl"
+		args="assy=$(assy)$(st):, ax1=$(assy)SH:, ax2=$(assy)SW:, ax3=$(assy)SV: "
+	}
+	display[3] {
+		label="Show Kappa"
+		name="GonioOKCS_ID.adl"
+		args="assy=$(assy), Beamline=$(Beamline),st=$(st)"
+		policy="replace display"
+	}
+	clr=14
+	bclr=15
+	label="More"
+}
+rectangle {
+	object {
+		x=148
+		y=22
+		width=181
+		height=130
+	}
+	"basic attribute" {
+		clr=9
+		fill="outline"
+		width=2
+	}
+}
+"message button" {
+	object {
+		x=153
+		y=24
+		width=45
+		height=20
+	}
+	control {
+		chan="$(assy)Cr:Abort"
+		clr=24
+		bclr=51
+	}
+	label="Abort"
+	press_msg="1"
+}
+"text entry" {
+	object {
+		x=151
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)CX:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=166
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)CX:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=215
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)CX:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=150
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)CX:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=151
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)CX:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=151
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)CX:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=151
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)CX:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=241
+		y=105
+		width=80
+		height=20
+	}
+	control {
+		chan="$(assy)CY:RqsPos"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=256
+		y=127
+		width=50
+		height=20
+	}
+	control {
+		chan="$(assy)CY:RqsPosInc"
+		clr=14
+		bclr=2
+	}
+	limits {
+	}
+}
+"message button" {
+	object {
+		x=305
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)CY:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label=">"
+	press_msg="1"
+}
+"message button" {
+	object {
+		x=240
+		y=126
+		width=18
+		height=22
+	}
+	control {
+		chan="$(assy)CY:RqsPosIncBmp"
+		clr=14
+		bclr=51
+	}
+	label="<"
+	press_msg="-1"
+}
+"text update" {
+	object {
+		x=241
+		y=90
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)CY:ActPos"
+		clr=32
+		bclr=14
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=241
+		y=45
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)CY:ActPos.DESC"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=241
+		y=58
+		width=80
+		height=13
+	}
+	monitor {
+		chan="$(assy)CY:ActPos.EGU"
+		clr=14
+		bclr=56
+	}
+	align="horiz. centered"
+	format="exponential"
+	limits {
+	}
+}
+composite {
+	object {
+		x=356
+		y=1
+		width=115
+		height=20
+	}
+	"composite name"=""
+	children {
+		"shell command" {
+			object {
+				x=356
+				y=1
+				width=20
+				height=20
+			}
+			command[0] {
+				label="Home Omega"
+				name="xterm -e home23_v2.pl $(Beamline) GO:Om noMedmHome noMedmMove noMacroReset noUnlink32 &"
+			}
+			clr=14
+			bclr=31
+		}
+		rectangle {
+			object {
+				x=376
+				y=2
+				width=95
+				height=18
+			}
+			"basic attribute" {
+				clr=31
+				width=4
+			}
+		}
+		text {
+			object {
+				x=381
+				y=5
+				width=85
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="<-Home Omega"
+		}
+		rectangle {
+			object {
+				x=376
+				y=2
+				width=95
+				height=18
+			}
+			"basic attribute" {
+				clr=10
+				fill="outline"
+				width=1
+			}
+		}
+	}
+}
+"related display" {
+	object {
+		x=263
+		y=2
+		width=85
+		height=18
+	}
+	display[0] {
+		label="Gonio Omega"
+		name="Move1_speed.adl"
+		args="assy=$(assy)Om:, ax1=$(assy)OM:"
+	}
+	clr=14
+	bclr=31
+	label="Omega Speed"
+}
+"text update" {
+	object {
+		x=203
+		y=4
+		width=60
+		height=14
+	}
+	monitor {
+		chan="$(assy)OM:speed"
+		clr=20
+		bclr=56
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+composite {
+	object {
+		x=213
+		y=24
+		width=50
+		height=21
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=213
+				y=24
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(assy)Cr:AutoStart"
+			}
+			textix="Manual"
+			align="horiz. centered"
+		}
+		text {
+			object {
+				x=213
+				y=33
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(assy)Cr:Motion"
+			}
+			textix="Disabled"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=444
+		y=24
+		width=50
+		height=21
+	}
+	"composite name"=""
+	children {
+		text {
+			object {
+				x=444
+				y=24
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(assy)$(st):AutoStart"
+			}
+			textix="Manual"
+			align="horiz. centered"
+		}
+		text {
+			object {
+				x=444
+				y=33
+				width=50
+				height=12
+			}
+			"basic attribute" {
+				clr=20
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(assy)$(st):Motion"
+			}
+			textix="Disabled"
+			align="horiz. centered"
+		}
+	}
+}
+"message button" {
+	object {
+		x=130
+		y=23
+		width=10
+		height=10
+	}
+	control {
+		chan="$(assy)Om:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="A"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=296
+		y=24
+		width=30
+		height=10
+	}
+	control {
+		chan="$(assy)Cr:AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="AUTO"
+	press_msg="0"
+}
+"message button" {
+	object {
+		x=575
+		y=24
+		width=30
+		height=10
+	}
+	control {
+		chan="$(assy)$(st):AutoStart"
+		clr=14
+		bclr=51
+	}
+	label="AUTO"
+	press_msg="0"
+}
+composite {
+	object {
+		x=63
+		y=75
+		width=526
+		height=10
+	}
+	"composite name"=""
+	children {
+		composite {
+			object {
+				x=63
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=63
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=63
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=63
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)OM:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=111
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=111
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=111
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)OM:PsLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=79
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=79
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=79
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)OM:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=95
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=95
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=95
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)Om:InPos"
+							}
+						}
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=161
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=161
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=161
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=161
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)CX:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=209
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=209
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=209
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)CX:PsLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=177
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=177
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=177
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)CX:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=193
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=193
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=193
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)Cr:InPos"
+							}
+						}
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=251
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=251
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=251
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=251
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)CY:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=299
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=299
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=299
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)CY:PsLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=267
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=267
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=267
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)CY:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=283
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=283
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=283
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)Cr:InPos"
+							}
+						}
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=351
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=351
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=351
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=351
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SH:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=399
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=399
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=399
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SH:PsLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=367
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=367
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=367
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)SH:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=383
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=383
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=383
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)$(st):InPos"
+							}
+						}
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=439
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=439
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=439
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=439
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SW:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=455
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=455
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=455
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)SW:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=471
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=471
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=471
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)$(st):InPos"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=487
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=487
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=487
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SW:PsLimSet"
+							}
+						}
+					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=531
+				y=75
+				width=58
+				height=10
+			}
+			"composite name"=""
+			children {
+				composite {
+					object {
+						x=547
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=547
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=547
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=30
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)SV:AmpEna"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=531
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=531
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=531
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SV:NgLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=579
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=579
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=579
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=21
+							}
+							"dynamic attribute" {
+								vis="if not zero"
+								chan="$(assy)SV:PsLimSet"
+							}
+						}
+					}
+				}
+				composite {
+					object {
+						x=563
+						y=75
+						width=10
+						height=10
+					}
+					"composite name"=""
+					children {
+						oval {
+							object {
+								x=563
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=7
+							}
+						}
+						oval {
+							object {
+								x=563
+								y=75
+								width=10
+								height=10
+							}
+							"basic attribute" {
+								clr=61
+							}
+							"dynamic attribute" {
+								vis="if zero"
+								chan="$(assy)$(st):InPos"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

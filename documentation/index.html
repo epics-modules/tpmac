@@ -15,7 +15,7 @@
 <tr VALIGN="top">
  <td>Module Owners:</td>
  <td>Oleg Makarov and Sergey Stepanov, <a href="http://www.anl.gov">Argonne National Laboratory</a><br>
-     Nick Rees, <a href="http://www.diamond.ac.uk">Diamond Light Source</a></td>
+     Nick Rees and Matthew Pearson, <a href="http://www.diamond.ac.uk">Diamond Light Source</a></td>
 </tr>
 </table>
 
@@ -198,6 +198,35 @@ enable/disable signals from "motors" to "axes" and "drives".
   <td><b>Notes</b></td>
 </tr>
 <tr align="center" valign="top">
+  <td><nobr>3-10</nobr></td>
+  <td><nobr>11/2011</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-10.zip">tpmac3-10.zip</a></nobr></td>
+  <td ALIGN="left">A number of changes and bug fixes to pmacAsynCoordSrc,
+pmacAsynIPPortSrc, and pmacAsynMotorSrc produced at the
+<a href="http://www.diamond.ac.uk">Diamond Light Source</a>. See
+<a href="ReleaseNotes_3-10.txt">Release Notes</a> for additional details.
+</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>3-9</nobr></td>
+  <td><nobr>10/2011</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-9.zip">tpmac3-9.zip</a></nobr></td>
+  <td ALIGN="left">The TSUB (Transformation Subroutine) Record was made portable (independent of
+VxWorks) so that now it can be used independently from the TPMAC distribution.
+Note that it requires few minor tweaks of user-supplied subroutines. Additional
+detais are provided in <a href="ReleaseNotes_3-9.txt">Release Notes</a>.
+</td>
+</tr>
+<tr align="center" valign="top">
+  <td><nobr>3-8</nobr></td>
+  <td><nobr>10/2010</nobr></td>
+  <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-8.zip">tpmac3-8.zip</a></nobr></td>
+  <td ALIGN="left">Essentilly same as 3-7, but a few examples of coordinate system DBs
+added/updated, more documentation, boot tree examples (xxx) added, and the directory
+changed from 3-x to synApps/tpmac/3-x reflecting that the package is a part of synApps.
+</td>
+</tr>
+<tr align="center" valign="top">
   <td><nobr>3-7</nobr></td>
   <td><nobr>05/2010</nobr></td>
   <td><nobr><a href="http://www.gmca.aps.anl.gov/TPMAC2/tpmac3-7.zip">tpmac3-7.zip</a></nobr></td>
@@ -215,7 +244,7 @@ Muir</a> to devPmacRam.c avoiding potential crash on IOC reboots. See
   <td ALIGN="left">New versions of pmacAsynCoordSrc, pmacAsynIPPort and pmacAsynMotorSrc by
 <a href="mailto:matthew.pearson@diamond.ac.uk">Matthew Pearson</a> and
 <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> from the
-<a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>. Also, a few patches
+<a href="http://www.diamond.ac.uk">Diamond Light Source</a>. Also, a few patches
 to databases including those to AssyGeneric_scanrec.db and bkgfix1pcs_scanrec.db
 by <a href="mailto:jlmuir@anl.gov">Lewis Muir</a>. See
 <a href="ReleaseNotes_3-6.txt">Release Notes</a> for details.
@@ -228,7 +257,7 @@ by <a href="mailto:jlmuir@anl.gov">Lewis Muir</a>. See
   <td ALIGN="left">The main motivation for this release is the addition of new
 IP driver produced by <a href="mailto:peter.leicester@diamond.ac.uk">Pete Leicester</a>
 and <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at the
-<a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>. This driver
+<a href="http://www.diamond.ac.uk">Diamond Light Source</a>. This driver
 should allow communicating with Ethernet based Delta Tau controllers. See
 <a href="ReleaseNotes_3-5.txt">Release Notes</a> for details.
 </td>
@@ -251,7 +280,7 @@ the only updated directory in this release compared to 3-3 is pmacApp/src.
       communicating with PMAC and replaced PMAC Mailbox communications by PMAC
       DPRAM ASCII communications. The new driver is mostly due to
       <a href="mailto:nick.rees@diamond.ac.uk">Nick Reese</a> at the
-      <a href="http://www.diamond.ac.uk">DIAMOND Light Source</a>.
+      <a href="http://www.diamond.ac.uk">Diamond Light Source</a>.
       Also, added the support for PMAC ADC/DAC (ACC-59E) and Digital IO (ACC-65E),
       revised some DBs, Tcl/Tk menus and MEDM screens.</td>
 </tr>
@@ -393,7 +422,12 @@ and successfully used for a number of years by both SBC and BIO CATs at the APS.
 <p>The <B>tpmac</B> is in use at all three GM/CA CAT beamlines at the APS.
 From two to three PMAC2-VME cards per one beamline provide controls for all
 GM/CA CAT motors. Since the fall of 2006 the system is also operational at
-the LS-CAT beamlines at the APS.
+four LS-CAT beamlines at the APS and since 2009 it is used at IMCA-CAT. At
+Diamond several hundred PMACs are in used (VME Turbo PMAC2 Ultralite and
+Geobrick LVM with ethernet interface). While using the EPICS tpmac driver,
+Diamond prefers to build EPICS Motor Records and Coordinate System Records
+instead of servicing PMAC communication via multiple standard EPICS records
+as at the GM/CA and LS CATs.
 
 <p>Please submit any comments and bug reports to
 <a href="mailto:makarov@anl.gov">Oleg Makarov</a> (PMAC driver and PMAC

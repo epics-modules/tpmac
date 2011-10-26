@@ -6,23 +6,24 @@
  *		 with respect to x-ray beam deflected by Horiz.Focusing Mirror (HFM)   *
  *               (GM/CA CAT detector mounted on A-frame with 1 motor for latera shift) */
 
-
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
-#define   PI2360 ((double) 1.7453292e-2)	/* = 2*pi/360 */
-#define   DEG2RAD(deg) ((deg) * PI2360)
-#define   RAD2DEG(rad) ((rad) / PI2360)
-#define		SIND(deg)	sin(DEG2RAD(deg))
-#define		COSD(deg)	cos(DEG2RAD(deg))
-#define		TAND(deg)	tan(DEG2RAD(deg))
+#define   	PI2360       ((double) 1.7453292e-2)	/* = 2*pi/360 */
+#define   	DEG2RAD(deg) ((deg) * PI2360)
+#define   	RAD2DEG(rad) ((rad) / PI2360)
+#define		SIND(deg)      sin(DEG2RAD(deg))
+#define		COSD(deg)      cos(DEG2RAD(deg))
+#define		TAND(deg)      tan(DEG2RAD(deg))
 
 volatile int tsubCCDDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -34,11 +35,7 @@ volatile int tsubCCDDebug = 0;
 /* ===========================================
  * tsubCCDSt - CCD support
  */
-long tsubCCDSt
-(
-        struct tsubRecord *     pRec
-)
-{
+static long tsubCCDSt (struct tsubRecord *pRec) {
         return (0);
 }
 
@@ -52,15 +49,10 @@ long tsubCCDSt
  *	b  = m2:ActPos
  *	c  = m3:ActPos
  */
-long tsubCCDStSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDStSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
-
 	return (0);
 }
 
@@ -94,11 +86,7 @@ long tsubCCDStSync
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubCCDStMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDStMtr (struct tsubRecord *pRec) {
 	double Du=0.0,
 	       D=0.0,
 	       S=0.0,
@@ -210,11 +198,7 @@ long tsubCCDStMtr
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubCCDStDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDStDrv (struct tsubRecord *pRec) {
 	double Du=0.0,
 	       D=0.0,
 	       S=0.0,
@@ -332,11 +316,7 @@ long tsubCCDStDrv
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubCCDStAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDStAxs (struct tsubRecord *pRec) {
 	double Du=0.0,
 	       S=0.0,
 	       QQ=0.0,
@@ -445,11 +425,7 @@ long tsubCCDStAxs
  *	c3 = d3:Scale
  *      nla = Index of input(m1=1, m2=2, m3=3, d1=11, d2=12, d3=13, x1=21, x2=22)
  */
-long tsubCCDStSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDStSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, m3, d1, d2, d3, x1, x2;
 	double Du=0.0,
@@ -617,11 +593,7 @@ long tsubCCDStSpeed
 /* ===========================================
  * tsubCCDLp - CCD lateral position
  */
-long tsubCCDLp
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDLp (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -631,13 +603,8 @@ long tsubCCDLp
  *	oa = m1:RqsPos
  *	a  = m1:ActPos
  */
-long tsubCCDLpSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDLpSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
-
 	return (0);
 }
 
@@ -656,11 +623,7 @@ long tsubCCDLpSync
  *	a1 = d1:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubCCDLpMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDLpMtr (struct tsubRecord *pRec) {
 	double Dmd=0.0,
                TwoAlpha=0.0;
 
@@ -699,11 +662,7 @@ long tsubCCDLpMtr
  *	a1 = d1:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubCCDLpDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDLpDrv (struct tsubRecord *pRec) {
 	double Dmd=0.0,
                TwoAlpha=0.0;
 
@@ -743,11 +702,7 @@ long tsubCCDLpDrv
  *	a3 = d1:Scale
  *      nla = Index of input(m1=1, d1=11)
  */
-long tsubCCDLpSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCCDLpSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, d1;
 	long ifail = 0;
@@ -795,4 +750,26 @@ long tsubCCDLpSpeed
 /*	printf ("tsubCCDLpSpeed: m1=%5.2f\n",m1); */
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubCCDStRef[] = {
+    {"tsubCCDSt",      (REGISTRYFUNCTION)tsubCCDSt},
+    {"tsubCCDStSync",  (REGISTRYFUNCTION)tsubCCDStSync},
+    {"tsubCCDStMtr",   (REGISTRYFUNCTION)tsubCCDStMtr},
+    {"tsubCCDStDrv",   (REGISTRYFUNCTION)tsubCCDStDrv},
+    {"tsubCCDStAxs",   (REGISTRYFUNCTION)tsubCCDStAxs},
+    {"tsubCCDStSpeed", (REGISTRYFUNCTION)tsubCCDStSpeed},
+    {"tsubCCDLp",      (REGISTRYFUNCTION)tsubCCDLp},
+    {"tsubCCDLpSync",  (REGISTRYFUNCTION)tsubCCDLpSync},
+    {"tsubCCDLpMtr",   (REGISTRYFUNCTION)tsubCCDLpMtr},
+    {"tsubCCDLpDrv",   (REGISTRYFUNCTION)tsubCCDLpDrv},
+    {"tsubCCDLpSpeed", (REGISTRYFUNCTION)tsubCCDLpSpeed}
+};
+
+static void tsubCCDStFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubCCDStRef,NELEMENTS(tsubCCDStRef));
+}
+epicsExportRegistrar(tsubCCDStFunc);
 

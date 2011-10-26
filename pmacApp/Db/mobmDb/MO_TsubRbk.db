@@ -14,7 +14,7 @@ record(tsub, "$(assy)$(val)TsubMtr") {
   field(INPI, "$(assy)BeamOffset NPP MS")
   field(INPM, "$(d1)ActPos NPP MS")
   field(INPP, "$(x1)ActPos NPP MS")
-  field(IPA2, "$(assy)mirrAng NPP MS")
+  field(IPA2, "$(assy)mirrAng PP MS")
   field(IPA0, "$(d1)Offset NPP MS")
   field(IPA1, "$(d1)Scale NPP MS")
   field(IPB0, "$(d2)Offset NPP MS")

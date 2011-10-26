@@ -2,8 +2,10 @@
 
 if { [info exists env(HOST)] } {
    set HOST $env(HOST)
+#  puts "gmca: HOST=${HOST}"
 } elseif { [info exists env(HOSTNAME)] } {
    set HOST $env(HOSTNAME)
+#  puts "gmca: HOSTNAME=${HOST}"
 } else {
    set HOST "unknown"
    puts "!!! gmca: unknown host"
@@ -94,6 +96,7 @@ if { ${SYSTEM} == "LINUX" } {
   set stripTool   StripTool
   set perl	  perl
 
-# if {![info exists env(FASTSCANS)]} {set env(FASTSCANS) "${topdir}${sp}fastscans";}
-# if {![info exists env(PEZCA)]}     {set env(PEZCA) "${topdir}${sp}pezca";}
-
+  if {![info exists env(FASTSCANS)]} {set env(FASTSCANS) "${topdir}${sp}fastscans";}
+  if {![info exists env(PEZCA)]}     {set env(PEZCA) "${topdir}${sp}pezca";}
+  set PEZCA $env(PEZCA)
+  set FASTSCANS $env(FASTSCANS)

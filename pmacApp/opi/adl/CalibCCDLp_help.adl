@@ -8,7 +8,7 @@ display {
 		x=157
 		y=255
 		width=700
-		height=223
+		height=275
 	}
 	clr=14
 	bclr=4
@@ -131,7 +131,7 @@ image {
 		x=2
 		y=26
 		width=700
-		height=197
+		height=249
 	}
 	type="gif"
 	"image name"="CalibCCDLp_help.gif"

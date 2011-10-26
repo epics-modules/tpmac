@@ -2,31 +2,29 @@
 
 /* tsubBD.c - Transformation Subroutines For Beam Delivery Pipe */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubBDDebug = 0;
 #define TSUB_MESSAGE	logMsg
 #define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubBDDebug == (level)) ) { code } }
 
-/* if x1=mm, x2=mrad, base=m (BioCAT), then FCDN=1; if base=mm, then FCDN=1000. */
-double FCDN = 1.0;
+/* if x1=mm, x2=mrad, base=m (BioCAT), then FCBD=1; if base=mm, then FCBD=1000. */
+double FCBD = 1.0;
 
 /* ===========================================
  * tsubBDSt - Support Initialization
  */
-long tsubBDSt
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDSt (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -38,14 +36,9 @@ long tsubBDSt
  *	a  = m1:ActPos
  *	b  = m2:ActPos
  */
-long tsubBDStSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDStSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
-
 	return (0);
 }
 
@@ -66,11 +59,7 @@ long tsubBDStSync
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubBDStMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDStMtr (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) )
 	{
 		return (-1);
@@ -85,8 +74,8 @@ long tsubBDStMtr
 		pRec->oa1 = pRec->a * pRec->a1;                    /* d1=m1*scale1 */
 		pRec->ob1 = pRec->b * pRec->b1;                    /* d2=m2*scale2 */
 	}
-	pRec->ob = FCDN * (pRec->oa1 - pRec->ob1) / pRec->k;       /* x2=(d1-d2)/BaseLength */
-	pRec->oa = pRec->ob1 - (pRec->ob * pRec->l / FCDN);        /* x1=d2-x2*RotOrigin */
+	pRec->ob = FCBD * (pRec->oa1 - pRec->ob1) / pRec->k;       /* x2=(d1-d2)/BaseLength */
+	pRec->oa = pRec->ob1 - (pRec->ob * pRec->l / FCBD);        /* x1=d2-x2*RotOrigin */
 	return (0);
 }
 
@@ -106,11 +95,7 @@ long tsubBDStMtr
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubBDStDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDStDrv (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) ||
 	     (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) )
@@ -127,8 +112,8 @@ long tsubBDStDrv
 		pRec->oa0 = (pRec->a) / pRec->a1;                  /* m1=d1/scale1 */
 		pRec->ob0 = (pRec->b) / pRec->b1;                  /* m2=d2/scale2 */
 	}
-	pRec->ob = FCDN * (pRec->a - pRec->b) / pRec->k;           /* x2=(d1-d2)/BaseLength */
-	pRec->oa = pRec->b - (pRec->ob * pRec->l / FCDN);          /* x1=d2-x2*RotOrigin    */
+	pRec->ob = FCBD * (pRec->a - pRec->b) / pRec->k;           /* x2=(d1-d2)/BaseLength */
+	pRec->oa = pRec->b - (pRec->ob * pRec->l / FCBD);          /* x1=d2-x2*RotOrigin    */
 	return (0);
 
 }
@@ -149,17 +134,13 @@ long tsubBDStDrv
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubBDStAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDStAxs (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) )
 	{
 		return (-1);
 	}
-	pRec->ob1 = pRec->a   + pRec->b * (pRec->l / FCDN);        /* d2=x1+x2*RotOrigin     */
-	pRec->oa1 = pRec->ob1 + pRec->b * (pRec->k / FCDN);        /* d1=d2+x2*BaseLength    */
+	pRec->ob1 = pRec->a   + pRec->b * (pRec->l / FCBD);        /* d2=x1+x2*RotOrigin     */
+	pRec->oa1 = pRec->ob1 + pRec->b * (pRec->k / FCBD);        /* d1=d2+x2*BaseLength    */
 	if (pRec->nla == 0.0)
 	{
 		pRec->oa0 = (pRec->oa1 - pRec->a0) / pRec->a1;     /* m1=(d1-offset1)/scale1 */
@@ -197,11 +178,7 @@ long tsubBDStAxs
  *	l = RotOrigin
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12, x1=21, x2=22)
  */
-long tsubBDStSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubBDStSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2, orig, base, x2a, x2b;
 	long ifail = 0;
@@ -276,10 +253,10 @@ long tsubBDStSpeed
 /* of each motor divided by base does not apply here -- SS 2006/01/05            */
 	      d1 = fabs( 1000.0 *  pRec->a * pRec->a3 );   /* d1=m1*scale1 */
 	      d2 = fabs( 1000.0 *  pRec->b * pRec->b3 );   /* d2=m2*scale2 */
-/*	      x2 = FCDN*fmin(d2/(orig+base),d1/orig); */
+/*	      x2 = FCBD*fmin(d2/(orig+base),d1/orig); */
 /* fmin causes task crash; so we use workaround:      */
-	      x2a = FCDN*d2/(orig+base);
-	      x2b = FCDN*d1/orig;
+	      x2a = FCBD*d2/(orig+base);
+	      x2b = FCBD*d1/orig;
 	      if (x2a < x2b) x2=x2a;
   	      else           x2=x2b;
 	      if ( x2 != 0.0 ) prcn = fabs( pRec->b2 / x2 );
@@ -301,10 +278,10 @@ long tsubBDStSpeed
 	d1 = fabs( 1000.0 *  m1 * pRec->a3 );            	/* d1=m1*scale1 */
 	d2 = fabs( 1000.0 *  m2 * pRec->b3 );            	/* d2=m2*scale2 */
 	x1 = 0.5*(d2 + d1);	                         	/* x1=0.5*(d2+d1) */
-/*	x2 = FCDN*fmin(d2/(orig+base),d1/orig);  */		/* x2=min(d2/(RotOrigin+BaseLength),d1/RotOrigin) */
+/*	x2 = FCBD*fmin(d2/(orig+base),d1/orig);  */		/* x2=min(d2/(RotOrigin+BaseLength),d1/RotOrigin) */
 /* fmin causes task crash; so we use workaround: */
-	x2a = FCDN*d2/(orig+base);
-	x2b = FCDN*d1/orig;
+	x2a = FCBD*d2/(orig+base);
+	x2b = FCBD*d1/orig;
 	if (x2a < x2b) x2=x2a;
 	else           x2=x2b;
 	pRec->oa0 = m1;
@@ -316,4 +293,21 @@ long tsubBDStSpeed
   	if (tsubBDDebug > 1) printf ("+++tsubBDStSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubBDStRef[] = {
+    {"tsubBDSt",      (REGISTRYFUNCTION)tsubBDSt},
+    {"tsubBDStSync",  (REGISTRYFUNCTION)tsubBDStSync},
+    {"tsubBDStMtr",   (REGISTRYFUNCTION)tsubBDStMtr},
+    {"tsubBDStDrv",   (REGISTRYFUNCTION)tsubBDStDrv},
+    {"tsubBDStAxs",   (REGISTRYFUNCTION)tsubBDStAxs},
+    {"tsubBDStSpeed", (REGISTRYFUNCTION)tsubBDStSpeed}
+};
+
+static void tsubBDStFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubBDStRef,NELEMENTS(tsubBDStRef));
+}
+epicsExportRegistrar(tsubBDStFunc);
 

@@ -3,15 +3,17 @@
 /* tsubACC65E.c - Transformation Subroutines for PMAC Accessory-65E */
 /*                Digital Output -- Sergey Stepanov    */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 #define TSUB_DIAGNOSTIC tsubAcc65eDebug
 
@@ -26,11 +28,7 @@ volatile int TSUB_DIAGNOSTIC = 0;
 /*===========================================
  * tsubAcc65eIni - Accessory-65E Initialization
  */
-long tsubAcc65eIni
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAcc65eIni (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -39,11 +37,7 @@ long tsubAcc65eIni
  *	a0,...a9,b0,..b9,c1,...c3 = inputs
  *	oa = output
  */
-long tsubAcc65eOut
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAcc65eOut (struct tsubRecord *	pRec) {
 	long acc65e_out_long = 0;
 
 	if ( pRec->a0 ) acc65e_out_long += 0x00000001;      /* IPA0 = bit0  */
@@ -79,11 +73,7 @@ long tsubAcc65eOut
  *	a = input
  *	oa0,...oa9,ob0,..ob9,oc1,...oc3 = outputs
  */
-long tsubAcc65eRbk
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAcc65eRbk (struct tsubRecord *pRec) {
 	long          acc65e_rbk_long = 0;
 	unsigned long tmp = 0;
 	char 	      binstr[32];
@@ -92,9 +82,9 @@ long tsubAcc65eRbk
 	acc65e_rbk_long = (long)pRec->a;
 
 	for(i=31; i>=0; i--) {
-/* 
- *  "<<n" Left shift n places, 
- *  ">>n" Right shift n places 
+/*
+ *  "<<n" Left shift n places,
+ *  ">>n" Right shift n places
 */
           tmp = acc65e_rbk_long/(1<<i);  		/* tmp=value/pow(2,i)*/
 	  if(tmp > 0) {
@@ -130,4 +120,18 @@ long tsubAcc65eRbk
 	if ( binstr[23] == '1' ) {pRec->oc3=1;} else {pRec->oc3=0;}      /* bit23 = OTC3 */
 	return (0);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubAcc65eRef[] = {
+    {"tsubAcc65eIni", (REGISTRYFUNCTION)tsubAcc65eIni},
+    {"tsubAcc65eOut", (REGISTRYFUNCTION)tsubAcc65eOut},
+    {"tsubAcc65eRbk", (REGISTRYFUNCTION)tsubAcc65eRbk}
+};
+
+static void tsubAcc65eFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubAcc65eRef,NELEMENTS(tsubAcc65eRef));
+}
+epicsExportRegistrar(tsubAcc65eFunc);
 

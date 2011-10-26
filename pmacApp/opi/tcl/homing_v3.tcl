@@ -9,6 +9,7 @@
 # Version-2    /2007.06/ added loading nominal positions from snapshot file.
 # Version-3    /2008.01/ added button to mark not homed directories
 # Version-3.1  /2008.02/ added using caTCL functions instead of caget (if caTCL exists)
+# Version-3.2  /2010.01/ added exception for Robot: rotation and XYZ can only be homed sequentially
 #-----------------------------------------------------------------------------------------
   set CA_EXIST 0
   if { [info exists env(EPICS_HOST_ARCH)] } {
@@ -54,7 +55,10 @@ proc pDoitIoc {iocname pmaclist} {
 proc pDoitHome {} {
     global Beamline xterm homeScript varOpt varMedmHome varMedmMove IocPmacList nominalFile
 #   puts stdout "pDoitHome: pmaclist=${pmaclist}"
-    flush stdout
+#   flush stdout
+    set extraHomingArgs " ${Beamline} nominal=${nominalFile} autoMacroReset"
+    if {$varMedmHome == 0} {set extraHomingArgs "${extraHomingArgs} noMedmHome"}
+    if {$varMedmMove == 0} {set extraHomingArgs "${extraHomingArgs} noMedmMove"}
 
     switch -exact ${varOpt} {
 	Sequential {
@@ -84,15 +88,13 @@ proc pDoitHome {} {
                 }
             }
             if { $lhome != "" } {
-                set CmdString "${lhome} nominal=${nominalFile}"
-                if {$varMedmHome == 0} {set CmdString "${CmdString} noMedmHome"}
-                if {$varMedmMove == 0} {set CmdString "${CmdString} noMedmMove"}
-#               puts "${homeScript} ${Beamline} ${CmdString}"
-                eval "exec $xterm perl ${homeScript} ${Beamline} ${CmdString} &"
+#               puts "${homeScript} ${Beamline} ${lhome} ${extraHomingArgs}"
+                eval "exec $xterm perl ${homeScript} ${lhome} ${extraHomingArgs} &"
             }
         }
 	Parallel {
 # 1. Loop over VME crates
+	    set robotList []
 	    foreach ioc $IocPmacList {
 	        set iocname [lindex $ioc 0]
                 global var$iocname
@@ -110,20 +112,26 @@ proc pDoitHome {} {
                         set coordname [lindex $coord 1]
                         global var$coordname
                         if { [set var$coordname] } {
-                            incr i
-                            set CmdString "${coordname} nominal=${nominalFile}"
-                            if {$varMedmHome == 0} {set CmdString "${CmdString} noMedmHome"}
-                            if {$varMedmMove == 0} {set CmdString "${CmdString} noMedmMove"}
-                            if {$i == 1} {
-                              set CmdString "${CmdString} autoMacroReset"
-                            } else {
-                              set CmdString "${CmdString} noUnlink32 waitMacroReset"
-                            }
-#                           puts "${homeScript} ${Beamline} ${CmdString}"
-                            eval "exec ${xterm} perl ${homeScript} ${Beamline} ${CmdString} &"
+                            if {[regexp {^RB:} $coordname] == 1} {lappend robotList $coordname;} \
+			    else {
+                               set CmdString "${coordname} ${extraHomingArgs}"
+                               if {$i == 0} {set CmdString "${CmdString} autoMacroReset";} \
+                               else         {set CmdString "${CmdString} noUnlink32 waitMacroReset";}
+#                              puts "${homeScript} ${Beamline} ${CmdString}"
+                               eval "exec ${xterm} perl ${homeScript} ${CmdString} &"
+                               incr i
+			    }
                             .cbFunc$coordname config -foreground #007700
                             set var$coordname 0
 			}
+                    }
+                    if { $robotList != "" } {
+                       set CmdString "${robotList} ${extraHomingArgs}"
+                       if {$i == 0} {set CmdString "${CmdString} autoMacroReset";} \
+                       else         {set CmdString "${CmdString} noUnlink32 waitMacroReset";}
+#                      puts "${homeScript} ${Beamline} ${CmdString}"
+                       eval "exec ${xterm} perl ${homeScript} ${CmdString} &"
+		       set $robotList []
                     }
                 }
             }

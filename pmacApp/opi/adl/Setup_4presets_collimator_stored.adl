@@ -1,0 +1,569 @@
+
+file {
+	name="/home/gmca/epics/mtrApp/adl/Setup_4presets_collimator_stored.adl"
+	version=030104
+}
+display {
+	object {
+		x=431
+		y=362
+		width=410
+		height=252
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=0
+		y=0
+		width=410
+		height=26
+	}
+	"basic attribute" {
+		clr=56
+	}
+}
+text {
+	object {
+		x=285
+		y=5
+		width=120
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(assy)"
+	align="horiz. right"
+}
+text {
+	object {
+		x=4
+		y=5
+		width=250
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Backed Collimator Presets"
+}
+rectangle {
+	object {
+		x=20
+		y=56
+		width=185
+		height=190
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+}
+"text update" {
+	object {
+		x=28
+		y=90
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA0"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=28
+		y=134
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA2"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=28
+		y=178
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA4"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=28
+		y=222
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA6"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=120
+		y=90
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA1"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=120
+		y=134
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA3"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=120
+		y=178
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA5"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=120
+		y=222
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OA7"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+rectangle {
+	object {
+		x=218
+		y=56
+		width=185
+		height=190
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+		width=2
+	}
+}
+"text update" {
+	object {
+		x=226
+		y=90
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB0"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=226
+		y=134
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB2"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=226
+		y=178
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB4"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=226
+		y=222
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB6"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=318
+		y=90
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB1"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=318
+		y=134
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB3"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=318
+		y=178
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB5"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=318
+		y=222
+		width=80
+		height=16
+	}
+	monitor {
+		chan="$(pre)copyColPresets.OB7"
+		clr=14
+		bclr=2
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=25
+		y=35
+		width=45
+		height=14
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Set0:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=81
+		y=34
+		width=116
+		height=16
+	}
+	monitor {
+		chan="$(pre)currentCollimatorSet.ZNAM"
+		clr=14
+		bclr=36
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+text {
+	object {
+		x=223
+		y=35
+		width=45
+		height=14
+	}
+	"basic attribute" {
+		clr=54
+	}
+	textix="Set1:"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=279
+		y=34
+		width=116
+		height=16
+	}
+	monitor {
+		chan="$(pre)currentCollimatorSet.ONAM"
+		clr=14
+		bclr=36
+	}
+	align="horiz. centered"
+	limits {
+	}
+}
+text {
+	object {
+		x=26
+		y=61
+		width=80
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="H"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=118
+		y=61
+		width=80
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="V"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=224
+		y=61
+		width=80
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="H"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=316
+		y=61
+		width=80
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="V"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=2
+		y=90
+		width=16
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="1"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=2
+		y=134
+		width=16
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="2"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=2
+		y=178
+		width=16
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="3"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=2
+		y=222
+		width=16
+		height=16
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="4"
+	align="horiz. centered"
+}

@@ -1,0 +1,22 @@
+These are databases databases for vertical support of GM/CA-CAT beam delivery:
+
+dsSt provide coordinated motions for 3-motor beam delivery support at GM/CA-CAT.
+The three motors are lined along the beam pass, but the bellows have certain
+flexibility so that the construction is not always a straight line.
+
+The coordinate system consists of 3 motors:
+- one upstream vertical slide that should keep the upstream part of the
+  pipe roughly pointing it to the point where the x-rays are reflected
+  from the mirror -- i.e. the beam should enter the center of the pipe
+  at the upstream location.
+- two downstream vertical slides supporting the goniometer platform. The
+  interplay between these two defines the vertical tilt of the platform
+  along the beam and the height of the sample position.
+
+See more details in file "beamdelivery3_equations.ppt"
+and in files BD3_Calibrate.db and CalibBD3.adl.
+
+
+-- Sergey
+
+

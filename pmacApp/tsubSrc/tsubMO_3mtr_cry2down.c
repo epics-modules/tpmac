@@ -3,24 +3,26 @@
 /* tsubMObm.c - Transformation Subroutines For Monochromator Energy       */
 /*              This is for Accel BM monochromator (with trolley X and Y) */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
-#define   PI2360 ((double) 1.7453292519943295769236907684886e-2)	/* = 2*pi/360 */
-#define   DEG2RAD(deg) ((deg) * PI2360)
-#define   RAD2DEG(rad) ((rad) / PI2360)
+#define   	PI2360 ((double) 1.7453292519943295769236907684886e-2)	/* = 2*pi/360 */
+#define   	DEG2RAD(deg) ((deg) * PI2360)
+#define   	RAD2DEG(rad) ((rad) / PI2360)
 #define		SIND(deg)	sin(DEG2RAD(deg))
 #define		COSD(deg)	cos(DEG2RAD(deg))
 
 volatile int tsubMODebug = 0;
-#define TSUB_MESSAGE	logMsg
+#define	TSUB_MESSAGE	logMsg
 #define TSUB_TRACE(level,code) { if ( (pRec->tpro == (level)) || (tsubMODebug == (level)) ) { code } }
 
 double coQB, siQB;                      /* added by Sergey 2001/04/20 */
@@ -29,7 +31,7 @@ double coQB, siQB;                      /* added by Sergey 2001/04/20 */
 /* =========================================== - Energy Initialization
  * tsubMOEn - Energy Initialization
  */
-long tsubMOEn (struct tsubRecord *pRec) {
+static long tsubMOEn (struct tsubRecord *pRec) {
  	return (0);
 }
 
@@ -43,7 +45,7 @@ long tsubMOEn (struct tsubRecord *pRec) {
  *	b  = m2:ActPos
  *	c  = m3:ActPos
  */
-long tsubMOEnSync (struct tsubRecord *	pRec) {
+static long tsubMOEnSync (struct tsubRecord *	pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
@@ -70,7 +72,7 @@ long tsubMOEnSync (struct tsubRecord *	pRec) {
  *	                   p = x1:ActPos (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnMtr (struct tsubRecord *pRec) {
+static long tsubMOEnMtr (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0 + 2.0*pRec->a2;     /* d1=m1*scale1+offset1+2*mirrAng */
 		pRec->ob1 = pRec->b * pRec->b1 + pRec->b0;		      /* d2=m2*scale2+offset2 */
@@ -124,7 +126,7 @@ long tsubMOEnMtr (struct tsubRecord *pRec) {
  *	                   p = x1:ActPos (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnDrv (struct tsubRecord *pRec) {
+static long tsubMOEnDrv (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) ||
 	     (pRec->c1 == 0.0) )  return (-1);
@@ -181,7 +183,7 @@ long tsubMOEnDrv (struct tsubRecord *pRec) {
  *                         p = x1:ActPos     (E:ActPos)
  *                         nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs (struct tsubRecord *pRec) {
+static long tsubMOEnAxs (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) ||
              (pRec->b1 == 0.0) ||
 	     (pRec->c1 == 0.0) ) return (-1);
@@ -261,7 +263,7 @@ long tsubMOEnAxs (struct tsubRecord *pRec) {
  *	a = E                p = x1:ActPos
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs1 (struct tsubRecord *pRec) {
+static long tsubMOEnAxs1 (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
 		if (pRec->a != 0.0) pRec->oa = pRec->h / pRec->a;             /* L=EvLambda/E        */
 	} else {			/* ----------Relative Motion--------- */
@@ -277,7 +279,7 @@ long tsubMOEnAxs1 (struct tsubRecord *pRec) {
  *	a = L                q = x2:ActPos
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubMOEnAxs2 (struct tsubRecord *pRec) {
+static long tsubMOEnAxs2 (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0) {		/* ----------Absolute Motion--------- */
 		if (pRec->a != 0.0) pRec->oa = pRec->h / pRec->a;             /* E=EvLambda/L        */
 	} else {			/* ----------Relative Motion--------- */
@@ -318,7 +320,7 @@ long tsubMOEnAxs2 (struct tsubRecord *pRec) {
  *      p = x1:ActPos (E:ActPos)
  *      nla = Index of input (m1=1, m2=2, m3=3, d1=11, d2=12, d3=13, x1=21, x2=22)
  */
-long tsubMOEnSpeed (struct tsubRecord *	pRec) {
+static long tsubMOEnSpeed (struct tsubRecord *	pRec) {
 	double prcn = 0.0;
 	double m1, m2, m3, d1, d2, d3, x1, x2;
 	long ifail = 0;
@@ -436,4 +438,23 @@ long tsubMOEnSpeed (struct tsubRecord *	pRec) {
   	if (tsubMODebug > 1) printf ("tsubMOEnSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubMOEnRef[] = {
+    {"tsubMOEn",      (REGISTRYFUNCTION)tsubMOEn},
+    {"tsubMOEnSync",  (REGISTRYFUNCTION)tsubMOEnSync},
+    {"tsubMOEnMtr",   (REGISTRYFUNCTION)tsubMOEnMtr},
+    {"tsubMOEnDrv",   (REGISTRYFUNCTION)tsubMOEnDrv},
+    {"tsubMOEnAxs",   (REGISTRYFUNCTION)tsubMOEnAxs},
+    {"tsubMOEnAxs1",  (REGISTRYFUNCTION)tsubMOEnAxs1},
+    {"tsubMOEnAxs2",  (REGISTRYFUNCTION)tsubMOEnAxs2},
+    {"tsubMOEnSpeed", (REGISTRYFUNCTION)tsubMOEnSpeed}
+};
+
+static void tsubMOEnFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubMOEnRef,NELEMENTS(tsubMOEnRef));
+}
+epicsExportRegistrar(tsubMOEnFunc);
 

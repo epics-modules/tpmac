@@ -8,6 +8,7 @@
 
 # set ComponentList { $name $cmp $units{$name $asy $calib $dpram $axes $drives $motors} }
 # set ComponentList { $name $cmp $units{$name $asy $calib $pmac $dpram $axes $drives $motors{$mtrNo $mtr} } }
+#             { "Mono BPM"            Mo:  MDCs pmac11: 05X3     {}      {MOZ:}    {{ 3 mmo:}}             }
   set ComponentList {
         { "White Beam Slits" WS:
             {
@@ -34,8 +35,7 @@
 	}
         { "Beam Position Monitors" BP:
             {
-                { "Mono BPM"            Mo:  MDCs pmac11: 05X3     {}      {MOZ:}    {{ 3 mmo:}}             }
-		{ "VFM BPM "            Vf:  MDCs pmac11: 05X3     {}      {VFZ:}    {{14 mvf:}}             }
+  		{ "VFM BPM "            Vf:  MDCs pmac11: 05X3     {}      {VFZ:}    {{14 mvf:}}             }
             }
 	}
         { "White Beam Attenuator" AT:

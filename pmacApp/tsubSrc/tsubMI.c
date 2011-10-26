@@ -3,15 +3,17 @@
 /* tsubMI.c - Transformation Subroutines For Mirror -- ACCEL mirror support */
 /*            This is for 2-point mirror support - Stepanov */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubMIDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -23,11 +25,7 @@ double FCMI = 1.0;
 /* ===========================================
  * tsubMISt - Support Initialization
  */
-long tsubMISt
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMISt (struct tsubRecord *pRec) {
  	return (0);
 }
 
@@ -39,14 +37,9 @@ long tsubMISt
  *	a  = m1:ActPos
  *	b  = m2:ActPos
  */
-long tsubMIStSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMIStSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
-
 	return (0);
 }
 
@@ -66,11 +59,7 @@ long tsubMIStSync
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubMIStMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMIStMtr (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) )
 	{
 		return (-1);
@@ -104,11 +93,7 @@ long tsubMIStMtr
  *	b0 = d2:Offset
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubMIStDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMIStDrv (struct tsubRecord *pRec) {
 	if ( (pRec->k == 0.0) ||
 	     (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) )
@@ -145,11 +130,7 @@ long tsubMIStDrv
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubMIStAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMIStAxs (struct tsubRecord *pRec) {
 	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) )
 	{
 		return (-1);
@@ -193,11 +174,7 @@ long tsubMIStAxs
  *	k = BaseLength
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12, x1=21, x2=22)
  */
-long tsubMIStSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubMIStSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2;
 	long ifail = 0;
@@ -293,4 +270,22 @@ long tsubMIStSpeed
   	if (tsubMIDebug > 1) printf ("tsubMIStSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubMIStRef[] = {
+    {"tsubMISt",      (REGISTRYFUNCTION)tsubMISt},
+    {"tsubMIStSync",  (REGISTRYFUNCTION)tsubMIStSync},
+    {"tsubMIStMtr",   (REGISTRYFUNCTION)tsubMIStMtr},
+    {"tsubMIStDrv",   (REGISTRYFUNCTION)tsubMIStDrv},
+    {"tsubMIStAxs",   (REGISTRYFUNCTION)tsubMIStAxs},
+    {"tsubMIStSpeed", (REGISTRYFUNCTION)tsubMIStSpeed}
+};
+
+static void tsubMIStFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubMIStRef,NELEMENTS(tsubMIStRef));
+}
+epicsExportRegistrar(tsubMIStFunc);
+
 

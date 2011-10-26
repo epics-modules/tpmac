@@ -169,19 +169,32 @@ record(longout, "$(assy)AccelCurve") {
   field(DOL, "1000")
 }
 
-# This is a link to white beam mirror angle. Instead of 
-# reading it directly, we make this linking record that is 
-# processed every 2s in order to suppress extra mono DB 
-# processings due to encoder noise on the mirror. 
-# Besides, this calc record re-calculates mrad into degr.:
+### This is a link to white beam mirror angle. Instead of 
+### reading it directly, we make this linking record that is 
+### processed every 2s in order to suppress extra mono DB 
+### processings due to encoder noise on the mirror. 
+### Besides, this calc record re-calculates mrad into degr.:
 
 record(calc,"$(assy)mirrAng") {
   field(DESC, "White-beam VCM angle")
-  field(CALC,"A*B")
+  field(CALC,"A*B*C")
+  field(INPA, "$(angleVCM)RqsPos NPP MS")
+# field(INPA, "$(angleVCM)RqsPos CA NMS")
+# field(INPA, "$(angleVCM)ActPos NPP MS")
 # field(INPA, "$(angleVCM)ActPos CA NMS")
-  field(INPA, "$(angleVCM)ActPos PP MS")
   field(INPB,"0.057295779513082320876798154814105")
+  field(INPC,"$(assy)mirrorIN NPP MS")
 # field(PINI, "yes")
   field(PREC, "6")
   field(EGU, "(degr)")
+### This is not needed because this record is called with
+### processing from RqsPos and ActPos Mono TSUBs:
+# field(SCAN, "2 second")
+}
+
+record(bo, "$(assy)mirrorIN") {
+  field(PINI, "YES")
+  field(DOL, "1")
+  field(ZNAM, "Mirror OUT")
+  field(ONAM, "Mirror IN")
 }

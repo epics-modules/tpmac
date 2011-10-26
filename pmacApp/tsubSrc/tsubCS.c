@@ -5,15 +5,17 @@
 /* runs "on the back" of blade-1                              */
 /*                ** ACCEL SLITS CONFIGURATION **             */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubCSDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -22,11 +24,7 @@ volatile int tsubCSDebug = 0;
 /* ===========================================
  * tsubCSAp - Aperture Initialization
  */
-long tsubCSAp
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSAp (struct tsubRecord *pRec) {
  	return (0);
 }
 
@@ -38,14 +36,9 @@ long tsubCSAp
  *	a  = m1:ActPos
  *	b  = m2:ActPos
  */
-long tsubCSApSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSApSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
-
 	return (0);
 }
 
@@ -65,11 +58,7 @@ long tsubCSApSync
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubCSApMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSApMtr (struct tsubRecord *pRec) {
 	double d2_real;
 
 	if (pRec->nla == 0.0)
@@ -104,11 +93,7 @@ long tsubCSApMtr
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubCSApDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSApDrv (struct tsubRecord *pRec) {
 	double d2_real;
 
 	if ( (pRec->a1 == 0.0) ||
@@ -149,11 +134,7 @@ long tsubCSApDrv
  *	b1 = d2:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubCSApAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSApAxs (struct tsubRecord *pRec) {
 	double d2_real;
 
 	if ( (pRec->a1 == 0.0) || (pRec->b1 == 0.0) )
@@ -200,11 +181,7 @@ long tsubCSApAxs
  *	b3 = d2:Scale
  *      nla = Index of input(m1=1, m2=2, d1=11, d2=12, x1=21, x2=22)
  */
-long tsubCSApSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubCSApSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, d1, d2, x1, x2;
 	long ifail = 0;
@@ -289,7 +266,24 @@ long tsubCSApSpeed
 	pRec->ob1 = d2;
 	pRec->oa2 = x1;
 	pRec->ob2 = x2;
-  	if (tsubCSDebug > 1) printf ("tsubCSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2); 
+  	if (tsubCSDebug > 1) printf ("tsubCSApSpeed: m1=%5.2f  m2=%5.2f\n",m1,m2);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubCSApRef[] = {
+    {"tsubCSAp",      (REGISTRYFUNCTION)tsubCSAp},
+    {"tsubCSApSync",  (REGISTRYFUNCTION)tsubCSApSync},
+    {"tsubCSApMtr",   (REGISTRYFUNCTION)tsubCSApMtr},
+    {"tsubCSApDrv",   (REGISTRYFUNCTION)tsubCSApDrv},
+    {"tsubCSApAxs",   (REGISTRYFUNCTION)tsubCSApAxs},
+    {"tsubCSApSpeed", (REGISTRYFUNCTION)tsubCSApSpeed}
+};
+
+static void tsubCSApFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubCSApRef,NELEMENTS(tsubCSApRef));
+}
+epicsExportRegistrar(tsubCSApFunc);
 

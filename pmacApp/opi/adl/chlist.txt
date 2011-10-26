@@ -1,0 +1,389 @@
+$(assy)Name
+	CalibMDAx.adl:	    
+	ConfigMDAx.adl: 	
+	CMove1.adl:		
+	Move1_limits.adl:	
+	Move1_medium.adl:	
+	Move1_medium_limits.adl:
+	Move1_short.adl:	
+	Move1_short_limits.adl: 
+	Move2.adl:		
+	Move2_limits.adl:	
+	Move2_medium.adl:	
+	Move2_medium_limits.adl:
+	Move2_short.adl:	
+	Move2_short_limits.adl: 
+
+LoHi1.adl:		$(ax1)Name
+LoHi1_full.adl:		$(ax1)Name
+Move1.adl:		$(ax1)Name
+Move1_limits.adl:	$(ax1)Name
+Move1_medium.adl:	$(ax1)Name
+Move1_medium_limits.adl:$(ax1)Name    
+Move1_short.adl:	$(ax1)Name
+Move1_short_limits.adl:	$(ax1)Name
+Move2.adl:		$(ax1)Name
+Move2_limits.adl:	$(ax1)Name
+Move2_medium.adl:	$(ax1)Name
+Move2_medium_limits.adl:$(ax1)Name       
+Move2_short.adl:	$(ax1)Name  
+Move2_short_limits.adl:	$(ax1)Name	 
+
+Move2.adl:		$(ax2)Name
+Move2_limits.adl:	$(ax2)Name
+Move2_medium.adl:	$(ax2)Name
+Move2_medium_limits.adl:$(ax2)Name	
+Move2_short.adl:	$(ax2)Name	
+Move2_short_limits.adl:	$(ax2)Name	
+
+CalibMDAx.adl:		$(m1)Offset"
+
+CalibMDAx.adl:		$(d1)Reference"
+
+CalibMDAx.adl:		$(d1)Scale"
+
+ConfigMDAx.adl:		$(d1)DesBkl"
+
+ConfigMDAx.adl:		$(m1)DesBkl"
+
+
+LoHi1.adl:		$(ax1)RqsPos
+LoHi1_full.adl:		$(ax1)RqsPos
+Move1.adl:		$(ax1)RqsPos
+Move1_limits.adl:	$(ax1)RqsPos
+Move1_medium.adl:	$(ax1)RqsPos
+Move1_medium_limits.adl:$(ax1)RqsPos
+Move1_short.adl:	$(ax1)RqsPos
+Move1_short_limits.adl:	$(ax1)RqsPos
+Move2.adl:		$(ax1)RqsPos
+Move2_limits.adl:	$(ax1)RqsPos
+Move2_medium.adl:	$(ax1)RqsPos
+Move2_medium_limits.adl:$(ax1)RqsPos
+Move2_short.adl:	$(ax1)RqsPos
+Move2_short_limits.adl:	$(ax1)RqsPos
+	       
+Move2.adl:		$(ax2)RqsPos
+Move2_limits.adl:	$(ax2)RqsPos
+Move2_medium.adl:	$(ax2)RqsPos
+Move2_medium_limits.adl:$(ax2)RqsPos	
+Move2_short.adl:	$(ax2)RqsPos	       
+Move2_short_limits.adl:	$(ax2)RqsPos
+
+LoHi1.adl:		$(ax1)RqsRel
+LoHi1_full.adl:		$(ax1)RqsRel
+
+LoHi1_full.adl:		$(ax1)RqsScn
+
+LoHi1_full.adl:		$(ax1)RqsSlw
+
+
+Move1.adl:		$(ax1)ActPos
+Move1_limits.adl:	$(ax1)ActPos
+Move1_medium.adl:	$(ax1)ActPos
+Move1_medium_limits.adl:$(ax1)ActPos
+Move1_short.adl:	$(ax1)ActPos    
+Move1_short_limits.adl:	$(ax1)ActPos	  
+Move2.adl:		$(ax1)ActPos
+Move2_limits.adl:	$(ax1)ActPos
+Move2_medium.adl:	$(ax1)ActPos
+Move2_medium_limits.adl:$(ax1)ActPos
+Move2_short.adl:	$(ax1)ActPos
+Move2_short_limits.adl:	$(ax1)ActPos
+
+Move2.adl:		$(ax2)ActPos
+Move2_limits.adl:	$(ax2)ActPos
+Move2_medium.adl:	$(ax2)ActPos
+Move2_medium_limits.adl:$(ax2)ActPos	      
+Move2_short.adl:	$(ax2)ActPos	      
+Move2_short_limits.adl:	$(ax2)ActPos	      
+
+Move1.adl:		$(ax1)TgtPos
+Move1_limits.adl:	$(ax1)TgtPos
+Move2.adl:		$(ax1)TgtPos
+Move2_limits.adl:	$(ax1)TgtPos
+
+Move2.adl:		$(ax2)TgtPos
+Move2_limits.adl:	$(ax2)TgtPos
+
+Move1.adl:		$(ax1)CmdPos
+Move1_limits.adl:	$(ax1)CmdPos
+Move2.adl:		$(ax1)CmdPos
+Move2_limits.adl:	$(ax1)CmdPos
+
+Move2.adl:		$(ax2)CmdPos
+Move2_limits.adl:	$(ax2)CmdPos
+
+Move1.adl:		$(ax1)DesPos
+Move1_limits.adl:	$(ax1)DesPos
+Move2.adl:		$(ax1)DesPos
+Move2_limits.adl:	$(ax1)DesPos
+
+Move2.adl:		$(ax2)DesPos
+Move2_limits.adl:	$(ax2)DesPos
+
+Move1.adl:		$(ax1)NgLimSet
+Move1_limits.adl:	$(ax1)NgLimSet
+Move1_medium.adl:	$(ax1)NgLimSet
+Move1_medium_limits.adl:$(ax1)NgLimSet      
+Move1_short.adl:	$(ax1)NgLimSet      
+Move1_short_limits.adl:	$(ax1)NgLimSet       
+Move2.adl:		$(ax1)NgLimSet
+Move2_limits.adl:	$(ax1)NgLimSet
+Move2_medium.adl:	$(ax1)NgLimSet
+Move2_medium_limits.adl:$(ax1)NgLimSet       
+Move2_short.adl:	$(ax1)NgLimSet        
+Move2_short_limits.adl:	$(ax1)NgLimSet        
+
+Move2.adl:		$(ax2)NgLimSet
+Move2_limits.adl:	$(ax2)NgLimSet
+Move2_medium.adl:	$(ax2)NgLimSet
+Move2_medium_limits.adl:$(ax2)NgLimSet       
+Move2_short.adl:	$(ax2)NgLimSet       
+Move2_short_limits.adl:	$(ax2)NgLimSet
+        
+Move1.adl:		$(ax1)PsLimSet
+Move1_limits.adl:	$(ax1)PsLimSet
+Move1_medium.adl:	$(ax1)PsLimSet
+Move1_medium_limits.adl:$(ax1)PsLimSet     
+Move1_short.adl:	$(ax1)PsLimSet       
+Move1_short_limits.adl:	$(ax1)PsLimSet
+Move2.adl:		$(ax1)PsLimSet
+Move2_limits.adl:	$(ax1)PsLimSet
+Move2_medium.adl:	$(ax1)PsLimSet
+Move2_medium_limits.adl:$(ax1)PsLimSet       
+Move2_short.adl:	$(ax1)PsLimSet        
+Move2_short_limits.adl:	$(ax1)PsLimSet
+
+Move2.adl:		$(ax2)PsLimSet
+Move2_limits.adl:	$(ax2)PsLimSet
+Move2_medium.adl:	$(ax2)PsLimSet
+Move2_medium_limits.adl:$(ax2)PsLimSet       
+Move2_short.adl:	$(ax2)PsLimSet       
+Move2_short_limits.adl:	$(ax2)PsLimSet       
+     
+
+Move1.adl:		$(ax1)AmpEna
+Move1_limits.adl:	$(ax1)AmpEna
+Move1_medium.adl:	$(ax1)AmpEna
+Move1_medium_limits.adl:$(ax1)AmpEna         
+Move1_short.adl:	$(ax1)AmpEna         
+Move1_short_limits.adl:	$(ax1)AmpEna         
+Move2.adl:		$(ax1)AmpEna
+Move2_limits.adl:	$(ax1)AmpEna
+Move2_medium.adl:	$(ax1)AmpEna
+Move2_medium_limits.adl:$(ax1)AmpEna	     
+Move2_short.adl:	$(ax1)AmpEna	      
+Move2_short_limits.adl:	$(ax1)AmpEna
+	       
+Move2.adl:		$(ax2)AmpEna
+Move2_limits.adl:	$(ax2)AmpEna
+Move2_medium.adl:	$(ax2)AmpEna
+Move2_medium_limits.adl:$(ax2)AmpEna	      
+Move2_short.adl:	$(ax2)AmpEna	      
+Move2_short_limits.adl:	$(ax2)AmpEna
+
+Move1.adl:		$(ax1)RqsPosInc
+Move1_limits.adl:	$(ax1)RqsPosInc
+Move1_medium.adl:	$(ax1)RqsPosInc
+Move1_medium_limits.adl:$(ax1)RqsPosInc      
+Move1_short.adl:	$(ax1)RqsPosInc      
+Move1_short_limits.adl:	$(ax1)RqsPosInc      
+Move2.adl:		$(ax1)RqsPosInc
+Move2_limits.adl:	$(ax1)RqsPosInc
+Move2_medium.adl:	$(ax1)RqsPosInc
+Move2_medium_limits.adl:$(ax1)RqsPosInc
+Move2_short.adl:	$(ax1)RqsPosInc       
+Move2_short_limits.adl:	$(ax1)RqsPosInc       
+	       
+Move2.adl:		$(ax2)RqsPosInc
+Move2_limits.adl:	$(ax2)RqsPosInc
+Move2_medium.adl:	$(ax2)RqsPosInc
+Move2_medium_limits.adl:$(ax2)RqsPosInc       
+Move2_short.adl:	$(ax2)RqsPosInc       
+Move2_short_limits.adl:	$(ax2)RqsPosInc
+
+Move1.adl:		$(ax1)RqsPosIncBmp
+Move1_limits.adl:	$(ax1)RqsPosIncBmp
+Move1_medium.adl:	$(ax1)RqsPosIncBmp
+Move1_medium_limits.adl:$(ax1)RqsPosIncBmp    
+Move1_short.adl:	$(ax1)RqsPosIncBmp    
+Move1_short_limits.adl:	$(ax1)RqsPosIncBmp    
+Move2.adl:		$(ax1)RqsPosIncBmp
+Move2_limits.adl:	$(ax1)RqsPosIncBmp
+Move2_medium.adl:	$(ax1)RqsPosIncBmp
+Move2_medium_limits.adl:$(ax1)RqsPosIncBmp    
+Move2_short_limits.adl:	$(ax1)RqsPosIncBmp   
+Move2_short.adl:	$(ax1)RqsPosIncBmp
+
+Move2.adl:		$(ax2)RqsPosIncBmp
+Move2.adl:		$(ax2)RqsPosIncBmp
+Move2_limits.adl:	$(ax2)RqsPosIncBmp
+Move2_limits.adl:	$(ax2)RqsPosIncBmp
+Move2_medium.adl:	$(ax2)RqsPosIncBmp
+Move2_medium.adl:	$(ax2)RqsPosIncBmp
+Move2_medium_limits.adl:$(ax2)RqsPosIncBmp 
+Move2_medium_limits.adl:$(ax2)RqsPosIncBmp 
+Move2_short.adl:	$(ax2)RqsPosIncBmp 
+Move2_short.adl:	$(ax2)RqsPosIncBmp 
+Move2_short_limits.adl:	$(ax2)RqsPosIncBmp 
+Move2_short_limits.adl:	$(ax2)RqsPosIncBmp
+ 
+Move1.adl:		$(ax1)MemPos
+Move1_limits.adl:	$(ax1)MemPos
+Move1_medium.adl:	$(ax1)MemPos
+Move1_medium_limits.adl:$(ax1)MemPos
+Move2.adl:		$(ax1)MemPos
+Move2_limits.adl:	$(ax1)MemPos
+Move2_medium.adl:	$(ax1)MemPos
+Move2_medium_limits.adl:$(ax1)MemPos	       
+	       
+Move2.adl:		$(ax2)MemPos
+Move2_limits.adl:	$(ax2)MemPos
+Move2_medium.adl:	$(ax2)MemPos
+Move2_medium_limits.adl:$(ax2)MemPos
+	       
+Move1.adl:		$(ax1)MemPosRcl
+Move1_limits.adl:	$(ax1)MemPosRcl
+Move1_medium.adl:	$(ax1)MemPosRcl
+Move1_medium_limits.adl:$(ax1)MemPosRcl 
+Move2.adl:		$(ax1)MemPosRcl
+Move2_limits.adl:	$(ax1)MemPosRcl
+Move2_medium.adl:	$(ax1)MemPosRcl
+Move2_medium_limits.adl:$(ax1)MemPosRcl  
+
+Move1.adl:		$(ax1)MemPosSto
+Move1_limits.adl:	$(ax1)MemPosSto
+Move1_medium.adl:	$(ax1)MemPosSto
+Move1_medium_limits.adl:$(ax1)MemPosSto
+Move2.adl:		$(ax1)MemPosSto
+Move2_limits.adl:	$(ax1)MemPosSto
+Move2_medium.adl:	$(ax1)MemPosSto
+Move2_medium_limits.adl:$(ax1)MemPosSto  
+
+       
+        
+	       
+       
+
+Move1.adl:		$(assy)Abort
+Move1_limits.adl:	$(assy)Abort
+Move1_medium.adl:	$(assy)Abort
+Move1_medium_limits.adl:$(assy)Abort	      
+Move1_short.adl:	$(assy)Abort	      
+Move1_short_limits.adl:	$(assy)Abort	      
+Move2.adl:		$(assy)Abort
+Move2_limits.adl:	$(assy)Abort
+Move2_medium.adl:	$(assy)Abort
+Move2_medium_limits.adl:$(assy)Abort	      
+Move2_short.adl:	$(assy)Abort	      
+Move2_short_limits.adl:	$(assy)Abort	      
+
+ConfigMDAx.adl:		$(assy)AccelTime"
+
+ConfigMDAx.adl:		$(assy)AccelCurve"
+
+ConfigMDAx.adl:		$(assy)Avail"
+Move1.adl:		$(assy)Avail"
+Move1_limits.adl:	$(assy)Avail"
+Move1_medium.adl:	$(assy)Avail"
+Move1_medium_limits.adl:$(assy)Avail"
+Move1_short.adl:	$(assy)Avail"
+Move1_short_limits.adl:	$(assy)Avail"
+Move2.adl:		$(assy)Avail"
+Move2_limits.adl:	$(assy)Avail"
+Move2_medium.adl:	$(assy)Avail"
+Move2_medium_limits.adl:$(assy)Avail"
+Move2_short_limits.adl:	$(assy)Avail"
+
+Move1.adl:		$(assy)Motion
+Move1_limits.adl:	$(assy)Motion
+Move2.adl:		$(assy)Motion
+Move2_limits.adl:	$(assy)Motion
+
+Move1.adl:		$(assy)Rate
+Move1_limits.adl:	$(assy)Rate
+Move2.adl:		$(assy)Rate
+Move2_limits.adl:	$(assy)Rate
+
+Move1.adl:		$(assy)RunPrg
+Move1_limits.adl:	$(assy)RunPrg
+Move2.adl:		$(assy)RunPrg
+Move2_limits.adl:	$(assy)RunPrg
+
+Move1.adl:		$(assy)Start
+Move1_limits.adl:	$(assy)Start
+Move2.adl:		$(assy)Start
+Move2_limits.adl:	$(assy)Start
+
+Move1.adl:		$(assy)InPos
+Move1_limits.adl:	$(assy)InPos
+Move1_medium.adl:	$(assy)InPos
+Move1_medium_limits.adl:$(assy)InPos	      
+Move1_short.adl:	$(assy)InPos	      
+Move1_short_limits.adl:	$(assy)InPos
+Move2.adl:		$(assy)InPos
+Move2_limits.adl:	$(assy)InPos
+Move2_medium.adl:	$(assy)InPos
+Move2_medium_limits.adl:$(assy)InPos	      
+Move2_short.adl:	$(assy)InPos	      
+Move2_short_limits.adl:	$(assy)InPos	      
+	       
+Move1.adl:		$(assy)Legal
+Move1_limits.adl:	$(assy)Legal
+Move2.adl:		$(assy)Legal
+Move2_limits.adl:	$(assy)Legal
+
+Move1.adl:		$(assy)Setup
+Move1_limits.adl:	$(assy)Setup
+Move2.adl:		$(assy)Setup
+Move2_limits.adl:	$(assy)Setup
+
+Move1.adl:		$(assy)Ready
+Move1_limits.adl:	$(assy)Ready
+Move2.adl:		$(assy)Ready
+Move2_limits.adl:	$(assy)Ready
+
+Move1.adl:		$(assy)Loaded
+Move1_limits.adl:	$(assy)Loaded
+Move2.adl:		$(assy)Loaded
+Move2_limits.adl:	$(assy)Loaded
+
+Move1.adl:		$(assy)Permit
+Move1_limits.adl:	$(assy)Permit
+Move2.adl:		$(assy)Permit
+Move2_limits.adl:	$(assy)Permit
+
+Move1.adl:		$(assy)AutoStart
+Move1_limits.adl:	$(assy)AutoStart
+Move1_medium.adl:	$(assy)AutoStart
+Move1_medium_limits.adl:$(assy)AutoStart      
+Move1_short.adl:	$(assy)AutoStart      
+Move1_short_limits.adl:	$(assy)AutoStart      
+Move2.adl:		$(assy)AutoStart
+Move2_limits.adl:	$(assy)AutoStart
+Move2_medium.adl:	$(assy)AutoStart
+Move2_medium_limits.adl:$(assy)AutoStart      
+Move2_short.adl:	$(assy)AutoStart      
+Move2_short_limits.adl:	$(assy)AutoStart 
+
+Move1.adl:		$(assy)AutoSetup
+Move1_limits.adl:	$(assy)AutoSetup
+Move1_medium.adl:	$(assy)AutoSetup
+Move1_medium_limits.adl:$(assy)AutoSetup      
+Move1_short.adl:	$(assy)AutoSetup      
+Move1_short_limits.adl:	$(assy)AutoSetup      
+Move2.adl:		$(assy)AutoSetup
+Move2_limits.adl:	$(assy)AutoSetup
+Move2_medium.adl:	$(assy)AutoSetup
+Move2_medium_limits.adl:$(assy)AutoSetup      
+Move2_short.adl:	$(assy)AutoSetup      
+Move2_short_limits.adl:	$(assy)AutoSetup 
+     
+Overview23ID.adl:	$(B)pmac10:mbx:SvoTm  
+Overview23ID.adl:	$(B)pmac10:svo:SvoTm  
+Overview23ID.adl:	$(B)pmac10:var:SvoTm  
+Overview23ID.adl:	$(B)pmac10:bkg:SvoTm 
+ 
+Overview23ID.adl:	$(B)pmac10:StrCmd     
+PmacCommands23ID.adl:	$(bl)pmac10:StrCmd    
+PmacCommands23ID.adl:	$(bl)pmac10:StrRsp    

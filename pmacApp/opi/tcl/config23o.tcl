@@ -19,17 +19,17 @@
             {
                 { "Mono Positioning"    Ps:  XYPs pmac10: 08XY3    {}      {Z:  Y: } {{ 5 mz: } { 6 my: }}   }
                 { "Mono Energy"         En:  MOEn pmac10: 08XY3  {E: L:}   {QB: T2:} {{ 7 mr: } { 8 mt2:}}   }
-                { "Crystal-1 Tuning"    Tn1: MDCs pmac10: 05X3     {}      {R1:    } {{17 mr1:}}             }
-                { "Crystal-2 Tuning"    Tn2: XYPs pmac10: 08XY3    {}      {P2: R2:} {{18 mp2:} {19 mr2:}}   }
+                { "Crystal-1 Tuning"    Tn1: XPs  pmac10: 05X3     {}      {R1:    } {{17 mr1:}}             }
+                { "Crystal-2 Tuning"    Tn2: XPs  pmac10: 05X3     {}      {P2:    } {{18 mp2:}}             }
             }
 	}
         { "Beam Position Monitors" BP:
             {
-                { "Mono BPM"            Mo:  MDCs pmac10: 05X3     {}      {MOZ:}    {{20 mmo:}}             }
-		{ "HDM1 BPM"            Hd1: MDCs pmac10: 05X3     {}      {H1Z:}    {{28 mh1z:}}            }
-		{ "HDM1a BPM"           Hd3: MDCs pmac10: 05X3     {}      {H3Z:}    {{ 9 mh3z:}}            }
-		{ "HDM2 BPM"            Hd2: MDCs pmac11: 05X3     {}      {H2Z:}    {{ 1 mh2z:}}            }
-                { "KB mirrors BPM"      Kb:  MDCs pmac11: 05X3     {}      {KBZ:}    {{16 mkb:}}             }
+                { "Mono BPM"            Mo:  XPs  pmac10: 05X3     {}      {MOZ:}    {{20 mmo:}}             }
+		{ "HDM1 BPM"            Hd1: XPs  pmac10: 05X3     {}      {H1Z:}    {{28 mh1z:}}            }
+		{ "HDM1a BPM"           Hd3: XPs  pmac10: 05X3     {}      {H3Z:}    {{ 9 mh3z:}}            }
+		{ "HDM2 BPM"            Hd2: XPs  pmac11: 05X3     {}      {H2Z:}    {{ 1 mh2z:}}            }
+                { "KB mirrors BPM"      Kb:  XPs  pmac11: 05X3     {}      {KBZ:}    {{16 mkb:}}             }
 
             }
 	}
@@ -57,12 +57,12 @@
         { "Beam Delivery" BD:
             {
                 { "Horizontal delivery" Dh:  BDSt  pmac20: 08XY3   {HD: HA:}   {HDS: HUS: }     {{15 mhd:}  {16 mhu:}}              }
-                { "Vertical delivery"   Dv:  BDSt  pmac20: 08XY3   {VD: VA:}   {VDS: VUS: }     {{17 mvd:}  {18 mvu:}}              }
+                { "Vertical delivery"   Dv3: BD3St pmac20: 11XYZ3  {VH: VA:}   {V1:  V2:  V3: } {{18 mv1:}  {21 mv2:}  {17 mv3:}}   }
             }
  	}
         { "Guard Slits" GS:
             {
-                { "Guard Slits Support" St:  XYZPs pmac20: 11XYZ3     {}       {YW: X:  PT:}    {{19 myw:}  {20 mx: }  {21 mpt:}}   }
+                { "Guard Slits Support" St2: XYPs  pmac20: 08XY3      {}       {YW: X: }        {{19 myw:}  {20 mx: }}              }
                 { "Vertical aperture"   Av:  HSAp  pmac20: 08XY3   {ZC: ZS:}   {ZT: ZB:}        {{22 mt: }  {23 mb: }}              }
                 { "Horizontal aperture" Ah:  HSAp  pmac20: 08XY3   {YC: YS:}   {YO: YI:}        {{24 mo: }  {25 mi: }}              }
             }
@@ -127,10 +127,12 @@
  	    {
  		{ "Positioner-2 (Pico)"           P2:  XYPs  pmac21: 08XY3      {}       {X2:  Y2: }      {{15 mx2: } {16 my2: }}             }
  		{ "Positioner-3 (ThinGap)"        P3:  XYPs  pmac21: 08XY3      {}       {X3:  Y3: }      {{17 mx3: } {18 my3: }}             }
+ 		{ "Positioner-4 (MICOS)"          P4:  XYPs  pmac21: 08XY3      {}       {X4:  Y4: }      {{19 mx4: } {20 my4: }}             }
+ 		{ "Positioner-5 (PI)"        	  P5:  XYPs  pmac21: 08XY3      {}       {X5:  Y5: }      {{21 mx5: } {22 my5: }}             }
  		{ "Positioner-6 (Newport)"        P6:  XYPs  pmac21: 08XY3      {}       {X6:  Y6: }      {{23 mx6: } {24 my6: }}             }
  	    }
  	}
- 	{ "Huber Slits" HS:
+ 	{ "ADC Slits (Huber type)" HS:
  	    {
                 { "Vertical   Aperture" Av:  HSAp  pmac21: 08XY3   {ZC: ZS:}   {ZT: ZB:  }      {{1 mt:  } {2 mb:  }}             }
                 { "Horizontal Aperture" Ah:  HSAp  pmac21: 08XY3   {YC: YS:}   {YO: YI:  }      {{3 mo:  } {4 mi:  }}             }
@@ -184,8 +186,8 @@
                   { 6 GO:St: }
                   { 7 JET:Ps:}
                   { 8 BD:Dh: }
-                  { 9 BD:Dv: }
-                  {10 GS:St: }
+                  { 9 BD:Dv3:}
+                  {10 GS:St2:}
                   {11 GS:Av: }
                   {12 GS:Ah: }
                   {13 BS:Ps: }
@@ -221,7 +223,7 @@
 
 ## Additional list for brushless motors:
 ## (Sergey, 2005/03/29)
-  set brushlessList { CCD:mx: GO:mom: XY:mx3: XY:my3:}
+  set brushlessList { CCD:mx: GO:mom: GO:msh: XY:mx3: XY:my3:}
 
 ## Additional list for geodrives:
 ## The format is: {motor_name pmac_node}
@@ -262,12 +264,12 @@
         { "Beam Delivery" BD:
             {
                 { "Horizontal delivery" Dh:  {HD: } }
-                { "Vertical delivery"   Dv:  {VD: } }
+                { "Vertical delivery"   Dv3: {VH: VA:} }
             }
  	}
         { "Guard Slits" GS:
             {
-                { "Guard Slits Support" St:  {X:     } }
+                { "Guard Slits Support" St2: {X:     } }
                 { "Vertical aperture"   Av:  {ZC: ZS:} }
                 { "Horizontal aperture" Ah:  {YC: YS:} }
             }

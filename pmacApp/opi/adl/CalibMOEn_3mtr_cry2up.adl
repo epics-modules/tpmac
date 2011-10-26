@@ -1,12 +1,12 @@
 
 file {
 	name="/mnt/software/gmca_epics/mtrApp/adl/CalibMOEn_3mtr_cry2up.adl"
-	version=030101
+	version=030104
 }
 display {
 	object {
-		x=133
-		y=223
+		x=154
+		y=65
 		width=680
 		height=730
 	}
@@ -2655,57 +2655,46 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="+ 2*"
+	textix="- 2*"
 }
-composite {
+rectangle {
 	object {
 		x=571
 		y=520
 		width=100
 		height=44
 	}
-	"composite name"=""
-	children {
-		rectangle {
-			object {
-				x=571
-				y=520
-				width=100
-				height=44
-			}
-			"basic attribute" {
-				clr=6
-			}
-		}
-		text {
-			object {
-				x=586
-				y=523
-				width=70
-				height=14
-			}
-			"basic attribute" {
-				clr=14
-			}
-			textix="$(assy)mirrAng"
-			align="horiz. centered"
-		}
-		"text update" {
-			object {
-				x=581
-				y=543
-				width=80
-				height=14
-			}
-			monitor {
-				chan="$(assy)mirrAng"
-				clr=32
-				bclr=14
-			}
-			align="horiz. right"
-			limits {
-			}
-		}
+	"basic attribute" {
+		clr=6
+	}
+}
+text {
+	object {
+		x=586
+		y=523
+		width=70
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="$(assy)mirrAng"
+	align="horiz. centered"
+}
+"text update" {
+	object {
+		x=581
+		y=543
+		width=80
+		height=14
+	}
+	monitor {
+		chan="$(assy)mirrAng"
+		clr=32
+		bclr=14
+	}
+	align="horiz. right"
+	limits {
 	}
 }
 rectangle {
@@ -2812,4 +2801,17 @@ text {
 	}
 	label="Save $(ioc)"
 	press_msg="1"
+}
+"choice button" {
+	object {
+		x=571
+		y=568
+		width=100
+		height=36
+	}
+	control {
+		chan="$(assy)mirrorIN"
+		clr=14
+		bclr=3
+	}
 }

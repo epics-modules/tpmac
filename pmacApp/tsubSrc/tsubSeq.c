@@ -2,44 +2,39 @@
 
 /* tsubSeq.c - Transformation Subroutines For Sequence Function */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
+#include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 #define TSUB_DIAGNOSTIC tsubSeqDebug
 
 #if TSUB_DIAGNOSTIC
 volatile int TSUB_DIAGNOSTIC = 0;
 #define TSUB_MESSAGE	logMsg
-#define TSUB_TRACE(level,code)       { if ( (pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level)) ) { code } }
+#define TSUB_TRACE(level,code)  {if ((pRec->tpro == (level)) || (TSUB_DIAGNOSTIC == (level))) {code}}
 #else
-#define TSUB_TRACE(level,code)      ;
+#define TSUB_TRACE(level,code);
 #endif
 
-/*===========================================
+/* ===========================================
  * tsubSeqInit - Initialization
  */
-long tsubSeqInit
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSeqInit (struct tsubRecord *pRec) {
 	return (0);
 }
 
-/*===========================================
+/* ===========================================
  * tsubSeqProc - Process
  */
-long tsubSeqProc
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubSeqProc (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
@@ -119,4 +114,17 @@ long tsubSeqProc
 
 	return (0);
 }
-	
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubSeqRef[] = {
+    {"tsubSeqInit",  (REGISTRYFUNCTION)tsubSeqInit},
+    {"tsubSeqProc",  (REGISTRYFUNCTION)tsubSeqProc}
+};
+
+static void tsubSeqFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubSeqRef,NELEMENTS(tsubSeqRef));
+}
+epicsExportRegistrar(tsubSeqFunc);
+

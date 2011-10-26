@@ -13,16 +13,39 @@ proc menuPMC {widget bln pmc} {
   menuMedm ${thisMenu} "Command String"            ${adlPMAC}PmacCommand.adl  pmac=${bln}${pmc}
 # menuMedm ${thisMenu} "Tcl/Tk Strings"            ${adlPMAC}PmacTcl.adl      pmac=${bln}${pmc}
   ${thisMenu} add separator
-  if { $bln == "23o:" && $pmc == "pmac10:"} {
-    menuMedm ${thisMenu} "RON905_1 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re1:,mtrNo=9,node=-1
-    menuMedm ${thisMenu} "RON905_2 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re2:,mtrNo=10,node=-1
-    menuMedm ${thisMenu} "RON905_3 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re3:,mtrNo=11,node=-1
-    menuMedm ${thisMenu} "RON905_4 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re4:,mtrNo=12,node=-1
+  if { $bln == "23i:" && $pmc == "pmac10:"} {
+    menuMedm ${thisMenu} "RON905_1" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re1:,mtrNo=13,node=-1
+    menuMedm ${thisMenu} "RON905_2" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re2:,mtrNo=14,node=-1
+    menuMedm ${thisMenu} "RON905_3" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re3:,mtrNo=15,node=-1
+    menuMedm ${thisMenu} "RON905_4" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re4:,mtrNo=16,node=-1
+    menuMedm ${thisMenu} "RON905_S" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}reS:,mtrNo=11,node=-1
     ${thisMenu} add separator
   }
-  menuMedm ${thisMenu} "Motor#32 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}mo:,mtrNo=32,node=-1
-  set optcmd "exec ${xterm} ${tclGMCA2}pezca23id unlink32.pl ${pmc} &"
-  ${thisMenu} add command -label "Motor#32 Unlink from PCS" -command "${optcmd}"
+  if { $bln == "23o:" && $pmc == "pmac10:"} {
+    menuMedm ${thisMenu} "RON905_1" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re1:,mtrNo=13,node=-1
+    menuMedm ${thisMenu} "RON905_2" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re2:,mtrNo=14,node=-1
+    menuMedm ${thisMenu} "RON905_3" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re3:,mtrNo=15,node=-1
+    menuMedm ${thisMenu} "RON905_4" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re4:,mtrNo=16,node=-1
+    menuMedm ${thisMenu} "RON905_S" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}sm12:,mtrNo=12,node=-1
+    ${thisMenu} add separator
+  }
+  if { $bln == "23b:" && $pmc == "pmac10:"} {
+    menuMedm ${thisMenu} "RON905_1" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re1:,mtrNo=25,node=-1
+    menuMedm ${thisMenu} "RON905_2" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re2:,mtrNo=26,node=-1
+    menuMedm ${thisMenu} "RON905_3" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re3:,mtrNo=27,node=-1
+    menuMedm ${thisMenu} "RON905_4" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}re4:,mtrNo=28,node=-1
+    menuMedm ${thisMenu} "RON905_S" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}reS:,mtrNo=31,node=-1
+    ${thisMenu} add separator
+  }
+  if { $bln == "23b:" && ($pmc == "pmac10:" ||$pmc == "pmac11:") } {
+     menuMedm ${thisMenu} "Motor#16 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}mo:,mtrNo=16,node=-1
+     set optcmd "exec ${xterm} ${tclGMCA2}pezca23id unlink32.pl ${pmc} 16 &"
+     ${thisMenu} add command -label "Motor#16 Unlink from PCS" -command "${optcmd}"
+  } else {
+     menuMedm ${thisMenu} "Motor#32 View/Configure" ${adlPMAC}Channel32.adl    pmac=${bln}${pmc},mtr=${bln}${pmc}mo:,mtrNo=32,node=-1
+     set optcmd "exec ${xterm} ${tclGMCA2}pezca23id unlink32.pl ${pmc} 32 &"
+     ${thisMenu} add command -label "Motor#32 Unlink from PCS" -command "${optcmd}"
+  }
 
   if { [ info exists acc59eList ] } {
     set acc59e [ lsearch $acc59eList "${pmc}" ]
@@ -176,7 +199,7 @@ proc menuUNT {widget bln cmp unit} {
 # puts "${axes}"
 # puts "${drives}"
 # puts "${MOTORS}"
-  global medm varyFont errorFile adlMTR sp
+  global medm varyFont errorFile adlMTR adlGMCA Beamline sp SYSTEM
 
   set motors {}
   set motorsNo {}
@@ -269,17 +292,15 @@ proc menuUNT {widget bln cmp unit} {
   menuMedm ${thisMenu} "Calibrate" ${adlMTR}Calib${calib}.adl  ${macro}
   menuMedm ${thisMenu} "Configure" ${adlMTR}Config${calib}.adl ${macro}
   if {$cmp == "COL:" && $asy == "St:"} {
-#   append macro ",ax1=${bln}${cmp}V:,header=Collimator Vertical Setup"
-#   menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
-#   set macro1 "${macro},ax1=${bln}${cmp}V:,header=Collimator Vertical Presets"
-#   menuMedm ${thisMenu} "Setup Vertical Presets" ${adlMTR}Setup_4presets.adl ${macro1}
-#   set macro1 "${macro},ax1=${bln}${cmp}H:,header=Collimator Horizontal Presets"
-#   menuMedm ${thisMenu} "Setup Horizontal Presets" ${adlMTR}Setup_4presets.adl ${macro1}
-    append macro ",ax1=${bln}${cmp}H:,ax2=${bln}${cmp}V:,header=Collimator Positions Presets"
-    menuMedm ${thisMenu} "Setup Presets" ${adlMTR}Setup_4presets_XY.adl ${macro}
+    append macro ",ax1=${bln}${cmp}H:,ax2=${bln}${cmp}V:,pre=${Beamline}:bi:,header=Collimator Positions Presets"
+    menuMedm ${thisMenu} "Setup Presets" ${adlMTR}Setup_5presets_collimator.adl ${macro}
+### See this menu in main.tcl:
+    menuCollimatorPresetsBURT ${thisMenu}
   } elseif {$cmp == "BS:" && $asy == "Ps:"} {
     append macro ",ax1=${bln}${cmp}PT:,header=BeamStop In/Out Setup"
     menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
+    regsub ",ax1=.*" $macro ",ax1=${bln}${cmp}D:,name=critical,header=BeamStop Collision Distance Setup" macro
+    menuMedm ${thisMenu} "Setup Collision Distance" ${adlMTR}SetupCollisionDistance.adl ${macro}
   } elseif {$cmp == "PIN:" && $asy == "St:"} {
     append macro ",ax1=${bln}${cmp}P:,header=Pin Diode In/Out Setup"
     menuMedm ${thisMenu} "Setup In/Out" ${adlMTR}SetupInOut.adl ${macro}
@@ -295,6 +316,9 @@ proc menuUNT {widget bln cmp unit} {
   } elseif {$cmp == "BP:" && $asy == "Kb:"} {
     append macro ",ax1=${bln}${cmp}KBZ:,header=KBM BPM presets"
     menuMedm ${thisMenu} "Setup Position Presets" ${adlMTR}Setup_3presets.adl ${macro}
+  } elseif {$cmp == "TV:" && $asy == "V1:"} {
+    menuMedm ${thisMenu} "Zoom to Backlight calibration" \
+             ${adlGMCA}zoom2backlightCalibration.adl P=${bln},C=${cmp}${asy}lightcalc,SDIS=${cmp}${asy}lightSDIS,ioc=${ioc}
   }
 ## }
 #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -321,7 +345,7 @@ proc menuUNT {widget bln cmp unit} {
 #  proc menuCMP (components menu: slits, mono, mirror...)
 
 proc menuCMP {widget bln component} {
-  global adlMTR ID Beamline
+  global adlMTR adlGMCA ID Beamline
   set name  [lindex $component 0]
   set cmp   [lindex $component 1]
   set units [lindex $component 2]
@@ -331,61 +355,72 @@ proc menuCMP {widget bln component} {
 
   menu ${thisMenu}
 
-if {$cmp == "MO:"} {
-  if {$ID != "none"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Mono.adl assy=${bln}${cmp},xx=${ID}
-    ${thisMenu} add separator
-  } else {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}MonoBM.adl assy=${bln}${cmp}
-    ${thisMenu} add separator
+  if {$cmp == "MO:"} {
+     if {$ID != "none"} {
+        menuMedm ${thisMenu} "Everything"           ${adlMTR}Mono.adl assy=${bln}${cmp},xx=${ID}
+        ${thisMenu} add separator
+     } else {
+        menuMedm ${thisMenu} "Everything"           ${adlMTR}MonoBM.adl assy=${bln}${cmp}
+        ${thisMenu} add separator
+     }
+  } elseif {$cmp == "HD:"} {
+     menuMedm ${thisMenu} "Horiz.Deflecting Mirrors Everything" ${adlMTR}MirrorHDM.adl assy=${bln}${cmp}
+     ${thisMenu} add separator
+     menuMedm ${thisMenu} "Kill / Enable KBM and HDM motors" ${adlGMCA}kill_kbm_hdm.adl P=${bln}
+     ${thisMenu} add separator
+  } elseif {$cmp == "KB:"} {
+     menuMedm ${thisMenu} "Horiz.Mirror Everything" ${adlMTR}MirrorHKB.adl assy=${bln}${cmp}
+     menuMedm ${thisMenu} "Vert. Mirror Everything" ${adlMTR}MirrorVKB.adl assy=${bln}${cmp}
+     ${thisMenu} add separator
+     if { $bln == "23i:" } {
+        menuMedm ${thisMenu} "Kill / Enable KBM motors"         ${adlGMCA}kill_kbm.adl P=${bln}
+     } elseif { $bln == "23o:" } {
+        menuMedm ${thisMenu} "Kill / Enable KBM and HDM motors" ${adlGMCA}kill_kbm_hdm.adl P=${bln}
+     }
+     ${thisMenu} add separator
+  } elseif {$cmp == "WS:"} {
+     menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=White
+     ${thisMenu} add separator
+  } elseif {$cmp == "CS:"} {
+     menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Monochromatic
+     ${thisMenu} add separator
+  } elseif {$cmp == "GS:"} {
+     menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
+     ${thisMenu} add separator
+  } elseif {$cmp == "BD:"} {
+     menuMedm ${thisMenu} "Everything"              ${adlMTR}Delivery.adl assy=${bln}${cmp}
+     ${thisMenu} add separator
+  } elseif {$cmp == "GO:"} {
+     if { $bln != "23b:" } {
+        menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_ID.adl  assy=${bln}${cmp},Beamline=${Beamline},st=St
+#       menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_ID.adl assy=${bln}${cmp},Beamline=${Beamline},st=St
+     } else {
+        menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_BM.adl  assy=${bln}${cmp},Beamline=${Beamline},st=StB
+#       menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_BM.adl assy=${bln}${cmp},Beamline=${Beamline},st=StB
+     }
+     ${thisMenu} add separator
+  } elseif {$cmp == "RB:"} {
+     menuMedm ${thisMenu} "Everything"               ${adlMTR}Robot.adl assy=${bln}${cmp}
+     ${thisMenu} add separator
+  } elseif {$cmp == "SH:"} {
+     menuMedm ${thisMenu} "Shutter Control"          ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:,BL=${bln}
+     ${thisMenu} add separator
+  } elseif {$cmp == "HS:"} {
+     menuMedm ${thisMenu} "Everything"               ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Huber
+     ${thisMenu} add separator
+  } elseif {$cmp == "BP:" } {
+     if {$bln == "23i:" || $bln == "23o:"} {
+        menuMedm ${thisMenu} "Mono BPM Presets"      ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Mo:,ax1=${bln}${cmp}MOZ:
+        if {$bln == "23o:"} {
+           menuMedm ${thisMenu} "HDM1 BPM Presets"   ${adlMTR}Move1_4presets.adl assy=${bln}${cmp}Hd1:,ax1=${bln}${cmp}H1Z:
+        }
+        menuMedm ${thisMenu} "KBM  BPM Presets"      ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Kb:,ax1=${bln}${cmp}KBZ:
+     }
+     if { $bln == "23b:" } {
+        menuMedm ${thisMenu} "VFM BPM Presets"       ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Vf:,ax1=${bln}${cmp}VFZ:
+     }
+     ${thisMenu} add separator
   }
-} elseif {$cmp == "HD:"} {
-    menuMedm ${thisMenu} "Horiz.Deflecting Mirrors Everything" ${adlMTR}MirrorHDM.adl assy=${bln}${cmp}
-    ${thisMenu} add separator
-} elseif {$cmp == "KB:"} {
-    menuMedm ${thisMenu} "Horiz.Mirror Everything" ${adlMTR}MirrorHKB.adl assy=${bln}${cmp}
-    menuMedm ${thisMenu} "Vert. Mirror Everything" ${adlMTR}MirrorVKB.adl assy=${bln}${cmp}
-    ${thisMenu} add separator
-} elseif {$cmp == "WS:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=White
-    ${thisMenu} add separator
-} elseif {$cmp == "CS:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Monochromatic
-    ${thisMenu} add separator
-} elseif {$cmp == "GS:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Guard
-    ${thisMenu} add separator
-} elseif {$cmp == "BD:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Delivery.adl assy=${bln}${cmp}
-    ${thisMenu} add separator
-} elseif {$cmp == "GO:"} {
-    if { $bln != "23b:" } {
-      menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_ID.adl  assy=${bln}${cmp},Beamline=${Beamline},st=St
-#     menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_ID.adl assy=${bln}${cmp},Beamline=${Beamline},st=St
-    } else {
-      menuMedm ${thisMenu} "Everything, no  Kappa" ${adlMTR}GonioOCS_BM.adl  assy=${bln}${cmp},Beamline=${Beamline},st=StB
-#     menuMedm ${thisMenu} "Everything with Kappa" ${adlMTR}GonioOKCS_BM.adl assy=${bln}${cmp},Beamline=${Beamline},st=StB
-    }
-    ${thisMenu} add separator
-} elseif {$cmp == "RB:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Robot.adl assy=${bln}${cmp}
-    ${thisMenu} add separator
-} elseif {$cmp == "SH:"} {
-    menuMedm ${thisMenu} "Shutter Control"         ${adlMTR}Shutter.adl   mtr=${bln}${cmp}mp:,assy=${bln}${cmp}Ps:
-    ${thisMenu} add separator
-} elseif {$cmp == "HS:"} {
-    menuMedm ${thisMenu} "Everything"              ${adlMTR}Slits.adl assy=${bln}${cmp},txt=Huber
-    ${thisMenu} add separator
-} elseif {$cmp == "BP:" } {
-    menuMedm ${thisMenu} "Mono BPM Presets"        ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Mo:,ax1=${bln}${cmp}MOZ:
-    if { $bln == "23o:" } {
-      menuMedm ${thisMenu} "HDM1 BPM Presets"      ${adlMTR}Move1_4presets.adl assy=${bln}${cmp}Hd1:,ax1=${bln}${cmp}H1Z:
-    }
-    if { $bln == "23i:" || $bln == "23o:"} {
-      menuMedm ${thisMenu} "KBM  BPM Presets"      ${adlMTR}Move1_3presets.adl assy=${bln}${cmp}Kb:,ax1=${bln}${cmp}KBZ:
-    }
-    ${thisMenu} add separator
-}
 
   foreach unit $units {menuUNT ${thisMenu} ${bln} ${cmp} ${unit}}
 }
@@ -479,7 +514,7 @@ if { ${SYSTEM} == "LINUX" } {
   if { ($Beamline == "23i" && ($HOST == "bl1ws3" || $HOST == "bl1dl380lower" || $HOST == "bl1dl380upper")) \
     || ($Beamline == "23o" && ($HOST == "bl2ws3" || $HOST == "bl2dl380lower" || $HOST == "bl2dl380upper")) \
     || ($Beamline == "23b" && ($HOST == "bl3ws3" || $HOST == "bl3dl380lower" || $HOST == "bl3dl380upper")) \
-    || ($Beamline == "23d" &&  $HOST == "px0") \
+    || ($Beamline == "23d" && [regexp {^px} $HOST]) \
     || $HOST == "www" } {
 # To make colored text, use, e.g:  -foreground Red
     ${thisMenu} add command -label "Backup/Restore calibrations" \
@@ -499,17 +534,17 @@ if { ( $Beamline == "23i" && $HOST == "keithley1" )     || \
      ( $Beamline == "23b" && $HOST == "bl3ws2" )        || \
      ( $Beamline == "23b" && $HOST == "bl3ws3" )        || \
      ( $Beamline == "23b" && $HOST == "bl3dl380upper" ) || \
-     ( $Beamline == "23d" && $HOST == "px0" )           || \
+     ( $Beamline == "23d" && [regexp {^px} $HOST] )     || \
      ( $HOST == "www" ) } {
   ${thisMenu} add separator
   ${thisMenu} add command -label "Home Motors" \
       -command "exec ${wish} -f ${tclGMCA}homing_v3.tcl ${Beamline} $errorFile & "
 }
 
-if { ( $Beamline == "23i" && $HOST == "bl1ws3" )        || \
-     ( $Beamline == "23o" && $HOST == "bl2ws3" )        || \
-     ( $Beamline == "23b" && $HOST == "bl3ws3" )        || \
-     ( $Beamline == "23d" && $HOST == "px0" )           || \
+if { ( $Beamline == "23i" && ($HOST == "bl1ws3" || $HOST == "bl1ws2") ) || \
+     ( $Beamline == "23o" && ($HOST == "bl2ws3" || $HOST == "bl1ws2") ) || \
+     ( $Beamline == "23b" && ($HOST == "bl3ws3" || $HOST == "bl1ws2") ) || \
+     ( $Beamline == "23d" && [regexp {^px} $HOST])                      || \
      ( $HOST == "www" ) } {
   ${thisMenu} add separator
   ${thisMenu} add command -label "Calibrate Mono" \

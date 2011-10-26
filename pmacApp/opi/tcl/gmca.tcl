@@ -11,17 +11,21 @@ proc pError {text} {
 #-----------------------------------------------------------------------------------------
 # main:
 
-set tclGMCA  [pwd]/
 if { [ file exists /etc/passwd ] } {
    set SYSTEM LINUX
+   set tclGMCA  /home/gmca/epics/gmcaApp/tcl/
 } else {
    set SYSTEM WIN32
-### For Windows you must have cygwin Xwin.exe installed:
-### Set this environment system-wide:
+#  set tclGMCA  {c:\\gmca\\gmcaApp\\tcl\\}
+   set tclGMCA  {c:/gmca/gmcaApp/tcl/}
+### Set this system-wide:
 #  set env(DISPLAY) "locaslhost:0.0"
    set xwin  [exec perl ${tclGMCA}xwin_detect.pl]
    if { $xwin == "0" } {
-      exec XWin.exe -multiwindow -clipboard &
+#     exec XWin.exe -multiwindow -clipboard -screen 0 @1 -screen 0 @2
+#     exec XWin.exe -multiwindow -clipboard -screen 0 1280x1024@1 -screen 0 1600x1200@2 &
+      exec XWin.exe -multiwindow -clipboard -multiplemonitors &
+#     exec XWin.exe -multiwindow -clipboard &
 #     exec sleep 2
       after 2000
    }
@@ -47,6 +51,28 @@ if { $Control != "staff"  &&  $Control != "users" } {
   pError $txt
 }
 
+if { $Control == "staff" && $SYSTEM != "WIN32" } {
+  if { $env(USER) != "gmca"         && \
+       $env(USER) != "user0"        && \
+       $env(USER) != "dyoder"       && \
+       $env(USER) != "makarov"      && \
+       $env(USER) != "mbecker"      && \
+       $env(USER) != "mhilgart"     && \
+       $env(USER) != "nukri"        && \
+       $env(USER) != "ogata"        && \
+       $env(USER) != "rbenn"        && \
+       $env(USER) != "rfischetti"   && \
+       $env(USER) != "sergey"       && \
+       $env(USER) != "spothineni"   && \
+       $env(USER) != "vnagas"       && \
+       $env(USER) != "root" } {
+    catch {exec ${tclGMCA}/authorize.tcl } txt
+    if { $txt != "0" } {
+      pError "Authorization failed (${txt})"
+    }
+  }
+}
+
   set bln ${Beamline}:
   set subTitle (${Control})
   source ${tclGMCA}config.tcl
@@ -67,4 +93,7 @@ if { $Control != "staff"  &&  $Control != "users" } {
   source ${tclGMCA}motion_${Control}.tcl
 # source ${tclGMCA}scan.tcl
 # source ${tclGMCA}tools.tcl
+# if { $SYSTEM != "WIN32" } {
+#    source ${tclGMCA}px.tcl
+# }
 

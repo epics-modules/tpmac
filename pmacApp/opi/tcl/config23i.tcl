@@ -19,14 +19,14 @@
             {
                 { "Mono Positioning"    Ps:  XYPs pmac10: 08XY3    {}      {Z:  Y: } {{ 5 mz: } { 6 my: }}   }
                 { "Mono Energy"         En:  MOEn pmac10: 08XY3  {E: L:}   {QB: T2:} {{ 7 mr: } { 8 mt2:}}   }
-                { "Crystal-1 Tuning"    Tn1: MDCs pmac10: 05X3     {}      {R1:    } {{ 9 mr1:}}             }
-                { "Crystal-2 Tuning"    Tn2: XYPs pmac10: 08XY3    {}      {P2: R2:} {{10 mp2:} {11 mr2:}}   }
+                { "Crystal-1 Tuning"    Tn1: XPs  pmac10: 05X3     {}      {R1:    } {{ 9 mr1:}}             }
+                { "Crystal-2 Tuning"    Tn2: XPs  pmac10: 05X3     {}      {P2:    } {{10 mp2:}}             }
             }
 	}
         { "Beam Position Monitors" BP:
             {
-                { "Mono BMP"            Mo:  MDCs pmac10: 05X3     {}      {MOZ:}    {{12 mmo:}}             }
-                { "KB mirrors BMP"      Kb:  MDCs pmac10: 05X3     {}      {KBZ:}    {{31 mkb:}}             }
+                { "Mono BPM"            Mo:  XPs  pmac10: 05X3     {}      {MOZ:}    {{12 mmo:}}             }
+                { "KB mirrors BPM"      Kb:  XPs  pmac10: 05X3     {}      {KBZ:}    {{31 mkb:}}             }
             }
 	}
         { "Monochromatic Beam Slits" CS:
@@ -114,6 +114,7 @@
  	}
  	{ "PMAC-21 XY Positioners " XY:
  	    {
+ 		{ "Positioner-MICOS"    P2:  XPs   pmac21: 05X3       {}       {Y2: }           {{16 my2: }}                        }
  		{ "Positioner-6"        P6:  XYPs  pmac21: 08XY3      {}       {X6:  Y6: }      {{23 mx6: } {24 my6: }}             }
  	    }
  	}
@@ -200,7 +201,7 @@
 ### This is for ID-out:
 # set brushlessList { CCD:mx: GO:mom: XY:mx3: XY:my3:}
 ### This is for ID-in:
-  set brushlessList { CCD:mx: GO:mom:}
+  set brushlessList { CCD:mx: GO:mom: GO:msh:}
 
 ## Additional list for geodrives:
 ## The format is: {motor_name pmac_node}

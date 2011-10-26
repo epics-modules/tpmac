@@ -5,15 +5,17 @@
 /*           This is for 1-motor assemblies -- Stepanov            */
 /* Chitra:   Modified tsubX.c 2.2 to include offset from upstream mirror    */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubXbmDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -24,11 +26,7 @@ volatile int tsubXbmDebug = 0;
 /* ===========================================
  * tsubXbmPs - Assembly-X Initialization
  */
-long tsubXbmPs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXbmPs (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -38,13 +36,8 @@ long tsubXbmPs
  *	oa = m1:RqsPos
  *	a  = m1:ActPos
  */
-long tsubXbmPsSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXbmPsSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
-
 	return (0);
 }
 
@@ -61,11 +54,7 @@ long tsubXbmPsSync
  *	n  = (0=don't use mirror angle) (1=use mirror angle)
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXbmPsMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXbmPsMtr (struct tsubRecord *pRec) {
 	double TwoAlpha=0.0;
 	if ( pRec->n != 0.0 ) TwoAlpha = 2.0*(pRec->m)/1000.0;                /* recalc. from mrad */
         else                  TwoAlpha = 0.0;
@@ -95,11 +84,7 @@ long tsubXbmPsMtr
  *	n  = (0=don't use mirror angle) (1=use mirror angle)
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXbmPsDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXbmPsDrv (struct tsubRecord *pRec) {
 	double TwoAlpha=0.0;
 
 	if ( pRec->a1 == 0.0 )
@@ -136,11 +121,7 @@ long tsubXbmPsDrv
  *	n  = (0=don't use mirror angle) (1=use mirror angle)
  *      nla = Index of input(m1=1, d1=11)
  */
-long tsubXbmPsSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXbmPsSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, d1;
 
@@ -187,4 +168,20 @@ long tsubXbmPsSpeed
   	if (tsubXbmDebug > 1) printf ("tsubXbmPsSpeed: m1=%5.2f\n",m1);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubXbmPsRef[] = {
+    {"tsubXbmPs",      (REGISTRYFUNCTION)tsubXbmPs},
+    {"tsubXbmPsSync",  (REGISTRYFUNCTION)tsubXbmPsSync},
+    {"tsubXbmPsMtr",   (REGISTRYFUNCTION)tsubXbmPsMtr},
+    {"tsubXbmPsDrv",   (REGISTRYFUNCTION)tsubXbmPsDrv},
+    {"tsubXbmPsSpeed", (REGISTRYFUNCTION)tsubXbmPsSpeed}
+};
+
+static void tsubXbmPsFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubXbmPsRef,NELEMENTS(tsubXbmPsRef));
+}
+epicsExportRegistrar(tsubXbmPsFunc);
 

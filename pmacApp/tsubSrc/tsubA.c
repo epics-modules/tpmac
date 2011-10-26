@@ -4,15 +4,17 @@
 /*           i.e. one-axis rotation stages, i.e. any modular drives  */
 /*           This is for 1-motor assemblies -- Stepanov            */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubADebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -21,11 +23,7 @@ volatile int tsubADebug = 0;
 /* ===========================================
  * tsubAPs - Assembly-A Initialization
  */
-long tsubAPs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAPs (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -35,13 +33,8 @@ long tsubAPs
  *	oa = m1:RqsPos
  *	a  = m1:ActPos
  */
-long tsubAPsSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAPsSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
-
 	return (0);
 }
 
@@ -55,11 +48,7 @@ long tsubAPsSync
  *	a2 = m1:rollover
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubAPsMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAPsMtr (struct tsubRecord *pRec) {
 	double fraction;
 	if (pRec->nla == 0.0)
 	{
@@ -81,11 +70,7 @@ long tsubAPsMtr
  *	a1 = d1:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubAPsDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAPsDrv (struct tsubRecord *pRec) {
 	if ( pRec->a1 == 0.0 )
 	{
 		return (-1);
@@ -112,11 +97,7 @@ long tsubAPsDrv
  *	a3 = d1:Scale
  *      nla = Index of input(m1=1, d1=11)
  */
-long tsubAPsSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubAPsSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, d1;
 	long ifail = 0;
@@ -159,7 +140,23 @@ long tsubAPsSpeed
 	d1 = fabs( 1000.0 *  m1 * pRec->a3 );            /* d1=m1*scale1 */
 	pRec->oa0 = m1;
 	pRec->oa1 = d1;
-  	if (tsubADebug > 1) printf ("tsubAPsSpeed: m1=%5.2f\n",m1); 
+  	if (tsubADebug > 1) printf ("tsubAPsSpeed: m1=%5.2f\n",m1);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubAPsRef[] = {
+    {"tsubAPs",      (REGISTRYFUNCTION)tsubAPs},
+    {"tsubAPsSync",  (REGISTRYFUNCTION)tsubAPsSync},
+    {"tsubAPsMtr",   (REGISTRYFUNCTION)tsubAPsMtr},
+    {"tsubAPsDrv",   (REGISTRYFUNCTION)tsubAPsDrv},
+    {"tsubAPsSpeed", (REGISTRYFUNCTION)tsubAPsSpeed}
+};
+
+static void tsubAPsFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubAPsRef,NELEMENTS(tsubAPsRef));
+}
+epicsExportRegistrar(tsubAPsFunc);
 

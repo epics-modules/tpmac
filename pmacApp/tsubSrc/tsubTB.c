@@ -3,16 +3,17 @@
 /* tsubTBSt.c - Transformation Subroutines for a table supported by 3 motors
  *            - can also be used for the GM/CA CAT KB mirror  */
 
-
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubTBDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -24,11 +25,7 @@ volatile double FCTB = 1.0;
 /* ===========================================
  * tsubTBSt - Table support
  */
-long tsubTBSt
-(
-        struct tsubRecord *     pRec
-)
-{
+static long tsubTBSt (struct tsubRecord *pRec) {
         return (0);
 }
 
@@ -42,15 +39,10 @@ long tsubTBSt
  *	b  = m2:ActPos
  *	c  = m3:ActPos
  */
-long tsubTBStSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubTBStSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
 	pRec->ob = pRec->b;
 	pRec->oc = pRec->c;
-
 	return (0);
 }
 
@@ -76,11 +68,7 @@ long tsubTBStSync
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubTBStMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubTBStMtr (struct tsubRecord *pRec) {
 	if ( (pRec->m == 0.0) || (pRec->n == 0.0) )
 	{
 		return (-1);
@@ -128,11 +116,7 @@ long tsubTBStMtr
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubTBStDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubTBStDrv (struct tsubRecord *pRec) {
 	if ( (pRec->m  == 0.0) || (pRec->n == 0.0) ||
 	     (pRec->a1 == 0.0) ||
 	     (pRec->b1 == 0.0) ||
@@ -180,11 +164,7 @@ long tsubTBStDrv
  *	c1 = d3:Scale
  *	nla = (0=w/Offsets)[abs,pos] (1=wo/Offsets)[rel,vel]
  */
-long tsubTBStAxs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubTBStAxs (struct tsubRecord *pRec) {
 	if ( (pRec->m  == 0.0) ||
              (pRec->n  == 0.0) ||
 	     (pRec->a1 == 0.0) ||
@@ -242,11 +222,7 @@ long tsubTBStAxs
  *	n = Base23
  *      nla = Index of input(m1=1, m2=2, m3=3, d1=11, d2=12, d3=13, x1=21, x2=22, x3=23)
  */
-long tsubTBStSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubTBStSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, m2, m3, d1, d2, d3, x1, x2, x3;
 	long ifail = 0;
@@ -370,4 +346,21 @@ long tsubTBStSpeed
   	if (tsubTBDebug > 1) printf ("tsubTBStSpeed: m1=%5.2f  m2=%5.2f  m3=%5.2f\n",m1,m2,m3);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubTBStRef[] = {
+    {"tsubTBSt",      (REGISTRYFUNCTION)tsubTBSt},
+    {"tsubTBStSync",  (REGISTRYFUNCTION)tsubTBStSync},
+    {"tsubTBStMtr",   (REGISTRYFUNCTION)tsubTBStMtr},
+    {"tsubTBStDrv",   (REGISTRYFUNCTION)tsubTBStDrv},
+    {"tsubTBStAxs",   (REGISTRYFUNCTION)tsubTBStAxs},
+    {"tsubTBStSpeed", (REGISTRYFUNCTION)tsubTBStSpeed}
+};
+
+static void tsubTBStFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubTBStRef,NELEMENTS(tsubTBStRef));
+}
+epicsExportRegistrar(tsubTBStFunc);
 

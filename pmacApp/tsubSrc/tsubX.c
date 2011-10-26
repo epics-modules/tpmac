@@ -4,15 +4,17 @@
 /*           or one-axis rotation stages, i.e. any modular drives  */
 /*           This is for 1-motor assemblies -- Stepanov            */
 
-#include	<vxWorks.h>
-#include	<types.h>
-#include	<stdioLib.h>
+#include	<stdlib.h>
+#include	<stdio.h>
+#include	<string.h>
 #include	<math.h>
 
 #include	<dbDefs.h>
 #include	<tsubRecord.h>
 #include	<dbCommon.h>
 #include	<recSup.h>
+#include	<epicsExport.h>		/* Sergey */
+#include	<registryFunction.h>	/* Sergey */
 
 volatile int tsubXDebug = 0;
 #define TSUB_MESSAGE	logMsg
@@ -21,11 +23,7 @@ volatile int tsubXDebug = 0;
 /* ===========================================
  * tsubXPs - Assembly-X Initialization
  */
-long tsubXPs
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXPs (struct tsubRecord *pRec) {
 	return (0);
 }
 
@@ -35,13 +33,8 @@ long tsubXPs
  *	oa = m1:RqsPos
  *	a  = m1:ActPos
  */
-long tsubXPsSync
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXPsSync (struct tsubRecord *pRec) {
 	pRec->oa = pRec->a;
-
 	return (0);
 }
 
@@ -54,11 +47,7 @@ long tsubXPsSync
  *	a1 = d1:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXPsMtr
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXPsMtr (struct tsubRecord *pRec) {
 	if (pRec->nla == 0.0)
 	{
 		pRec->oa1 = pRec->a * pRec->a1 + pRec->a0;         /* d1=m1*scale1+offset1 */
@@ -78,11 +67,7 @@ long tsubXPsMtr
  *	a1 = d1:Scale
  *	nla = (1=wo/Offsets)[rel,vel] (0=w/Offsets)[abs,pos]
  */
-long tsubXPsDrv
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXPsDrv (struct tsubRecord *pRec) {
 	if ( pRec->a1 == 0.0 )
 	{
 		return (-1);
@@ -109,11 +94,7 @@ long tsubXPsDrv
  *	a3 = d1:Scale
  *      nla = Index of input(m1=1, d1=11)
  */
-long tsubXPsSpeed
-(
-	struct tsubRecord *	pRec
-)
-{
+static long tsubXPsSpeed (struct tsubRecord *pRec) {
 	double prcn = 0.0;
 	double m1, d1;
 	long ifail = 0;
@@ -156,7 +137,24 @@ long tsubXPsSpeed
 	d1 = fabs( 1000.0 *  m1 * pRec->a3 );            /* d1=m1*scale1 */
 	pRec->oa0 = m1;
 	pRec->oa1 = d1;
-  	if (tsubXDebug > 1) printf ("tsubXPsSpeed: m1=%5.2f\n",m1); 
+  	if (tsubXDebug > 1) printf ("tsubXPsSpeed: m1=%5.2f\n",m1);
 	return (ifail);
 }
+
+/* ===========================================
+ *               Names registration
+ *  =========================================== */
+static registryFunctionRef tsubXPsRef[] = {
+    {"tsubXPs",      (REGISTRYFUNCTION)tsubXPs},
+    {"tsubXPsSync",  (REGISTRYFUNCTION)tsubXPsSync},
+    {"tsubXPsMtr",   (REGISTRYFUNCTION)tsubXPsMtr},
+    {"tsubXPsDrv",   (REGISTRYFUNCTION)tsubXPsDrv},
+    {"tsubXPsSpeed", (REGISTRYFUNCTION)tsubXPsSpeed}
+};
+
+static void tsubXPsFunc(void) {				/* declare this via registrar in DBD */
+    registryFunctionRefAdd(tsubXPsRef,NELEMENTS(tsubXPsRef));
+}
+epicsExportRegistrar(tsubXPsFunc);
+
 
