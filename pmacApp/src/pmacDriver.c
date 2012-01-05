@@ -612,7 +612,7 @@ long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long add
 #include <epicsExport.h>
 #include <iocsh.h>
 
-int pmacAsynConfig( char * mbx_prefix, char * asc_prefix )
+int pmacAsynConfig( char * mbx_prefix, char * asc_prefix, unsigned int priority)
 {
     int i;
     char devName[32];
@@ -631,7 +631,7 @@ int pmacAsynConfig( char * mbx_prefix, char * asc_prefix )
             {
                 sprintf( devName,  "/dev/pmac/%d/mbx", pmacVmeCtlr[i].ctlr );
                 sprintf( asynName, "%s%d", mbx_prefix, pmacVmeCtlr[i].ctlr );
-                drvAsynSerialPortConfigure( asynName, devName, 0, 0, 0 );
+                drvAsynSerialPortConfigure( asynName, devName, priority, 0, 0 );
             }
         }
         installedAsynMbx = 1;
@@ -646,7 +646,7 @@ int pmacAsynConfig( char * mbx_prefix, char * asc_prefix )
             {
                 sprintf( devName,  "/dev/pmac/%d/asc", pmacVmeCtlr[i].ctlr );
                 sprintf( asynName, "%s%d", asc_prefix, pmacVmeCtlr[i].ctlr );
-                drvAsynSerialPortConfigure( asynName, devName, 0, 0, 0 );
+                drvAsynSerialPortConfigure( asynName, devName, priority, 0, 0 );
             }
         }
         installedAsynAsc = 1;
@@ -657,13 +657,14 @@ int pmacAsynConfig( char * mbx_prefix, char * asc_prefix )
 
 static const iocshArg pmacAsynConfigArg0 = {"PMAC Mailbox Asyn port prefix",     iocshArgString};
 static const iocshArg pmacAsynConfigArg1 = {"PMAC DPRAM ASCII Asyn port prefix", iocshArgString};
-static const iocshArg * const pmacAsynConfigArgs[2] = {&pmacAsynConfigArg0, &pmacAsynConfigArg1};
+static const iocshArg pmacAsynConfigArg2 = {"Asyn port priority (0 for default)", iocshArgInt};
+static const iocshArg * const pmacAsynConfigArgs[] = {&pmacAsynConfigArg0, &pmacAsynConfigArg1, &pmacAsynConfigArg2};
  
-static const iocshFuncDef pmacAsynConfigDef = {"pmacAsynConfig", 2, pmacAsynConfigArgs};
+static const iocshFuncDef pmacAsynConfigDef = {"pmacAsynConfig", 3, pmacAsynConfigArgs};
 
 static void pmacAsynConfigCallFunc(const iocshArgBuf *args)
 {
-    pmacAsynConfig(args[0].sval, args[1].sval);
+    pmacAsynConfig(args[0].sval, args[1].sval, args[2].ival);
 }
 
 

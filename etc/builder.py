@@ -58,11 +58,12 @@ class pmacVmeConfig(DeltaTauCommsPort):
     DbdFileList = ['pmacInclude']
     _Cards = []       
 
-    def __init__(self, Prefix = "PMAC_S", simulation=None):    
+    def __init__(self, Prefix = "PMAC_S", simulation=None, priority=0):    
         # Now add self to list of cards
         self.Card = len(self._Cards)
         self._Cards.append(self)     
         self.Prefix = Prefix
+        self.priority = priority
         self.vector = self.AllocateIntVector(3)
         assert self.vector == 192 + self.Card * 3, "PMAC should be instantiated first to avoid interrupt clashes, vector = %d"% self.vector                    
         # init the AsynPort superclass
@@ -79,10 +80,11 @@ class pmacVmeConfig(DeltaTauCommsPort):
             print 'pmacDrv()'
             print 'pmacVmeDebug=0'
             print 'drvPmacDebug=0'
-            print 'pmacAsynConfig(0, "%s")' % self.Prefix
+            print 'pmacAsynConfig(0, "%s", %d)' % (self.Prefix, self.priority)
 
     ArgInfo = makeArgInfo(__init__,            
         Prefix = Simple('Prefix for asyn port name, Default of PMAC_S will give PMAC_S0, PMAC_S1, etc.', str),
+        priority = Simple('Priority to give the asyn serial ports', int),
         simulation    = Simple('IP port to connect to if in simulation mode', str))
 
 # Sim requires python simulator running on simulation port
