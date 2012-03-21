@@ -16,6 +16,22 @@ static void sendBufferCallFunc(const iocshArgBuf *args)
     sendBuffer(args[0].sval, args[1].ival, args[2].sval);
 }
 
+
+/* int pmacDisableLimitsCheck(int card, int axis, int allAxes) */
+static const iocshArg pmacDisableLimitsCheckArg0 = {"Card number", iocshArgInt};
+static const iocshArg pmacDisableLimitsCheckArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmacDisableLimitsCheckArg2 = {"Do all axes", iocshArgInt};
+static const iocshArg * const pmacDisableLimitsCheckArgs[] = {&pmacDisableLimitsCheckArg0,
+								  &pmacDisableLimitsCheckArg1, 
+								  &pmacDisableLimitsCheckArg2};
+static const iocshFuncDef pmacDisableLimitsCheckDef = {"pmacDisableLimitsCheck", 3, pmacDisableLimitsCheckArgs};
+static void pmacDisableLimitsCheckCallFunc(const iocshArgBuf *args)
+{
+  pmacDisableLimitsCheck(args[0].ival, args[1].ival, args[2].ival );
+}
+
+
+
 /* int pmacSetOpenLoopEncoderAxis(int card, int axis, int encoder_axis ) */
 static const iocshArg pmacSetOpenLoopEncoderAxisArg0 = {"Card number", iocshArgInt};
 static const iocshArg pmacSetOpenLoopEncoderAxisArg1 = {"Axis number", iocshArgInt};
@@ -89,6 +105,7 @@ void pmacAsynMotorRegister(void)
   iocshRegister(&pmacSetIdlePollPeriodDef, pmacSetIdlePollPeriodCallFunc);
   iocshRegister(&pmacSetAxisScaleDef, pmacSetAxisScaleCallFunc);
   iocshRegister(&pmacSetOpenLoopEncoderAxisDef, pmacSetOpenLoopEncoderAxisCallFunc);
+  iocshRegister(&pmacDisableLimitsCheckDef, pmacDisableLimitsCheckCallFunc);
   iocshRegister(&pmacAsynMotorCreateDef, pmacAsynMotorCreateCallFunc);
   iocshRegister(&sendBufferDef, sendBufferCallFunc);
 }

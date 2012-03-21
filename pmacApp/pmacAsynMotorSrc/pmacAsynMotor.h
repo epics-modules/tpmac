@@ -10,6 +10,7 @@ int pmacSetMovingPollPeriod(int card, int movingPollPeriod);
 int pmacSetIdlePollPeriod(int card, int idlePollPeriod);
 int pmacSetAxisScale( int card, int axis, int scale );
 int pmacSetOpenLoopEncoderAxis(int card, int axis, int encoder_axis );
+int pmacDisableLimitsCheck(int card, int axis, int allAxes);
 int sendBuffer(const char *portName, int addr, const char *command);
 
 #ifdef __cplusplus

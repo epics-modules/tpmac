@@ -184,6 +184,7 @@ typedef struct motorAxisHandle
     int amp_enabled;
     int fatal_following;
     int encoder_axis;
+    int limitsCheckDisable;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -366,7 +367,7 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
     asynUser * pasynUser = (logGlobal? pAxis->pDrv->pasynUser: pAxis->pasynUser);
 
     if ( !logGlobal )
-        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Sending to PMAC %d command : %s\n",pAxis->pDrv->card, command );
+        asynPrint(pasynUser, TRACE_DRIVER, "Sending to PMAC %d command : %s\n", pAxis->pDrv->card, command);
    
     status = pasynOctetSyncIO->writeRead( pasynUser,
                                           command, strlen(command),
@@ -375,7 +376,7 @@ static int motorAxisWriteRead( AXIS_HDL pAxis, char * command, size_t reply_buff
                                           &nwrite, &nread, &eomReason );
 
     if ( !logGlobal && nread != 0 )
-        pAxis->print( pAxis->logParam, TRACE_DRIVER, "Recvd from PMAC %d response: %s\n",pAxis->pDrv->card, response );
+      asynPrint(pasynUser, TRACE_DRIVER, "Recvd from PMAC %d response: %s\n", pAxis->pDrv->card, response);
 
     if (status)
     {
@@ -955,6 +956,8 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     double position, enc_position;
     int nvals;
     epicsUInt32 status[2];
+    int axisProblemFlag = 0;
+    int limitsDisabledBit = 0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
@@ -1050,9 +1053,32 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
 	    pAxis->fatal_following = ((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0);
 
+	    axisProblemFlag = 0;
 	    /*Set any axis specific general problem bits.*/
-	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[0] & PMAX_AXIS_GENERAL_PROB1) != 0) );
-	    motorParam->setInteger( pAxis->params, motorAxisProblem, ((status[1] & PMAX_AXIS_GENERAL_PROB2) != 0) );
+	    if ( ((status[0] & PMAX_AXIS_GENERAL_PROB1) != 0) || ((status[1] & PMAX_AXIS_GENERAL_PROB2) != 0) ) {
+	      axisProblemFlag = 1;
+	    }
+	    /*Check limits disabled bit in ix24, and if we haven't intentially disabled limits
+	      because we are homing, set the motorAxisProblem bit. Also check the limitsCheckDisable
+	      flag, which the user can set to disable this feature.*/
+	    if (!pAxis->limitsCheckDisable) {
+	      /*Check we haven't intentially disabled limits for homing.*/
+	      if (!pAxis->limitsDisabled) {
+		sprintf( command, "i%d24", pAxis->axis);
+		cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
+		if (cmdStatus == MOTOR_AXIS_OK) {
+		  sscanf(response, "$%x", &limitsDisabledBit);
+		  limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
+		  if (limitsDisabledBit) {
+		    axisProblemFlag = 1;
+		    asynPrint(pasynUser, TRACE_ERROR, "*** WARNING *** Limits are disabled on card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis);
+		  }
+		}
+	      }
+	    }
+	    motorParam->setInteger( pAxis->params, motorAxisProblem, axisProblemFlag );
+	    
+
         }
 
 #ifdef REMOVE_LIMITS_ON_HOME
@@ -1267,6 +1293,7 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].pasynUser = pDrv->pasynUser;
                         pDrv->axis[i].scale = 1;
                         pDrv->axis[i].encoder_axis = 0;
+			pDrv->axis[i].limitsCheckDisable = 0;
 
 /*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
                         motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
@@ -1424,6 +1451,59 @@ int pmacSetIdlePollPeriod(int card, int idlePollPeriod)
   }
 
   return status;
+}
+
+/**
+ * Disable the check in the poller that reads ix24 to check if hardware limits
+ * are disabled. By default this is enabled for safety reasons. It sets the motor
+ * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
+ * @param card Numerical ID of the controller.
+ * @param axis Axis number to disable the check for.
+ * @param allAxes Set to 0 if only dealing with one axis. 
+ *                Set to 1 to do all axes (in which case the axis parameter is ignored).
+ */
+int pmacDisableLimitsCheck(int card, int axis, int allAxes)
+{
+  AXIS_HDL pAxis = NULL; 
+  PMACDRV_ID pDrv = NULL;
+  int status = MOTOR_AXIS_ERROR;
+  int i = 0;
+
+  if (pFirstDrv != NULL) {
+    for (pDrv = pFirstDrv; pDrv!=NULL; pDrv = pDrv->pNext) {
+      if (card == pDrv->card) {
+	if (allAxes == 0) {
+	  pAxis = motorAxisOpen( card, axis, NULL );
+	  if (pAxis != NULL) {
+	    drvPrint(drvPrintParam, TRACE_FLOW, "** Disabling ix24 limits check on card %d, axis %d\n", card, axis);
+	    if (epicsMutexLock( pAxis->pDrv->controllerMutexId ) == epicsMutexLockOK) {
+	      pAxis->limitsCheckDisable = 1;
+	      epicsMutexUnlock( pAxis->pDrv->controllerMutexId );
+	      status = MOTOR_AXIS_OK;
+	    }
+	  }
+	} else if (allAxes == 1) {
+	  drvPrint(drvPrintParam, TRACE_FLOW, "** Disabling ix24 limits check on all axes on card %d\n", card);
+	  for (i=0; i<pDrv->nAxes; i++) {
+	    pAxis = &(pDrv->axis[i]);
+	    if (pAxis != NULL) {
+	      drvPrint(drvPrintParam, TRACE_FLOW, "** Disabling ix24 limits check on card %d, axis %d\n", card, i);
+	      if (epicsMutexLock( pAxis->pDrv->controllerMutexId ) == epicsMutexLockOK) {
+		pAxis->limitsCheckDisable = 1;
+		epicsMutexUnlock( pAxis->pDrv->controllerMutexId );
+	      }
+	      if (i == pDrv->nAxes-1) {
+		status = MOTOR_AXIS_OK;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+  
+  return status;
+  
 }
 
 int pmacSetAxisScale( int card, int axis, int scale )
