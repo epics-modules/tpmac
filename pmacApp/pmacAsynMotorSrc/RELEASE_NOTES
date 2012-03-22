@@ -1,17 +1,133 @@
               RELEASE NOTES for asyn version of tpmac module
 
 		            Matthew Pearson
-	                      24 Oct 11
+	                      22 March 11
 
 1. Changes to pmacAsynMotor
 
-* Removed include of motorSupport.dbd, so applications will need to include 
-this manually from now.
+* Added in a check for the limits disabled bit in ix24 in the poller thread.
+By default the poller thread checks the limits disabled bit in ix24, and if limits are 
+disabled sets the motorAxisProblem bit in MSTA. This will cause the motor record 
+to go into MAJOR/STATE alarm (and flash red).
 
-* Added pmacSetOpenLoopEncoderAxis axis configuration routine, to read back the 
-position from a different axis number.
+To disabled this feature, there are two methods.
+
+To disable globally, do:
+
+# pmacDisableLimitsCheck(int card, int axis, int allAxes)
+pmacDisableLimitsCheck(0, 1, 1)
+
+To disable on a per-axis basis, do:
+
+# pmacDisableLimitsCheck(int card, int axis, int allAxes)
+pmacDisableLimitsCheck(0, 1, 0)
+pmacDisableLimitsCheck(0, 2, 0)
+pmacDisableLimitsCheck(0, 3, 0)
+pmacDisableLimitsCheck(0, 4, 0)
+pmacDisableLimitsCheck(0, 5, 0)
+etc.
+
+Make sure the above function calls are called after calling pmacAsynMotorCreate in the IOC startup file.
+
+This has been tested using a Delta Tau Geobrick and a VME PMAC, both on linux and VxWorks.
 
 
+		            Matthew Pearson
+	                      24 Oct 11
+
+Summary of changes over the past few months:
+
+!! Changes to pmacAsynIPPort
+----------------------------
+
+There are quite a few changes to pmacAsynIPPort.c
+* Fix problem with vxWorks builds
+* Fix problem reading large buffers composed of multiple packets
+
+!! Changes to pmacAsynMotorSrc
+------------------------------
+
+Changes to pmacAsynMotor.h:
+* New function prototype to set encoder readback from a different axis number 
+(see Nicks comments below, 15 Feb 10)
+* New utility function to test reading a large buffer
+
+Changes to pmacAsynMotor.dbd:
+* Removed include of motorSupport.dbd, so applications will need to include
+  this manually from now.
+
+Changes to pmacAsynMotorRegister.cc
+* Added register functions for the two new functions so they can be used on
+  the IOC shell.
+
+Changes to pmacAsynMotor.c:
+* Made a fix to the deferred move implementation in the PMAC driver. There
+  was a race condition between turning off deferred moves and the poller
+  thread, which was causing some moves to return early when scanning with
+  deferred moves.
+* Added amplifier fault bit check. The motor record MSTA problem bit will
+  be set if the amplifier fault is on.
+* Changed the set position logic to also set the encoder axis position, if
+  one is in use. This relies on the correct encoder ratio being set by asyn
+  device support.
+* Added axis status poll when setting encoder axis number. Changed it to
+  use global pAsynUser.
+* Added pmacSetOpenLoopEncoderAxis axis configuration routine (see below)
+* Moved pmac abort (A cmd) earlier in command sequence so drive amps have
+  longer to start up
+* Changed definition on motorAxisMoving. Now it is set
+  desired_velocity_zero=0 & motor activated (ix00=1) & amplifier enabled.
+  The new check is for amplifier enabled. This is to prevent EPICS thinking
+  an axis is moving if it has been killed.
+* Redefined motor done. Now, if we are not in position but the amplifier
+  has been disabled then we have finished moving. This will catch fatal
+  following errors. In the same database update the fatal following error
+  flag should be set. This change is to prevent clients from hanging,
+  waiting for a motor to finish moving, in the case of fatal following
+  errors.
+* Only send a J/ if the amplifier output is enabled. When we send a stop,
+  we don't want to power on axes that have been powered off for a reason.
+* Better feedback of axis status in the poller thread.
+
+Changed to pmacAsynCoord:
+
+* This has been moved out of tpmac and into pmacCoord module.
+
+
+                              Nick Rees
+                              15 Feb 10
+
+There are now a couple of axis configuration routines, as well as the
+PMAC global ones. These are pmacSetAxisScale and pmacSetOpenLoopEncoderAxis.
+
+pmacSetAxisScale will scale all positions by a set number, so the
+EPICS motor record (which likes integral positions) can make use of
+the extra 5 bits of interpolated position which are available after
+the decimal point on the pmac. All motor and limit positions for that
+axis will be in the new scale. The call is:
+
+    pmacSetAxisScale(
+        int card,         /* the third parameter for pmacAsynMotorCreate */
+        int axis,         /* a PMAC axis which is driven open loop. */
+        int scale )/* the scale (1-32, usually in powers of 2 */
+
+This call should be made just after pmacAsynMotorCreate. Note that
+scale is an integer, and should normally, sensibly, only be 32, but
+other values are a possibility.
+
+pmacSetOpenLoopEncoderAxis can be used if you want to close open loop
+PMAC axes in the motor record (using UEIP) around a econder on another
+axis in the PMAC. It should also be called just after pmacAsynMotorCreate:
+
+    pmacSetOpenLoopEncoderAxis(
+        int card,         /* the third parameter for pmacAsynMotorCreate */
+        int axis,         /* a PMAC axis which is driven open loop. */
+        int encoder_axis )/* the axis on which the encoder is read back. */
+
+This is fiarly self explanatory. The result of the "P" command on the
+motor axis will be returned on the "motor position" motor status
+field, and the reult of the "P" command on the encoder axis will be
+returned in the "encoder position" motor status field.
 
 
               RELEASE NOTES for asyn version of tpmac module
