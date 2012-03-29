@@ -184,6 +184,7 @@ class pmacDisableLimitsCheck(Device):
     Dependencies = (Tpmac,)
 
     def __init__(self, Controller, Axis = None):
+        self.__super.__init__()
         self.Card = Controller.Card
         self.Axis = Axis
 
