@@ -1,0 +1,47 @@
+#RELEASE Location of external products
+# Run "gnumake clean uninstall install" in the application
+# top directory each time this file is changed.
+#
+# NOTE: The build does not check dependancies on files
+# external to this application. Thus you should run
+# "gnumake clean uninstall install" in the top directory
+# each time EPICS_BASE, SNCSEQ, or any other external
+# module defined in the RELEASE file is rebuilt.
+
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+
+# If you don't want to install into $(TOP) then
+# define INSTALL_LOCATION_APP here
+#INSTALL_LOCATION_APP=<fullpathname>
+
+SUPPORT=/dls_sw/prod/R3.14.11/support
+WORK=/dls_sw/work/R3.14.11/support
+
+ASYN=           $(SUPPORT)/asyn/4-17
+#TPMAC=		$(SUPPORT)/tpmac/3-7dls7
+TPMAC=          /home/mp49/epics/support/tpmac
+#MOTOR=		$(SUPPORT)/motor/6-5-2dls7
+MOTOR=          /home/mp49/epics/support/motor
+PMACCOORD=	$(SUPPORT)/pmacCoord/1-7
+USER=           $(SUPPORT)/userIO/2-2
+UTILITY=	$(SUPPORT)/utility/dls2-8
+AUTOSAVE=       $(SUPPORT)/autosave/4-6dls1
+PMACUTIL=	$(SUPPORT)/pmacUtil/4-8
+CALC=           $(SUPPORT)/calc/2-8dls2
+SSCAN=          $(SUPPORT)/sscan/2-6-6dls1
+STREAMS=	$(SUPPORT)/streamDevice/2-4dls6
+GENSUB=		$(SUPPORT)/genSub/1-6dls2-7
+SNCSEQ=		$(SUPPORT)/seq/2-0-12dls1
+STD=        	$(SUPPORT)/std/2-8dls4
+BUSY=		$(SUPPORT)/busy/1-3dls3
+
+#If using the sequencer, uncomment this line:
+#SNCSEQ=/home/diamond/R3.14.7/prod/support/seq/2-0-10
+
+# EPICS_BASE usually appears last so other apps can override stuff:
+EPICS_BASE=/dls_sw/epics/R3.14.11/base
+
+#Capfast users may need the following definitions
+#CAPFAST_TEMPLATES=
+#SCH2EDIF_PATH=
+-include $(TOP)/configure/RELEASE.private

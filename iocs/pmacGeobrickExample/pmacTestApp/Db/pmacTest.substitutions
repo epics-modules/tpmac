@@ -1,0 +1,17 @@
+#file basic_asyn_motor.template
+file dls_pmac_asyn_motor.template
+{
+pattern { P, M, DESC, DTYP, DIR, VELO, VBAS, ACCL, BDST, BVEL, BACC, PORT, ADDR, MRES, PREC, EGU, DHLM, DLLM, HLSV, INIT, SREV, RRES, TWV, ERES, JAR, UEIP, VMAX, OFF, RDBD, FOFF, SPORT}
+        { mp49t:geo:, A, "A", asynMotor, 0, 5, 0, 0.1, 0, 0, 0, PMAC1, 1, 0.001, 3, mm, 5000, -5000, MINOR, "", 1, 0, 1.0, 0.1, 0, 0, 5, 0, 0, 0, "pmacLV"}
+        { mp49t:geo:, B, "B", asynMotor, 0, 5, 0, 0.1, 0, 0, 0, PMAC1, 2, 0.001, 3, mm, 5000, -5000, MINOR, "", 1, 0, 1.0, 0, 0, 0, 5, 0, 0, 0, "pmacLV"}
+}
+
+
+file bo.template
+{
+pattern {P, R, DTYP, OUT, ZNAM, ONAM, SCAN }
+	{mp49t:geo:, defer, asynUInt32Digital, "@asynMask(PMAC1,6,1)MOTOR_DEFER_MOVES", "GO", "DEFER", Passive }
+}
+
+
+
