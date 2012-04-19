@@ -958,11 +958,24 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     epicsUInt32 status[2];
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
+    static int errorPrintFlag[33];
+    static int errorPrintCount;
+    int errorPrintMin = 10000;
+    int i=0;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
         /*Set any global status bits.*/
-      
+
+      /* Keep error messages from being printed each poll.*/
+      if (errorPrintCount == errorPrintMin) {
+	errorPrintCount = 0;
+	for (i=0; i<33; i++) {
+	  errorPrintFlag[i] = 0;
+	}
+      }
+      errorPrintCount++;
+            
         /*Combine several general errors for the motor record problem error bit.*/
         motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
@@ -1071,12 +1084,20 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 		  limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
 		  if (limitsDisabledBit) {
 		    axisProblemFlag = 1;
-		    asynPrint(pasynUser, TRACE_ERROR, "*** WARNING *** Limits are disabled on card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis);
+		    if (errorPrintFlag[pAxis->axis] == 0) {
+		      asynPrint(pasynUser, TRACE_ERROR, "*** WARNING *** Limits are disabled on card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis);
+		      errorPrintFlag[pAxis->axis] = 1;
+		    }
 		  }
 		}
 	      }
 	    }
 	    motorParam->setInteger( pAxis->params, motorAxisProblem, axisProblemFlag );
+
+	    /* Clear error print flag for this axis if problem has been removed.*/
+	    if (axisProblemFlag == 0) {
+		errorPrintFlag[pAxis->axis] = 0;
+	    }
 	    
 
         }
