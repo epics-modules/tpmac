@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#EDIT THIS SECTION
+
+#export MOTOR=/dls_sw/prod/R3.14.8.2/support/motor/6-4dls9
+export MOTOR=/home/mp49/epics/support/motor
+export PMACUTIL=/home/mp49/epics/support/pmacUtil
+export EPICS_CA_SERVER_PORT=5064
+export EPICS_CA_REPEATER_PORT=5065
+motorPV1=mp49t:geo:A
+motorPV2=mp49t:geo:B
+
+#DO NOT EDIT THIS SECTION
+
+export EDMDATAFILES=${EDMDATAFILES}:${MOTOR}/data/
+export EDMDATAFILES=${EDMDATAFILES}:${PMACUTIL}/data/
+export PATH=${PATH}:EDMDATAFILES
+edm -x -m "motor=${motorPV1}" -port ${EPICS_CA_SERVER_PORT} ${MOTOR}/data/motor.edl &
+edm -x -m "motor=${motorPV2}" -port ${EPICS_CA_SERVER_PORT} ${MOTOR}/data/motor.edl &
+
+
+
+
+
+
+
