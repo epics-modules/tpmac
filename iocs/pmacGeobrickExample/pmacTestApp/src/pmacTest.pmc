@@ -1,0 +1,58 @@
+
+#include clear_PLC_CS.pmc
+
+#include BRICK_M_variables.pmc
+
+#include PLC6_servo_IC_setup.pmc
+
+
+#define $(PLC) 5
+#include PLC_cpu_load.pmc
+
+
+;Load co-ordinate system definitions for S1
+;Horizontal axes:
+#define $(COORD) 2
+#define $(PLC) 17
+#define $(BP) 1
+#define $(BM) 2
+#include CS_blade_slits.pmc
+
+; Generic program for moving an CS axis, used for all CS instances 
+#include PROG10_CS_motion.pmc
+
+#define $(CMDS) ;
+
+#define $(PLC17=DISABLE) ENABLE
+#define $(PLC5=DISABLE) ENABLE
+
+#define $(PLC2=DISABLE) DISABLE 
+#define $(PLC3=DISABLE) DISABLE
+#define $(PLC4=DISABLE) DISABLE
+#define $(PLC6=DISABLE) DISABLE
+#define $(PLC7=DISABLE) DISABLE
+#define $(PLC8=DISABLE) DISABLE
+#define $(PLC9=DISABLE) DISABLE
+#define $(PLC10=DISABLE) DISABLE
+#define $(PLC11=DISABLE) DISABLE
+#define $(PLC12=DISABLE) DISABLE
+#define $(PLC13=DISABLE) DISABLE
+#define $(PLC14=DISABLE) DISABLE
+#define $(PLC15=DISABLE) DISABLE
+#define $(PLC16=DISABLE) DISABLE
+#define $(PLC18=DISABLE) DISABLE
+#define $(PLC19=DISABLE) DISABLE
+#define $(PLC20=DISABLE) DISABLE
+#define $(PLC21=DISABLE) DISABLE
+#define $(PLC22=DISABLE) DISABLE
+#define $(PLC23=DISABLE) DISABLE
+#define $(PLC24=DISABLE) DISABLE
+#define $(PLC25=DISABLE) DISABLE
+#define $(PLC26=DISABLE) DISABLE
+#define $(PLC27=DISABLE) DISABLE
+#define $(PLC28=DISABLE) DISABLE
+#define $(PLC29=DISABLE) DISABLE
+#define $(PLC30=DISABLE) DISABLE
+#define $(PLC31=DISABLE) DISABLE
+
+#include PLC1_BRICK_initialise.pmc

@@ -1,0 +1,137 @@
+#!$(INSTALL)/bin/$(ARCH)/pmacTest
+
+## You may have to change pmacTest to something else
+## everywhere it appears in this file
+
+$(VXWORKS_ONLY)tyBackspaceSet(127)
+$(VXWORKS_ONLY)putenv("EPICS_CA_MAX_ARRAY_BYTES=10000000")
+
+cd "$(INSTALL)"
+
+# Load binaries on architectures that need to do so.
+# VXWORKS_ONLY, LINUX_ONLY and RTEMS_ONLY are macros that resolve
+# to a comment symbol on architectures that are not the current
+# build architecture, so they can be used liberally to do architecture
+# specific things. Alternatively, you can include an architecture
+# specific file.
+$(VXWORKS_ONLY)ld < bin/$(ARCH)/pmacTest.munch
+
+epicsEnvSet("STREAM_PROTOCOL_PATH", "$(PMACUTIL)/data/"
+epicsEnvSet("STREAM_PROTOCOL_PATH", "$(STREAM_PROTOCOL_PATH):$(PMACCOORD)/data/")
+#epicsEnvSet("STREAM_PROTOCOL_PATH", "$(STREAM_PROTOCOL_PATH):$(LEESPC)/data/")
+
+## This drvTS initializer is needed if the IOC has a hardware event system
+#TSinit
+
+## Register all support components
+dbLoadDatabase("dbd/pmacTest.dbd")
+pmacTest_registerRecordDeviceDriver(pdbbase)
+
+
+#####################################################################
+### Set up Delta Tau Geobrick LV Controller ########################
+
+# Connect, through asyn, to the Delta Tau LV controller
+#pmacAsynIPConfigure("pmacLV", "127.0.0.1:50001")
+pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
+#pmacAsynIPConfigure("pmacLV", "172.23.243.200:1025") #a fake address
+
+# Set debugging flags if desired
+#asynSetTraceIOMask("pmacLV",0,15)
+#asynSetTraceMask("pmacLV",0,15)
+#asynSetTraceIOMask("pmacLV",0,255)
+#asynSetTraceMask("pmacLV",0,255)
+
+# Set up the PMAC driver (COMMS PORT, ADDR, CARD, #AXES)
+pmacAsynMotorCreate("pmacLV", 0, 0, 8)
+
+# Disable the limits disabled check for some axes (normally this should be left enabled)
+# pmacDisableLimitsCheck(int card, int axis, int allAxes)
+pmacDisableLimitsCheck(0, 1, 1)
+#pmacDisableLimitsCheck(0, 2, 0)
+#pmacDisableLimitsCheck(0, 3, 0)
+#pmacDisableLimitsCheck(0, 4, 0)
+#pmacDisableLimitsCheck(0, 5, 0)
+#pmacDisableLimitsCheck(0, 6, 0)
+#pmacDisableLimitsCheck(0, 7, 0)
+#pmacDisableLimitsCheck(0, 8, 0)
+
+#S1
+pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 
+#pmacSetCoordStepsPerUnit(0, 1, 1)
+#pmacSetCoordStepsPerUnit(0, 1, 2)
+pmacSetDefaultCoordSteps(10000)
+drvAsynMotorConfigure("PMAC1CS2", "pmacAsynCoord", 0, 9)
+
+# Setup the motor Asyn layer (PORT, DRIVER TYPE, CARD, #AXES+1)
+drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
+
+#asynSetTraceIOMask("PMAC1",0,15)
+#asynSetTraceMask("PMAC1",0,15)
+
+pmacSetIdlePollPeriod(0, 500)
+pmacSetMovingPollPeriod(0, 50)
+
+#Set encoder to come back on different PMAC axis
+#pmacSetOpenLoopEncoderAxis(0, 1, 3)
+
+######################################################################
+
+#pmacAsynIPConfigure("pmacLVPC", "172.23.243.156:1025")
+#drvAsynIPPortConfigure("leespc", "172.23.241.5:7015", 0, 0, 0)
+
+#asynSetTraceIOMask("pmacLVPC",0,15)
+#asynSetTraceMask("pmacLVPC",0,15)
+
+#asynSetTraceIOMask("leespc",0,15)
+#asynSetTraceMask("leespc",0,15)
+
+
+####################################################################
+### Initialise save restore #########################################
+
+save_restoreSet_Debug(0)
+
+### status-PV prefix, so save_restore can find its status PV's.
+save_restoreSet_status_prefix("pmacGeobrickExample:SR")
+
+### ok to restore a save set that had missing values (no CA connection to PV)?
+### ok to save a file if some CA connections are bad?
+save_restoreSet_IncompleteSetsOk(1)
+
+### In the restore operation, a copy of the save file will be written.  The
+### file name can look like "auto_settings.sav.bu", and be overwritten every
+### reboot, or it can look like "auto_settings.sav_020306-083522" (this is what
+### is meant by a dated backup file) and every reboot will write a new copy.
+save_restoreSet_DatedBackupFiles(1)
+
+### specify where save files should go
+set_savefile_path("$(INSTALL)/autosave")
+
+set_requestfile_path("$(INSTALL)/data")
+
+### restore positions before record init, settings before and after
+set_pass0_restoreFile("pmacGeobrickExample.sav")
+#set_pass1_restoreFile("pmacGeobrickExample.sav")
+
+### Number of sequenced backup files (e.g., 'auto_settings.sav0') to write
+save_restoreSet_NumSeqFiles(3)
+
+### Time interval between sequenced backups
+save_restoreSet_SeqPeriodInSeconds(600)
+###########################################################
+
+
+## Load record instances
+dbLoadRecords("db/pmacTest.db")
+
+
+iocInit()
+
+
+
+# save positions every 5 seconds
+create_monitor_set("pmacGeobrickExample.req",5)
+
+
+
