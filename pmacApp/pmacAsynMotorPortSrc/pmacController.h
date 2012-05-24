@@ -16,11 +16,10 @@
 #include "asynMotorAxis.h"
 #include "pmacAxis.h"
 
-
 class pmacController : public asynMotorController {
 
-  public:
-  pmacController(const char *portName, int numAxes, double movingPollPeriod, 
+ public:
+  pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, int numAxes, double movingPollPeriod, 
 		 double idlePollPeriod);
 
   /* These are the methods that we override */
@@ -31,10 +30,15 @@ class pmacController : public asynMotorController {
   pmacAxis* getAxis(int axisNo);
   asynStatus poll();
 
-  protected:
+ protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
  private:
+  asynUser* lowLevelPortUser;
+  asynStatus writeRead(const char *command, char *response);
+  int motorAxisAsynConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+
+  static int _MAXBUF;
 
 };
 

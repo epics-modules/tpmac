@@ -21,7 +21,7 @@ class pmacAxis : public asynMotorAxis
 {
   public:
   /* These are the methods we override from the base class */
-  pmacAxis(pmacController *pController, int axisNo, double stepSize);
+  pmacAxis(pmacController *pController, int axisNo);
   asynStatus move(double position, int relative, double min_velocity, double max_velocity, double acceleration);
   asynStatus moveVelocity(double min_velocity, double max_velocity, double acceleration);
   asynStatus home(double min_velocity, double max_velocity, double acceleration, int forwards);

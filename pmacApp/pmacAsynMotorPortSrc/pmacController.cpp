@@ -22,12 +22,17 @@
 #include <iocsh.h>
 
 #include "pmacController.h"
+#include "asynOctetSyncIO.h"
+#include "asynCommonSyncIO.h"
+
 
 static const char *driverName = "pmacController";
 
+static const int _MAXBUF = 256;
 
-pmacController::pmacController(const char *portName, int numAxes, double movingPollPeriod, 
-		 double idlePollPeriod)
+
+pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+			       int numAxes, double movingPollPeriod, double idlePollPeriod)
   : asynMotorController(portName, numAxes, NUM_MOTOR_DRIVER_PARAMS,
 			0, // No additional interfaces
 			0, // No addition interrupt interfaces
@@ -35,9 +40,20 @@ pmacController::pmacController(const char *portName, int numAxes, double movingP
 			1, // autoconnect
 			0, 0)  // Default priority and stack size
 {
-  static const char *functionName = "pmacController";
+  static const char *functionName = "pmacController::pmacController";
+
+  printf("  Calling %s\n", functionName);
 
   pAxes_ = (pmacAxis **)(asynMotorController::pAxes_);
+
+  // Connect our Asyn user to the low level port that is a parameter to this constructor
+  //if(pasynOctetSyncIO->connect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser, NULL) != asynSuccess) {
+  //   printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
+  //}
+  if (motorAxisAsynConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser, "\006", "\r") != asynSuccess) {
+    printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
+  }
+  
 
   // Create controller-specific parameters
 
@@ -49,11 +65,64 @@ pmacController::pmacController(const char *portName, int numAxes, double movingP
 
 }
 
+int pmacController::motorAxisAsynConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos)
+{
+  asynStatus status = asynSuccess;
+ 
+  status = pasynOctetSyncIO->connect( port, addr, ppasynUser, NULL);
+    if (status) {
+        asynPrint(lowLevelPortUser, ASYN_TRACE_ERROR,
+                  "pmacController::motorAxisAsynConnect: unable to connect to port %s\n", 
+                  port);
+        return status;
+    }
+
+    status = pasynOctetSyncIO->setInputEos(*ppasynUser, inputEos, strlen(inputEos) );
+    if (status) {
+        asynPrint(*ppasynUser, ASYN_TRACE_ERROR,
+                  "drvPmacCreate: unable to set input EOS on %s: %s\n", 
+                  port, (*ppasynUser)->errorMessage);
+        pasynOctetSyncIO->disconnect(*ppasynUser);
+        return status;
+    }
+
+    status = pasynOctetSyncIO->setOutputEos(*ppasynUser, outputEos, strlen(outputEos));
+    if (status) {
+        asynPrint(*ppasynUser, ASYN_TRACE_ERROR,
+                  "drvPmacCreate: unable to set output EOS on %s: %s\n", 
+                  port, (*ppasynUser)->errorMessage);
+        pasynOctetSyncIO->disconnect(*ppasynUser);
+        return status;
+    }
+
+    return status;
+}
+
+/**
+ * Wrapper for asynOctetSyncIO write/read functions.
+ * @param command - String command to send.
+ * @response response - String response back.
+ */
+asynStatus pmacController::writeRead(const char *command, char *response)
+{
+  asynStatus status = asynSuccess;
+
+   int eomReason;
+   size_t bytesOut;
+   size_t bytesIn;
+   printf("Tx> %s\n", command);
+   status = pasynOctetSyncIO->writeRead(lowLevelPortUser, command, strlen(command),
+						   response, 256, /*timeout=*/1.0, &bytesOut, &bytesIn, &eomReason);
+   printf("Rx< %s\n", response);
+   
+  return status;
+}
+
 
 void pmacController::report(FILE *fp, int level)
 {
-  int axis;
-  pmacAxis *pAxis;
+  int axis = 0;
+  pmacAxis *pAxis = NULL;
 
   fprintf(fp, "pmac motor driver %s, numAxes=%d, moving poll period=%f, idle poll period=%f\n", 
           this->portName, numAxes_, movingPollPeriod_, idlePollPeriod_);
@@ -80,10 +149,12 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 {
   int function = pasynUser->reason;
   int status = asynSuccess;
-  pmacAxis *pAxis;
+  pmacAxis *pAxis = NULL;
   double deviceValue = 0.0;
-  static const char *functionName = "writeFloat64";
+  static const char *functionName = "pmacController::writeFloat64";
   
+  printf("  Calling %s\n", functionName);
+
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) return asynError;
 
@@ -112,8 +183,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
   int function = pasynUser->reason;
   int status = asynSuccess;
-  pmacAxis *pAxis;
-  static const char *functionName = "writeInt32";
+  pmacAxis *pAxis = NULL;
+  static const char *functionName = "pmacController::writeInt32";
+
+  printf("  Calling %s\n", functionName);
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) return asynError;
@@ -139,10 +212,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   * \param[in] pasynUser asynUser structure that encodes the axis index number. */
 pmacAxis* pmacController::getAxis(asynUser *pasynUser)
 {
-    int axisNo;
+  int axisNo = 0;
     
-    getAddress(pasynUser, &axisNo);
-    return getAxis(axisNo);
+  getAddress(pasynUser, &axisNo);
+  return getAxis(axisNo);
 }
 
 
@@ -152,8 +225,8 @@ pmacAxis* pmacController::getAxis(asynUser *pasynUser)
   * \param[in] axisNo Axis index number. */
 pmacAxis* pmacController::getAxis(int axisNo)
 {
-    if ((axisNo < 0) || (axisNo >= numAxes_)) return NULL;
-    return pAxes_[axisNo];
+  if ((axisNo < 0) || (axisNo >= numAxes_)) return NULL;
+  return pAxes_[axisNo];
 }
 
 
@@ -161,7 +234,17 @@ pmacAxis* pmacController::getAxis(int axisNo)
 asynStatus pmacController::poll()
 {
   int status = 0;
+  char *command = NULL;
+  char response[256];
+  static const char *functionName = "pmacController::poll";
+
+  printf("  Calling %s\n", functionName);
   
+  /* Read ver as a test.*/
+  command = "ver";
+  writeRead(command, response);
+  printf("Response from ver: %s\n", response);
+
   if (status) return asynError;
   
   callParamCallbacks();
@@ -169,14 +252,16 @@ asynStatus pmacController::poll()
 }
 
 
+
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
 extern "C" {
 
-asynStatus pmacCreateController(const char *portName, int numAxes, int movingPollPeriod, int idlePollPeriod)
+asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
     pmacController *ppmacController
-        = new pmacController(portName, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
+      = new pmacController(portName, lowLevelPortName, lowLevelPortAddress, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
     ppmacController = NULL;
     static const char *functionName = "pmacCreateController";
     
@@ -222,17 +307,21 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
 
 /* pmacCreateController */
 static const iocshArg pmacCreateControllerArg0 = {"Controller port name", iocshArgString};
-static const iocshArg pmacCreateControllerArg1 = {"Number of axes", iocshArgInt};
-static const iocshArg pmacCreateControllerArg2 = {"Moving poll rate (ms)", iocshArgInt};
-static const iocshArg pmacCreateControllerArg3 = {"Idle poll rate (ms)", iocshArgInt};
+static const iocshArg pmacCreateControllerArg1 = {"Low level port name", iocshArgString};
+static const iocshArg pmacCreateControllerArg2 = {"Low level port address", iocshArgInt};
+static const iocshArg pmacCreateControllerArg3 = {"Number of axes", iocshArgInt};
+static const iocshArg pmacCreateControllerArg4 = {"Moving poll rate (ms)", iocshArgInt};
+static const iocshArg pmacCreateControllerArg5 = {"Idle poll rate (ms)", iocshArgInt};
 static const iocshArg * const pmacCreateControllerArgs[] = {&pmacCreateControllerArg0,
-                                                           &pmacCreateControllerArg1,
-                                                           &pmacCreateControllerArg2,
-                                                           &pmacCreateControllerArg3};
-static const iocshFuncDef configpmac = {"pmacCreateController", 4, pmacCreateControllerArgs};
+							    &pmacCreateControllerArg1,
+							    &pmacCreateControllerArg2,
+							    &pmacCreateControllerArg3,
+							    &pmacCreateControllerArg4,
+							    &pmacCreateControllerArg5};
+static const iocshFuncDef configpmac = {"pmacCreateController", 6, pmacCreateControllerArgs};
 static void configpmacCallFunc(const iocshArgBuf *args)
 {
-  pmacCreateController(args[0].sval, args[1].ival, args[2].ival, args[3].ival);
+  pmacCreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival, args[4].ival, args[5].ival);
 }
 
 
