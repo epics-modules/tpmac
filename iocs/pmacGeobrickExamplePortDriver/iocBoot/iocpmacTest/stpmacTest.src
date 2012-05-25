@@ -54,8 +54,8 @@ pmacCreateController("PMAC1", "pmacLV", 0, 2, 50, 500)
 #asynSetTraceIOMask("PMAC1",0,0x15)
 #asynSetTraceMask("PMAC1",0,0x15)
 
+pmacCreateAxis("PMAC1", 0)
 pmacCreateAxis("PMAC1", 1)
-pmacCreateAxis("PMAC1", 2)
 
 
 # Disable the limits disabled check for some axes (normally this should be left enabled)

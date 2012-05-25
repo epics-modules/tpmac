@@ -130,10 +130,10 @@ asynStatus pmacAxis::poll(bool *moving)
   char response[pC_->m_MAXBUF];
   static const char *functionName = "pmacAxis::poll";
 
-  sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_);
+  sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_+1);
   pC_->myDebug(message); 
   
-  sprintf(command, "#%d ???", this->axisNo_);
+  sprintf(command, "#%d ???", this->axisNo_+1);
   this->pC_->lowLevelWriteRead(command, response);
 
   callParamCallbacks();
