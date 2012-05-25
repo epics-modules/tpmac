@@ -22,6 +22,8 @@ class pmacController : public asynMotorController {
   pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, int numAxes, double movingPollPeriod, 
 		 double idlePollPeriod);
 
+  virtual ~pmacController();
+
   /* These are the methods that we override */
   asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
   asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
@@ -34,11 +36,16 @@ class pmacController : public asynMotorController {
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
  private:
-  asynUser* lowLevelPortUser;
-  asynStatus writeRead(const char *command, char *response);
-  int motorAxisAsynConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  asynUser* m_LowLevelPortUser;
+  epicsUInt32 debugFlag;
+  asynStatus lowLevelWriteRead(char *command, char *response);
+  int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  void myDebug(const char *message);
 
-  static int _MAXBUF;
+  static const epicsUInt32 m_MAXBUF;
+  static const epicsUInt32 m_TIMEOUT;
+
+  friend class pmacAxis;
 
 };
 

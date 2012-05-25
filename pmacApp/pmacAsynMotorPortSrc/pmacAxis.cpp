@@ -43,7 +43,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   char *index = NULL;
   int status = 0;
   
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName); 
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -53,8 +53,12 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   /* Wake up the poller task which will make it do a poll, 
    * updating values for this axis to use the new resolution (stepSize_) */   
   pC_->wakeupPoller();
+ 
+}
 
-  printf("  %s\n", functionName); 
+pmacAxis::~pmacAxis() 
+{
+  //Destructor
 }
 
 
@@ -65,7 +69,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   int status = 0;
   static const char *functionName = "pmacAxis::move";
 
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName);  
 
   return asynSuccess;
 }
@@ -78,7 +82,7 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
   char errorBuffer[100] = {0};
   static const char *functionName = "pmacAxis::home";
 
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName); 
 
   return asynSuccess;
 
@@ -91,7 +95,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
   double deviceAcceleration = 0.0;
   static const char *functionName = "pmacAxis::moveVelocity";
 
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName);  
 
   return asynSuccess;
 }
@@ -102,7 +106,7 @@ asynStatus pmacAxis::setPosition(double position)
   int status = 0;
   static const char *functionName = "pmacAxis::setPosition";
   
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName);  
 
   return asynSuccess;
 }
@@ -112,7 +116,7 @@ asynStatus pmacAxis::stop(double acceleration)
   int status = 0;
   static const char *functionName = "pmacAxis::stopAxis";
 
-  printf("  %s\n", functionName); 
+  pC_->myDebug(functionName); 
 
   return asynSuccess;
 }
@@ -121,9 +125,16 @@ asynStatus pmacAxis::poll(bool *moving)
 {
   int status = 0;
   int axisDone = 0;
+  char message[pC_->m_MAXBUF];
+  char command[pC_->m_MAXBUF];
+  char response[pC_->m_MAXBUF];
   static const char *functionName = "pmacAxis::poll";
 
-  printf("  %s\n", functionName); 
+  sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_);
+  pC_->myDebug(message); 
+  
+  sprintf(command, "#%d ???", this->axisNo_);
+  this->pC_->lowLevelWriteRead(command, response);
 
   callParamCallbacks();
   return status ? asynError : asynSuccess;
