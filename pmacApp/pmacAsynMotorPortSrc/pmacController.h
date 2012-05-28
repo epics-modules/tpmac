@@ -44,6 +44,7 @@ class pmacController : public asynMotorController {
  private:
   asynUser* lowLevelPortUser_;
   epicsUInt32 debugFlag_;
+  epicsUInt32 movesDeferred_;
   asynStatus lowLevelWriteRead(const char *command, char *response);
   int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
   void myDebug(const char *message);

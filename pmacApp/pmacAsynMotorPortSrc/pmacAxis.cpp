@@ -77,14 +77,47 @@ pmacAxis::~pmacAxis()
 
 asynStatus pmacAxis::move(double position, int relative, double min_velocity, double max_velocity, double acceleration)
 {
-  //char errorString[100] = {0};
-  //double deviceUnits = 0.0;
-  //int status = 0;
+  asynStatus status = asynError;
   static const char *functionName = "pmacAxis::move";
 
   pC_->myDebug(functionName);  
 
-  return asynSuccess;
+  char acc_buff[32]="\0";
+  char vel_buff[32]="\0";
+  char command[128] = {0};
+  char response[32] = {0};
+
+  if (max_velocity != 0) {
+    sprintf(vel_buff, "I%d22=%f ", axisNo_, (max_velocity / (scale_ * 1000.0) ));
+  }
+  if (acceleration != 0) {
+    if (max_velocity != 0) {
+      sprintf(acc_buff, "I%d20=%f ", axisNo_, (fabs(max_velocity/acceleration) * 1000.0));
+    }
+  }
+
+  if (pC_->movesDeferred_ == 0) {
+    sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, axisNo_,
+	     (relative?"J^":"J="), position/scale_ );
+  } else { /* deferred moves */
+    sprintf( command, "%s%s", vel_buff, acc_buff);
+    deferredPosition_ = position/scale_;
+    deferredMove_ = 1;
+    deferredRelative_ = relative;
+  }
+        
+#ifdef REMOVE_LIMITS_ON_HOME
+  if (limitsDisabled_) {
+    char buffer[32];
+    /* Re-enable limits */
+    sprintf( buffer, " i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+    strcat( command, buffer );
+    limitsDisabled_ = 0;
+  }
+#endif
+  status = pC_->lowLevelWriteRead(command, response);
+  
+  return status;
 }
 
 
@@ -126,12 +159,26 @@ asynStatus pmacAxis::setPosition(double position)
 
 asynStatus pmacAxis::stop(double acceleration)
 {
-  //int status = 0;
+  asynStatus status = asynError;
   static const char *functionName = "pmacAxis::stopAxis";
 
   pC_->myDebug(functionName); 
 
-  return asynSuccess;
+  char command[128] = {0};
+  char response[32] = {0};
+
+  /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
+    we don't want to power on axes that have been powered off for a reason.*/
+  if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
+    sprintf( command, "#%d J/ M%d40=1",  axisNo_, axisNo_ );
+  } else {
+    /*Just set the inposition bit in this case.*/
+    sprintf( command, "M%d40=1",  axisNo_ );
+  }
+  deferredMove_ = 0;
+
+  status = pC_->lowLevelWriteRead(command, response);
+  return status;
 }
 
 asynStatus pmacAxis::poll(bool *moving)
