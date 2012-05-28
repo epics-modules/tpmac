@@ -30,8 +30,81 @@ using std::endl;
 
 static const char *driverName = "pmacController";
 
-const epicsUInt32 pmacController::m_MAXBUF = 1024;
-const epicsUInt32 pmacController::m_TIMEOUT = 5.0;
+const epicsUInt32 pmacController::PMAC_MAXBUF_ = 1024;
+const epicsUInt32 pmacController::PMAC_TIMEOUT_ = 5.0;
+
+const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
+const epicsUInt32 pmacController::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
+const epicsUInt32 pmacController::PMAC_STATUS1_SOFT_POS_CAPTURE  = (0x1<<2);
+const epicsUInt32 pmacController::PMAC_STATUS1_ERROR_TRIGGER     = (0x1<<3);
+const epicsUInt32 pmacController::PMAC_STATUS1_FOLLOW_ENABLE     = (0x1<<4);
+const epicsUInt32 pmacController::PMAC_STATUS1_FOLLOW_OFFSET     = (0x1<<5);
+const epicsUInt32 pmacController::PMAC_STATUS1_PHASED_MOTOR      = (0x1<<6);
+const epicsUInt32 pmacController::PMAC_STATUS1_ALT_SRC_DEST      = (0x1<<7);
+const epicsUInt32 pmacController::PMAC_STATUS1_USER_SERVO        = (0x1<<8);
+const epicsUInt32 pmacController::PMAC_STATUS1_USER_PHASE        = (0x1<<9);
+const epicsUInt32 pmacController::PMAC_STATUS1_HOMING            = (0x1<<10);
+const epicsUInt32 pmacController::PMAC_STATUS1_BLOCK_REQUEST     = (0x1<<11);
+const epicsUInt32 pmacController::PMAC_STATUS1_DECEL_ABORT       = (0x1<<12);
+const epicsUInt32 pmacController::PMAC_STATUS1_DESIRED_VELOCITY_ZERO = (0x1<<13);
+const epicsUInt32 pmacController::PMAC_STATUS1_DATABLKERR        = (0x1<<14);
+const epicsUInt32 pmacController::PMAC_STATUS1_DWELL             = (0x1<<15);
+const epicsUInt32 pmacController::PMAC_STATUS1_INTEGRATE_MODE    = (0x1<<16);
+const epicsUInt32 pmacController::PMAC_STATUS1_MOVE_TIME_ON      = (0x1<<17);
+const epicsUInt32 pmacController::PMAC_STATUS1_OPEN_LOOP         = (0x1<<18);
+const epicsUInt32 pmacController::PMAC_STATUS1_AMP_ENABLED       = (0x1<<19);
+const epicsUInt32 pmacController::PMAC_STATUS1_X_SERVO_ON        = (0x1<<20);
+const epicsUInt32 pmacController::PMAC_STATUS1_POS_LIMIT_SET     = (0x1<<21);
+const epicsUInt32 pmacController::PMAC_STATUS1_NEG_LIMIT_SET     = (0x1<<22);
+const epicsUInt32 pmacController::PMAC_STATUS1_MOTOR_ON          = (0x1<<23);
+
+const epicsUInt32 pmacController::PMAC_STATUS2_IN_POSITION       = (0x1<<0);
+const epicsUInt32 pmacController::PMAC_STATUS2_WARN_FOLLOW_ERR   = (0x1<<1);
+const epicsUInt32 pmacController::PMAC_STATUS2_ERR_FOLLOW_ERR    = (0x1<<2);
+const epicsUInt32 pmacController::PMAC_STATUS2_AMP_FAULT         = (0x1<<3);
+const epicsUInt32 pmacController::PMAC_STATUS2_NEG_BACKLASH      = (0x1<<4);
+const epicsUInt32 pmacController::PMAC_STATUS2_I2T_AMP_FAULT     = (0x1<<5);
+const epicsUInt32 pmacController::PMAC_STATUS2_I2_FOLLOW_ERR     = (0x1<<6);
+const epicsUInt32 pmacController::PMAC_STATUS2_TRIGGER_MOVE      = (0x1<<7);
+const epicsUInt32 pmacController::PMAC_STATUS2_PHASE_REF_ERR     = (0x1<<8);
+const epicsUInt32 pmacController::PMAC_STATUS2_PHASE_SEARCH      = (0x1<<9);
+const epicsUInt32 pmacController::PMAC_STATUS2_HOME_COMPLETE     = (0x1<<10);
+const epicsUInt32 pmacController::PMAC_STATUS2_POS_LIMIT_STOP    = (0x1<<11);
+const epicsUInt32 pmacController::PMAC_STATUS2_DESIRED_STOP      = (0x1<<12);
+const epicsUInt32 pmacController::PMAC_STATUS2_FORE_IN_POS       = (0x1<<13);
+const epicsUInt32 pmacController::PMAC_STATUS2_NA14              = (0x1<<14);
+const epicsUInt32 pmacController::PMAC_STATUS2_ASSIGNED_CS       = (0x1<<15);
+
+/*Global status ???*/
+const epicsUInt32 pmacController::PMAC_GSTATUS_CARD_ADDR             = (0x1<<0);
+const epicsUInt32 pmacController::PMAC_GSTATUS_ALL_CARD_ADDR         = (0x1<<1);
+const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED              = (0x1<<2);
+const epicsUInt32 pmacController::PMAC_GSTATUS_PHASE_CLK_MISS        = (0x1<<3);
+const epicsUInt32 pmacController::PMAC_GSTATUS_MACRO_RING_ERRORCHECK = (0x1<<4);
+const epicsUInt32 pmacController::PMAC_GSTATUS_MACRO_RING_COMMS      = (0x1<<5);
+const epicsUInt32 pmacController::PMAC_GSTATUS_TWS_PARITY_ERROR      = (0x1<<6);
+const epicsUInt32 pmacController::PMAC_GSTATUS_CONFIG_ERROR          = (0x1<<7);
+const epicsUInt32 pmacController::PMAC_GSTATUS_ILLEGAL_LVAR          = (0x1<<8);
+const epicsUInt32 pmacController::PMAC_GSTATUS_REALTIME_INTR         = (0x1<<9);
+const epicsUInt32 pmacController::PMAC_GSTATUS_FLASH_ERROR           = (0x1<<10);
+const epicsUInt32 pmacController::PMAC_GSTATUS_DPRAM_ERROR           = (0x1<<11);
+const epicsUInt32 pmacController::PMAC_GSTATUS_CKSUM_ACTIVE          = (0x1<<12);
+const epicsUInt32 pmacController::PMAC_GSTATUS_CKSUM_ERROR           = (0x1<<13);
+const epicsUInt32 pmacController::PMAC_GSTATUS_LEADSCREW_COMP        = (0x1<<14);
+const epicsUInt32 pmacController::PMAC_GSTATUS_WATCHDOG              = (0x1<<15);
+const epicsUInt32 pmacController::PMAC_GSTATUS_SERVO_REQ             = (0x1<<16);
+const epicsUInt32 pmacController::PMAC_GSTATUS_DATA_GATHER_START     = (0x1<<17);
+const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED2             = (0x1<<18);
+const epicsUInt32 pmacController::PMAC_GSTATUS_DATA_GATHER_ON        = (0x1<<19);
+const epicsUInt32 pmacController::PMAC_GSTATUS_SERVO_ERROR           = (0x1<<20);
+const epicsUInt32 pmacController::PMAC_GSTATUS_CPUTYPE               = (0x1<<21);
+const epicsUInt32 pmacController::PMAC_GSTATUS_REALTIME_INTR_RE      = (0x1<<22);
+const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED3             = (0x1<<23);
+
+const epicsUInt32 pmacController::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG | PMAC_GSTATUS_SERVO_ERROR);
+
+const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
+const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP | PMAC_STATUS2_AMP_FAULT);
 
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 			       int numAxes, double movingPollPeriod, double idlePollPeriod)
@@ -47,17 +120,17 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   printf("  Calling constructor: %s\n", functionName);
 
   //Initialize non static data members
-  m_LowLevelPortUser = NULL;
-  debugFlag = 1;
+  lowLevelPortUser_ = NULL;
+  debugFlag_ = 1;
 
   pAxes_ = (pmacAxis **)(asynMotorController::pAxes_);
 
   // Connect our Asyn user to the low level port that is a parameter to this constructor
-  if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &m_LowLevelPortUser, "\006", "\r") != asynSuccess) {
+  if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_, "\006", "\r") != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
   } else {
     // Create controller-specific parameters
-
+    createParam(PMAC_C_GlobalStatusString,       asynParamInt32, &PMAC_C_GlobalStatus_);
 
     /* Create the poller thread for this controller
      * NOTE: at this point the axis objects don't yet exist, but the poller tolerates this */
@@ -119,7 +192,7 @@ int pmacController::lowLevelPortConnect(const char *port, int addr, asynUser **p
  * @param command - String command to send.
  * @response response - String response back.
  */
-asynStatus pmacController::lowLevelWriteRead(char *command, char *response)
+asynStatus pmacController::lowLevelWriteRead(const char *command, char *response)
 {
   asynStatus status = asynSuccess;
 
@@ -131,17 +204,21 @@ asynStatus pmacController::lowLevelWriteRead(char *command, char *response)
 
    myDebug(functionName);
 
-   asynPrint(m_LowLevelPortUser, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
+   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
    myDebug("Sending: ");
    myDebug(command);
 
-   status = pasynOctetSyncIO->writeRead(m_LowLevelPortUser ,
+   status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
                                           command, strlen(command),
-                                          response, m_MAXBUF,
-                                          m_TIMEOUT,
+                                          response, PMAC_MAXBUF_,
+                                          PMAC_TIMEOUT_,
                                           &nwrite, &nread, &eomReason );
 
-   asynPrint(m_LowLevelPortUser, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
+   if (status) {
+     asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+   }
+
+   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
    myDebug("Received: ");
    myDebug(response);
 
@@ -150,7 +227,7 @@ asynStatus pmacController::lowLevelWriteRead(char *command, char *response)
 
 void pmacController::myDebug(const char *message)
 {
-  if (debugFlag == 1) {
+  if (debugFlag_ == 1) {
     printf("  %s\n", message);
   }
 
@@ -274,15 +351,18 @@ pmacAxis* pmacController::getAxis(int axisNo)
 asynStatus pmacController::poll()
 {
   int status = 0;
+  epicsUInt32 globalStatus = 0;
   char *command = NULL;
-  char response[m_MAXBUF];
+  char response[PMAC_MAXBUF_];
   static const char *functionName = "pmacController::poll";
 
   myDebug(functionName);
+
+  //Set any controller specific parameters. 
+  //Some of these may be used by the axis poll to set axis problem bits.
+  globalStatus = getGlobalStatus();
+  setIntegerParam(this->PMAC_C_GlobalStatus_, ((globalStatus & PMAC_HARDWARE_PROB) != 0));
   
-  /* Read ver as a test.*/
-  command = "ver";
-  lowLevelWriteRead(command, response);
 
   if (status) {
     return asynError;
@@ -293,6 +373,31 @@ asynStatus pmacController::poll()
   return asynSuccess;
 }
 
+
+/**
+ * Read the PMAC global status integer (using a ??? )
+ * @return int The global status integer (23 active bits)
+ */
+epicsUInt32 pmacController::getGlobalStatus(void)
+{
+  char command[32];
+  char response[PMAC_MAXBUF_];
+  int cmdStatus = 0;
+  int nvals = 0;
+  epicsUInt32 pmacStatus = 0;
+  static const char *functionName = "pmacController::getGlobalStatus";
+
+  myDebug(functionName);
+
+  sprintf(command, "???");
+  if (lowLevelWriteRead(command, response) != asynSuccess) {
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading global status. command: %s\n", functionName, command);
+  }
+  nvals = sscanf(response, "%6x", &pmacStatus);
+
+  return pmacStatus;
+
+}
 
 
 /** The following functions have C linkage, and can be called directly or from iocsh */

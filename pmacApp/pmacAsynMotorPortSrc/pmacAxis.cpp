@@ -125,16 +125,29 @@ asynStatus pmacAxis::poll(bool *moving)
 {
   int status = 0;
   int axisDone = 0;
-  char message[pC_->m_MAXBUF];
-  char command[pC_->m_MAXBUF];
-  char response[pC_->m_MAXBUF];
+  int globalStatus = 0;
+  char message[pC_->PMAC_MAXBUF_];
+  char command[pC_->PMAC_MAXBUF_];
+  char response[pC_->PMAC_MAXBUF_];
   static const char *functionName = "pmacAxis::poll";
 
   sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_+1);
   pC_->myDebug(message); 
   
-  sprintf(command, "#%d ???", this->axisNo_+1);
-  this->pC_->lowLevelWriteRead(command, response);
+  //Set axis problem bits based on the controller status (obtained in the controller poll).
+  if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {
+    asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Could not read controller global status.\n", functionName);
+  }
+  if (globalStatus == 1) {
+    printf("**********globalStatus is 1!\n");
+  } else {
+    printf("**********globalStatus is 0\n");
+  }
+  setIntegerParam(pC_->motorStatusProblem_, globalStatus);
+      
+
+  //sprintf(command, "#%d P F", this->axisNo_+1);
+  //this->pC_->lowLevelWriteRead(command, response);
 
   callParamCallbacks();
   return status ? asynError : asynSuccess;
