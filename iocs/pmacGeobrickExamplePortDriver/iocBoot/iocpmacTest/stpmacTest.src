@@ -49,13 +49,13 @@ pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
 
 #New model 3 driver
 #PMACCreateController(motor record port name, low level port, low level port address, num axes, moving polling period (ms), idle polling period (ms))
-pmacCreateController("PMAC1", "pmacLV", 0, 2, 50, 500)
+pmacCreateController("PMAC1", "pmacLV", 0, 3, 50, 500)
 
 #asynSetTraceIOMask("PMAC1",0,0x15)
 #asynSetTraceMask("PMAC1",0,0x15)
 
-pmacCreateAxis("PMAC1", 0)
 pmacCreateAxis("PMAC1", 1)
+pmacCreateAxis("PMAC1", 2)
 
 
 # Disable the limits disabled check for some axes (normally this should be left enabled)

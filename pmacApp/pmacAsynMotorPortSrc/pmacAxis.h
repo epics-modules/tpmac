@@ -33,6 +33,8 @@ class pmacAxis : public asynMotorAxis
   private:
   pmacController *pC_;
   
+  asynStatus getAxisStatus(void);
+
   double setpointPosition_;
   double encoderPosition_;
   double currentVelocity_;
@@ -42,9 +44,17 @@ class pmacAxis : public asynMotorAxis
   double lowLimit_;
   double stepSize_;
   int axisStatus_;
+  int limitsDisabled_;
   double deferredPosition_;
   int deferredMove_;
   int deferredRelative_;
+  int scale_;
+  double previous_position_;
+  int previous_direction_;
+  int amp_enabled_;
+  int fatal_following_;
+  int encoder_axis_;
+  int limitsCheckDisable_;
 
   friend class pmacController;
 };
