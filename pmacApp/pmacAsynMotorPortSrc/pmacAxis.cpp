@@ -54,9 +54,12 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
 {
   static const char *functionName = "pmacAxis::pmacAxis";
   //char *index = NULL;
-  //  int status = 0;
+  //int status = 0;
   
   pC_->myDebug(functionName); 
+
+  //Initialize non-static data members
+  scale_ = 1;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -198,11 +201,6 @@ asynStatus pmacAxis::poll(bool *moving)
   if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {
     asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Could not read controller %s global status.\n", functionName, pC_->portName);
   }
-  //if (globalStatus == 1) {
-  //  printf("**********globalStatus is 1!\n");
-  //} else {
-  //  printf("**********globalStatus is 0\n");
-  //}
   setIntegerParam(pC_->motorStatusProblem_, globalStatus);
       
   //Now poll axis status
