@@ -31,7 +31,7 @@ using std::endl;
 static const char *driverName = "pmacController";
 
 const epicsUInt32 pmacController::PMAC_MAXBUF_ = 1024;
-const epicsUInt32 pmacController::PMAC_TIMEOUT_ = 5.0;
+const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 5.0;
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const epicsUInt32 pmacController::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -107,13 +107,14 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP | PMAC_STATUS2_AMP_FAULT);
 
 
-//C function prototypes that will be called on IOC shell
-
+//C function prototypes, for the functions that will be called on IOC shell
 extern "C" {
 static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod);
 
-static asynStatus pmacCreateAxis(const char *pmacName, int axis);    
+static asynStatus pmacCreateAxis(const char *pmacName, int axis);
+
+  static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);  
 }
 
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
@@ -209,7 +210,7 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    int eomReason;
    size_t nwrite = 0;
    size_t nread = 0;
-   int connected = 0;
+   //int connected = 0;
    static const char *functionName = "pmacController::writeRead";
 
    myDebug(functionName);
@@ -221,7 +222,7 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
                                           command, strlen(command),
                                           response, PMAC_MAXBUF_,
-                                          PMAC_TIMEOUT_,
+					  PMAC_TIMEOUT_,
                                           &nwrite, &nread, &eomReason );
 
    if (status) {
@@ -258,12 +259,9 @@ void pmacController::report(FILE *fp, int level)
     for (axis=0; axis<numAxes_; axis++) {
       pAxis = getAxis(axis);
       fprintf(fp, "  axis %d\n"
-                  "    name = %s\n"
-                  "    step size = %g\n"
-                  "    status = %d\n", 
+                  "    scale = %d\n", 
               pAxis->axisNo_,
-              pAxis->stepSize_,  
-              pAxis->axisStatus_);
+              pAxis->scale_);
     }
   }
 
@@ -277,7 +275,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   int function = pasynUser->reason;
   int status = asynSuccess;
   pmacAxis *pAxis = NULL;
-  double deviceValue = 0.0;
+  //double deviceValue = 0.0;
   static const char *functionName = "pmacController::writeFloat64";
   
   myDebug(functionName);
@@ -360,10 +358,7 @@ pmacAxis* pmacController::getAxis(int axisNo)
 /** Polls the controller, rather than individual axis.*/
 asynStatus pmacController::poll()
 {
-  int status = 0;
   epicsUInt32 globalStatus = 0;
-  char *command = NULL;
-  char response[PMAC_MAXBUF_];
   static const char *functionName = "pmacController::poll";
 
   myDebug(functionName);
@@ -372,11 +367,6 @@ asynStatus pmacController::poll()
   //Some of these may be used by the axis poll to set axis problem bits.
   globalStatus = getGlobalStatus();
   setIntegerParam(this->PMAC_C_GlobalStatus_, ((globalStatus & PMAC_HARDWARE_PROB) != 0));
-  
-
-  if (status) {
-    return asynError;
-  }
   
   callParamCallbacks();
 
@@ -392,7 +382,6 @@ epicsUInt32 pmacController::getGlobalStatus(void)
 {
   char command[32];
   char response[PMAC_MAXBUF_];
-  int cmdStatus = 0;
   int nvals = 0;
   epicsUInt32 pmacStatus = 0;
   static const char *functionName = "pmacController::getGlobalStatus";
@@ -409,6 +398,54 @@ epicsUInt32 pmacController::getGlobalStatus(void)
 
 }
 
+/**
+ * Disable the check in the axis poller that reads ix24 to check if hardware limits
+ * are disabled. By default this is enabled for safety reasons. It sets the motor
+ * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
+ * @param axis Axis number to disable the check for.
+ */
+asynStatus pmacController::pmacDisableLimitsCheck(int axis) 
+{
+  pmacAxis *pA = NULL;
+  static const char *functionName = "pmacController::pmacDisableLimitsCheck";
+
+  this->lock();
+  pA = getAxis(axis);
+  if (pA) {
+    pA->limitsCheckDisable_ = 1;
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
+              "%s. Disabling hardware limits disable check on controller %s, axis %d\n", 
+              functionName, portName, pA->axisNo_);
+
+  }
+  this->unlock();
+  return asynSuccess;
+}
+
+/**
+ * Disable the check in the axis poller that reads ix24 to check if hardware limits
+ * are disabled. By default this is enabled for safety reasons. It sets the motor
+ * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
+ * This function will disable the check for all axes on this controller.
+ */
+asynStatus pmacController::pmacDisableLimitsCheck(void) 
+{
+  pmacAxis *pA = NULL;
+  static const char *functionName = "pmacController::pmacDisableLimitsCheck";
+
+  this->lock();
+  for (int i=0; i<numAxes_; i++) {
+    pA = getAxis(i);
+    if (!pA) continue;
+    pA->limitsCheckDisable_ = 1;
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
+              "%s. Disabling hardware limits disable check on controller %s, axis %d\n", 
+              functionName, portName, pA->axisNo_);
+  }
+  this->unlock();
+  return asynSuccess;
+}
+
 
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
@@ -420,7 +457,6 @@ static asynStatus pmacCreateController(const char *portName, const char *lowLeve
     pmacController *ppmacController
       = new pmacController(portName, lowLevelPortName, lowLevelPortAddress, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
     ppmacController = NULL;
-    static const char *functionName = "pmacCreateController";
 
     return asynSuccess;
 }
@@ -430,7 +466,7 @@ static asynStatus pmacCreateAxis(const char *pmacName,         /* specify which 
 {
   pmacController *pC;
   pmacAxis *pAxis;
-  double stepSize;
+
   static const char *functionName = "pmacCreateAxis";
 
   pC = (pmacController*) findAsynPortDriver(pmacName);
@@ -446,6 +482,40 @@ static asynStatus pmacCreateAxis(const char *pmacName,         /* specify which 
   pC->unlock();
   return asynSuccess;
 }
+
+
+/**
+ * Disable the check in the axis poller that reads ix24 to check if hardware limits
+ * are disabled. By default this is enabled for safety reasons. It sets the motor
+ * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
+ * @param controller Low level Asyn port name for the controller (const char *)
+ * @param axis Axis number to disable the check for.
+ * @param allAxes Set to 0 if only dealing with one axis. 
+ *                Set to 1 to do all axes (in which case the axis parameter is ignored).
+ */
+static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes)
+{
+  pmacController *pC;
+  static const char *functionName = "pmacDisableLimitsCheck";
+
+  pC = (pmacController*) findAsynPortDriver(controller);
+  if (!pC) {
+    cout << driverName << "::" << functionName << " Error port " << controller << " not found." << endl;
+    return asynError;
+  }
+
+  if (allAxes == 1) {
+      cout << "Calling pmacDisableLimitsCheck()." << endl;
+    return pC->pmacDisableLimitsCheck();
+  } else if (allAxes == 0) {
+      cout << "Calling pmacDisableLimitsCheck(axis)." << endl;
+    return pC->pmacDisableLimitsCheck(axis);
+  }
+
+  return asynError;
+}
+
+
 
 
 /* Code for iocsh registration */
@@ -482,10 +552,27 @@ static void configpmacAxisCallFunc(const iocshArgBuf *args)
   pmacCreateAxis(args[0].sval, args[1].ival);
 }
 
+
+/* pmacDisableLimitsCheck */
+static const iocshArg pmacDisableLimitsCheckArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacDisableLimitsCheckArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmacDisableLimitsCheckArg2 = {"All Axes", iocshArgInt};
+static const iocshArg * const pmacDisableLimitsCheckArgs[] = {&pmacDisableLimitsCheckArg0,
+							      &pmacDisableLimitsCheckArg1,
+							      &pmacDisableLimitsCheckArg2};
+static const iocshFuncDef configpmacDisableLimitsCheck = {"pmacDisableLimitsCheck", 3, pmacDisableLimitsCheckArgs};
+
+static void configpmacDisableLimitsCheckCallFunc(const iocshArgBuf *args)
+{
+  pmacDisableLimitsCheck(args[0].sval, args[1].ival, args[2].ival);
+}
+
+
 static void pmacRegister3(void)
 {
-  iocshRegister(&configpmac,            configpmacCallFunc);
-  iocshRegister(&configpmacAxis,        configpmacAxisCallFunc);
+  iocshRegister(&configpmac,                   configpmacCallFunc);
+  iocshRegister(&configpmacAxis,               configpmacAxisCallFunc);
+  iocshRegister(&configpmacDisableLimitsCheck, configpmacDisableLimitsCheckCallFunc);
 }
 epicsExportRegistrar(pmacRegister3);
 

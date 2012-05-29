@@ -59,15 +59,8 @@ pmacCreateAxis("PMAC1", 2)
 
 
 # Disable the limits disabled check for some axes (normally this should be left enabled)
-# pmacDisableLimitsCheck(int card, int axis, int allAxes)
-###pmacDisableLimitsCheck(0, 1, 1)
-#pmacDisableLimitsCheck(0, 2, 0)
-#pmacDisableLimitsCheck(0, 3, 0)
-#pmacDisableLimitsCheck(0, 4, 0)
-#pmacDisableLimitsCheck(0, 5, 0)
-#pmacDisableLimitsCheck(0, 6, 0)
-#pmacDisableLimitsCheck(0, 7, 0)
-#pmacDisableLimitsCheck(0, 8, 0)
+# pmacDisableLimitsCheck(string portname, int axis, int allAxes)
+pmacDisableLimitsCheck("PMAC1", 0, 1)
 
 #S1
 #pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 

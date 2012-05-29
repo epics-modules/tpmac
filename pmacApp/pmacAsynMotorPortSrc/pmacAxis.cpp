@@ -60,6 +60,9 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
 
   //Initialize non-static data members
   scale_ = 1;
+  limitsCheckDisable_ = 0;
+  previous_position_ = 0.0;
+  previous_direction_ = 0;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);

@@ -42,9 +42,8 @@ class pmacAxis : public asynMotorAxis
   double accel_;
   double highLimit_;
   double lowLimit_;
-  double stepSize_;
-  int axisStatus_;
   int limitsDisabled_;
+  double stepSize_;
   double deferredPosition_;
   int deferredMove_;
   int deferredRelative_;

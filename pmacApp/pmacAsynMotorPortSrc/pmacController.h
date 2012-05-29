@@ -34,6 +34,10 @@ class pmacController : public asynMotorController {
   pmacAxis* getAxis(int axisNo);
   asynStatus poll();
 
+  //Disable the check for disabled hardware limits.
+  asynStatus pmacDisableLimitsCheck(int axis);
+  asynStatus pmacDisableLimitsCheck(void);
+
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
@@ -54,7 +58,7 @@ class pmacController : public asynMotorController {
   //static class data members
 
   static const epicsUInt32 PMAC_MAXBUF_;
-  static const epicsUInt32 PMAC_TIMEOUT_;
+  static const epicsFloat64 PMAC_TIMEOUT_;
 
   
   static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
