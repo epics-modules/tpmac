@@ -59,10 +59,25 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   pC_->myDebug(functionName); 
 
   //Initialize non-static data members
+  setpointPosition_ = 0.0;
+  encoderPosition_ = 0.0;
+  currentVelocity_ = 0.0;
+  velocity_ = 0.0;
+  accel_ = 0.0;
+  highLimit_ = 0.0;
+  lowLimit_ = 0.0;
+  limitsDisabled_ = 0;
+  stepSize_ = 1; //Don't need?
+  deferredPosition_ = 0.0;
+  deferredMove_ = 0;
+  deferredRelative_ = 0;
   scale_ = 1;
-  limitsCheckDisable_ = 0;
   previous_position_ = 0.0;
   previous_direction_ = 0;
+  amp_enabled_ = 0;
+  fatal_following_ = 0;
+  encoder_axis_ = 0;
+  limitsCheckDisable_ = 0;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
