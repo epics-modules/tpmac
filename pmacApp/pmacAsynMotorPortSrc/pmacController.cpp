@@ -106,6 +106,16 @@ const epicsUInt32 pmacController::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_MACRO_RING_
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP | PMAC_STATUS2_AMP_FAULT);
 
+
+//C function prototypes that will be called on IOC shell
+
+extern "C" {
+static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+				int numAxes, int movingPollPeriod, int idlePollPeriod);
+
+static asynStatus pmacCreateAxis(const char *pmacName, int axis);    
+}
+
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 			       int numAxes, double movingPollPeriod, double idlePollPeriod)
   : asynMotorController(portName, numAxes, NUM_MOTOR_DRIVER_PARAMS,
@@ -404,7 +414,7 @@ epicsUInt32 pmacController::getGlobalStatus(void)
 
 extern "C" {
 
-asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
     pmacController *ppmacController
@@ -415,8 +425,8 @@ asynStatus pmacCreateController(const char *portName, const char *lowLevelPortNa
     return asynSuccess;
 }
 
-asynStatus pmacCreateAxis(const char *pmacName,         /* specify which controller by port name */
-			  int axis)                    /* axis number 0-7 */
+static asynStatus pmacCreateAxis(const char *pmacName,         /* specify which controller by port name */
+			  int axis)                    /* axis number (start from 1). */
 {
   pmacController *pC;
   pmacAxis *pAxis;
