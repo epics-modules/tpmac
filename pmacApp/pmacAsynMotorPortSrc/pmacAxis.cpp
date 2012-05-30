@@ -196,14 +196,37 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
 
 asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, double acceleration)
 {
-  //int status = 0;
-  //double deviceVelocity = 0.0;
-  //double deviceAcceleration = 0.0;
+  asynStatus status = asynError;
+  char acc_buff[32] = "\0";
+  char vel_buff[32] = "\0";
+  char command[128] = {0};
+  char response[32] = {0};
   static const char *functionName = "pmacAxis::moveVelocity";
 
   pC_->myDebug(functionName);  
 
-  return asynSuccess;
+  if (max_velocity != 0) {
+    sprintf(vel_buff, "I%d22=%f ", axisNo_, (fabs(max_velocity) / (scale_ * 1000.0)));
+  }
+  if (acceleration != 0) {
+    if (max_velocity != 0) {
+      sprintf(acc_buff, "I%d20=%f ", axisNo_, (fabs(max_velocity/acceleration) * 1000.0));
+    }
+  }
+  sprintf(command, "%s%s#%d %s", vel_buff, acc_buff, axisNo_, (max_velocity < 0 ? "J-": "J+") );
+
+#ifdef REMOVE_LIMITS_ON_HOME
+  if (limitsDisabled_) {
+    char buffer[32];
+    /* Re-enable limits */
+    sprintf(buffer, " i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+    strcat(command, buffer);
+    limitsDisabled_ = 0;
+  }
+#endif
+  status = pC_->lowLevelWriteRead(command, response);
+
+  return status;
 }
 
 
