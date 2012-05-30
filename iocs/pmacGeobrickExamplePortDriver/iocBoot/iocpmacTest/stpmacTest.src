@@ -62,6 +62,9 @@ pmacCreateAxis("PMAC1", 2)
 # pmacDisableLimitsCheck(string portname, int axis, int allAxes)
 pmacDisableLimitsCheck("PMAC1", 0, 1)
 
+#Set the axis scale factor
+#pmacSetAxisScale("PMAC1", 1, 10)
+
 #S1
 #pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 
 #pmacSetCoordStepsPerUnit(0, 1, 1)

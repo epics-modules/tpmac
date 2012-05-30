@@ -38,6 +38,9 @@ class pmacController : public asynMotorController {
   asynStatus pmacDisableLimitsCheck(int axis);
   asynStatus pmacDisableLimitsCheck(void);
 
+  //Set the axis scale factor.
+  asynStatus pmacSetAxisScale(int axis, int scale);
+
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
