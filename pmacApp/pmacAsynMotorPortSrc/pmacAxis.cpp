@@ -261,22 +261,18 @@ asynStatus pmacAxis::poll(bool *moving)
   setIntegerParam(pC_->motorStatusProblem_, globalStatus);
       
   //Now poll axis status
-  if ((status = getAxisStatus()) != asynSuccess) {
+  if ((status = getAxisStatus(moving)) != asynSuccess) {
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
 	      "%s: getAxisStatus failed to return asynSuccess. Controller: %s, Axis: %d.\n", functionName, pC_->portName, axisNo_);
   }
   
-
-  //sprintf(command, "#%d P F", this->axisNo_);
-  //this->pC_->lowLevelWriteRead(command, response);
-
   callParamCallbacks();
   return status ? asynError : asynSuccess;
 }
 
 
 
-asynStatus pmacAxis::getAxisStatus(void)
+asynStatus pmacAxis::getAxisStatus(bool *moving)
 {
     char command[pC_->PMAC_MAXBUF_];
     char response[pC_->PMAC_MAXBUF_];
@@ -306,14 +302,12 @@ asynStatus pmacAxis::getAxisStatus(void)
     if (encoder_axis_ != 0) {
       /* Encoder position comes back on a different axis */
       sprintf( command, "#%d ? P #%d P", axisNo_,  encoder_axis_);
-    }
-    else {
+    } else {
       /* Encoder position comes back on this axis - note we initially read 
 	 the following error into the position variable */
       sprintf( command, "#%d ? F P", axisNo_);
     }
     
-    //cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
     cmdStatus = pC_->lowLevelWriteRead(command, response);
     nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &enc_position );
 	
@@ -321,8 +315,7 @@ asynStatus pmacAxis::getAxisStatus(void)
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
 		"drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
 		cmdStatus, command, response );
-    }
-    else {
+    } else {
       int homeSignal = ((status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) != 0);
       int direction = 0;
       
@@ -359,6 +352,13 @@ asynStatus pmacAxis::getAxisStatus(void)
 	  done = 1;
 	}
       }
+
+      if (!done) {
+	*moving = true;
+      } else {
+	*moving = false;
+      }
+
       setIntegerParam(pC_->motorStatusDone_, done);
       setIntegerParam(pC_->motorStatusHighLimit_, ((status[0] & pC_->PMAC_STATUS1_POS_LIMIT_SET) != 0) );
       setIntegerParam(pC_->motorStatusHomed_, homeSignal);

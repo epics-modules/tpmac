@@ -43,10 +43,6 @@ pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
 #asynSetTraceIOMask("pmacLV",0,255)
 #asynSetTraceMask("pmacLV",0,255)
 
-#Old model 2 driver
-# Set up the PMAC driver (COMMS PORT, ADDR, CARD, #AXES)
-#pmacAsynMotorCreate("pmacLV", 0, 0, 8)
-
 #New model 3 driver
 #PMACCreateController(motor record port name, low level port, low level port address, num axes, moving polling period (ms), idle polling period (ms))
 pmacCreateController("PMAC1", "pmacLV", 0, 3, 50, 500)
@@ -57,47 +53,21 @@ pmacCreateController("PMAC1", "pmacLV", 0, 3, 50, 500)
 pmacCreateAxis("PMAC1", 1)
 pmacCreateAxis("PMAC1", 2)
 
-
 # Disable the limits disabled check for some axes (normally this should be left enabled)
 # pmacDisableLimitsCheck(string portname, int axis, int allAxes)
 pmacDisableLimitsCheck("PMAC1", 0, 1)
 
 #Set the axis scale factor
-pmacSetAxisScale("PMAC1", 1, 1)
+#pmacSetAxisScale("PMAC1", 1, 1)
 
 #Set the encoder axis for an open loop axis.
 #pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
-pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
+#pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
 
-#S1
-#pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 
-#pmacSetCoordStepsPerUnit(0, 1, 1)
-#pmacSetCoordStepsPerUnit(0, 1, 2)
-#pmacSetDefaultCoordSteps(10000)
-#drvAsynMotorConfigure("PMAC1CS2", "pmacAsynCoord", 0, 9)
-
-# Setup the motor Asyn layer (PORT, DRIVER TYPE, CARD, #AXES+1)
-#drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
-
-#asynSetTraceIOMask("PMAC1",0,15)
-#asynSetTraceMask("PMAC1",0,15)
-
+########Not implemented these yet. This should be done in asynMotorController.cpp##########
 #pmacSetIdlePollPeriod(0, 500)
 #pmacSetMovingPollPeriod(0, 50)
 
-#Set encoder to come back on different PMAC axis
-#pmacSetOpenLoopEncoderAxis(0, 1, 3)
-
-######################################################################
-
-#pmacAsynIPConfigure("pmacLVPC", "172.23.243.156:1025")
-#drvAsynIPPortConfigure("leespc", "172.23.241.5:7015", 0, 0, 0)
-
-#asynSetTraceIOMask("pmacLVPC",0,15)
-#asynSetTraceMask("pmacLVPC",0,15)
-
-#asynSetTraceIOMask("leespc",0,15)
-#asynSetTraceMask("leespc",0,15)
 
 
 ####################################################################

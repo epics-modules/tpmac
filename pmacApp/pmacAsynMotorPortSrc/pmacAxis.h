@@ -33,7 +33,7 @@ class pmacAxis : public asynMotorAxis
   private:
   pmacController *pC_;
   
-  asynStatus getAxisStatus(void);
+  asynStatus getAxisStatus(bool *moving);
   asynStatus getAxisInitialStatus(void);
 
   double setpointPosition_;
