@@ -109,12 +109,18 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRE
 
 //C function prototypes, for the functions that will be called on IOC shell
 extern "C" {
-static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
-				int numAxes, int movingPollPeriod, int idlePollPeriod);
+  static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+					 int numAxes, int movingPollPeriod, int idlePollPeriod);
+  
+  static asynStatus pmacCreateAxis(const char *pmacName, int axis);
+  
+  static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);
+  
+  static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale);
+  
+  static asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis);
 
-static asynStatus pmacCreateAxis(const char *pmacName, int axis);
-
-  static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);  
+  
 }
 
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
@@ -418,7 +424,10 @@ asynStatus pmacController::pmacDisableLimitsCheck(int axis)
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
               "%s. Disabling hardware limits disable check on controller %s, axis %d\n", 
               functionName, portName, pA->axisNo_);
-
+  } else {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, 
+	      "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName, axis);
+    return asynError;
   }
   this->unlock();
   return asynSuccess;
@@ -464,10 +473,6 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale)
 
   myDebug(functionName);
 
-  if (axis < 0) {
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: axis number must be 0 or positive.\n", functionName);
-    return asynError;
-  }
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
     return asynError;
@@ -481,13 +486,58 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale)
               "%s. Setting scale factor of &d on axis %d, on controller %s.\n", 
               functionName, pA->scale_, pA->axisNo_, portName);
 
+  } else {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, 
+	      "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName, axis);
+    return asynError;
   }
   this->unlock();
   return asynSuccess;
 }
 
 
+/**
+ * If we have an open loop axis that has an encoder coming back on a different channel
+ * then the encoder readback axis number can be set here. This ensures that the encoder
+ * will be used for the position readback. It will also ensure that the encoder axis
+ * is set correctly when performing a set position on the open loop axis.
+ *
+ * To use this function, the axis number used for the encoder must have been configured
+ * already using pmacCreateAxis.
+ *
+ * @param controller The Asyn port name for the PMAC controller.
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param encoder_axis The axis number that the encoder is fed into.  
+ */
+asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis)
+{
+  pmacAxis *pA = NULL;
+  static const char *functionName = "pmacController::pmacSetOpenLoopEncoderAxis";
 
+  myDebug(functionName);
+
+  this->lock();
+  pA = getAxis(axis);
+  if (pA) {
+    //Test that the encoder axis has also been configured
+    if (getAxis(encoder_axis) == NULL) {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, 
+		"%s: Error: encoder axis %d has not been configured using pmacCreateAxis.\n", functionName, encoder_axis);
+      return asynError;
+    }
+    pA->encoder_axis_ = encoder_axis;
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
+              "%s. Setting encoder axis &d for axis %d, on controller %s.\n", 
+              functionName, pA->encoder_axis_, pA->axisNo_, portName);
+
+  } else {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, 
+	      "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName, axis);
+    return asynError;
+  }
+  this->unlock();
+  return asynSuccess;
+}
 
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
@@ -579,6 +629,33 @@ static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale)
   return pC->pmacSetAxisScale(axis, scale);
 }
 
+  
+/**
+ * If we have an open loop axis that has an encoder coming back on a different channel
+ * then the encoder readback axis number can be set here. This ensures that the encoder
+ * will be used for the position readback. It will also ensure that the encoder axis
+ * is set correctly when performing a set position on the open loop axis.
+ *
+ * To use this function, the axis number used for the encoder must have been configured
+ * already using pmacCreateAxis.
+ *
+ * @param controller The Asyn port name for the PMAC controller.
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param encoder_axis The axis number that the encoder is fed into.  
+ */
+static asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
+{
+  pmacController *pC;
+  static const char *functionName = "pmacSetOpenLoopEncoderAxis";
+
+  pC = (pmacController*) findAsynPortDriver(controller);
+  if (!pC) {
+    cout << driverName << "::" << functionName << " Error: port " << controller << " not found." << endl;
+    return asynError;
+  }
+    
+  return pC->pmacSetOpenLoopEncoderAxis(axis, encoder_axis);
+}
 
 
 /* Code for iocsh registration */
@@ -646,6 +723,20 @@ static void configpmacSetAxisScaleCallFunc(const iocshArgBuf *args)
   pmacSetAxisScale(args[0].sval, args[1].ival, args[2].ival);
 }
 
+/* pmacSetOpenLoopEncoderAxis */
+static const iocshArg pmacSetOpenLoopEncoderAxisArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacSetOpenLoopEncoderAxisArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmacSetOpenLoopEncoderAxisArg2 = {"Encoder Axis", iocshArgInt};
+static const iocshArg * const pmacSetOpenLoopEncoderAxisArgs[] = {&pmacSetOpenLoopEncoderAxisArg0,
+								  &pmacSetOpenLoopEncoderAxisArg1,
+								  &pmacSetOpenLoopEncoderAxisArg2};
+static const iocshFuncDef configpmacSetOpenLoopEncoderAxis = {"pmacSetOpenLoopEncoderAxis", 3, pmacSetOpenLoopEncoderAxisArgs};
+
+static void configpmacSetOpenLoopEncoderAxisCallFunc(const iocshArgBuf *args)
+{
+  pmacSetOpenLoopEncoderAxis(args[0].sval, args[1].ival, args[2].ival);
+}
+
 
 static void pmacRegister3(void)
 {
@@ -653,6 +744,7 @@ static void pmacRegister3(void)
   iocshRegister(&configpmacAxis,               configpmacAxisCallFunc);
   iocshRegister(&configpmacDisableLimitsCheck, configpmacDisableLimitsCheckCallFunc);
   iocshRegister(&configpmacSetAxisScale, configpmacSetAxisScaleCallFunc);
+  iocshRegister(&configpmacSetOpenLoopEncoderAxis, configpmacSetOpenLoopEncoderAxisCallFunc);
 }
 epicsExportRegistrar(pmacRegister3);
 

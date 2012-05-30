@@ -65,6 +65,10 @@ pmacDisableLimitsCheck("PMAC1", 0, 1)
 #Set the axis scale factor
 pmacSetAxisScale("PMAC1", 1, 1)
 
+#Set the encoder axis for an open loop axis.
+#pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
+pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
+
 #S1
 #pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 
 #pmacSetCoordStepsPerUnit(0, 1, 1)

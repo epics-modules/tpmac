@@ -41,6 +41,9 @@ class pmacController : public asynMotorController {
   //Set the axis scale factor.
   asynStatus pmacSetAxisScale(int axis, int scale);
 
+  //Set the open loop encoder axis
+  asynStatus pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis);
+
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
