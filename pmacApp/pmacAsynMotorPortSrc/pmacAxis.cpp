@@ -184,14 +184,94 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
  
 asynStatus pmacAxis::home(double min_velocity, double max_velocity, double acceleration, int forwards)
 {
-  //int status = 0;
-  //char errorBuffer[100] = {0};
+  asynStatus status = asynError;
+  char command[128] = {0};
+  char response[128] = {0};
   static const char *functionName = "pmacAxis::home";
 
   pC_->myDebug(functionName); 
 
-  return asynSuccess;
+  sprintf(command, "#%d HOME", axisNo_);
+  
+#ifdef REMOVE_LIMITS_ON_HOME
+ /* If homing onto an end-limit and home velocity is in the right direction, clear limits protection */
+  int macro_station = ((axisNo_-1)/2)*4 + (axisNo_-1)%2;
+  int home_type = 0;
+  int home_flag = 0;
+  int flag_mode = 0;
+  int nvals = 0;
+  int home_offset = 0;
+  int controller_type = 0;
+  double home_velocity = 0.0;
+  char buffer[128] = {0};
 
+  /* Discover type of controller */
+  strcpy(buffer, "cid");
+  status = pC_->lowLevelWriteRead(buffer, response);
+  nvals  = sscanf(response, "%d", &controller_type);
+  
+  if (controller_type == 603382) {
+    printf("%s. This is a Geobrick LV\n", functionName);
+  } else if (controller_type == 602413) {
+    printf("%s. This is a Turbo PMAC 2 Ultralite\n", functionName);
+  } else {
+    printf("%s. Error. Unknown controller type = %d\n", functionName, controller_type);
+    return asynError;
+  }
+
+  if (controller_type == 603382) {
+    /* Read home flags and home direction from Geobrick LV */ 
+    if (axisNo_ < 5) {
+      sprintf(buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", axisNo_, axisNo_, axisNo_, axisNo_, axisNo_);
+    } else {
+      sprintf(buffer, "I71%d2 I71%d3 i%d24 i%d23 i%d26", axisNo_-4, axisNo_-4, axisNo_, axisNo_, axisNo_);
+    }
+    printf("%s\n", buffer);
+    status = pC_->lowLevelWriteRead(buffer, response);
+    nvals = sscanf(response, "%d %d $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset);
+  }
+  
+  if( controller_type == 602413 ) {
+    /* Read home flags and home direction from VME PMAC */ 
+    sprintf(buffer, "ms%d,i912 ms%d,i913 i%d24 i%d23 i%d26", macro_station, macro_station, axisNo_, axisNo_, axisNo_);
+    status = pC_->lowLevelWriteRead(buffer, response);
+    nvals = sscanf(response, "$%x $%x $%x %lf %d", &home_type, &home_flag, &flag_mode, &home_velocity, &home_offset);
+  }
+
+  if (status || (nvals !=5)) {
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+	      "%s: Error: Cannot read home flags. status=%d, nvals=%d. Controller: %s, Axis: %d.\n", 
+	      functionName, status, nvals, pC_->portName, axisNo_);
+    return asynError;
+  }
+
+  printf("home_type = %d, home_flag = %d, flag_mode = %x, home_velocity = %f, home_offset = %d\n", home_type, home_flag, flag_mode, home_velocity, home_offset );
+  printf("status = %d, nvals = %d\n", status, nvals);
+  
+  if (max_velocity != 0) {
+    home_velocity = (forwards?1:-1)*(fabs(max_velocity) / 1000.0);
+  }
+
+  if ( ( home_type <= 15 )      && 
+       ( home_type % 4 >= 2 )   &&
+       !( flag_mode & 0x20000 ) &&
+       (( home_velocity > 0 && home_flag == 1 && home_offset <= 0 ) || 
+	( home_velocity < 0 && home_flag == 2 && home_offset >= 0 )    )   ) {
+      sprintf(buffer, " i%d24=i%d24|$20000", axisNo_, axisNo_ );
+      strcat(command, buffer);
+      limitsDisabled_ = 1;
+      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, 
+		"%s. Disabling limits whilst homing PMAC controller %s, axis %d, type:%d, flag:$%x, vel:%f\n",
+		functionName, pC_->portName, axisNo_, home_type, home_flag, home_velocity);
+  } else {
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+	      "%s: Error: Cannot disable limits to home PMAC controller %s, axis %d, type:%x, flag:$%d, vel:%f, mode:0x%x, offset: %d\n", 
+	      functionName, pC_->portName, axisNo_, home_type, home_flag, home_velocity, flag_mode, home_offset);
+  }
+#endif
+  status = pC_->lowLevelWriteRead(command, response);
+
+  return status;
 }
 
 asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, double acceleration)
