@@ -348,7 +348,7 @@ asynStatus pmacAxis::getAxisStatus(void)
 	    if (limitsDisabledBit) {
 	      axisProblemFlag = 1;
 	      if (errorPrintFlag[axisNo_] == 0) {
-		asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %d, axis %d\n", pC_->portName, axisNo_);
+		asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
 		errorPrintFlag[axisNo_] = 1;
 	      }
 	    }
