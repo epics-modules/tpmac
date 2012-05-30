@@ -82,6 +82,12 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
 
+  //Do an initial poll to get some values from the PMAC
+  if (getAxisInitialStatus() != asynSuccess) {
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+	      "%s: getAxisInitialStatus failed to return asynSuccess. Controller: %s, Axis: %d.\n", functionName, pC_->portName, axisNo_);
+  }
+
   callParamCallbacks();
 
   /* Wake up the poller task which will make it do a poll, 
@@ -89,6 +95,39 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   pC_->wakeupPoller();
  
 }
+
+asynStatus pmacAxis::getAxisInitialStatus(void)
+{
+  char command[pC_->PMAC_MAXBUF_];
+  char response[pC_->PMAC_MAXBUF_];
+  int cmdStatus = 0;
+  double low_limit = 0.0;
+  double high_limit = 0.0;
+  double pgain = 0.0;
+  double igain = 0.0;
+  double dgain = 0.0;
+  int nvals = 0;
+
+  static const char *functionName = "pmacAxis::getAxisInitialStatus";
+
+  sprintf(command, "I%d13 I%d14 I%d30 I%d31 I%d33", axisNo_, axisNo_, axisNo_, axisNo_, axisNo_);
+  cmdStatus = pC_->lowLevelWriteRead(command, response);
+  nvals = sscanf(response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain, &igain);
+
+  if (cmdStatus || nvals != 5) {
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: initial status poll failed on axis %d.\n", functionName, axisNo_);
+    return asynError;
+  } else {
+    setDoubleParam(pC_->motorLowLimit_,  low_limit*scale_);
+    setDoubleParam(pC_->motorHighLimit_, high_limit*scale_);
+    setDoubleParam(pC_->motorPgain_,     pgain);
+    setDoubleParam(pC_->motorIgain_,     igain);
+    setDoubleParam(pC_->motorDgain_,     dgain);
+    setIntegerParam(pC_->motorStatusHasEncoder_, 1);
+  }
+  return asynSuccess;
+}
+
 
 pmacAxis::~pmacAxis() 
 {
@@ -217,13 +256,13 @@ asynStatus pmacAxis::poll(bool *moving)
   
   //Set axis problem bits based on the controller status (obtained in the controller poll).
   if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {
-    asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Could not read controller %s global status.\n", functionName, pC_->portName);
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Could not read controller %s global status.\n", functionName, pC_->portName);
   }
   setIntegerParam(pC_->motorStatusProblem_, globalStatus);
       
   //Now poll axis status
   if ((status = getAxisStatus()) != asynSuccess) {
-    asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR,
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
 	      "%s: getAxisStatus failed to return asynSuccess. Controller: %s, Axis: %d.\n", functionName, pC_->portName, axisNo_);
   }
   
@@ -279,7 +318,7 @@ asynStatus pmacAxis::getAxisStatus(void)
     nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &enc_position );
 	
     if ( cmdStatus || nvals != 4) {
-      asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR,
+      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
 		"drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
 		cmdStatus, command, response );
     }
@@ -348,7 +387,7 @@ asynStatus pmacAxis::getAxisStatus(void)
 	    if (limitsDisabledBit) {
 	      axisProblemFlag = 1;
 	      if (errorPrintFlag[axisNo_] == 0) {
-		asynPrint(pC_->lowLevelPortUser_, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
+		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
 		errorPrintFlag[axisNo_] = 1;
 	      }
 	    }
