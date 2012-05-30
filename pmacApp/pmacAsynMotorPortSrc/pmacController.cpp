@@ -464,6 +464,15 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale)
 
   myDebug(functionName);
 
+  if (axis < 0) {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: axis number must be 0 or positive.\n", functionName);
+    return asynError;
+  }
+  if (scale < 1) {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
+    return asynError;
+  }
+
   this->lock();
   pA = getAxis(axis);
   if (pA) {
@@ -564,15 +573,6 @@ static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale)
   pC = (pmacController*) findAsynPortDriver(controller);
   if (!pC) {
     cout << driverName << "::" << functionName << " Error: port " << controller << " not found." << endl;
-    return asynError;
-  }
-
-  if (axis < 0) {
-    cout << driverName << "::" << functionName << " Error: axis number must be 0 or positive." << endl;
-    return asynError;
-  }
-  if (scale < 1) {
-    cout << driverName << "::" << functionName << " Error: scale factor must be >=1." << endl;
     return asynError;
   }
     
