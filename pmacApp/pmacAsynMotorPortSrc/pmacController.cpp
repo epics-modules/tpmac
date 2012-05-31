@@ -316,27 +316,34 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
   int function = pasynUser->reason;
-  int status = asynSuccess;
+  asynStatus status = asynError;
   pmacAxis *pAxis = NULL;
   static const char *functionName = "pmacController::writeInt32";
 
   debugFlow(functionName);
+  cout << functionName << endl;
 
   pAxis = this->getAxis(pasynUser);
-  if (!pAxis) return asynError;
+  if (!pAxis) {
+    return asynError;
+  }
   
   /* Set the parameter and readback in the parameter library.  This may be overwritten when we read back the
    * status at the end, but that's OK */
   status = pAxis->setIntegerParam(function, value);
 
-  if (function == motorSetClosedLoop_) {
-
-  }
-  else {
+  if (function == motorDeferMoves_) {
+    cout << "Setting defer moves on. Value=" << value << endl;
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
+    if (value == 0 && this->movesDeferred_ != 0) {
+      status = this->processDeferredMoves();
+    }
+    this->movesDeferred_ = value;
+  } else {
     /* Call base class method */
     status = asynMotorController::writeInt32(pasynUser, value);
   }
-  return (asynStatus)status;
+  return status;
 
 }
 
@@ -543,6 +550,49 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
 }
 
 
+asynStatus pmacController::processDeferredMoves(void)
+{
+  asynStatus status = asynError;
+  char command[PMAC_MAXBUF_] = {0};
+  char response[32] = {0};
+  pmacAxis *pAxis = NULL;
+  static const char *functionName = "pmacController::processDeferredMoves";
+
+  debugFlow(functionName);
+
+  //Build up combined move command for all axes involved in the deferred move.
+  for (int axis=0; axis<numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis != NULL) {
+      if (pAxis->deferredMove_) {
+	sprintf(command, "%s #%d%s%.2f", command, pAxis->axisNo_,
+		pAxis->deferredRelative_ ? "J^" : "J=",
+		pAxis->deferredPosition_);
+      }
+    }
+  }
+  
+  //Execute the deferred move
+  status = lowLevelWriteRead(command, response);
+
+  //Clear deferred move flag for the axes involved.
+  for (int axis=0; axis<numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis!=NULL) {
+      if (pAxis->deferredMove_) {
+	pAxis->deferredMove_ = 0;
+      }
+    }
+  }
+     
+  return status;
+}
+
+
+
+
+
+/*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
 extern "C" {

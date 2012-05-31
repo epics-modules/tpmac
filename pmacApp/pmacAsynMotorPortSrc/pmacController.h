@@ -61,6 +61,8 @@ class pmacController : public asynMotorController {
 
   epicsUInt32 getGlobalStatus(void);
 
+  asynStatus processDeferredMoves(void);
+
   //static class data members
 
   static const epicsUInt32 PMAC_MAXBUF_;
