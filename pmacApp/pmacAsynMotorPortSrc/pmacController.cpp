@@ -9,6 +9,8 @@
  * 
  ********************************************/
 
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,8 +27,9 @@ using std::endl;
 #include <epicsString.h>
 #include <iocsh.h>
 
-#include "pmacController.h"
 #include "asynOctetSyncIO.h"
+
+#include "pmacController.h"
 
 static const char *driverName = "pmacController";
 
@@ -107,7 +110,7 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP | PMAC_STATUS2_AMP_FAULT);
 
 
-//C function prototypes, for the functions that will be called on IOC shell
+//C function prototypes, for the functions that can be called on IOC shell
 extern "C" {
   static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 					 int numAxes, int movingPollPeriod, int idlePollPeriod);
@@ -173,7 +176,7 @@ int pmacController::lowLevelPortConnect(const char *port, int addr, asynUser **p
  
   static const char *functionName = "pmacController::lowLevelPortConnect";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   status = pasynOctetSyncIO->connect( port, addr, ppasynUser, NULL);
   if (status) {
@@ -219,11 +222,11 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    //int connected = 0;
    static const char *functionName = "pmacController::writeRead";
 
-   myDebug(functionName);
+   debugFlow(functionName);
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
-   myDebug("Sending: ");
-   myDebug(command);
+   debugFlow("Sending: ");
+   debugFlow(command);
 
    status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
                                           command, strlen(command),
@@ -236,13 +239,13 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    }
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
-   myDebug("Received: ");
-   myDebug(response);
+   debugFlow("Received: ");
+   debugFlow(response);
 
   return status;
 }
 
-void pmacController::myDebug(const char *message)
+void pmacController::debugFlow(const char *message)
 {
   if (debugFlag_ == 1) {
     printf("  %s\n", message);
@@ -284,7 +287,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   //double deviceValue = 0.0;
   static const char *functionName = "pmacController::writeFloat64";
   
-  myDebug(functionName);
+  debugFlow(functionName);
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) return asynError;
@@ -317,7 +320,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   pmacAxis *pAxis = NULL;
   static const char *functionName = "pmacController::writeInt32";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) return asynError;
@@ -367,7 +370,7 @@ asynStatus pmacController::poll()
   epicsUInt32 globalStatus = 0;
   static const char *functionName = "pmacController::poll";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   //Set any controller specific parameters. 
   //Some of these may be used by the axis poll to set axis problem bits.
@@ -392,7 +395,7 @@ epicsUInt32 pmacController::getGlobalStatus(void)
   epicsUInt32 pmacStatus = 0;
   static const char *functionName = "pmacController::getGlobalStatus";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   sprintf(command, "???");
   if (lowLevelWriteRead(command, response) != asynSuccess) {
@@ -415,7 +418,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(int axis)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   this->lock();
   pA = getAxis(axis);
@@ -444,7 +447,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(void)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   this->lock();
   for (int i=0; i<numAxes_; i++) {
@@ -471,7 +474,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetAxisScale";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
@@ -514,7 +517,7 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetOpenLoopEncoderAxis";
 
-  myDebug(functionName);
+  debugFlow(functionName);
 
   this->lock();
   pA = getAxis(axis);
@@ -539,6 +542,7 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
   return asynSuccess;
 }
 
+
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
 extern "C" {
@@ -546,6 +550,7 @@ extern "C" {
 static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
+
     pmacController *ppmacController
       = new pmacController(portName, lowLevelPortName, lowLevelPortAddress, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
     ppmacController = NULL;

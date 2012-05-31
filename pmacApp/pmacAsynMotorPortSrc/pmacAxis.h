@@ -59,4 +59,5 @@ class pmacAxis : public asynMotorAxis
   friend class pmacController;
 };
 
+
 #endif /* pmacAxis_H */

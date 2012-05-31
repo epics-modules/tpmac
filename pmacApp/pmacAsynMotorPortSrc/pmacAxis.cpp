@@ -56,7 +56,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   //char *index = NULL;
   //int status = 0;
   
-  pC_->myDebug(functionName); 
+  pC_->debugFlow(functionName); 
 
   //Initialize non-static data members
   setpointPosition_ = 0.0;
@@ -140,7 +140,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   asynStatus status = asynError;
   static const char *functionName = "pmacAxis::move";
 
-  pC_->myDebug(functionName);  
+  pC_->debugFlow(functionName);  
 
   char acc_buff[32]="\0";
   char vel_buff[32]="\0";
@@ -189,7 +189,7 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
   char response[128] = {0};
   static const char *functionName = "pmacAxis::home";
 
-  pC_->myDebug(functionName); 
+  pC_->debugFlow(functionName); 
 
   sprintf(command, "#%d HOME", axisNo_);
   
@@ -283,7 +283,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
   char response[32] = {0};
   static const char *functionName = "pmacAxis::moveVelocity";
 
-  pC_->myDebug(functionName);  
+  pC_->debugFlow(functionName);  
 
   if (max_velocity != 0) {
     sprintf(vel_buff, "I%d22=%f ", axisNo_, (fabs(max_velocity) / (scale_ * 1000.0)));
@@ -315,7 +315,7 @@ asynStatus pmacAxis::setPosition(double position)
   //int status = 0;
   static const char *functionName = "pmacAxis::setPosition";
   
-  pC_->myDebug(functionName);  
+  pC_->debugFlow(functionName);  
 
   return asynSuccess;
 }
@@ -325,7 +325,7 @@ asynStatus pmacAxis::stop(double acceleration)
   asynStatus status = asynError;
   static const char *functionName = "pmacAxis::stopAxis";
 
-  pC_->myDebug(functionName); 
+  pC_->debugFlow(functionName); 
 
   char command[128] = {0};
   char response[32] = {0};
@@ -355,7 +355,7 @@ asynStatus pmacAxis::poll(bool *moving)
   static const char *functionName = "pmacAxis::poll";
 
   sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_);
-  pC_->myDebug(message); 
+  pC_->debugFlow(message); 
   
   //Set axis problem bits based on the controller status (obtained in the controller poll).
   if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {
@@ -524,3 +524,4 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
     
     return asynSuccess;
 }
+
