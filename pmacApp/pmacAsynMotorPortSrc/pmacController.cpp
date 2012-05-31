@@ -282,33 +282,98 @@ void pmacController::report(FILE *fp, int level)
 asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 {
   int function = pasynUser->reason;
-  int status = asynSuccess;
+  asynStatus status = asynError;
   pmacAxis *pAxis = NULL;
-  //double deviceValue = 0.0;
+  char command[64] = {0};
+  char response[64] = {0};
+  double encRatio = 1.0;
+  epicsInt32 encposition = 0;
+	
   static const char *functionName = "pmacController::writeFloat64";
   
   debugFlow(functionName);
 
   pAxis = this->getAxis(pasynUser);
-  if (!pAxis) return asynError;
+  if (!pAxis) {
+    return asynError;
+  }
 
   /* Set the parameter and readback in the parameter library. */
   status = pAxis->setDoubleParam(function, value);
 
+  if (function == motorPosition_) {
+    /*Set position on motor axis.*/            
+    epicsInt32 position = (epicsInt32) floor(value*32/pAxis->scale_ + 0.5);
+    
+    sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
+	     pAxis->axisNo_,
+	     pAxis->axisNo_, position, pAxis->axisNo_, 
+	     pAxis->axisNo_, position, pAxis->axisNo_ );
 
-  if (function == motorResolution_)
-  {
-    pAxis->stepSize_ = value;
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
-              "%s:%s: Set pmac %s, axis %d stepSize to %f\n", 
-               driverName, functionName, portName, pAxis->axisNo_, value);
+	      "%s: Set axis %d on controller %s to position %f\n", 
+	      functionName, pAxis->axisNo_, portName, value);
+    
+    if ( command[0] != 0 && status == asynSuccess) {
+      status = lowLevelWriteRead(command, response);
+    }
+                
+    sprintf(command, "#%dJ/", pAxis->axisNo_);
+
+    if (command[0] != 0 && status == asynSuccess) {
+      status = lowLevelWriteRead(command, response);
+    }
+
+    /*Now set position on encoder axis, if one is in use.*/
+                
+    if (pAxis->encoder_axis_) {
+      getDoubleParam(motorEncRatio_,  &encRatio);
+      encposition = (epicsInt32) floor((position*encRatio) + 0.5);
+                  
+      sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
+	      pAxis->encoder_axis_,
+	      pAxis->encoder_axis_, encposition, pAxis->encoder_axis_, 
+	      pAxis->encoder_axis_, encposition, pAxis->encoder_axis_ );
+                  
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, 
+		"%s: Set encoder axis %d on controller %s to position %f\n", 
+		functionName, pAxis->axisNo_, portName, value);
+                  
+      if (command[0] != 0 && status == asynSuccess) {
+	status = lowLevelWriteRead(command, response);
+      }
+                  
+      sprintf(command, "#%dJ/", pAxis->encoder_axis_);
+      //The lowLevelWriteRead will be done at the end of this function.
+    }
+
+    /*Now do an update, to get the new position from the controller.*/
+    bool moving = true;
+    pAxis->getAxisStatus(&moving);
+  } 
+  else if (function == motorLowLimit_) {
+    sprintf(command, "I%d14=%f", pAxis->axisNo_, value/pAxis->scale_);
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+	      "%s: Setting low limit on controller %s, axis %d to %f\n",
+	      functionName, portName, pAxis->axisNo_, value);
   }
-  else {
-    /* Call base class method */
-    status = asynMotorController::writeFloat64(pasynUser, value);
+  else if (function == motorHighLimit_) {
+    sprintf(command, "I%d13=%f", pAxis->axisNo_, value/pAxis->scale_);
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+	      "%s: Setting high limit on controller %s, axis %d to %f\n",
+	      functionName, portName, pAxis->axisNo_, value);
+  } 
+
+  //Execute the command.
+  if (command[0] != 0 && status == asynSuccess) {
+    status = lowLevelWriteRead(command, response);
   }
 
-  return (asynStatus)status;
+  //Call base class method
+  //This will handle callCallbacks even if the function was handled here.
+  status = asynMotorController::writeFloat64(pasynUser, value);
+
+  return status;
 
 }
 
@@ -321,7 +386,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   static const char *functionName = "pmacController::writeInt32";
 
   debugFlow(functionName);
-  cout << functionName << endl;
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
@@ -333,16 +397,17 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   status = pAxis->setIntegerParam(function, value);
 
   if (function == motorDeferMoves_) {
-    cout << "Setting defer moves on. Value=" << value << endl;
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
     if (value == 0 && this->movesDeferred_ != 0) {
       status = this->processDeferredMoves();
     }
     this->movesDeferred_ = value;
-  } else {
-    /* Call base class method */
-    status = asynMotorController::writeInt32(pasynUser, value);
   }
+
+  //Call base class method
+  //This will handle callCallbacks even if the function was handled here.
+  status = asynMotorController::writeInt32(pasynUser, value);
+
   return status;
 
 }

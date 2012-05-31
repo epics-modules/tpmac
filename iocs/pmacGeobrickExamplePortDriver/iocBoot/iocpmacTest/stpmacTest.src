@@ -62,7 +62,7 @@ pmacDisableLimitsCheck("PMAC1", 0, 1)
 
 #Set the encoder axis for an open loop axis.
 #pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
-#pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
+pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
 
 ########Not implemented these yet. This should be done in asynMotorController.cpp##########
 #pmacSetIdlePollPeriod(0, 500)
