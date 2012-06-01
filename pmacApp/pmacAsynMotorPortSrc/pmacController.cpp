@@ -141,21 +141,26 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   //Initialize non static data members
   lowLevelPortUser_ = NULL;
-  debugFlag_ = 1;
+  debugFlag_ = 0;
 
   pAxes_ = (pmacAxis **)(asynMotorController::pAxes_);
+
+  // Create controller-specific parameters
+  createParam(PMAC_C_GlobalStatusString,       asynParamInt32, &PMAC_C_GlobalStatus_);
+  createParam(PMAC_C_CommsErrorString,         asynParamInt32, &PMAC_C_CommsError_);
 
   // Connect our Asyn user to the low level port that is a parameter to this constructor
   if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_, "\006", "\r") != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
+    setIntegerParam(PMAC_C_CommsError_, 1);
   } else {
-    // Create controller-specific parameters
-    createParam(PMAC_C_GlobalStatusString,       asynParamInt32, &PMAC_C_GlobalStatus_);
-
     /* Create the poller thread for this controller
      * NOTE: at this point the axis objects don't yet exist, but the poller tolerates this */
     startPoller(movingPollPeriod, idlePollPeriod, 10);
+    setIntegerParam(PMAC_C_CommsError_, 0);
   }
+
+  callParamCallbacks();
  
 }
 
@@ -219,8 +224,9 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    int eomReason;
    size_t nwrite = 0;
    size_t nread = 0;
-   //int connected = 0;
-   static const char *functionName = "pmacController::writeRead";
+   int commsError = 0;
+   int asynManagerConnected = 0; 
+   static const char *functionName = "pmacController::lowLevelWriteRead";
 
    debugFlow(functionName);
 
@@ -228,14 +234,30 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    debugFlow("Sending: ");
    debugFlow(command);
 
-   status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
+   //Make sure the low level port is connected before we attempt comms
+   //Use the controller-wide param PMAC_C_CommsError_
+   getIntegerParam(PMAC_C_CommsError_, &commsError);
+   
+   //pasynManager->isConnected(lowLevelPortUser_, &asynManagerConnected);
+   //if (asynManagerConnected) {
+   //  cout << "Asyn manager reports port is connected" << endl;
+   //} else {
+   //  cout << "Asyn manager reports port is NOT connected" << endl;
+   // }
+
+   if (!commsError) {
+     //cout << "**************Connected**************" << endl;
+     status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
                                           command, strlen(command),
                                           response, PMAC_MAXBUF_,
 					  PMAC_TIMEOUT_,
                                           &nwrite, &nread, &eomReason );
-
-   if (status) {
-     asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+     
+     if (status) {
+       asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+     }
+   } else {
+     // cout << "**************NOT Connected**************" << endl;
    }
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 

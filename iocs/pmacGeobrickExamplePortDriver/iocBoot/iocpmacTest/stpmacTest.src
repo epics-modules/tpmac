@@ -38,8 +38,8 @@ pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
 #pmacAsynIPConfigure("pmacLV", "172.23.243.200:1025") #a fake address
 
 # Set debugging flags if desired
-#asynSetTraceIOMask("pmacLV",0,0x15)
-#asynSetTraceMask("pmacLV",0,0x15)
+##asynSetTraceIOMask("pmacLV",0,0x15)
+##asynSetTraceMask("pmacLV",0,0x15)
 #asynSetTraceIOMask("pmacLV",0,255)
 #asynSetTraceMask("pmacLV",0,255)
 
@@ -62,7 +62,7 @@ pmacDisableLimitsCheck("PMAC1", 0, 1)
 
 #Set the encoder axis for an open loop axis.
 #pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
-pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
+#pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
 
 ########Not implemented these yet. This should be done in asynMotorController.cpp##########
 #pmacSetIdlePollPeriod(0, 500)
