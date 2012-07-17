@@ -36,56 +36,39 @@ pmacTest_registerRecordDeviceDriver(pdbbase)
 #pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
 pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
 #pmacAsynIPConfigure("pmacLV", "172.23.243.200:1025") #a fake address
+#drvAsynIPPortConfigure("pmacLV", "172.23.243.200:1025", 0, 0, 1)
 
 # Set debugging flags if desired
-#asynSetTraceIOMask("pmacLV",0,15)
-#asynSetTraceMask("pmacLV",0,15)
+##asynSetTraceIOMask("pmacLV",0,0x15)
+##asynSetTraceMask("pmacLV",0,0x15)
 #asynSetTraceIOMask("pmacLV",0,255)
 #asynSetTraceMask("pmacLV",0,255)
 
-# Set up the PMAC driver (COMMS PORT, ADDR, CARD, #AXES)
-pmacAsynMotorCreate("pmacLV", 0, 0, 8)
+#New model 3 driver
+#PMACCreateController(motor record port name, low level port, low level port address, num axes, moving polling period (ms), idle polling period (ms))
+pmacCreateController("PMAC1", "pmacLV", 0, 3, 50, 500)
+
+#asynSetTraceIOMask("PMAC1",0,0xFF)
+#asynSetTraceMask("PMAC1",0,0xFF)
+
+pmacCreateAxis("PMAC1", 1)
+pmacCreateAxis("PMAC1", 2)
 
 # Disable the limits disabled check for some axes (normally this should be left enabled)
-# pmacDisableLimitsCheck(int card, int axis, int allAxes)
-pmacDisableLimitsCheck(0, 1, 1)
-#pmacDisableLimitsCheck(0, 2, 0)
-#pmacDisableLimitsCheck(0, 3, 0)
-#pmacDisableLimitsCheck(0, 4, 0)
-#pmacDisableLimitsCheck(0, 5, 0)
-#pmacDisableLimitsCheck(0, 6, 0)
-#pmacDisableLimitsCheck(0, 7, 0)
-#pmacDisableLimitsCheck(0, 8, 0)
+# pmacDisableLimitsCheck(string portname, int axis, int allAxes)
+pmacDisableLimitsCheck("PMAC1", 0, 1)
 
-#S1
-pmacAsynCoordCreate("pmacLV", 0, 2, 0, 10) 
-#pmacSetCoordStepsPerUnit(0, 1, 1)
-#pmacSetCoordStepsPerUnit(0, 1, 2)
-pmacSetDefaultCoordSteps(10000)
-drvAsynMotorConfigure("PMAC1CS2", "pmacAsynCoord", 0, 9)
+#Set the axis scale factor
+#pmacSetAxisScale("PMAC1", 1, 1)
 
-# Setup the motor Asyn layer (PORT, DRIVER TYPE, CARD, #AXES+1)
-drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
+#Set the encoder axis for an open loop axis.
+#pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
+#pmacSetOpenLoopEncoderAxis("PMAC1", 1, 2)
 
-#asynSetTraceIOMask("PMAC1",0,15)
-#asynSetTraceMask("PMAC1",0,15)
+########Not implemented these yet. This should be done in asynMotorController.cpp##########
+#pmacSetIdlePollPeriod(0, 500)
+#pmacSetMovingPollPeriod(0, 50)
 
-pmacSetIdlePollPeriod(0, 500)
-pmacSetMovingPollPeriod(0, 50)
-
-#Set encoder to come back on different PMAC axis
-#pmacSetOpenLoopEncoderAxis(0, 1, 3)
-
-######################################################################
-
-#pmacAsynIPConfigure("pmacLVPC", "172.23.243.156:1025")
-#drvAsynIPPortConfigure("leespc", "172.23.241.5:7015", 0, 0, 0)
-
-#asynSetTraceIOMask("pmacLVPC",0,15)
-#asynSetTraceMask("pmacLVPC",0,15)
-
-#asynSetTraceIOMask("leespc",0,15)
-#asynSetTraceMask("leespc",0,15)
 
 
 ####################################################################
@@ -113,7 +96,7 @@ set_requestfile_path("$(INSTALL)/data")
 
 ### restore positions before record init, settings before and after
 set_pass0_restoreFile("pmacGeobrickExample.sav")
-#set_pass1_restoreFile("pmacGeobrickExample.sav")
+###set_pass1_restoreFile("pmacGeobrickExample.sav")
 
 ### Number of sequenced backup files (e.g., 'auto_settings.sav0') to write
 save_restoreSet_NumSeqFiles(3)

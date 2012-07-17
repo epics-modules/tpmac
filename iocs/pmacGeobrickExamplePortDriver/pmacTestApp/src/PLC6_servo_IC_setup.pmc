@@ -1,0 +1,44 @@
+CLOSE
+
+;####################################################
+; PLC for putting Geobrick into defined state at startup
+; Original Author: Trevor Bates
+; Used variables: P600..P628, i5411
+;####################################################
+
+OPEN PLC6
+CLEAR
+
+#define MilliSeconds               * 8388608/i10
+#define Timer                      i5411
+#define WaitTimer                  WHILE (Timer > 0) END WHILE
+#define BaseSettings               $F84CFE ; 16272638
+#define SelectStepperBit           $100    ; 256 (b8)
+#define ResetBit                   $8000   ; 32768(b15)
+#define AddressOffset              $10000  ; 65536
+; -----------------------------------------------------
+
+;Set Axis Type RESET Bits 
+Timer= 2000 MilliSeconds    ;First Delay
+WaitTimer
+p600 = 1  ;  axis number
+;  Loop through all axis
+WHILE (p600 < 5)
+ ;These command write set axis type and Reset Bits
+ ;Into the Servo IC 1 and 2 Commmand/Status registers
+ COMMAND "wx$78014,p(p600+10)"
+ COMMAND "wx$78114,p(p600+14)"
+ Timer= 50 MilliSeconds    ;Wait for commands to settle
+ WaitTimer
+ ;And Now release reset
+ COMMAND "wx$78014,p(p600+20)"
+ COMMAND "wx$78114,p(p600+24)"
+ Timer= 50 MilliSeconds    ;Wait for commands to settle
+ WaitTimer
+ M(p600*100+48) = 0 ;reset phase error
+ M(p600*100+448) = 0 ;reset phase error
+ p600=p600+1
+ENDWHILE
+
+DISPLC6
+CLOSE

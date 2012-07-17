@@ -1,0 +1,154 @@
+/********************************************
+ *  pmacController.h 
+ * 
+ *  PMAC Asyn motor based on the 
+ *  asynMotorController class.
+ * 
+ *  Matthew Pearson
+ *  23 May 2012
+ * 
+ ********************************************/
+
+#ifndef pmacController_H
+#define pmacController_H
+
+#include "asynMotorController.h"
+#include "asynMotorAxis.h"
+#include "pmacAxis.h"
+
+#define PMAC_C_GlobalStatusString "PMAC_C_GLOBALSTATUS"
+#define PMAC_C_CommsErrorString "PMAC_C_COMMSERROR"
+
+class pmacController : public asynMotorController {
+
+ public:
+  pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, int numAxes, double movingPollPeriod, 
+		 double idlePollPeriod);
+
+  virtual ~pmacController();
+
+  asynStatus printConnectedStatus(void);
+
+  /* These are the methods that we override */
+  asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
+  asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
+  void report(FILE *fp, int level);
+  pmacAxis* getAxis(asynUser *pasynUser);
+  pmacAxis* getAxis(int axisNo);
+  asynStatus poll();
+
+  //Disable the check for disabled hardware limits.
+  asynStatus pmacDisableLimitsCheck(int axis);
+  asynStatus pmacDisableLimitsCheck(void);
+
+  //Set the axis scale factor.
+  asynStatus pmacSetAxisScale(int axis, int scale);
+
+  //Set the open loop encoder axis
+  asynStatus pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis);
+
+ protected:
+  pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
+
+  #define FIRST_PMAC_PARAM PMAC_C_GlobalStatus__
+  int PMAC_C_GlobalStatus_;
+  int PMAC_C_CommsError_;
+  #define LAST_PMAC_PARAM PMAC_C_CommsError__
+
+ private:
+  asynUser* lowLevelPortUser_;
+  epicsUInt32 debugFlag_;
+  epicsUInt32 movesDeferred_;
+  asynStatus lowLevelWriteRead(const char *command, char *response);
+  int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  void debugFlow(const char *message);
+
+  epicsUInt32 getGlobalStatus(void);
+
+  asynStatus processDeferredMoves(void);
+
+  //static class data members
+
+  static const epicsUInt32 PMAC_MAXBUF_;
+  static const epicsFloat64 PMAC_TIMEOUT_;
+
+  
+  static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
+  static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  
+  static const epicsUInt32 PMAC_STATUS1_SOFT_POS_CAPTURE;
+  static const epicsUInt32 PMAC_STATUS1_ERROR_TRIGGER;
+  static const epicsUInt32 PMAC_STATUS1_FOLLOW_ENABLE;   
+  static const epicsUInt32 PMAC_STATUS1_FOLLOW_OFFSET;   
+  static const epicsUInt32 PMAC_STATUS1_PHASED_MOTOR;   
+  static const epicsUInt32 PMAC_STATUS1_ALT_SRC_DEST;    
+  static const epicsUInt32 PMAC_STATUS1_USER_SERVO;      
+  static const epicsUInt32 PMAC_STATUS1_USER_PHASE;      
+  static const epicsUInt32 PMAC_STATUS1_HOMING;          
+  static const epicsUInt32 PMAC_STATUS1_BLOCK_REQUEST;   
+  static const epicsUInt32 PMAC_STATUS1_DECEL_ABORT;     
+  static const epicsUInt32 PMAC_STATUS1_DESIRED_VELOCITY_ZERO;
+  static const epicsUInt32 PMAC_STATUS1_DATABLKERR;        
+  static const epicsUInt32 PMAC_STATUS1_DWELL;             
+  static const epicsUInt32 PMAC_STATUS1_INTEGRATE_MODE;    
+  static const epicsUInt32 PMAC_STATUS1_MOVE_TIME_ON;      
+  static const epicsUInt32 PMAC_STATUS1_OPEN_LOOP;         
+  static const epicsUInt32 PMAC_STATUS1_AMP_ENABLED;       
+  static const epicsUInt32 PMAC_STATUS1_X_SERVO_ON;        
+  static const epicsUInt32 PMAC_STATUS1_POS_LIMIT_SET;     
+  static const epicsUInt32 PMAC_STATUS1_NEG_LIMIT_SET;     
+  static const epicsUInt32 PMAC_STATUS1_MOTOR_ON;          
+
+  static const epicsUInt32 PMAC_STATUS2_IN_POSITION;       
+  static const epicsUInt32 PMAC_STATUS2_WARN_FOLLOW_ERR;   
+  static const epicsUInt32 PMAC_STATUS2_ERR_FOLLOW_ERR;    
+  static const epicsUInt32 PMAC_STATUS2_AMP_FAULT;         
+  static const epicsUInt32 PMAC_STATUS2_NEG_BACKLASH;      
+  static const epicsUInt32 PMAC_STATUS2_I2T_AMP_FAULT;     
+  static const epicsUInt32 PMAC_STATUS2_I2_FOLLOW_ERR;     
+  static const epicsUInt32 PMAC_STATUS2_TRIGGER_MOVE;      
+  static const epicsUInt32 PMAC_STATUS2_PHASE_REF_ERR;     
+  static const epicsUInt32 PMAC_STATUS2_PHASE_SEARCH;      
+  static const epicsUInt32 PMAC_STATUS2_HOME_COMPLETE;     
+  static const epicsUInt32 PMAC_STATUS2_POS_LIMIT_STOP;    
+  static const epicsUInt32 PMAC_STATUS2_DESIRED_STOP;      
+  static const epicsUInt32 PMAC_STATUS2_FORE_IN_POS;       
+  static const epicsUInt32 PMAC_STATUS2_NA14;              
+  static const epicsUInt32 PMAC_STATUS2_ASSIGNED_CS;       
+
+ /*Global status ???*/
+  static const epicsUInt32 PMAC_GSTATUS_CARD_ADDR;             
+  static const epicsUInt32 PMAC_GSTATUS_ALL_CARD_ADDR;         
+  static const epicsUInt32 PMAC_GSTATUS_RESERVED;              
+  static const epicsUInt32 PMAC_GSTATUS_PHASE_CLK_MISS;        
+  static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_ERRORCHECK; 
+  static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_COMMS;      
+  static const epicsUInt32 PMAC_GSTATUS_TWS_PARITY_ERROR;      
+  static const epicsUInt32 PMAC_GSTATUS_CONFIG_ERROR;          
+  static const epicsUInt32 PMAC_GSTATUS_ILLEGAL_LVAR;          
+  static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR;         
+  static const epicsUInt32 PMAC_GSTATUS_FLASH_ERROR;           
+  static const epicsUInt32 PMAC_GSTATUS_DPRAM_ERROR;           
+  static const epicsUInt32 PMAC_GSTATUS_CKSUM_ACTIVE;          
+  static const epicsUInt32 PMAC_GSTATUS_CKSUM_ERROR;           
+  static const epicsUInt32 PMAC_GSTATUS_LEADSCREW_COMP;        
+  static const epicsUInt32 PMAC_GSTATUS_WATCHDOG;              
+  static const epicsUInt32 PMAC_GSTATUS_SERVO_REQ;             
+  static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_START;     
+  static const epicsUInt32 PMAC_GSTATUS_RESERVED2;             
+  static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_ON;        
+  static const epicsUInt32 PMAC_GSTATUS_SERVO_ERROR;           
+  static const epicsUInt32 PMAC_GSTATUS_CPUTYPE;               
+  static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR_RE;      
+  static const epicsUInt32 PMAC_GSTATUS_RESERVED3;             
+
+  static const epicsUInt32 PMAC_HARDWARE_PROB;
+  static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
+  static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
+
+  friend class pmacAxis;
+
+};
+
+#define NUM_PMAC_PARAMS (&LAST_PMAC_PARAM - &FIRST_PMAC_PARAM + 1)
+
+#endif /* pmacController_H */
