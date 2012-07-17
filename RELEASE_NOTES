@@ -1,7 +1,29 @@
               RELEASE NOTES for asyn version of tpmac module
 
+                            Matthew Pearson
+			      17 July 12
+
+1. Added a new 'model 3' PMAC driver based on asynMotorController/Axis.
+   This is in pmacApp/pmacAsynMotorPortSrc/ directory.
+
+   The IOC shell function calls are:
+	pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
+	pmacCreateController("PMAC1", "pmacLV", 0, 3, 50, 500)
+	pmacCreateAxis("PMAC1", 1)
+	pmacCreateAxis("PMAC1", 2)
+	etc.
+
+	There is more detail in the example IOC (pmacGeobrickExamplePortDriver).
+
+   Currently the driver is a drop in replacement for the old 'model 2' driver, with
+   similar IOC shell function calls. 
+
+   The driver has been tested on linux and VxWorks.
+	
+
+
 		            Matthew Pearson
-	                      22 March 11
+	                      22 March 12
 
 1. Changes to pmacAsynMotor
 
