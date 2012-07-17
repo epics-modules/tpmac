@@ -26,6 +26,8 @@ using std::endl;
 #include <epicsExport.h>
 #include <epicsString.h>
 #include <iocsh.h>
+#include <drvSup.h>
+#include <registryFunction.h>
 
 #include "asynOctetSyncIO.h"
 
@@ -112,16 +114,16 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRE
 
 //C function prototypes, for the functions that can be called on IOC shell
 extern "C" {
-  static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+  asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 					 int numAxes, int movingPollPeriod, int idlePollPeriod);
   
-  static asynStatus pmacCreateAxis(const char *pmacName, int axis);
+  asynStatus pmacCreateAxis(const char *pmacName, int axis);
   
-  static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);
+  asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);
   
-  static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale);
+  asynStatus pmacSetAxisScale(const char *controller, int axis, int scale);
   
-  static asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis);
+  asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis);
 
   
 }
@@ -137,7 +139,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 {
   static const char *functionName = "pmacController::pmacController";
 
-  printf("  Calling constructor: %s\n", functionName);
+  printf("  Constructor: %s\n", functionName);
 
   //Initialize non static data members
   lowLevelPortUser_ = NULL;
@@ -152,13 +154,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   // Connect our Asyn user to the low level port that is a parameter to this constructor
   if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_, "\006", "\r") != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
-    setIntegerParam(PMAC_C_CommsError_, 1);
+        setIntegerParam(PMAC_C_CommsError_, 1);
   } else {
     /* Create the poller thread for this controller
      * NOTE: at this point the axis objects don't yet exist, but the poller tolerates this */
-    startPoller(movingPollPeriod, idlePollPeriod, 10);
     setIntegerParam(PMAC_C_CommsError_, 0);
   }
+  startPoller(movingPollPeriod, idlePollPeriod, 10);
 
   callParamCallbacks();
  
@@ -190,26 +192,57 @@ int pmacController::lowLevelPortConnect(const char *port, int addr, asynUser **p
 	      port);
     return status;
   }
-  
+
+  //Do I want to disconnect below? If the IP address comes up, will the driver recover
+  //if the poller functions are running? Might have to use asynManager->isConnected to
+  //test connection status of low level port (in the pollers). But then autosave 
+  //restore doesn't work (and we would save wrong positions). So I need to 
+  //have a seperate function(s) to deal with connecting after IOC init.
+
   status = pasynOctetSyncIO->setInputEos(*ppasynUser, inputEos, strlen(inputEos) );
   if (status) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-	      "drvPmacCreate: unable to set input EOS on %s: %s\n", 
+	      "pmacController: unable to set input EOS on %s: %s\n", 
 	      port, (*ppasynUser)->errorMessage);
     pasynOctetSyncIO->disconnect(*ppasynUser);
+    //Set my low level pasynUser pointer to NULL
+    *ppasynUser = NULL;
     return status;
   }
   
   status = pasynOctetSyncIO->setOutputEos(*ppasynUser, outputEos, strlen(outputEos));
   if (status) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-	      "drvPmacCreate: unable to set output EOS on %s: %s\n", 
+	      "pmacController: unable to set output EOS on %s: %s\n", 
 	      port, (*ppasynUser)->errorMessage);
     pasynOctetSyncIO->disconnect(*ppasynUser);
+    //Set my low level pasynUser pointer to NULL
+    *ppasynUser = NULL;
     return status;
   }
   
   return status;
+}
+
+/**
+ * Utilty function to print the connected status of the low level asyn port.
+ */
+asynStatus pmacController::printConnectedStatus()
+{
+  asynStatus status = asynSuccess;
+  int asynManagerConnected = 0;
+  
+  if (lowLevelPortUser_) {
+    status = pasynManager->isConnected(lowLevelPortUser_, &asynManagerConnected);
+      if (status) {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+	      "pmacController: Error calling pasynManager::isConnected.\n");
+      return asynError;
+    } else {
+	printf("pmacController::printConnectedStatus: isConnected: %d\n", asynManagerConnected);
+    }
+  }
+  return asynSuccess;
 }
 
 /**
@@ -230,6 +263,11 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
 
    debugFlow(functionName);
 
+   if (!lowLevelPortUser_) {
+     setIntegerParam(this->motorStatusCommsError_, 1);
+     return asynError;
+   }
+
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
    debugFlow("Sending: ");
    debugFlow(command);
@@ -237,27 +275,20 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    //Make sure the low level port is connected before we attempt comms
    //Use the controller-wide param PMAC_C_CommsError_
    getIntegerParam(PMAC_C_CommsError_, &commsError);
-   
-   //pasynManager->isConnected(lowLevelPortUser_, &asynManagerConnected);
-   //if (asynManagerConnected) {
-   //  cout << "Asyn manager reports port is connected" << endl;
-   //} else {
-   //  cout << "Asyn manager reports port is NOT connected" << endl;
-   // }
 
    if (!commsError) {
-     //cout << "**************Connected**************" << endl;
      status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
-                                          command, strlen(command),
-                                          response, PMAC_MAXBUF_,
+					  command, strlen(command),
+					  response, PMAC_MAXBUF_,
 					  PMAC_TIMEOUT_,
-                                          &nwrite, &nread, &eomReason );
+					  &nwrite, &nread, &eomReason );
      
      if (status) {
        asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+       setIntegerParam(this->motorStatusCommsError_, 1);
+     } else {
+       setIntegerParam(this->motorStatusCommsError_, 0);
      }
-   } else {
-     // cout << "**************NOT Connected**************" << endl;
    }
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
@@ -312,7 +343,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   epicsInt32 encposition = 0;
 	
   static const char *functionName = "pmacController::writeFloat64";
-  
+
   debugFlow(functionName);
 
   pAxis = this->getAxis(pasynUser);
@@ -466,6 +497,11 @@ asynStatus pmacController::poll()
 
   debugFlow(functionName);
 
+  if (!lowLevelPortUser_) {
+    setIntegerParam(this->motorStatusCommsError_, 1);
+    return asynError;
+  }
+
   //Set any controller specific parameters. 
   //Some of these may be used by the axis poll to set axis problem bits.
   globalStatus = getGlobalStatus();
@@ -494,7 +530,11 @@ epicsUInt32 pmacController::getGlobalStatus(void)
   sprintf(command, "???");
   if (lowLevelWriteRead(command, response) != asynSuccess) {
     asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading global status. command: %s\n", functionName, command);
+    setIntegerParam(this->motorStatusCommsError_, 1);
+  } else {
+    setIntegerParam(this->motorStatusCommsError_, 0);
   }
+  
   nvals = sscanf(response, "%6x", &pmacStatus);
 
   return pmacStatus;
@@ -684,7 +724,7 @@ asynStatus pmacController::processDeferredMoves(void)
 
 extern "C" {
 
-static asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
+asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
 
@@ -695,7 +735,7 @@ static asynStatus pmacCreateController(const char *portName, const char *lowLeve
     return asynSuccess;
 }
 
-static asynStatus pmacCreateAxis(const char *pmacName,         /* specify which controller by port name */
+asynStatus pmacCreateAxis(const char *pmacName,         /* specify which controller by port name */
 			  int axis)                    /* axis number (start from 1). */
 {
   pmacController *pC;
@@ -727,7 +767,7 @@ static asynStatus pmacCreateAxis(const char *pmacName,         /* specify which 
  * @param allAxes Set to 0 if only dealing with one axis. 
  *                Set to 1 to do all axes (in which case the axis parameter is ignored).
  */
-static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes)
+asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes)
 {
   pmacController *pC;
   static const char *functionName = "pmacDisableLimitsCheck";
@@ -757,7 +797,7 @@ static asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int a
  * @param axis Axis number to set the PMAC axis scale factor.
  * @param scale Scale factor to set
  */
-static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale)
+asynStatus pmacSetAxisScale(const char *controller, int axis, int scale)
 {
   pmacController *pC;
   static const char *functionName = "pmacSetAxisScale";
@@ -785,7 +825,7 @@ static asynStatus pmacSetAxisScale(const char *controller, int axis, int scale)
  * @param axis Axis number to set the PMAC axis scale factor.
  * @param encoder_axis The axis number that the encoder is fed into.  
  */
-static asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
+asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis)
 {
   pmacController *pC;
   static const char *functionName = "pmacSetOpenLoopEncoderAxis";
@@ -799,8 +839,10 @@ static asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, i
   return pC->pmacSetOpenLoopEncoderAxis(axis, encoder_axis);
 }
 
-
 /* Code for iocsh registration */
+
+#ifdef vxWorks
+#else
 
 /* pmacCreateController */
 static const iocshArg pmacCreateControllerArg0 = {"Controller port name", iocshArgString};
@@ -815,8 +857,8 @@ static const iocshArg * const pmacCreateControllerArgs[] = {&pmacCreateControlle
 							    &pmacCreateControllerArg3,
 							    &pmacCreateControllerArg4,
 							    &pmacCreateControllerArg5};
-static const iocshFuncDef configpmac = {"pmacCreateController", 6, pmacCreateControllerArgs};
-static void configpmacCallFunc(const iocshArgBuf *args)
+static const iocshFuncDef configpmacCreateController = {"pmacCreateController", 6, pmacCreateControllerArgs};
+static void configpmacCreateControllerCallFunc(const iocshArgBuf *args)
 {
   pmacCreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival, args[4].ival, args[5].ival);
 }
@@ -880,15 +922,25 @@ static void configpmacSetOpenLoopEncoderAxisCallFunc(const iocshArgBuf *args)
 }
 
 
-static void pmacRegister3(void)
+static void pmacControllerRegister(void)
 {
-  iocshRegister(&configpmac,                   configpmacCallFunc);
+  iocshRegister(&configpmacCreateController,   configpmacCreateControllerCallFunc);
   iocshRegister(&configpmacAxis,               configpmacAxisCallFunc);
   iocshRegister(&configpmacDisableLimitsCheck, configpmacDisableLimitsCheckCallFunc);
   iocshRegister(&configpmacSetAxisScale, configpmacSetAxisScaleCallFunc);
   iocshRegister(&configpmacSetOpenLoopEncoderAxis, configpmacSetOpenLoopEncoderAxisCallFunc);
 }
-epicsExportRegistrar(pmacRegister3);
+epicsExportRegistrar(pmacControllerRegister);
 
+#endif
 
+#ifdef vxWorks
+  //VxWorks register functions
+  epicsRegisterFunction(pmacCreateController);
+  epicsRegisterFunction(pmacCreateAxis);
+  epicsRegisterFunction(pmacDisableLimitsCheck);
+  epicsRegisterFunction(pmacSetAxisScale);
+  epicsRegisterFunction(pmacSetOpenLoopEncoderAxis);
+#endif
 } // extern "C"
+

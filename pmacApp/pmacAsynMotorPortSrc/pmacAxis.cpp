@@ -53,9 +53,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
       pC_(pC)
 {
   static const char *functionName = "pmacAxis::pmacAxis";
-  //char *index = NULL;
-  //int status = 0;
-  
+
   pC_->debugFlow(functionName); 
 
   //Initialize non-static data members
@@ -125,6 +123,7 @@ asynStatus pmacAxis::getAxisInitialStatus(void)
     setDoubleParam(pC_->motorDgain_,     dgain);
     setIntegerParam(pC_->motorStatusHasEncoder_, 1);
   }
+
   return asynSuccess;
 }
 
@@ -356,6 +355,11 @@ asynStatus pmacAxis::poll(bool *moving)
 
   sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_);
   pC_->debugFlow(message); 
+
+  if (!pC_->lowLevelPortUser_) {
+    setIntegerParam(pC_->motorStatusCommsError_, 1);
+    return asynError;
+  }
   
   //Set axis problem bits based on the controller status (obtained in the controller poll).
   if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {

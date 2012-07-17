@@ -27,6 +27,8 @@ class pmacController : public asynMotorController {
 
   virtual ~pmacController();
 
+  asynStatus printConnectedStatus(void);
+
   /* These are the methods that we override */
   asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
   asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
