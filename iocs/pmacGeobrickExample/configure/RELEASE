@@ -19,8 +19,8 @@ WORK=/dls_sw/work/R3.14.11/support
 
 ASYN=           $(SUPPORT)/asyn/4-17
 #ASYN=		/home/mp49/epics/support/asyn
-TPMAC=		$(SUPPORT)/tpmac/3-10dls7
-#TPMAC=          /home/mp49/epics/support/tpmac
+#TPMAC=		$(SUPPORT)/tpmac/3-10dls7
+TPMAC=          /home/mp49/epics/support/tpmac
 #TPMAC=          /home/mp49/epics/support/tpmac_model3
 MOTOR=		$(SUPPORT)/motor/6-7-1dls2
 #MOTOR=          /home/mp49/epics/support/motor

@@ -29,7 +29,7 @@ class motorTestSuite(TestSuite):
    def createTests(self):
       # Define the targets for this test suite
       Target("pmac_model3", self, [
-            BuildEntity('tpmac_model3'),
+            BuildEntity('tpmac'),
             IocEntity('ioc', directory='iocs/pmacGeobrickExamplePortDriver', bootCmd='bin/linux-x86/stpmacTest.boot'),
             EpicsDbEntity('db', directory='iocs/pmacGeobrickExamplePortDriver', fileName="db/pmacTest.db")])
       
