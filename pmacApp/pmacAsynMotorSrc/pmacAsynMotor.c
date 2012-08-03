@@ -1432,6 +1432,7 @@ int pmacSetMovingPollPeriod(int card, int movingPollPeriod)
         if (epicsMutexLock( pDrv->controllerMutexId ) == epicsMutexLockOK) {
 	  pDrv->movingPollPeriod = (double)movingPollPeriod / 1000.0;
 	  epicsMutexUnlock( pDrv->controllerMutexId );
+	  epicsEventSignal( pDrv->pollEventId );
 	  status = 0;
 	} else {
 	   drvPrint(drvPrintParam, TRACE_ERROR, "pmacSetMovingPollPeriod: could not access pDrv to set polling period.\n" );
@@ -1463,6 +1464,7 @@ int pmacSetIdlePollPeriod(int card, int idlePollPeriod)
 	if (epicsMutexLock( pDrv->controllerMutexId ) == epicsMutexLockOK) {
 	pDrv->idlePollPeriod = (double)idlePollPeriod / 1000.0;
 	epicsMutexUnlock( pDrv->controllerMutexId );
+        epicsEventSignal( pDrv->pollEventId );
 	status = 0;
 	} else {
 	    drvPrint(drvPrintParam, TRACE_ERROR, "pmacSetMovingPollPeriod: could not access pDrv to set polling period.\n" );
