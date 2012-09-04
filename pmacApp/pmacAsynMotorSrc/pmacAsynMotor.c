@@ -185,6 +185,8 @@ typedef struct motorAxisHandle
     int fatal_following;
     int encoder_axis;
     int limitsCheckDisable;
+    int errorPrintFlag;
+    int errorPrintCount;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -958,24 +960,19 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     epicsUInt32 status[2];
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
-    static int errorPrintFlag[33];
-    static int errorPrintCount;
-    int errorPrintMin = 10000;
-    int i=0;
+    int errorPrintMin = 1000;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
         /*Set any global status bits.*/
 
       /* Keep error messages from being printed each poll.*/
-      if (errorPrintCount == errorPrintMin) {
-	errorPrintCount = 0;
-	for (i=0; i<33; i++) {
-	  errorPrintFlag[i] = 0;
+	if (pAxis->errorPrintCount > errorPrintMin) {
+	  pAxis->errorPrintCount = 0;
+	  pAxis->errorPrintFlag = 0;
 	}
-      }
-      errorPrintCount++;
-            
+	pAxis->errorPrintCount++;
+      
         /*Combine several general errors for the motor record problem error bit.*/
         motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
@@ -1084,9 +1081,9 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 		  limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
 		  if (limitsDisabledBit) {
 		    axisProblemFlag = 1;
-		    if (errorPrintFlag[pAxis->axis] == 0) {
+		    if (pAxis->errorPrintFlag == 0) {
 		      asynPrint(pasynUser, TRACE_ERROR, "*** WARNING *** Limits are disabled on card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis);
-		      errorPrintFlag[pAxis->axis] = 1;
+		      pAxis->errorPrintFlag = 1;
 		    }
 		  }
 		}
@@ -1096,7 +1093,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 
 	    /* Clear error print flag for this axis if problem has been removed.*/
 	    if (axisProblemFlag == 0) {
-		errorPrintFlag[pAxis->axis] = 0;
+		pAxis->errorPrintFlag = 0;
 	    }
 	    
 
@@ -1315,6 +1312,8 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].scale = 1;
                         pDrv->axis[i].encoder_axis = 0;
 			pDrv->axis[i].limitsCheckDisable = 0;
+			pDrv->axis[i].errorPrintFlag = 0;
+			pDrv->axis[i].errorPrintCount = 0;
 
 /*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
                         motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
