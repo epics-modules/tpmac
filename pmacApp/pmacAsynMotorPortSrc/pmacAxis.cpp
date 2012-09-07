@@ -76,6 +76,8 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   fatal_following_ = 0;
   encoder_axis_ = 0;
   limitsCheckDisable_ = 0;
+  errorPrintCount_ = 0;
+  errorPrintFlag_ = 0;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -391,19 +393,14 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
     epicsUInt32 status[2] = {0};
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
-    static int errorPrintFlag[33];
-    static int errorPrintCount;
     int errorPrintMin = 10000;
-    int i=0;
     
     /* Keep error messages from being printed each poll.*/
-    if (errorPrintCount == errorPrintMin) {
-      errorPrintCount = 0;
-      for (i=0; i<33; i++) {
-	errorPrintFlag[i] = 0;
-      }
+    if (errorPrintCount_ > errorPrintMin) {
+      errorPrintCount_ = 0;
+      errorPrintFlag_ = 0;
     }
-    errorPrintCount++;
+    errorPrintCount_++;
             
     /* Read all the status for this axis in one go */
     if (encoder_axis_ != 0) {
@@ -493,9 +490,9 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
 	    limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
 	    if (limitsDisabledBit) {
 	      axisProblemFlag = 1;
-	      if (errorPrintFlag[axisNo_] == 0) {
+	      if (errorPrintFlag_ == 0) {
 		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
-		errorPrintFlag[axisNo_] = 1;
+		errorPrintFlag_ = 1;
 	      }
 	    }
 	  }
@@ -505,7 +502,7 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       
       /* Clear error print flag for this axis if problem has been removed.*/
       if (axisProblemFlag == 0) {
-	errorPrintFlag[axisNo_] = 0;
+	errorPrintFlag_ = 0;
       }
             
 

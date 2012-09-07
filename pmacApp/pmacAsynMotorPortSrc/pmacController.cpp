@@ -118,6 +118,8 @@ extern "C" {
 					 int numAxes, int movingPollPeriod, int idlePollPeriod);
   
   asynStatus pmacCreateAxis(const char *pmacName, int axis);
+
+  asynStatus pmacCreateAxes(const char *pmacName, int numAxes);
   
   asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);
   
@@ -130,7 +132,7 @@ extern "C" {
 
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 			       int numAxes, double movingPollPeriod, double idlePollPeriod)
-  : asynMotorController(portName, numAxes, NUM_MOTOR_DRIVER_PARAMS,
+  : asynMotorController(portName, numAxes+1, NUM_MOTOR_DRIVER_PARAMS,
 			0, // No additional interfaces
 			0, // No addition interrupt interfaces
 			ASYN_CANBLOCK | ASYN_MULTIDEVICE, 
@@ -724,6 +726,11 @@ asynStatus pmacController::processDeferredMoves(void)
 
 extern "C" {
 
+/**
+ * C wrapper for the pmacController constructor.
+ * See pmacController::pmacController.
+ *
+ */
 asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
@@ -735,6 +742,11 @@ asynStatus pmacCreateController(const char *portName, const char *lowLevelPortNa
     return asynSuccess;
 }
 
+/**
+ * C wrapper for the pmacAxis constructor.
+ * See pmacAxis::pmacAxis.
+ *
+ */
 asynStatus pmacCreateAxis(const char *pmacName,         /* specify which controller by port name */
 			  int axis)                    /* axis number (start from 1). */
 {
@@ -757,12 +769,44 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
   return asynSuccess;
 }
 
+/**
+ * C Wrapper function for pmacAxis constructor.
+ * See pmacAxis::pmacAxis.
+ * This function allows creation of multiple pmacAxis objects with axis numbers 1 to numAxes.
+ * @param pmacName Asyn port name for the controller (const char *)
+ * @param numAxes The number of axes to create, starting at 1.
+ *
+ */
+asynStatus pmacCreateAxes(const char *pmacName,        
+			  int numAxes)                   
+{
+  pmacController *pC;
+  pmacAxis *pAxis;
+
+  static const char *functionName = "pmacCreateAxis";
+
+  pC = (pmacController*) findAsynPortDriver(pmacName);
+  if (!pC) {
+    printf("%s:%s: Error port %s not found\n",
+           driverName, functionName, pmacName);
+    return asynError;
+  }
+  
+  pC->lock();
+  for (int axis=1; axis<=numAxes; axis++) {
+    pAxis = new pmacAxis(pC, axis);
+    pAxis = NULL;
+  }
+  pC->unlock();
+  return asynSuccess;
+}
+
 
 /**
  * Disable the check in the axis poller that reads ix24 to check if hardware limits
  * are disabled. By default this is enabled for safety reasons. It sets the motor
  * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
- * @param controller Low level Asyn port name for the controller (const char *)
+ * @param controller Asyn port name for the controller (const char *)
  * @param axis Axis number to disable the check for.
  * @param allAxes Set to 0 if only dealing with one axis. 
  *                Set to 1 to do all axes (in which case the axis parameter is ignored).
@@ -779,10 +823,8 @@ asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes)
   }
 
   if (allAxes == 1) {
-      cout << "Calling pmacDisableLimitsCheck()." << endl;
     return pC->pmacDisableLimitsCheck();
   } else if (allAxes == 0) {
-      cout << "Calling pmacDisableLimitsCheck(axis)." << endl;
     return pC->pmacDisableLimitsCheck(axis);
   }
 
@@ -876,6 +918,18 @@ static void configpmacAxisCallFunc(const iocshArgBuf *args)
   pmacCreateAxis(args[0].sval, args[1].ival);
 }
 
+/* pmacCreateAxes */
+static const iocshArg pmacCreateAxesArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacCreateAxesArg1 = {"Num Axes", iocshArgInt};
+static const iocshArg * const pmacCreateAxesArgs[] = {&pmacCreateAxesArg0,
+                                                     &pmacCreateAxesArg1};
+static const iocshFuncDef configpmacAxes = {"pmacCreateAxes", 2, pmacCreateAxesArgs};
+
+static void configpmacAxesCallFunc(const iocshArgBuf *args)
+{
+  pmacCreateAxes(args[0].sval, args[1].ival);
+}
+
 
 /* pmacDisableLimitsCheck */
 static const iocshArg pmacDisableLimitsCheckArg0 = {"Controller port name", iocshArgString};
@@ -926,6 +980,7 @@ static void pmacControllerRegister(void)
 {
   iocshRegister(&configpmacCreateController,   configpmacCreateControllerCallFunc);
   iocshRegister(&configpmacAxis,               configpmacAxisCallFunc);
+  iocshRegister(&configpmacAxes,               configpmacAxesCallFunc);
   iocshRegister(&configpmacDisableLimitsCheck, configpmacDisableLimitsCheckCallFunc);
   iocshRegister(&configpmacSetAxisScale, configpmacSetAxisScaleCallFunc);
   iocshRegister(&configpmacSetOpenLoopEncoderAxis, configpmacSetOpenLoopEncoderAxisCallFunc);
@@ -938,6 +993,7 @@ epicsExportRegistrar(pmacControllerRegister);
   //VxWorks register functions
   epicsRegisterFunction(pmacCreateController);
   epicsRegisterFunction(pmacCreateAxis);
+  epicsRegisterFunction(pmacCreateAxes);
   epicsRegisterFunction(pmacDisableLimitsCheck);
   epicsRegisterFunction(pmacSetAxisScale);
   epicsRegisterFunction(pmacSetOpenLoopEncoderAxis);
