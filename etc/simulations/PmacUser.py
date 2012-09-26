@@ -9,7 +9,7 @@ import os, sys, math
 
 class FileUser(PmacParser):
     def __init__(self, fileName, pmac, includePaths):
-        getUi().output("Reading PMC file %s\n" % fileName)
+        getUi(pmac).output("Reading PMC file %s\n" % fileName)
         PmacParser.__init__(self, pmac)
         p = clsPmacParser(includePaths = includePaths)
         converted = p.parse(fileName, debug=True)
@@ -28,7 +28,7 @@ class ConsoleUser(PmacParser):
     def reply(self, data):
         text = data.rstrip()
         if len(text) > 0:
-            getUi().output("%s\n" % text)
+            getUi(self.pmac).output("%s\n" % text)
 
     def doConsole(self, machine):
         going = True
@@ -158,7 +158,7 @@ class TcpUserServer(dls_simulationlib.simsocket.listenSocket):
 
     def createClient(self, clientSocket):
         '''Override to create a client handler object.'''
-        getUi().output("Connecting PMAC user on port %s.\n" % self.tcpPort)
+        getUi(self.pmac).output("Connecting PMAC user on port %s.\n" % self.tcpPort)
         return TcpUser(clientSocket, self.pmac)
 
 

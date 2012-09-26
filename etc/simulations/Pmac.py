@@ -57,6 +57,7 @@ class CoordinateSystem(PmacParser):
         self.wAxis = 0.0
         self.currentProg = None
         self.programRunning = False
+        self.pmac = pmac
 
     def abort(self):
         self.programRunning = False
@@ -108,7 +109,7 @@ class CoordinateSystem(PmacParser):
         self.processAxisDefs()
 
     def processAxisDefs(self):
-        getUi().output("Process axis defs %s\n" % self.axisDef)
+        getUi(self.pmac).output("Process axis defs %s\n" % self.axisDef)
         for n,axisDef in self.axisDef.iteritems():
             motor = self.pmac.getMotor(n)
             if motor is not None:
@@ -377,8 +378,12 @@ class Pmac(object):
     countdownTimerDelta = 1000
 
     def __init__(self, name='none', geobrick=False, numMacroIcs=0, tcpPort=None,
-            pmcFile=None, pmcIncludeDirs=[]):
+            pmcFile=None, pmcIncludeDirs=[], beamline=None):
+        self.beamline = beamline
         self.name = name
+        # If we are running as part of a beamline simulation, register ourselves
+        if self.beamline is not None:
+            self.beamline.addSimulation(self)
         self.geobrick = geobrick
         self.numMacroIcs = numMacroIcs
         self.tcpPort = tcpPort
@@ -420,7 +425,10 @@ class Pmac(object):
             self.tcpUserServer = TcpUserServer(self, self.tcpPort)
         if self.pmcFile is not None:
             self.readPmcFile(self.pmcFile)
-        getUi().output("Initialised turbo PMAC simulator %s\n" % self.name)
+        getUi(self).output("Initialised turbo PMAC simulator %s\n" % self.name)
+
+    def consoleInput(self, text):
+        self.consoleUser.process(text.rstrip() + '\n', True)
 
     def motor(self, motorNum):
         result = None
@@ -533,7 +541,7 @@ class Pmac(object):
             orig = val
         self.memory[memAddress] = orig
         # Update any watch variable
-        getUi().updateMVar(self, typeString, address)
+        getUi(self).updateMVar(self, typeString, address)
         return supported
 
     def setMotorParamMemory(self, formatString, axis, offset, val, feedback=True):
@@ -589,20 +597,20 @@ class Pmac(object):
 
     def setIVariable(self, var, val):
         self.iVariables[var] = val
-        getUi().updateVar(self, ('i%s' % var), val)
+        getUi(self).updateVar(self, ('i%s' % var), val)
 
     def getIVariable(self, var):
         if not var in self.iVariables:
-            getUi().output("Read of undefined I%s\n" % var)
+            getUi(self).output("Read of undefined I%s\n" % var)
             self.iVariables[var] = 0.0
         return self.iVariables[var]
 
     def setCsQVariable(self, cs, var, val):
         if cs >= 1 and cs <= 16:
             self.setQVariable(Pmac.qVariableStartAddr[cs]+var, val)
-            getUi().updateVar(self, ('%sq%s' % (cs, var)), val)
+            getUi(self).updateVar(self, ('%sq%s' % (cs, var)), val)
         else:
-            getUi().output("Illegal coordinate system: %s\n" % cs)
+            getUi(self).output("Illegal coordinate system: %s\n" % cs)
 
     def setQVariable(self, var, val):
         self.qVariables[var] = val
@@ -612,7 +620,7 @@ class Pmac(object):
         if cs >= 1 and cs <= 16:
             result = self.getQVariable(Pmac.qVariableStartAddr[cs]+var)
         else:
-            getUi().output("Illegal coordinate system: %s\n" % cs)
+            getUi(self).output("Illegal coordinate system: %s\n" % cs)
         return result
 
     def getQVariable(self, var):
@@ -622,7 +630,7 @@ class Pmac(object):
 
     def setPVariable(self, var, val):
         self.pVariables[var] = val
-        getUi().updateVar(self, ('p%s' % var), val)
+        getUi(self).updateVar(self, ('p%s' % var), val)
 
     def getPVariable(self, var):
         if not var in self.pVariables:
@@ -630,11 +638,11 @@ class Pmac(object):
         return self.pVariables[var]
 
     def setMotorPosition(self, var, val):
-        getUi().updateVar(self, ('#%s' % var), val)
+        getUi(self).updateVar(self, ('#%s' % var), val)
 
     def setMVariableAddress(self, var, val):
         if val == '':
-            getUi().output("Setting m-var address to blank, m%s\n" % var)
+            getUi(self).output("Setting m-var address to blank, m%s\n" % var)
         self.mVariables[var] = val
 
     def getMVariableAddress(self, var):
@@ -646,13 +654,13 @@ class Pmac(object):
         addr = self.getMVariableAddress(var)
         supported = self.setMemory(addr, val)
         if not supported:
-            getUi().output("!>Write to unsupported memory location '%s=%s', M%s\n" % (addr, val, var))
+            getUi(self).output("!>Write to unsupported memory location '%s=%s', M%s\n" % (addr, val, var))
 
     def getMVariable(self, var):
         addr = self.getMVariableAddress(var)
         supported,val = self.getMemory(addr)
         if not supported:
-            getUi().output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
+            getUi(self).output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
         return val
 
     def getMacroStation(self, ms):
@@ -800,7 +808,7 @@ class Pmac(object):
         bp = BreakPoint(fileName, lineNumber)
         if  bp.getName() in self.breakPoints:
             self.runMode = 'stop'
-            getUi().output("Stopped on breakpoint %s:%s\n" % (fileName, lineNumber))
+            getUi(self).output("Stopped on breakpoint %s:%s\n" % (fileName, lineNumber))
         return self.runMode == 'stop'
 
     def isSingleStep(self, onNewLine):
@@ -816,14 +824,14 @@ class Pmac(object):
         if on:
             if bp.getName() not in self.breakPoints:
                 self.breakPoints[bp.getName()] = bp
-            getUi().displayLine(fileName, lineNumber)
+            getUi(self).displayLine(fileName, lineNumber)
         else:
             if bp.getName() in self.breakPoints:
                 del self.breakPoints[bp.getName()]
 
     def cmdDebugBreakList(self, user):
         for name, bp in self.breakPoints.iteritems():
-            getUi().output('Break point: %s\n' % name)
+            getUi(self).output('Break point: %s\n' % name)
 
     def cmdDebugBreakClear(self, user):
         self.breakPoints = {}
@@ -836,39 +844,39 @@ class Pmac(object):
         self.runMode = 'single'
 
     def cmdDebugWatchMotor(self, user, var):
-        getUi().watchVar(self, ('#%s' % var), self.getMotorPosition(var))
+        getUi(self).watchVar(self, ('#%s' % var), self.getMotorPosition(var))
 
     def cmdDebugWatchIVar(self, user, var):
-        getUi().watchVar(self, ('i%s' % var), self.getIVariable(var))
+        getUi(self).watchVar(self, ('i%s' % var), self.getIVariable(var))
 
     def cmdDebugWatchPVar(self, user, var):
-        getUi().watchVar(self, ('p%s' % var), self.getPVariable(var))
+        getUi(self).watchVar(self, ('p%s' % var), self.getPVariable(var))
 
     def cmdDebugWatchQVar(self, user, cs, var):
-        getUi().watchVar(self, ('%sq%s' % (cs, var)), self.getQVariable(var))
+        getUi(self).watchVar(self, ('%sq%s' % (cs, var)), self.getQVariable(var))
 
     def cmdDebugWatchMVar(self, user, var):
-        getUi().watchVar(self, ('m%s' % var), self.getMVariable(var))
+        getUi(self).watchVar(self, ('m%s' % var), self.getMVariable(var))
 
     def cmdDebugUnwatchMotor(self, user, var):
-        getUi().unwatchVar(self, ('#%s' % var))
+        getUi(self).unwatchVar(self, ('#%s' % var))
 
     def cmdDebugUnwatchIVar(self, user, var):
-        getUi().unwatchVar(self, 'i%s' % var)
+        getUi(self).unwatchVar(self, 'i%s' % var)
 
     def cmdDebugUnwatchPVar(self, user, var):
-        getUi().unwatchVar(self, 'p%s' % var)
+        getUi(self).unwatchVar(self, 'p%s' % var)
 
     def cmdDebugUnwatchQVar(self, user, cs, var):
-        getUi().unwatchVar(self, '%sq%s' % (cs, var))
+        getUi(self).unwatchVar(self, '%sq%s' % (cs, var))
 
     def cmdDebugUnwatchMVar(self, user, var):
-        getUi().unwatchVar('self, m%s' % var)
+        getUi(self).unwatchVar('self, m%s' % var)
 
     def cmdDebugTracePlc(self, user, plc):
-        getUi().debug('Trace plc%d\n' % plc)
+        getUi(self).debug('Trace plc%d\n' % plc)
         if plc in self.plcs:
-            getUi().debug('Trace plc%d found\n' % plc)
+            getUi(self).debug('Trace plc%d found\n' % plc)
             self.plcs[plc].openTraceWindow()
 
     def cmdDebugTraceProgram(self, user, pgm):
@@ -888,7 +896,7 @@ class Pmac(object):
             cs.closeTraceWindow()
 
     def cmdDebugTraceLog(self, user, fileName):
-        getUi().setTraceLog(fileName)
+        getUi(self).setTraceLog(fileName)
 
     def cmdJogRelative(self, user, axis, offset):
         if axis in self.axes:
@@ -927,7 +935,7 @@ class Pmac(object):
             self.axes[axis].setEncoderLoss(eloss)
 
     def cmdDwell(self, user, cs, period):
-        getUi().output("Dwell for cs=%s\n" % cs)
+        getUi(self).output("Dwell for cs=%s\n" % cs)
         if cs in self.coordinateSystems:
             self.coordinateSystems[cs].dwell(period)
 
@@ -1039,7 +1047,7 @@ class Pmac(object):
         elif addrType == 'l' or addrType == 'd':
             value = '%s:$%x' % (addrType, address)
         else:
-            getUi().output('Unsupported M-variable address type "%s\n"' % addrType)
+            getUi(self).output('Unsupported M-variable address type "%s\n"' % addrType)
         for i in range(first, first+(number*step), step):
             self.setMVariableAddress(i, value)
 

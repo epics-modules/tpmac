@@ -198,9 +198,9 @@ class PmacParser(object):
         if (PmacParser.printPolling and self.isPollLine(text)) or \
                 (PmacParser.printCmd and not self.isPollLine(text)):
             if len(text) > 0:
-                getUi().debug('>>%s\n' % repr(text))
+                getUi(self.pmac).debug('>>%s\n' % repr(text))
                 if len(self.outputData) > 0:
-                    getUi().debug('<<%s\n' % repr(self.outputData))
+                    getUi(self.pmac).debug('<<%s\n' % repr(self.outputData))
         self.reply(self.outputData + '\r')
         self.outputData = ''
 
@@ -230,7 +230,7 @@ class PmacParser(object):
         self.traceLineNumber = savedLineNumber
 
     def unsupported(self, syntax):
-        getUi().output("Unsupported syntax: %s" % syntax)
+        getUi(self.pmac).output("Unsupported syntax: %s" % syntax)
             
     def getToken(self, requireLineNumbers=False):
         '''Returns the next non-line number token, removing it from the token stream.'''
@@ -251,7 +251,7 @@ class PmacParser(object):
             token = self.getToken()
             if self.trace and token is not None:
                 if len(token.fileName) > 0:
-                    getUi().displayLine(token.fileName, token.lineNumber)
+                    getUi(self.pmac).displayLine(token.fileName, token.lineNumber)
                 if self.pmac.isAtBreakPoint(token.fileName, token.lineNumber):
                     self.atBreakPoint = True
                     self.stoppedAtFileName = token.fileName
@@ -336,10 +336,10 @@ class PmacParser(object):
             elif token in ['command', 'cmd']:
                 self.parseCommand()
             elif token == "a":
-                #getUi().output("abort %s" % repr(self.currentCoordSystem))
+                #getUi(self.pmac).output("abort %s" % repr(self.currentCoordSystem))
                 self.pmac.cmdAbortCoordSystem(self.tokenToInt(self.currentCoordSystem))
             elif token == 'k':
-                #getUi().output("kill %s" % repr(self.currentMotor))
+                #getUi(self.pmac).output("kill %s" % repr(self.currentMotor))
                 self.pmac.cmdKillMotor(self.tokenToInt(self.currentMotor))
             elif token == 'cid':
                 self.pmac.cmdCid(self)
