@@ -146,6 +146,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   //Initialize non static data members
   lowLevelPortUser_ = NULL;
   debugFlag_ = 0;
+  movesDeferred_ = 0;
 
   pAxes_ = (pmacAxis **)(asynMotorController::pAxes_);
 
