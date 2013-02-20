@@ -112,7 +112,7 @@ rset tsubRSET={
 	get_alarm_double };
 epicsExportAddress(rset,tsubRSET);
 
-static void alarm       (tsubRecord *);
+static void set_alarms  (tsubRecord *);
 static long do_sub      (tsubRecord *);
 static long fetch_values(tsubRecord *);
 static long push_values (tsubRecord *);
@@ -235,7 +235,7 @@ static long process(tsubRecord *ptsub)
 	}
 	recGblGetTimeStamp(ptsub);
         /* check for alarms */
-        alarm(ptsub);
+        set_alarms(ptsub);
         /* check event list */
         monitor(ptsub);
 
@@ -349,7 +349,7 @@ static long get_alarm_double(DBADDR *paddr, struct dbr_alDouble *pad)
     return(0);
 }
 
-static void alarm(tsubRecord *ptsub)
+static void set_alarms(tsubRecord *ptsub)
 {
 	double		val;
 	float		hyst, lalm, hihi, high, low, lolo;

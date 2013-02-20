@@ -1190,12 +1190,8 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   float timeout = 0.0;
   float factor = 0.0;
   float skipglobal = 0.0;
-  float skips[pDrv->nAxes];
+  float *skips = (float *)calloc(pDrv->nAxes, sizeof(float));
   epicsUInt32 globalStatus = 0;
-
-  for (i=0; i<pDrv->nAxes; i++) {
-    skips[i] = 0;
-  }
 
   while ( 1 ) 
   {
@@ -1244,6 +1240,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 
     }
   }
+  free(skips);
 }
 
 /**

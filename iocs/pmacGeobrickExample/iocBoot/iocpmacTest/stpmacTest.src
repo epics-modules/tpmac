@@ -34,7 +34,7 @@ pmacTest_registerRecordDeviceDriver(pdbbase)
 # Connect, through asyn, to the Delta Tau LV controller
 #pmacAsynIPConfigure("pmacLV", "127.0.0.1:50001")
 #pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
-pmacAsynIPConfigure("pmacLV", "172.23.243.164:1025")
+pmacAsynIPConfigure("pmacLV", "172.23.253.11:1025")
 #pmacAsynIPConfigure("pmacLV", "172.23.243.200:1025") #a fake address
 
 # Set debugging flags if desired

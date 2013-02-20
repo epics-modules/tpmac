@@ -19,6 +19,8 @@
 #define PMAC_C_GlobalStatusString "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString "PMAC_C_COMMSERROR"
 
+#define PMAC_MAXBUF 1024
+
 class pmacController : public asynMotorController {
 
  public:

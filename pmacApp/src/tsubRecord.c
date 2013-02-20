@@ -112,7 +112,7 @@ rset tsubRSET={
 	get_alarm_double };
 epicsExportAddress(rset,tsubRSET);
 
-static void alarm();
+static void set_alarms();
 static long do_sub();
 static long fetch_values();
 static long push_values();
@@ -205,7 +205,7 @@ static long process(ptsub)
 	}
 	recGblGetTimeStamp(ptsub);
         /* check for alarms */
-        alarm(ptsub);
+        set_alarms(ptsub);
         /* check event list */
         monitor(ptsub);
 
@@ -327,7 +327,7 @@ static long get_alarm_double(paddr,pad)
     return(0);
 }
 
-static void alarm(ptsub)
+static void set_alarms(ptsub)
     struct tsubRecord	*ptsub;
 {
 	double		val;

@@ -51,6 +51,7 @@
 #include <epicsAssert.h>
 #include <epicsStdio.h>
 #include <epicsString.h>
+#include <osiSock.h>
 #include <iocsh.h>
 
 #include <epicsExport.h>
@@ -61,7 +62,6 @@
 #include "drvAsynIPPort.h"
 #include "epicsThread.h"
 
-#include <netinet/in.h>
 
 #define ETHERNET_DATA_SIZE 1492
 #define MAX_BUFFER_SIZE 2097152
@@ -357,7 +357,6 @@ static void pmacInExceptionHandler(asynUser *pasynUser,asynException exception)
 */
 static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars, size_t *nbytesTransfered, int *eomReason )
 {
-    ethernetCmd* inCmd;
     asynStatus status = asynSuccess;
     size_t thisRead = 0;
     *nbytesTransfered = 0;
@@ -407,7 +406,7 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
 {
     ethernetCmd cmd;
-    unsigned char data[2] = {0};
+    char data[2] = {0};
     asynStatus status;
     size_t thisRead = 0;
     size_t nbytesTransfered = 0;
@@ -451,7 +450,7 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
 {
     ethernetCmd cmd;
-    unsigned char data[2];
+    char data[2];
     asynStatus status = asynSuccess;
     size_t thisRead;
     size_t nbytesTransfered = 0;
@@ -560,7 +559,6 @@ static asynStatus readIt(void *ppvt,asynUser *pasynUser,
     size_t nRead = 0;
     int bell = 0;
     int initialRead = 1;
-    ethernetCmd* inCmd;
  
     asynPrint( pasynUser, ASYN_TRACE_FLOW, "pmacAsynIPPort::readIt. START\n" );
     assert(pPmacPvt);

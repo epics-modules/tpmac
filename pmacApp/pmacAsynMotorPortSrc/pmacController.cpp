@@ -35,7 +35,7 @@ using std::endl;
 
 static const char *driverName = "pmacController";
 
-const epicsUInt32 pmacController::PMAC_MAXBUF_ = 1024;
+const epicsUInt32 pmacController::PMAC_MAXBUF_ = PMAC_MAXBUF;
 const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 5.0;
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
@@ -261,7 +261,6 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    size_t nwrite = 0;
    size_t nread = 0;
    int commsError = 0;
-   int asynManagerConnected = 0; 
    static const char *functionName = "pmacController::lowLevelWriteRead";
 
    debugFlow(functionName);
@@ -323,6 +322,7 @@ void pmacController::report(FILE *fp, int level)
   if (level > 0) {
     for (axis=0; axis<numAxes_; axis++) {
       pAxis = getAxis(axis);
+      if (!pAxis) continue;
       fprintf(fp, "  axis %d\n"
                   "    scale = %d\n", 
               pAxis->axisNo_,
@@ -383,7 +383,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     /*Now set position on encoder axis, if one is in use.*/
                 
     if (pAxis->encoder_axis_) {
-      getDoubleParam(motorEncRatio_,  &encRatio);
+      getDoubleParam(motorEncoderRatio_,  &encRatio);
       encposition = (epicsInt32) floor((position*encRatio) + 0.5);
                   
       sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
@@ -884,9 +884,6 @@ asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int enco
 
 /* Code for iocsh registration */
 
-#ifdef vxWorks
-#else
-
 /* pmacCreateController */
 static const iocshArg pmacCreateControllerArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacCreateControllerArg1 = {"Low level port name", iocshArgString};
@@ -987,8 +984,6 @@ static void pmacControllerRegister(void)
   iocshRegister(&configpmacSetOpenLoopEncoderAxis, configpmacSetOpenLoopEncoderAxisCallFunc);
 }
 epicsExportRegistrar(pmacControllerRegister);
-
-#endif
 
 #ifdef vxWorks
   //VxWorks register functions

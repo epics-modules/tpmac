@@ -22,8 +22,9 @@
 #include <iocsh.h>
 
 #include "pmacController.h"
-
-static const char *driverName = "pmacAxis";
+#include <iostream>
+using std::cout;
+using std::endl;
 
 /////////////////replace with a runtime function that can be called on IOC shell.////////////////////////
 /////////////////Or, provide an overloaded constructor with this as an argument.////////////////////////
@@ -38,7 +39,7 @@ static const char *driverName = "pmacAxis";
 
 #define REMOVE_LIMITS_ON_HOME
 
-extern "C" void shutdownCallback(void *pPvt)
+static void shutdownCallback(void *pPvt)
 {
   pmacController *pC = static_cast<pmacController *>(pPvt);
 
@@ -98,8 +99,8 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
 
 asynStatus pmacAxis::getAxisInitialStatus(void)
 {
-  char command[pC_->PMAC_MAXBUF_];
-  char response[pC_->PMAC_MAXBUF_];
+  char command[PMAC_MAXBUF];
+  char response[PMAC_MAXBUF];
   int cmdStatus = 0;
   double low_limit = 0.0;
   double high_limit = 0.0;
@@ -120,10 +121,11 @@ asynStatus pmacAxis::getAxisInitialStatus(void)
   } else {
     setDoubleParam(pC_->motorLowLimit_,  low_limit*scale_);
     setDoubleParam(pC_->motorHighLimit_, high_limit*scale_);
-    setDoubleParam(pC_->motorPgain_,     pgain);
-    setDoubleParam(pC_->motorIgain_,     igain);
-    setDoubleParam(pC_->motorDgain_,     dgain);
+    setDoubleParam(pC_->motorPGain_,     pgain);
+    setDoubleParam(pC_->motorIGain_,     igain);
+    setDoubleParam(pC_->motorDGain_,     dgain);
     setIntegerParam(pC_->motorStatusHasEncoder_, 1);
+    setIntegerParam(pC_->motorStatusGainSupport_, 1);
   }
 
   return asynSuccess;
@@ -156,7 +158,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
       sprintf(acc_buff, "I%d20=%f ", axisNo_, (fabs(max_velocity/acceleration) * 1000.0));
     }
   }
-
+  
   if (pC_->movesDeferred_ == 0) {
     sprintf( command, "%s%s#%d %s%.2f", vel_buff, acc_buff, axisNo_,
 	     (relative?"J^":"J="), position/scale_ );
@@ -345,12 +347,32 @@ asynStatus pmacAxis::stop(double acceleration)
   return status;
 }
 
+asynStatus pmacAxis::setClosedLoop(bool closedLoop)
+{
+  asynStatus status = asynError;
+  static const char *functionName = "pmacAxis::setClosedLoop";
+
+  pC_->debugFlow(functionName); 
+
+  char command[128] = {0};
+  char response[32] = {0};
+  
+  if (closedLoop) {
+    sprintf( command, "#%d J/",  axisNo_);
+  } else {
+    sprintf( command, "#%d K",  axisNo_);
+  }
+  status = pC_->lowLevelWriteRead(command, response);
+  return status;
+}
+
+
 asynStatus pmacAxis::poll(bool *moving)
 {
   int status = 0;
   //int axisDone = 0;
   int globalStatus = 0;
-  char message[pC_->PMAC_MAXBUF_];
+  char message[PMAC_MAXBUF];
   //char command[pC_->PMAC_MAXBUF_];
   //char response[pC_->PMAC_MAXBUF_];
   static const char *functionName = "pmacAxis::poll";
@@ -383,8 +405,8 @@ asynStatus pmacAxis::poll(bool *moving)
 
 asynStatus pmacAxis::getAxisStatus(bool *moving)
 {
-    char command[pC_->PMAC_MAXBUF_];
-    char response[pC_->PMAC_MAXBUF_];
+    char command[PMAC_MAXBUF];
+    char response[PMAC_MAXBUF];
     int cmdStatus = 0;; 
     int done = 0;
     double position = 0; 
@@ -522,6 +544,7 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
     } else {
       amp_enabled_ = 0;
     }
+    setIntegerParam(pC_->motorStatusPowerOn_, amp_enabled_);
     
     return asynSuccess;
 }
