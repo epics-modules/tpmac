@@ -20,6 +20,7 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::dec;
 
 #include <epicsTime.h>
 #include <epicsThread.h>
@@ -37,6 +38,8 @@ static const char *driverName = "pmacController";
 
 const epicsUInt32 pmacController::PMAC_MAXBUF_ = PMAC_MAXBUF;
 const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 5.0;
+const epicsUInt32 pmacController::PMAC_FEEDRATE_LIM_ = 100;
+const epicsUInt32 pmacController::PMAC_ERROR_PRINT_TIME_ = 600; //seconds
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const epicsUInt32 pmacController::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -147,12 +150,23 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   lowLevelPortUser_ = NULL;
   debugFlag_ = 0;
   movesDeferred_ = 0;
+  nowTimeSecs_ = 0.0;
+  lastTimeSecs_ = 0.0;
+  printNextError_ = false;
+  feedRatePoll_ = false;
 
   pAxes_ = (pmacAxis **)(asynMotorController::pAxes_);
 
+  //Create dummy axis for asyn address 0. This is used for controller parameters.
+  pAxisZero = new pmacAxis(this, 0);
+
   // Create controller-specific parameters
-  createParam(PMAC_C_GlobalStatusString,       asynParamInt32, &PMAC_C_GlobalStatus_);
-  createParam(PMAC_C_CommsErrorString,         asynParamInt32, &PMAC_C_CommsError_);
+  createParam(PMAC_C_GlobalStatusString,     asynParamInt32, &PMAC_C_GlobalStatus_);
+  createParam(PMAC_C_CommsErrorString,       asynParamInt32, &PMAC_C_CommsError_);
+  createParam(PMAC_C_FeedRateString,         asynParamInt32, &PMAC_C_FeedRate_);
+  createParam(PMAC_C_FeedRateLimitString,    asynParamInt32, &PMAC_C_FeedRateLimit_);
+  createParam(PMAC_C_FeedRatePollString,     asynParamInt32, &PMAC_C_FeedRatePoll_);
+  createParam(PMAC_C_FeedRateProblemString,  asynParamInt32, &PMAC_C_FeedRateProblem_);
 
   // Connect our Asyn user to the low level port that is a parameter to this constructor
   if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_, "\006", "\r") != asynSuccess) {
@@ -165,14 +179,26 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
   startPoller(movingPollPeriod, idlePollPeriod, 10);
 
+  bool paramStatus = true;
+  //Initialise any paramLib parameters
+  paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
+  //  paramStatus = ((setIntegerParam(PMAC_C_FeedRateLimit_, PMAC_FEEDRATE_LIM_) == asynSuccess) && paramStatus);
+  //paramStatus = ((setIntegerParam(PMAC_C_FeedRatePoll_, 0) == asynSuccess) && paramStatus);
+
   callParamCallbacks();
+
+  if (!paramStatus) {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
+  }
  
 }
 
 
 pmacController::~pmacController(void) 
 {
-  //Destructor
+  //Destructor. Should never get here.
+  delete pAxisZero;
 }
 
 
@@ -437,7 +463,10 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
   int function = pasynUser->reason;
-  asynStatus status = asynError;
+  int addr = -9;
+  char command[64] = {0};
+  char response[64] = {0};
+  asynStatus status = asynSuccess;
   pmacAxis *pAxis = NULL;
   static const char *functionName = "pmacController::writeInt32";
 
@@ -446,24 +475,39 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
     return asynError;
-  }
-  
-  /* Set the parameter and readback in the parameter library.  This may be overwritten when we read back the
-   * status at the end, but that's OK */
+  } 
+
   status = pAxis->setIntegerParam(function, value);
 
-  if (function == motorDeferMoves_) {
+  if (function == PMAC_C_FeedRatePoll_) {
+    if (value) {
+      this->feedRatePoll_ = true;
+    } else {
+      this->feedRatePoll_ = false;
+    }
+  } 
+  else if (function == PMAC_C_FeedRate_) {
+    sprintf(command, "%%%d", value);
+    if (command[0] != 0) {
+      status = lowLevelWriteRead(command, response);
+      status = asynSuccess; //Need this, as PMAC does not respond to this command.
+    }
+  }
+  else if (function == motorDeferMoves_) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
     if (value == 0 && this->movesDeferred_ != 0) {
       status = this->processDeferredMoves();
     }
     this->movesDeferred_ = value;
   }
-
+  
   //Call base class method
   //This will handle callCallbacks even if the function was handled here.
   status = asynMotorController::writeInt32(pasynUser, value);
-
+  
+  //Note: asynMotorController::writeInt32 will return error if using address zero for the controller
+  //parameters, and the axes objects have only been given asyn address 1 and above.
+  
   return status;
 
 }
@@ -496,51 +540,118 @@ pmacAxis* pmacController::getAxis(int axisNo)
 asynStatus pmacController::poll()
 {
   epicsUInt32 globalStatus = 0;
+  int feedrate = 0;
+  int feedrate_poll = 0;
+  int feedrate_limit = 0;
+  bool printErrors = 0;
+  bool status = true;
   static const char *functionName = "pmacController::poll";
 
   debugFlow(functionName);
 
   if (!lowLevelPortUser_) {
-    setIntegerParam(this->motorStatusCommsError_, 1);
     return asynError;
   }
 
+  /* Get the time and decide if we want to print errors.*/
+  epicsTimeGetCurrent(&nowTime_);
+  nowTimeSecs_ = nowTime_.secPastEpoch;
+  if ((nowTimeSecs_ - lastTimeSecs_) < PMAC_ERROR_PRINT_TIME_) {
+    printErrors = 0;
+  } else {
+    printErrors = 1;
+    lastTimeSecs_ = nowTimeSecs_;
+  }
+
+  if (printNextError_) {
+    printErrors = 1;
+  }
+  
   //Set any controller specific parameters. 
-  //Some of these may be used by the axis poll to set axis problem bits.
-  globalStatus = getGlobalStatus();
-  setIntegerParam(this->PMAC_C_GlobalStatus_, ((globalStatus & PMAC_HARDWARE_PROB) != 0));
+  //Some of these may be used by the axis poll to set axis problem bits. Error messages are
+  //printed out in the axis poller (which handles error message throttling).
+  status = (getGlobalStatus(&globalStatus, &feedrate, feedRatePoll_) == asynSuccess) && status;
+  status = (setIntegerParam(this->PMAC_C_GlobalStatus_, ((globalStatus & PMAC_HARDWARE_PROB) != 0)) == asynSuccess) && status;
+
+  if (status && feedRatePoll_) {
+    status = (setIntegerParam(this->PMAC_C_FeedRate_, feedrate) == asynSuccess) && status;
+    status = (getIntegerParam(this->PMAC_C_FeedRateLimit_, &feedrate_limit) == asynSuccess) && status;
+    if (feedrate < (feedrate_limit-1)) {
+      status = (setIntegerParam(this->PMAC_C_FeedRateProblem_, 1) == asynSuccess) && status;
+      if (printErrors) {
+	asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, 
+		  "%s: *** ERROR ***: global feed rate below limit. feedrate: %d, feedrate limit %d\n", functionName, feedrate, feedrate_limit);
+	printNextError_ = false;
+      }
+    } else {
+      status = (setIntegerParam(this->PMAC_C_FeedRateProblem_, 0) == asynSuccess) && status;
+      printNextError_ = true;
+    }
+  }
   
   callParamCallbacks();
+
+  if (!status) {
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading or setting params.\n", functionName);
+    return asynError;
+  }
 
   return asynSuccess;
 }
 
 
 /**
- * Read the PMAC global status integer (using a ??? )
- * @return int The global status integer (23 active bits)
+ * Read the PMAC global status integer (using a ??? ) and global feed rate (%)
+ * @param int The global status integer (23 active bits)
+ * @param int The global feed rate
  */
-epicsUInt32 pmacController::getGlobalStatus(void)
+asynStatus pmacController::getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll)
 {
   char command[32];
   char response[PMAC_MAXBUF_];
   int nvals = 0;
-  epicsUInt32 pmacStatus = 0;
+  asynStatus status = asynSuccess;
   static const char *functionName = "pmacController::getGlobalStatus";
 
   debugFlow(functionName);
-
+  
   sprintf(command, "???");
   if (lowLevelWriteRead(command, response) != asynSuccess) {
-    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading global status. command: %s\n", functionName, command);
-    setIntegerParam(this->motorStatusCommsError_, 1);
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading ???.\n", functionName);
+    status = asynError;
   } else {
-    setIntegerParam(this->motorStatusCommsError_, 0);
+    nvals = sscanf(response, "%6x", globalStatus);
+    if (nvals != 1) {
+      asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading ???. nvals: %d, response: %s\n", functionName, nvals, response);
+      status = asynError;
+    } else {
+      status = asynSuccess;
+    }
+  }
+
+  if (feedrate_poll) {
+    sprintf(command, "%%");
+    if (lowLevelWriteRead(command, response) != asynSuccess) {
+      asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading feedrate.\n", functionName);
+      status = asynError;
+    } else {
+      nvals = sscanf(response, "%d", feedrate);
+      if (nvals != 1) {
+	asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error reading feedrate: nvals: %d, response: %s\n", functionName, nvals, response);
+	status = asynError;
+      } else {
+	status = asynSuccess;
+      }
+    }
   }
   
-  nvals = sscanf(response, "%6x", &pmacStatus);
+  if (status == asynSuccess) {
+    setIntegerParam(this->motorStatusCommsError_, 0);
+  } else {
+    setIntegerParam(this->motorStatusCommsError_, 1);
+  }
 
-  return pmacStatus;
+  return status;
 
 }
 
@@ -760,6 +871,12 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
   if (!pC) {
     printf("%s:%s: Error port %s not found\n",
            driverName, functionName, pmacName);
+    return asynError;
+  }
+
+  if (axis == 0) {
+    printf("%s:%s: Error axis number 0 not allowed. This asyn address is reserved for controller specific parameters.\n",
+	   driverName, functionName);
     return asynError;
   }
   

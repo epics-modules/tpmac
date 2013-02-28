@@ -56,8 +56,10 @@ class pmacAxis : public asynMotorAxis
   int fatal_following_;
   int encoder_axis_;
   int limitsCheckDisable_;
-  int errorPrintCount_;
-  int errorPrintFlag_;
+  epicsTimeStamp nowTime_;
+  epicsFloat64 nowTimeSecs_;
+  epicsFloat64 lastTimeSecs_;
+  bool printNextError_;
 
   friend class pmacController;
 };

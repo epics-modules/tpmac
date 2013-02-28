@@ -10,8 +10,14 @@ pattern { P, M, DESC, DTYP, DIR, VELO, VBAS, ACCL, BDST, BVEL, BACC, PORT, ADDR,
 file bo.template
 {
 pattern {P, R, DTYP, OUT, ZNAM, ONAM, SCAN }
-	{mp49t:geo:, defer, asynInt32, "@asyn(PMAC1,1)MOTOR_DEFER_MOVES", "GO", "DEFER", Passive }
+	{mp49t:geo:, defer, asynInt32, "@asyn(PMAC1,0)MOTOR_DEFER_MOVES", "GO", "DEFER", Passive }
 }
 
+
+file pmacController.template
+{
+pattern {P,          R,     PORT, ADDR, TIMEOUT, FEEDRATE, FEEDRATE_POLL}
+	{mp49t:geo:, ctrl:, PMAC1,0,    5,       100,      1}
+}
 
 

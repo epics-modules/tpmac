@@ -39,8 +39,8 @@ pmacAsynIPConfigure("pmacLV", "172.23.253.11:1025")
 #drvAsynIPPortConfigure("pmacLV", "172.23.243.200:1025", 0, 0, 1)
 
 # Set debugging flags if desired
-##asynSetTraceIOMask("pmacLV",0,0x15)
-##asynSetTraceMask("pmacLV",0,0x15)
+#asynSetTraceIOMask("pmacLV",0,0x15)
+#asynSetTraceMask("pmacLV",0,0x15)
 #asynSetTraceIOMask("pmacLV",0,255)
 #asynSetTraceMask("pmacLV",0,255)
 

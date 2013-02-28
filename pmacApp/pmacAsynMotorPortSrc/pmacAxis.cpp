@@ -77,8 +77,9 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   fatal_following_ = 0;
   encoder_axis_ = 0;
   limitsCheckDisable_ = 0;
-  errorPrintCount_ = 0;
-  errorPrintFlag_ = 0;
+  nowTimeSecs_ = 0.0;
+  lastTimeSecs_ = 0.0;
+  printNextError_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -111,23 +112,27 @@ asynStatus pmacAxis::getAxisInitialStatus(void)
 
   static const char *functionName = "pmacAxis::getAxisInitialStatus";
 
-  sprintf(command, "I%d13 I%d14 I%d30 I%d31 I%d33", axisNo_, axisNo_, axisNo_, axisNo_, axisNo_);
-  cmdStatus = pC_->lowLevelWriteRead(command, response);
-  nvals = sscanf(response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain, &igain);
+  if (axisNo_ != 0) {
 
-  if (cmdStatus || nvals != 5) {
-    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: initial status poll failed on axis %d.\n", functionName, axisNo_);
-    return asynError;
-  } else {
-    setDoubleParam(pC_->motorLowLimit_,  low_limit*scale_);
-    setDoubleParam(pC_->motorHighLimit_, high_limit*scale_);
-    setDoubleParam(pC_->motorPGain_,     pgain);
-    setDoubleParam(pC_->motorIGain_,     igain);
-    setDoubleParam(pC_->motorDGain_,     dgain);
-    setIntegerParam(pC_->motorStatusHasEncoder_, 1);
-    setIntegerParam(pC_->motorStatusGainSupport_, 1);
+    sprintf(command, "I%d13 I%d14 I%d30 I%d31 I%d33", axisNo_, axisNo_, axisNo_, axisNo_, axisNo_);
+    cmdStatus = pC_->lowLevelWriteRead(command, response);
+    nvals = sscanf(response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain, &igain);
+    
+    if (cmdStatus || nvals != 5) {
+      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: initial status poll failed on axis %d.\n", functionName, axisNo_);
+      return asynError;
+    } else {
+      setDoubleParam(pC_->motorLowLimit_,  low_limit*scale_);
+      setDoubleParam(pC_->motorHighLimit_, high_limit*scale_);
+      setDoubleParam(pC_->motorPGain_,     pgain);
+      setDoubleParam(pC_->motorIGain_,     igain);
+      setDoubleParam(pC_->motorDGain_,     dgain);
+      setIntegerParam(pC_->motorStatusHasEncoder_, 1);
+      setIntegerParam(pC_->motorStatusGainSupport_, 1);
+    }
+    
   }
-
+  
   return asynSuccess;
 }
 
@@ -369,12 +374,8 @@ asynStatus pmacAxis::setClosedLoop(bool closedLoop)
 
 asynStatus pmacAxis::poll(bool *moving)
 {
-  int status = 0;
-  //int axisDone = 0;
-  int globalStatus = 0;
+  asynStatus status = asynSuccess;
   char message[PMAC_MAXBUF];
-  //char command[pC_->PMAC_MAXBUF_];
-  //char response[pC_->PMAC_MAXBUF_];
   static const char *functionName = "pmacAxis::poll";
 
   sprintf(message, "%s: Polling axis: %d", functionName, this->axisNo_);
@@ -385,16 +386,12 @@ asynStatus pmacAxis::poll(bool *moving)
     return asynError;
   }
   
-  //Set axis problem bits based on the controller status (obtained in the controller poll).
-  if (pC_->getIntegerParam(pC_->PMAC_C_GlobalStatus_, &globalStatus)) {
-    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Could not read controller %s global status.\n", functionName, pC_->portName);
-  }
-  setIntegerParam(pC_->motorStatusProblem_, globalStatus);
-      
+  if (axisNo_ != 0) {
   //Now poll axis status
-  if ((status = getAxisStatus(moving)) != asynSuccess) {
-    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-	      "%s: getAxisStatus failed to return asynSuccess. Controller: %s, Axis: %d.\n", functionName, pC_->portName, axisNo_);
+    if ((status = getAxisStatus(moving)) != asynSuccess) {
+      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+		"%s: getAxisStatus failed to return asynSuccess. Controller: %s, Axis: %d.\n", functionName, pC_->portName, axisNo_);
+    }
   }
   
   callParamCallbacks();
@@ -415,14 +412,21 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
     epicsUInt32 status[2] = {0};
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
-    int errorPrintMin = 10000;
+    bool printErrors = true;
     
-    /* Keep error messages from being printed each poll.*/
-    if (errorPrintCount_ > errorPrintMin) {
-      errorPrintCount_ = 0;
-      errorPrintFlag_ = 0;
+    /* Get the time and decide if we want to print errors.*/
+    epicsTimeGetCurrent(&nowTime_);
+    nowTimeSecs_ = nowTime_.secPastEpoch;
+    if ((nowTimeSecs_ - lastTimeSecs_) < pC_->PMAC_ERROR_PRINT_TIME_) {
+      printErrors = 0;
+    } else {
+      printErrors = 1;
+      lastTimeSecs_ = nowTimeSecs_;
     }
-    errorPrintCount_++;
+    
+    if (printNextError_) {
+      printErrors = 1;
+    }
             
     /* Read all the status for this axis in one go */
     if (encoder_axis_ != 0) {
@@ -499,6 +503,14 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       if ( ((status[0] & pC_->PMAX_AXIS_GENERAL_PROB1) != 0) || ((status[1] & pC_->PMAX_AXIS_GENERAL_PROB2) != 0) ) {
 	axisProblemFlag = 1;
       }
+
+      int globalStatus = 0;
+      int feedrate_problem = 0;
+      pC_->getIntegerParam(0, pC_->PMAC_C_GlobalStatus_, &globalStatus);
+      pC_->getIntegerParam(0, pC_->PMAC_C_FeedRateProblem_, &feedrate_problem);
+      if (globalStatus || feedrate_problem) {
+	axisProblemFlag = 1;
+      }
       /*Check limits disabled bit in ix24, and if we haven't intentially disabled limits
 	because we are homing, set the motorAxisProblem bit. Also check the limitsCheckDisable
 	flag, which the user can set to disable this feature.*/
@@ -512,10 +524,11 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
 	    limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
 	    if (limitsDisabledBit) {
 	      axisProblemFlag = 1;
-	      if (errorPrintFlag_ == 0) {
+	      if (printErrors) {
 		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
-		errorPrintFlag_ = 1;
+		printNextError_ = false;
 	      }
+
 	    }
 	  }
 	}
@@ -524,7 +537,7 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       
       /* Clear error print flag for this axis if problem has been removed.*/
       if (axisProblemFlag == 0) {
-	errorPrintFlag_ = 0;
+	printNextError_ = true;
       }
             
 
