@@ -16,6 +16,9 @@
 #include "asynMotorAxis.h"
 #include "pmacAxis.h"
 
+#define PMAC_C_FirstParamString "PMAC_C_FIRSTPARAM"
+#define PMAC_C_LastParamString "PMAC_C_LASTPARAM"
+
 #define PMAC_C_GlobalStatusString "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString "PMAC_C_COMMSERROR"
 
@@ -57,19 +60,20 @@ class pmacController : public asynMotorController {
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
-  #define FIRST_PMAC_PARAM PMAC_C_GlobalStatus__
+  #define FIRST_PMAC_PARAM PMAC_C_FirstParam__
+  int PMAC_C_FirstParam_;
   int PMAC_C_GlobalStatus_;
   int PMAC_C_CommsError_;
   int PMAC_C_FeedRate_;
   int PMAC_C_FeedRateLimit_;
   int PMAC_C_FeedRatePoll_;
   int PMAC_C_FeedRateProblem_;
-  #define LAST_PMAC_PARAM PMAC_C_FeedRateProblem__
+  int PMAC_C_LastParam_;
+  #define LAST_PMAC_PARAM PMAC_C_LastParam__
 
  private:
   pmacAxis *pAxisZero;
   asynUser* lowLevelPortUser_;
-  epicsUInt32 debugFlag_;
   epicsUInt32 movesDeferred_;
   epicsTimeStamp nowTime_;
   epicsFloat64 nowTimeSecs_;
@@ -77,7 +81,7 @@ class pmacController : public asynMotorController {
   bool printNextError_;
   bool feedRatePoll_;
   asynStatus lowLevelWriteRead(const char *command, char *response);
-  int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
 
   asynStatus getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll);
 
@@ -88,7 +92,11 @@ class pmacController : public asynMotorController {
   static const epicsUInt32 PMAC_MAXBUF_;
   static const epicsFloat64 PMAC_TIMEOUT_;
   static const epicsUInt32 PMAC_FEEDRATE_LIM_;
+  static const epicsUInt32 PMAC_FEEDRATE_DEADBAND_;
   static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
+  static const epicsUInt32 PMAC_FORCED_FAST_POLLS_;
+  static const epicsUInt32 PMAC_OK_;
+  static const epicsUInt32 PMAC_ERROR_;
   
   static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
   static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  
