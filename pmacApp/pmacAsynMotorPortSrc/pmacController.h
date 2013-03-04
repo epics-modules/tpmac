@@ -78,7 +78,6 @@ class pmacController : public asynMotorController {
   bool feedRatePoll_;
   asynStatus lowLevelWriteRead(const char *command, char *response);
   int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
-  void debugFlow(const char *message);
 
   asynStatus getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll);
 

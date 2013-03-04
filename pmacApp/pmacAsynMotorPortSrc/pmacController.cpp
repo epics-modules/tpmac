@@ -144,7 +144,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 {
   static const char *functionName = "pmacController::pmacController";
 
-  printf("  Constructor: %s\n", functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
   lowLevelPortUser_ = NULL;
@@ -212,7 +212,7 @@ int pmacController::lowLevelPortConnect(const char *port, int addr, asynUser **p
  
   static const char *functionName = "pmacController::lowLevelPortConnect";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   status = pasynOctetSyncIO->connect( port, addr, ppasynUser, NULL);
   if (status) {
@@ -260,18 +260,19 @@ asynStatus pmacController::printConnectedStatus()
 {
   asynStatus status = asynSuccess;
   int asynManagerConnected = 0;
+  static const char *functionName = "pmacController::printConnectedStatus";
   
   if (lowLevelPortUser_) {
     status = pasynManager->isConnected(lowLevelPortUser_, &asynManagerConnected);
-      if (status) {
+      if (status!=asynSuccess) {
       asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-	      "pmacController: Error calling pasynManager::isConnected.\n");
-      return asynError;
-    } else {
-	printf("pmacController::printConnectedStatus: isConnected: %d\n", asynManagerConnected);
+		"pmacController: Error calling pasynManager::isConnected.\n");
+      return status;
+      } else {
+	asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s isConnected: %d\n", functionName, asynManagerConnected);
     }
   }
-  return asynSuccess;
+  return status;
 }
 
 /**
@@ -289,7 +290,7 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    int commsError = 0;
    static const char *functionName = "pmacController::lowLevelWriteRead";
 
-   debugFlow(functionName);
+   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
    if (!lowLevelPortUser_) {
      setIntegerParam(this->motorStatusCommsError_, 1);
@@ -297,8 +298,6 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    }
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
-   debugFlow("Sending: ");
-   debugFlow(command);
 
    //Make sure the low level port is connected before we attempt comms
    //Use the controller-wide param PMAC_C_CommsError_
@@ -320,20 +319,8 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
    }
 
    asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
-   debugFlow("Received: ");
-   debugFlow(response);
 
   return status;
-}
-
-void pmacController::debugFlow(const char *message)
-{
-  if (debugFlag_ == 1) {
-    printf("  %s\n", message);
-  }
-
-  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", message);
-
 }
 
 
@@ -373,7 +360,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 	
   static const char *functionName = "pmacController::writeFloat64";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
@@ -463,14 +450,13 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
   int function = pasynUser->reason;
-  int addr = -9;
   char command[64] = {0};
   char response[64] = {0};
   asynStatus status = asynSuccess;
   pmacAxis *pAxis = NULL;
   static const char *functionName = "pmacController::writeInt32";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
@@ -541,13 +527,12 @@ asynStatus pmacController::poll()
 {
   epicsUInt32 globalStatus = 0;
   int feedrate = 0;
-  int feedrate_poll = 0;
   int feedrate_limit = 0;
   bool printErrors = 0;
   bool status = true;
   static const char *functionName = "pmacController::poll";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   if (!lowLevelPortUser_) {
     return asynError;
@@ -613,7 +598,7 @@ asynStatus pmacController::getGlobalStatus(epicsUInt32 *globalStatus, int *feedr
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacController::getGlobalStatus";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
   
   sprintf(command, "???");
   if (lowLevelWriteRead(command, response) != asynSuccess) {
@@ -666,7 +651,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(int axis)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   this->lock();
   pA = getAxis(axis);
@@ -695,7 +680,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(void)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   this->lock();
   for (int i=0; i<numAxes_; i++) {
@@ -722,7 +707,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale)
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetAxisScale";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
@@ -765,7 +750,7 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetOpenLoopEncoderAxis";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   this->lock();
   pA = getAxis(axis);
@@ -799,7 +784,7 @@ asynStatus pmacController::processDeferredMoves(void)
   pmacAxis *pAxis = NULL;
   static const char *functionName = "pmacController::processDeferredMoves";
 
-  debugFlow(functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
   for (int axis=0; axis<numAxes_; axis++) {
