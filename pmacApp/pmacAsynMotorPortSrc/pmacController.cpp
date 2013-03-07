@@ -44,6 +44,8 @@ const epicsUInt32 pmacController::PMAC_FORCED_FAST_POLLS_ = 10;
 const epicsUInt32 pmacController::PMAC_OK_ = 0;
 const epicsUInt32 pmacController::PMAC_ERROR_ = 1;
 const epicsUInt32 pmacController::PMAC_FEEDRATE_DEADBAND_ = 1;
+const epicsInt32 pmacController::PMAC_CID_PMAC_ = 602413;
+const epicsInt32 pmacController::PMAC_CID_GEOBRICK_ = 603382;
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const epicsUInt32 pmacController::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -405,13 +407,13 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 	      "%s: Set axis %d on controller %s to position %f\n", 
 	      functionName, pAxis->axisNo_, portName, value);
     
-    if ( command[0] != 0 && status == asynSuccess) {
+    if ( command[0] != 0 && status) {
       status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
     }
                 
     sprintf(command, "#%dJ/", pAxis->axisNo_);
 
-    if (command[0] != 0 && status == asynSuccess) {
+    if (command[0] != 0 && status) {
       status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
     }
 
@@ -430,7 +432,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 		"%s: Set encoder axis %d on controller %s to position %f\n", 
 		functionName, pAxis->axisNo_, portName, value);
                   
-      if (command[0] != 0 && status == asynSuccess) {
+      if (command[0] != 0 && status) {
 	status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
       }
                   
@@ -455,7 +457,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 	      functionName, portName, pAxis->axisNo_, value);
   } 
 
-  if (command[0] != 0 && status == asynSuccess) {
+  if (command[0] != 0 && status) {
     status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
   }
 

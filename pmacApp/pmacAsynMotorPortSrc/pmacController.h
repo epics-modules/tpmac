@@ -97,6 +97,8 @@ class pmacController : public asynMotorController {
   static const epicsUInt32 PMAC_FORCED_FAST_POLLS_;
   static const epicsUInt32 PMAC_OK_;
   static const epicsUInt32 PMAC_ERROR_;
+  static const epicsInt32 PMAC_CID_PMAC_;
+  static const epicsInt32 PMAC_CID_GEOBRICK_;
   
   static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
   static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  

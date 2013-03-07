@@ -18,6 +18,7 @@ SUPPORT=/dls_sw/prod/R3.14.11/support
 WORK=/dls_sw/work/R3.14.11/support
 
 ASYN=           $(SUPPORT)/asyn/4-17
+#TPMAC=          $(SUPPORT)/tpmac/3-10dls10
 TPMAC=          $(WORK)/tpmac
 MOTOR=		$(SUPPORT)/motor/6-7-1dls6
 #MOTOR=          $(WORK)/motor
