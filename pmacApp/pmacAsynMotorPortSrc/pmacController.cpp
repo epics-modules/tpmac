@@ -24,7 +24,6 @@ using std::dec;
 
 #include <epicsTime.h>
 #include <epicsThread.h>
-#include <epicsExport.h>
 #include <epicsString.h>
 #include <iocsh.h>
 #include <drvSup.h>
@@ -33,6 +32,8 @@ using std::dec;
 #include "asynOctetSyncIO.h"
 
 #include "pmacController.h"
+
+#include <epicsExport.h>
 
 static const char *driverName = "pmacController";
 

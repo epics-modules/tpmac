@@ -16,7 +16,6 @@
 
 #include <epicsTime.h>
 #include <epicsThread.h>
-#include <epicsExport.h>
 #include <epicsExit.h>
 #include <epicsString.h>
 #include <iocsh.h>
@@ -25,6 +24,8 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+
+#include <epicsExport.h>
 
 /////////////////replace with a runtime function that can be called on IOC shell.////////////////////////
 /////////////////Or, provide an overloaded constructor with this as an argument.////////////////////////
@@ -142,6 +143,7 @@ asynStatus pmacAxis::getAxisInitialStatus(void)
       setIntegerParam(pC_->motorStatusGainSupport_, 1);
     }
     
+    setIntegerParam(pC_->motorStatusGainSupport_, 1);
   }
   
   return asynSuccess;

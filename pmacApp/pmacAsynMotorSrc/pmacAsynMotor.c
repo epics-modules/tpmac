@@ -15,11 +15,11 @@
 #include "ellLib.h"
 
 #include "drvSup.h"
-#include "epicsExport.h"
 #define DEFINE_MOTOR_PROTOTYPES 1
 #include "motor_interface.h"
 #include "asynDriver.h"
 #include "asynOctetSyncIO.h"
+#include "epicsExport.h"
 
 #define PMAC_BUFFER_SIZE 2097152
 

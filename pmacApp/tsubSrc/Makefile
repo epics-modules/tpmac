@@ -8,6 +8,7 @@ USR_CFLAGS += -DDEBUG
 
 ### build a support library
 LIBRARY_IOC += tsub
+LIB_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 ### tsub record
 OBJLIB_SRCS  += tsubRecord.c
@@ -49,3 +50,21 @@ tsub_SRCS += $(OBJLIB_SRCS)
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
+tsubRecord$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubSeq$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubBD$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubBD3$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubCCD2009$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubCS$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubHS$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubMD$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubMI$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubMO_2mtr_cry2down$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubSH$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubTB$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubX$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubXY$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubXYZ$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubXYZ_frac$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubAcc65e$(OBJ): $(COMMON_DIR)/tsubRecord.h
+tsubCollimator$(OBJ): $(COMMON_DIR)/tsubRecord.h
