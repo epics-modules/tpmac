@@ -524,7 +524,20 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
-  
+
+  if (!status) {
+    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
+    return asynError;
+  } else {
+    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
+  }
+
+  if (function == motorSetClosedLoop_) {
+    bool closedLoop = (value == 0) ? 0 : 1;
+
+    status = pAxis->setClosedLoop(closedLoop);
+  }
+
   if (!status) {
     setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
     return asynError;

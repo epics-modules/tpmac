@@ -544,6 +544,11 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       setIntegerParam(pC_->motorStatusFollowingError_,((status[1] & pC_->PMAC_STATUS2_ERR_FOLLOW_ERR) != 0) );
       fatal_following_ = ((status[1] & pC_->PMAC_STATUS2_ERR_FOLLOW_ERR) != 0);
 
+      /* Need to make sure that we can write the CNEN flag, by setting the gain support flag in the status word */
+      setIntegerParam( pC_->motorStatusGainSupport_,  1 );
+      /* Reflect PMAC_STATUS1_OPEN_LOOP in the CNEN Flag. CNEN can be set from the (user) motor record via the motorAxisClosedLoop command */
+      setIntegerParam( pC_->motorStatusPowerOn_, !(status[0] & pC_->PMAC_STATUS1_OPEN_LOOP));
+            
       axisProblemFlag = 0;
       /*Set any axis specific general problem bits.*/
       if ( ((status[0] & pC_->PMAX_AXIS_GENERAL_PROB1) != 0) || ((status[1] & pC_->PMAX_AXIS_GENERAL_PROB2) != 0) ) {
