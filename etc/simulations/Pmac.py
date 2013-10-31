@@ -367,6 +367,8 @@ class MacroStation(object):
             self.iVariables[var] = 0.0
         return self.iVariables[var]
 
+# This is the main simulation class that creates a simulation of a PMAC
+# based motor controller.
 class Pmac(object):
     motorUpdatePeriod = 0.1
     msPerMotorUpdatePeriod = 1000 * motorUpdatePeriod
@@ -601,7 +603,7 @@ class Pmac(object):
 
     def getIVariable(self, var):
         if not var in self.iVariables:
-            getUi(self).output("Read of undefined I%s\n" % var)
+            #getUi(self).output("Read of undefined I%s\n" % var)
             self.iVariables[var] = 0.0
         return self.iVariables[var]
 
@@ -659,8 +661,8 @@ class Pmac(object):
     def getMVariable(self, var):
         addr = self.getMVariableAddress(var)
         supported,val = self.getMemory(addr)
-        if not supported:
-            getUi(self).output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
+        #if not supported:
+        #    getUi(self).output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
         return val
 
     def getMacroStation(self, ms):

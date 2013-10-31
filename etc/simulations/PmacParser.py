@@ -230,7 +230,8 @@ class PmacParser(object):
         self.traceLineNumber = savedLineNumber
 
     def unsupported(self, syntax):
-        getUi(self.pmac).output("Unsupported syntax: %s" % syntax)
+        print "%s: Unsupported syntax: %s" % (self.pmac.name, syntax)
+        #getUi(self.pmac).output("Unsupported syntax: %s" % syntax)
             
     def getToken(self, requireLineNumbers=False):
         '''Returns the next non-line number token, removing it from the token stream.'''
@@ -238,6 +239,7 @@ class PmacParser(object):
         if len(self.tokens) > 0:
             result = self.tokens[0]
             self.tokens = self.tokens[1:]
+        #print "{%s}" % result,
         return result
 
     def putToken(self, token):
@@ -497,11 +499,17 @@ class PmacParser(object):
 
     def parseCommand(self):
         cmdString = self.getToken()
-        if len(cmdString) >= 2 and cmdString[0] == '"' and cmdString[-1] == '"':
-            self.nestedProcess(cmdString[1:-1], False, 
-                cmdString.fileName, cmdString.lineNumber)
+        if cmdString == '^':
+            # It's a control code command
+            cmdString = self.getToken()
+            # TODO: Support control code commands
         else:
-            self.unsupported(['command', cmdString])
+            # It's a regular command string
+            if len(cmdString) >= 2 and cmdString[0] == '"' and cmdString[-1] == '"':
+                self.nestedProcess(cmdString[1:-1], False, 
+                    cmdString.fileName, cmdString.lineNumber)
+            else:
+                self.unsupported(['command', cmdString])
 
     def parseDebug(self):
         token = self.getToken()
@@ -1335,7 +1343,7 @@ class PmacParser(object):
         '''Returns an expression using the low priority operators.'''
         result = [self.parseExpressionMiddlePriority()]
         operator = self.getToken()
-        while operator in ['>', '=', '<', '!=']:
+        while operator in ['>', '=', '<', '!=', '!>', '!<']:
             result.append(operator)
             result.append(self.parseExpressionMiddlePriority())
             operator = self.getToken()
@@ -1476,7 +1484,7 @@ class PmacParser(object):
                             self.tokenToFloat(item))
                     elif item in ['i', 'm', 'p', 'q']:
                         operator = item
-                    elif item in ['+', '-', '*', '/', '%', '&', '|', '^', '<', '=', '>']:
+                    elif item in ['+', '-', '*', '/', '%', '&', '|', '^', '<', '=', '>', '!>', '!<']:
                         operator = item
                     elif item in ['abs', 'acos', 'asin', 'atan', 'cos', 'exp', 'int', 'ln',
                             'sin', 'sqrt', 'tan', 'atan2', 'and', 'or']:
@@ -1493,12 +1501,16 @@ class PmacParser(object):
             result = lhs - rhs
         elif operator == '>':
             result = lhs > rhs
+        elif operator == '!>':
+            result = lhs <= rhs
         elif operator == '=':
             result = lhs == rhs
         elif operator == '!=':
             result = lhs != rhs
         elif operator == '<':
             result = lhs < rhs
+        elif operator == '!<':
+            result = lhs >= rhs
         elif operator == '*':
             result = lhs * rhs
         elif operator == '/':
