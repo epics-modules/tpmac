@@ -655,14 +655,16 @@ class Pmac(object):
     def setMVariable(self, var, val):
         addr = self.getMVariableAddress(var)
         supported = self.setMemory(addr, val)
-        if not supported:
-            getUi(self).output("!>Write to unsupported memory location '%s=%s', M%s\n" % (addr, val, var))
+        #if not supported:
+            # getUi(self).output("!>Write to unsupported memory location '%s=%s', M%s\n" % (addr, val, var))
+            #print "!>Write to unsupported memory location '%s=%s', M%s\n" % (addr, val, var)
 
     def getMVariable(self, var):
         addr = self.getMVariableAddress(var)
         supported,val = self.getMemory(addr)
         #if not supported:
-        #    getUi(self).output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
+            #getUi(self).output("!>Read from unsupported memory location '%s', M%s\n" % (addr, var))
+            #print "!>Read from unsupported memory location '%s', M%s\n" % (addr, var)
         return val
 
     def getMacroStation(self, ms):

@@ -503,6 +503,9 @@ class PmacParser(object):
             # It's a control code command
             cmdString = self.getToken()
             # TODO: Support control code commands
+        elif cmdString == '^':
+            cmdString = self.getToken()
+            # TODO: Handle command control character
         else:
             # It's a regular command string
             if len(cmdString) >= 2 and cmdString[0] == '"' and cmdString[-1] == '"':
