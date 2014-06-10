@@ -1155,6 +1155,12 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	  pAxis->amp_enabled = 0;
 	}
 
+/* Added by AJF and AJG, after investigating problem on I04, SCIN-01:Y, of DMOV never being set TRUE after hitting a real
+ * limit switch.
+ */
+	if (((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) || ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET) != 0)) {
+	  motorParam->forceCallback( pAxis->params );
+	}
 	motorParam->callCallback( pAxis->params );           
 
         epicsMutexUnlock( pAxis->axisMutex );
