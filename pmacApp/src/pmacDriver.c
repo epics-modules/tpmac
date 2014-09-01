@@ -45,6 +45,7 @@ typedef struct
     int              ctlr;
     int              openFlag;
     int              cancelFlag;
+    int              polling;
     epicsRingBytesId replyQ;
     epicsEventId     ioReadmeId;
     epicsEventId     ioReceivedId;
@@ -80,13 +81,34 @@ IMPORT PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
 static epicsEventId transactionLock = NULL;
 #endif
 
+/* This is the polling task for DPRAM ASCII communications.  This task is only
+   created if the driver is requested to use polling and the default behaviour
+   is to use the interrupt service routine.  This task is created in the pmacDrv
+   function below.
+
+   Added by Alan Greer on 12th August 2014. */
+
+static void tpmac_poll_task_c(void *ptr)
+{
+  PMAC_DEV *pDev = (PMAC_DEV *)ptr;
+
+  /* Run this loop forever, checking status as fast as possible */
+  while(1)
+  {
+    /* Call the same routine that would be interrupted */
+    pmacAscReadMeISR(pDev);
+    /* Make sure other scheduled tasks are allowed to execute */
+    taskDelay(0);
+  }
+}
+
 /* This routine installs the DPRAM ASCII driver and the Mailbox ASCII driver.
    It adds a DRPAM ASCII device and a Mailbox ASCII device for every PMAC
    card that has been configured.
    This routine is called from "drvPmac_init" in "drvPmac.c"
    which in turn is called from EPICS "iocInit()" */
 
-STATUS pmacDrv(void)
+STATUS pmacDrv(int polling)
 {
   STATUS ret;
   int    installedAsc;
@@ -124,6 +146,7 @@ STATUS pmacDrv(void)
       pmacAscDev[i].ctlr       = pmacVmeCtlr[i].ctlr;
       pmacAscDev[i].openFlag   = 0;
       pmacAscDev[i].cancelFlag = 0;
+      pmacAscDev[i].polling    = polling;
 
       if( pmacVmeCtlr[i].configured )
       {
@@ -143,10 +166,22 @@ STATUS pmacDrv(void)
         pmacAscDev[i].ioReceivedId = 0;
         pmacAscDev[i].readMeISR    = (void *)pmacAscReadMeISR;
 
-        status = devConnectInterruptVME( pmacVmeCtlr[i].irqVector + 1,
-                                      (void *)pmacAscReadMeISR, (void *) &(pmacAscDev[i]) );
-        if(!RTN_SUCCESS(status))
-          cantProceed("pmacDrv: Failed to connect to DPRAM ASCII readme interrupt");
+        if (polling == 0){
+          status = devConnectInterruptVME( pmacVmeCtlr[i].irqVector + 1,
+                                        (void *)pmacAscReadMeISR, (void *) &(pmacAscDev[i]) );
+          if(!RTN_SUCCESS(status))
+            cantProceed("pmacDrv: Failed to connect to DPRAM ASCII readme interrupt");
+        } else {
+          /* Create the thread that calls the interrupt service routine when interrupts are not available */
+          status = (epicsThreadCreate("tpmac_poll_task",
+                                      epicsThreadPriorityLow,
+                                      epicsThreadGetStackSize(epicsThreadStackMedium),
+                                      (EPICSTHREADFUNC)tpmac_poll_task_c,
+                                      &(pmacAscDev[i])) == NULL);
+          if (status){
+            cantProceed("pmacDrv: Failed to create DPRAM ASCII polling task");
+          }
+        }
       }
     }
   }
@@ -171,6 +206,7 @@ STATUS pmacDrv(void)
       pmacMbxDev[i].ctlr       = pmacVmeCtlr[i].ctlr;
       pmacMbxDev[i].openFlag   = 0;
       pmacMbxDev[i].cancelFlag = 0;
+      pmacAscDev[i].polling    = polling;
 
       if ( pmacVmeCtlr[i].configured )
       {
@@ -209,7 +245,6 @@ STATUS pmacDrv(void)
   }
   return( ret );
 }
-
 
 /* The routines:                                                      */
 /*   pmacOpen                                                         */
@@ -389,7 +424,9 @@ static void pmacAscReadMeISR( PMAC_DEV *pDev )
 
   if (control.S == 0)
   {
-      logMsg( "No response from PMAC in pmacAscInISR\n", 0,0,0,0,0,0 );
+      if (pDev->polling == 0){
+        logMsg( "No response from PMAC in pmacAscInISR\n", 0,0,0,0,0,0 );
+      }
       return;
   }
   if (control.C[1] == 0 )
@@ -612,7 +649,7 @@ long pmacVmeConfigSim( int ctlrNumber, unsigned long addrBase, unsigned long add
 #include <epicsExport.h>
 #include <iocsh.h>
 
-int pmacAsynConfig( char * mbx_prefix, char * asc_prefix, unsigned int priority)
+int pmacAsynConfig( char * mbx_prefix, char * asc_prefix, unsigned int priority, int polling)
 {
     int i;
     char devName[32];
@@ -620,7 +657,7 @@ int pmacAsynConfig( char * mbx_prefix, char * asc_prefix, unsigned int priority)
     static int installedAsynAsc = 0;
     static int installedAsynMbx = 0;
 
-    pmacDrv();
+    pmacDrv(polling);
 
     if( !installedAsynMbx && mbx_prefix )
     {
@@ -658,13 +695,14 @@ int pmacAsynConfig( char * mbx_prefix, char * asc_prefix, unsigned int priority)
 static const iocshArg pmacAsynConfigArg0 = {"PMAC Mailbox Asyn port prefix",     iocshArgString};
 static const iocshArg pmacAsynConfigArg1 = {"PMAC DPRAM ASCII Asyn port prefix", iocshArgString};
 static const iocshArg pmacAsynConfigArg2 = {"Asyn port priority (0 for default)", iocshArgInt};
-static const iocshArg * const pmacAsynConfigArgs[] = {&pmacAsynConfigArg0, &pmacAsynConfigArg1, &pmacAsynConfigArg2};
+static const iocshArg pmacAsynConfigArg3 = {"Should the driver poll (0=no, 1=yes)", iocshArgInt};
+static const iocshArg * const pmacAsynConfigArgs[] = {&pmacAsynConfigArg0, &pmacAsynConfigArg1, &pmacAsynConfigArg2, &pmacAsynConfigArg3};
  
-static const iocshFuncDef pmacAsynConfigDef = {"pmacAsynConfig", 3, pmacAsynConfigArgs};
+static const iocshFuncDef pmacAsynConfigDef = {"pmacAsynConfig", 4, pmacAsynConfigArgs};
 
 static void pmacAsynConfigCallFunc(const iocshArgBuf *args)
 {
-    pmacAsynConfig(args[0].sval, args[1].sval, args[2].ival);
+    pmacAsynConfig(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
 }
 
 
