@@ -380,7 +380,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     /*Now set position on encoder axis, if one is in use.*/
                 
     if (pAxis->encoder_axis_) {
-      getDoubleParam(motorEncRatio_,  &encRatio);
+      getDoubleParam(motorEncoderRatio_,  &encRatio);
       encposition = (epicsInt32) floor((position*encRatio) + 0.5);
                   
       sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
