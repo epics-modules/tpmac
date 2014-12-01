@@ -1,0 +1,744 @@
+
+file {
+	name="/home/biocat/top/pmacApp/adl/IxSvoCtl_Help.adl"
+	version=030002
+}
+display {
+	object {
+		x=153
+		y=87
+		width=800
+		height=275
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=0
+		y=0
+		width=800
+		height=26
+	}
+	"basic attribute" {
+		clr=56
+	}
+}
+text {
+	object {
+		x=4
+		y=5
+		width=280
+		height=18
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Servo Control (Ix30-Ix69) Help"
+}
+"text update" {
+	object {
+		x=2
+		y=31
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix30:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=53
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix31:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=76
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix32:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=98
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix33:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=123
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix34:BI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=147
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix35:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=188
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix64:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=210
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix65:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=2
+		y=232
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix67:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=3
+		y=254
+		width=175
+		height=14
+	}
+	monitor {
+		chan="$(mtr)Ix69:LI.DESC"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+composite {
+	object {
+		x=184
+		y=31
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=31
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=31
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=53
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=53
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=53
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=76
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=76
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=76
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=98
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=98
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=98
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=147
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=147
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=147
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=232
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=232
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=232
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 8,388,607"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=123
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=123
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=123
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 1"
+			align="horiz. centered"
+		}
+	}
+}
+rectangle {
+	object {
+		x=184
+		y=188
+		width=114
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+}
+text {
+	object {
+		x=191
+		y=188
+		width=100
+		height=14
+	}
+	"basic attribute" {
+		clr=31
+	}
+	textix="-16 .. 0"
+	align="horiz. centered"
+}
+composite {
+	object {
+		x=184
+		y=210
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=210
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=210
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 32,767"
+			align="horiz. centered"
+		}
+	}
+}
+composite {
+	object {
+		x=184
+		y=254
+		width=114
+		height=14
+	}
+	"composite name"=""
+	children {
+		rectangle {
+			object {
+				x=184
+				y=254
+				width=114
+				height=14
+			}
+			"basic attribute" {
+				clr=14
+			}
+		}
+		text {
+			object {
+				x=191
+				y=254
+				width=100
+				height=14
+			}
+			"basic attribute" {
+				clr=31
+			}
+			textix="0 .. 32,767"
+			align="horiz. centered"
+		}
+	}
+}
+text {
+	object {
+		x=304
+		y=31
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Adds amount proportiional to pos.error (electronic spring)"
+}
+text {
+	object {
+		x=304
+		y=53
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Subtracts amount proportiinal to velocity (electronic damper)"
+}
+text {
+	object {
+		x=304
+		y=76
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Reduces tracking errors due to Ix31 (>= Ix31)"
+}
+text {
+	object {
+		x=304
+		y=98
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Adds amount ~time integral of position error (<=Ix69<=Ix63)"
+}
+text {
+	object {
+		x=304
+		y=147
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Adds term proportional to acceleration; reduces inertial lag error"
+}
+text {
+	object {
+		x=304
+		y=232
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Biggest position error in servo filter x16"
+}
+text {
+	object {
+		x=304
+		y=123
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="0=permanent position error integraration, 1=only when holding"
+}
+text {
+	object {
+		x=304
+		y=188
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="If error<Ix65 gain=gain*(Ix64+16)/16; 0=no deadband; -16=true"
+}
+text {
+	object {
+		x=304
+		y=210
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Must be 16 times deadband in counts"
+}
+text {
+	object {
+		x=304
+		y=254
+		width=490
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="The range at the left corresponds to -10V .. 10V"
+}
+text {
+	object {
+		x=417
+		y=7
+		width=380
+		height=14
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="See PMAC Software Reference p.5.45-5.52"
+	align="horiz. right"
+}

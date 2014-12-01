@@ -16,18 +16,8 @@
 #include "asynMotorAxis.h"
 #include "pmacAxis.h"
 
-#define PMAC_C_FirstParamString "PMAC_C_FIRSTPARAM"
-#define PMAC_C_LastParamString "PMAC_C_LASTPARAM"
-
 #define PMAC_C_GlobalStatusString "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString "PMAC_C_COMMSERROR"
-
-#define PMAC_C_FeedRateString         "PMAC_C_FEEDRATE"
-#define PMAC_C_FeedRateLimitString    "PMAC_C_FEEDRATE_LIMIT"
-#define PMAC_C_FeedRatePollString     "PMAC_C_FEEDRATE_POLL"
-#define PMAC_C_FeedRateProblemString  "PMAC_C_FEEDRATE_PROBLEM"
-
-#define PMAC_MAXBUF 1024
 
 class pmacController : public asynMotorController {
 
@@ -60,30 +50,20 @@ class pmacController : public asynMotorController {
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
-  #define FIRST_PMAC_PARAM PMAC_C_FirstParam__
-  int PMAC_C_FirstParam_;
+  #define FIRST_PMAC_PARAM PMAC_C_GlobalStatus__
   int PMAC_C_GlobalStatus_;
   int PMAC_C_CommsError_;
-  int PMAC_C_FeedRate_;
-  int PMAC_C_FeedRateLimit_;
-  int PMAC_C_FeedRatePoll_;
-  int PMAC_C_FeedRateProblem_;
-  int PMAC_C_LastParam_;
-  #define LAST_PMAC_PARAM PMAC_C_LastParam__
+  #define LAST_PMAC_PARAM PMAC_C_CommsError__
 
  private:
-  pmacAxis *pAxisZero;
   asynUser* lowLevelPortUser_;
+  epicsUInt32 debugFlag_;
   epicsUInt32 movesDeferred_;
-  epicsTimeStamp nowTime_;
-  epicsFloat64 nowTimeSecs_;
-  epicsFloat64 lastTimeSecs_;
-  bool printNextError_;
-  bool feedRatePoll_;
   asynStatus lowLevelWriteRead(const char *command, char *response);
-  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  int lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
+  void debugFlow(const char *message);
 
-  asynStatus getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll);
+  epicsUInt32 getGlobalStatus(void);
 
   asynStatus processDeferredMoves(void);
 
@@ -91,14 +71,7 @@ class pmacController : public asynMotorController {
 
   static const epicsUInt32 PMAC_MAXBUF_;
   static const epicsFloat64 PMAC_TIMEOUT_;
-  static const epicsUInt32 PMAC_FEEDRATE_LIM_;
-  static const epicsUInt32 PMAC_FEEDRATE_DEADBAND_;
-  static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
-  static const epicsUInt32 PMAC_FORCED_FAST_POLLS_;
-  static const epicsUInt32 PMAC_OK_;
-  static const epicsUInt32 PMAC_ERROR_;
-  static const epicsInt32 PMAC_CID_PMAC_;
-  static const epicsInt32 PMAC_CID_GEOBRICK_;
+
   
   static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
   static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  

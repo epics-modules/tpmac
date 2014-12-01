@@ -1,9 +1,0 @@
-#
-% 23i:2:scan1.VAL
-
-% file bluice.req P=23i:
-
-% file digital_IO_16_bo.req P=23i:bo0:ch
-% file digital_IO_24_bo.req P=23i:pmac20:acc65e:bo
-% file digital_IO_24_bo.req P=23i:pmac21:acc65e:bo
-

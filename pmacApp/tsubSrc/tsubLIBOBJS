@@ -1,2 +1,0 @@
-# TSUB library
-TSUBLIBOBJS += $(PMAC_TSUB)/tsubLib

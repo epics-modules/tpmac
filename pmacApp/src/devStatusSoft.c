@@ -33,9 +33,9 @@
 */
 
 
-#include	<vxWorks.h>
+/* #include	<vxWorks.h>
 #include	<types.h>
-#include	<stdioLib.h>
+#include	<stdioLib.h> */
 #include	<string.h>
 
 #include	<alarm.h>
@@ -44,7 +44,7 @@
 #include        <recGbl.h>
 #include        <recSup.h>
 #include	<devSup.h>
-#include	<module_types.h>
+/*#include	<module_types.h>*/
 
 #include	<statusRecord.h>
 #include "epicsExport.h"

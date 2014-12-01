@@ -1,0 +1,390 @@
+		     ***** Release 3-11 *****
+This release adds the "src_eth" source distribution, which provides
+communication with Ethernet-accessed Turbo PMACs (e.g. Turbo PMAC2 UMAC CPU)
+with full support for DPRAM and EPICS databases previously developed for
+Turbo PMAC2 VME Ultralite. For an example of soft IOC controlling an
+Ethernet-accessed PMAC, see the synApps\tpmac_eth_softioc directory.
+
+In addition, it replaces obsolete tsDef.h by epicsTime.h and fixes name
+conflict in tsubRecord.c with win32.
+
+Finally, the release include the latest up-to-date changes and bug fixes to
+pmacAsynCoordSrc, pmacAsynIPPortSrc, and pmacAsynMotorSrc from the
+Diamond Light Source tpmac and pmacCoord distributions. For the details of
+changes at the DLS, please consult:
+
+http://controls.diamond.ac.uk/downloads/support/tpmac/3-10dls9/tpmac-3-10dls9.tgz
+http://controls.diamond.ac.uk/downloads/support/pmacCoord/1-11/pmacCoord-1-11.tgz
+
+
+------------------------------------------------------------
+		     ***** Release 3-10 *****
+This release contains a number of changes and bug fixes to pmacAsynCoordSrc,
+pmacAsynIPPortSrc, pmacAsynMotorSrc produced at Diamond Light Source. Below
+is a note from Matthew Pearson <matthew.pearson@diamond.ac.uk>:
+
+!! Changes to pmacAsynIPPort
+----------------------------
+
+There are quite a few changes to pmacAsynIPPort.c
+* Fix problem with vxWorks builds
+* Fix problem reading large buffers composed of multiple packets
+
+!! Changes to pmacAsynMotorSrc
+------------------------------
+
+Changes to pmacAsynMotor.h:
+* New function prototype to set encoder readback from a different axis number
+* New utility function to test reading a large buffer
+
+Changes to pmacAsynMotor.dbd:
+* Removed include of motorSupport.dbd, so applications will need to include
+  this manually from now.
+
+Changes to pmacAsynMotorRegister.cc
+* Added register functions for the two new functions so they can be used on
+  the IOC shell.
+
+Changes to pmacAsynMotor.c:
+* Made a fix to the deferred move implementation in the PMAC driver. There
+  was a race condition between turning off deferred moves and the poller
+  thread, which was causing some moves to return early when scanning with
+  deferred moves.
+* Added amplifier fault bit check. The motor record MSTA problem bit will
+  be set if the amplifier fault is on.
+* Changed the set position logic to also set the encoder axis position, if
+  one is in use. This relies on the correct encoder ratio being set by asyn
+  device support.
+* Added axis status poll when setting encoder axis number. Changed it to
+  use global pAsynUser.
+* Added pmacSetOpenLoopEncoderAxis axis configuration routine
+* Moved pmac abort (A cmd) earlier in command sequence so drive amps have
+  longer to start up
+* Changed definition on motorAxisMoving. Now it is set
+  desired_velocity_zero=0 & motor activated (ix00=1) & amplifier enabled.
+  The new check is for amplifier enabled. This is to prevent EPICS thinking
+  an axis is moving if it has been killed.
+* Redefined motor done. Now, if we are not in position but the amplifier
+  has been disabled then we have finished moving. This will catch fatal
+  following errors. In the same database update the fatal following error
+  flag should be set. This change is to prevent clients from hanging,
+  waiting for a motor to finish moving, in the case of fatal following
+  errors.
+* Only send a J/ if the amplifier output is enabled. When we send a stop,
+  we don't want to power on axes that have been powered off for a reason.
+* Better feedback of axis status in the poller thread.
+
+!! Changes to pmacAsynCoordSrc
+------------------------------
+
+Changes to pmacAsynCoord.h:
+* Added more error bit macros
+* Added functions to help with axis scaling.
+
+Changes to pmacAsynCoordRegister.cc:
+* Added IOC register functions for the new axis scaling functions.
+
+Changes to pmacAsynCoord.dbd:
+* Removed include of motorSupport.dbd, so applications will need to include
+  this manually from now.
+
+Changes to pmacAsynCoord.cc:
+* Fix a race condition with deferred moves
+*  Added in coordinate system axis scaling factor, so we can use real
+  coordinates on the controller. It defaults to unity if not used. Added
+  IOC shell driver function to set the default coordinate system axis
+  scaling factor for all axes.
+* Moved pmac abort (A cmd) earlier in command sequence so drive amps have
+  longer to start up.
+* Abort any existing CS move before trying a new one. This has the welcome
+  side effect of putting any motor in this CS into closed loop mode.
+* Use a mutex when setting idlePollPeriod and movingPollPeriod in the same
+  way as pmacAsynMotor, make the polling a bit more intelligent.
+* Improved error reporting.
+
+
+------------------------------------------------------------
+		     ***** Release 3-9 *****
+The TSUB (Transformation Subroutine) Record was made portable (independent of
+VxWorks) so that now it can be used independently from the TPMAC distribution.
+
+TSUB is a general-purpose EPICS record providing a way to run user-written
+transformations in the IOC. The aim of TSUB is to fetch some input values
+through TSUB record "input" DB links, to perform a transformation according
+to respective transformation subroutine (a user-supplied C-program) and to
+push the output values into the "output" DB links. The name of user-supplied
+subroutine is specified in the TSUB record SNAM field. TSUB record provides
+80 input DB links and 70 output DB links, which should be sufficient for most
+needs. By its versatility, it stands between EPICS Sub (subroutine) Record
+and aSub (Array Subroutine) records included into EPICS Base, although it was
+developed well before aSub. In principle, aSub can be used anywhere instead
+of TSUB, provided one converts respective subroutines written for TSUB and
+replaces the TSUB DB fields with aSub fields.
+
+A typical use of TSUB records with PMAC is to map from e.g. actual motors
+positions into axis positions or from requested axis position into requested
+motor position. For example, when one specifies desired monochromator energy,
+a TSUB record and the associated subroutine tsubMOEnAxs (see tsubMO.c) are
+used to map the value into desired monochromator rotary and monochromator
+second crystal translation positions.
+
+The transformation routines in this directory are grouped as one file per
+assembly type. So, when one adds a new PMAC motors assembly type (e.g. an
+XYZ translation stage), he has to write a new tsubXYZ.c file by analogy
+with other assemblies.
+
+As TSUB is a soft record, this release made it independent of VxWorks, so
+that now it can be compiled for e.g. Linux IOC and deployed for calculations
+not related to TPMAC.
+
+NOTE: the change requires a little tweak of the C-routines written for TSUB:
+some includes need to be changed and REGISTRYFUNCTION for the function name
+should appended to the end. There are plenty of examples in the tsub
+subdirectory.
+
+
+------------------------------------------------------------
+		     ***** Release 3-8 *****
+Essentially same as 3-7, but a few examples of coordinate system DBs
+added/updated, more documentation, boot tree examples (xxx) added, and the
+directory changed from 3-x to synApps/tpmac/3-x reflecting that the package
+is a part of synApps.
+
+
+------------------------------------------------------------
+		     ***** Release 3-7 *****
+1. Added reporting of PMAC error messages using an EPICS waveform PV.
+Before this release PMAC error messages were displayed on IOC console only.
+One EPICS waveform PV per PMAC card was added to the db
+file .../pmacApp/Db/pmacDb/AsciiPmac_waveform.db:
+
+record(waveform, "$(pmac)StrErr") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S2 @")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+}
+
+Files drvPmac.c, drvPmac.h, devPmacMbx.c, add_pmac.dbd were modified to add
+the waveform record support.
+
+2. File statusRecord.c was modified to include definitions for YES/NO macros
+since they are no longer defined in EPICS-3.14.11 include files:
+
+#if !defined(YES) || !defined(NO)
+#define YES 1
+#define NO 0
+#endif
+
+3. A patch by Lewis Muir <jlmuir@anl.gov> to pmacApp/src/devPmacRam.c. Below
+is a description per Lewis' email:
+
+"I found that sometimes pmacApp/src/devPmacRam.c:devPmacRamUpdated was
+being called with a pointer to a PMAC_RAM_DPVT who's ioscanpvt field was
+null.  This resulted in a call to scanIoRequest (line 496) with a null
+argument (confirmed with a printf statement) which, I think, resulted in
+a null dereference in scanIoRequest.
+
+Looking further, I saw that certain EPICS record initialization
+functions in devPmacRam.c called
+pmacApp/src/drvPmac.c:drvPmacDpramRequest with devPmacRamUpdated as the
+(*pFunc)(void *) argument before calling scanIoInit.
+drvPmacDpramRequest sometimes invokes the (*pFunc)(void *) function
+which in this case is devPmacRamUpdated.  This means that
+devPmacRamUpdated might be called before scanIoInit has been called
+which means scanIoRequest might be called with a null argument.
+
+My fix is to move each scanIoInit call *before* each call to
+drvPmacDpramRequest so that the PMAC_RAM_DPVT ioscanpvt field will be
+initialized before devPmacRamUpdated might be called and hence before
+scanIoRequest might be called.
+
+With this fix, my IOC doesn't crash anymore.  However, I'm surprised no
+one else has had this problem before.  This makes me less confident
+about what I think is going wrong and my fix for it.  I'm no EPICS
+internals expert, so I would feel better if one of you looked at the
+problem and my proposed fix and agreed with it.  I'm not even sure what
+scanIoInit does; I hope it's safe to change the call order (i.e. before
+the drvPmacDpramRequest call rather than after it)."
+
+
+------------------------------------------------------------
+		     ***** Release 3-6 *****
+
+This release contains the following modifications:
+
+- - - - - - - - -
+1. New versions of pmacAsynCoordSrc, pmacAsynIPPort and pmacAsynMotorSrc by
+Matthew Pearson and Nick Reese from the DIAMOND Light Source:
+
+"I've attached a patch file for pmacAsynIPPort.c (and associated
+RELEASE_NOTES).
+
+There's been a lot of changes:
+
+Port to Asyn 4-10 (it compiles with Asyn 4-9, but does not work).
+New IOC shell configuration functions.
+Reorganization to improve efficiency.
+
+Recently we've also made a lot of changes to the PMAC driver
+(pmacAsynMotor.c). I think I should send you a patch file for this too,
+with a description of the changes.
+
+Cheers,
+Matthew"
+
+- - - - - - - - -
+2. A patch to AssyGeneric_scanrec.db and bkgfix1pcs_scanrec.db by Lewis
+Muir <jlmuir@anl.gov>:
+
+"When performing an sscan module step scan of a tpmac drive, sometimes
+the $(assy)Busy record does not get set to Done, and so the sscan record
+waits indefinitely for the move to complete.  The move has completed,
+but the $(assy)Busy record doesn't reflect this.
+
+I tracked down the problem to the fact that for some moves (maybe small
+ones that complete very quickly?), $(pcs)PrgExeSts is never processed
+(verified by setting its TPRO field to 1) and hence $(pcs)InPos is never
+processed.  This makes Tim Mooney's $(pcs)ClearBusy record not work
+right since it never sees $(pcs)InPos transition to 0 (Moving) and then
+to 1 (Positioned) - so it never sets $(assy)Busy to Done and so the step
+scan waits indefinitely.
+
+Attached is a patch against tpmac 3-5 to fix this problem.  The fix uses
+a software-only "in-position" indicator that gets set to 0 (Moving) at
+the start of the move and 1 (Positioned) 0.25 sec later.  0.25 sec was
+chosen because in the cases where $(pcs)InPos did process, it always
+seemed to process within 0.1 sec of having started the move, so 0.25 sec
+seemed safe.
+
+The idea is that if $(pcs)InPos has not transitioned to 0 (Moving)
+within 0.25 sec of starting the move, it never will.  In this case, the
+software-only "in-position" indicator is observed by the $(pcs)ClearBusy
+record and it sets $(assy)Busy to Done after 0.25 sec.  If, however,
+$(pcs)InPos does transition to 0 (Moving) within 0.25 sec of starting
+the move, $(pcs)ClearBusy will track it for determining when the move
+completes.
+
+The downside of this patch is that every move will take a minimum of
+0.25 sec.  The upside is that step scans will work correctly - the sscan
+module will not lock up.
+
+A cleaner fix would be for $(pcs)InPos to transition to 0 (Moving) and
+then to 1 (Positioned) for every move (even if the move takes a very
+short time).  I didn't look at the C code, but perhaps there's a way to
+force $(pcs)PrgExeSts to update right after starting the motion program,
+and again once the motion program completes.  Or maybe that won't work,
+and a separate flag would be needed that gets set to 0 (Moving) before
+starting the motion program and get set to 1 (Positioned) after the
+motion program completes (maybe even the motion program itself sets it
+as its last instruction)."
+
+- - - - - - - - -
+3. New, more flexible ccdDb databases (named ccdDb2009).
+
+- - - - - - - - -
+4. Small bug fix in motion programs PMC files (thanks to Lewis Muir).
+
+The core part of the distribution (the MAILBOX and DPRAM communication
+drivers for PMAC2-VME Ulltralite) did not change with this release.
+
+-- Sergey Stepanov
+
+
+------------------------------------------------------------
+		     ***** Release 3-5 *****
+
+The main motivation for this release is the addition of new IP driver
+produced by Pete Leicester and Nick Reese at the DIAMOND Light Source. This
+driver should allow communicating with Ethernet based Delta Tau controllers.
+Below is the message from Nick:
+
+----
+For some time I have been meaning to forward the following to you. It
+contains an asyn interpose driver for an asynIPPort interface for the
+Delta Tau PMAC controllers. It should be placed in the pmacApp directory
+and, if properly configured, should allow you to control a number of the
+Ethernet based Delta Tau controllers.
+
+The other thing we are working on is a asynMotor record interface to the
+various axes of a PMAC co-ordinate system. This will enable you to, for
+example, control a monochrometer in pure energy units through an EPICS
+motor record. This works, but we are trying to work out the finer points
+of save/restore etc before releasing it.
+
+[...] it should be clear that the new IP driver (and all the asyn Drivers)
+are only useful for your PMAC ASCII interface and cannot provide a PMAC
+DPRAM interface over the network. This is so obvious it should go without
+saying, but I'll say it anyway. However, I really want to keep the code
+base together, and your site is the logical distribution point.
+
+Cheers,
+
+Nick Rees
+Principal Software Engineer           Phone: +44 (0)1235-778430
+Diamond Light Source                  Fax:   +44 (0)1235-446713
+----
+
+The core part of the distribution (the MAILBOX and DPRAM communication
+drivers for PMAC2-VME Ulltralite) did not change with this release.
+However, now the driver has been tested to operate with both Tornado-2.0
+and Tornado-2.2.
+
+The databases and tsub routines underwent minor changes and bug fixes.
+
+Some convenient GUI tools have been added to the Tcl/Tk part including
+"Motors List", "Assemblies List" and a new frontend to homing. Homing
+itself is implemented as a bunch of Perl/Pezca scripts that are not
+included into this distro, but may be available on request along with
+the fast scanning software that is also based on PMAC drivers.
+
+-- Sergey Stepanov
+
+
+------------------------------------------------------------
+		     ***** Release 3-4 *****
+
+Compared to 3-3, release 3-4 is basically a bug fix. The only updated
+part is pmacApp/src where a long-standing bug from the initial 1996
+implementation has been finally nailed down and fixed. The bug related
+to improper mutexing was causing pmacMbox task to crash occasionally,
+especially under high IOC load.
+
+-- Oleg Makarov
+
+
+------------------------------------------------------------
+		     ***** Release 3-3 *****
+
+New features introduced in the 3-3 release:
+
+1) added get_enum_str() function to the statusRecord.c.
+this allows to query BI00-BI31 fields of the status record for debugging.
+examples:
+
+ioc1>dbgf "23d:CCD:ml:SvoSts.BI16"
+DBR_STRING:          ON
+value = 0 = 0x0
+ioc1>
+
+gmca@px0:/home/gmca 1 > caget 23d:CCD:ml:SvoSts.BI16
+23d:CCD:ml:SvoSts.BI16         ON
+gmca@px0:/home/gmca 2 >
+
+
+
+2) improved DPRAM-ASCII part of the PMAC driver by removing
+unnecessary queue from drvPmacMbxTask() in the drvPmac.c.
+Epics record get processed by the drvPmacMbxTask(), this eliminated
+errors with intermixing PMAC responses under higher IOC load.
+
+
+3) improved efficiency of pmacAscReadMeISR() in the pmacDriver.c
+- replaced two VME bus reads of byte size by one of uint16 size,
+- removed useless line at the end of pmacAscReadMeISR:
+  control = getReg( *dpramAsciiInControl );
+
+4) added support for ACC-59E in the file devPmacMbx.c. Currently the supoort
+corresponds to the bipolar configuration of DAC only.
+
+

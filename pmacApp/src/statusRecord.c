@@ -51,11 +51,15 @@
 
 #define VERSION 1.1
 
+/* VxWorks includes */
+#ifdef vxWorks
 #include        <vxWorks.h>
+#include        <lstLib.h>
+#endif
 #include        <stdlib.h>
 #include        <stdio.h>
 #include        <string.h>
-#include        <lstLib.h>
+
 
 #include        <alarm.h>
 #include        <dbDefs.h>
@@ -69,7 +73,7 @@
 #define GEN_SIZE_OFFSET
 #include	<statusRecord.h>
 #undef GEN_SIZE_OFFSET
-#include "tsDefs.h"
+#include "epicsTime.h"
 #include "recGbl.h"
 #include "epicsExport.h"
 
@@ -204,7 +208,7 @@ static long process(pstatus)
 	if ( !pact && pstatus->pact ) return(0);
 	pstatus->pact = TRUE;
 
-	tsLocalTime(&pstatus->time);
+	epicsTimeGetCurrent (&pstatus->time);
 
 	/* check for alarms */
 	alarm(pstatus);

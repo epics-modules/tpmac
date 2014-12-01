@@ -1,0 +1,1347 @@
+
+file {
+	name="/net/elt/home1/coleman/cs/sbc3/pmacApp/op/adl/CtlPnlBig2.adl"
+	version=020108
+}
+display {
+	object {
+		x=10
+		y=10
+		width=847
+		height=315
+	}
+	clr=14
+	bclr=4
+	cmap=""
+}
+"color map" {
+	ncolors=65
+	dl_color {
+		r=255
+		g=255
+		b=255
+		inten=255
+	}
+	dl_color {
+		r=236
+		g=236
+		b=236
+		inten=0
+	}
+	dl_color {
+		r=218
+		g=218
+		b=218
+		inten=0
+	}
+	dl_color {
+		r=200
+		g=200
+		b=200
+		inten=0
+	}
+	dl_color {
+		r=187
+		g=187
+		b=187
+		inten=0
+	}
+	dl_color {
+		r=174
+		g=174
+		b=174
+		inten=0
+	}
+	dl_color {
+		r=158
+		g=158
+		b=158
+		inten=0
+	}
+	dl_color {
+		r=145
+		g=145
+		b=145
+		inten=0
+	}
+	dl_color {
+		r=133
+		g=133
+		b=133
+		inten=0
+	}
+	dl_color {
+		r=120
+		g=120
+		b=120
+		inten=0
+	}
+	dl_color {
+		r=105
+		g=105
+		b=105
+		inten=0
+	}
+	dl_color {
+		r=90
+		g=90
+		b=90
+		inten=0
+	}
+	dl_color {
+		r=70
+		g=70
+		b=70
+		inten=0
+	}
+	dl_color {
+		r=45
+		g=45
+		b=45
+		inten=0
+	}
+	dl_color {
+		r=0
+		g=0
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=0
+		g=216
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=30
+		g=187
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=51
+		g=153
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=45
+		g=127
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=33
+		g=108
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=253
+		g=0
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=222
+		g=19
+		b=9
+		inten=0
+	}
+	dl_color {
+		r=190
+		g=25
+		b=11
+		inten=0
+	}
+	dl_color {
+		r=160
+		g=18
+		b=7
+		inten=0
+	}
+	dl_color {
+		r=130
+		g=4
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=88
+		g=147
+		b=255
+		inten=0
+	}
+	dl_color {
+		r=89
+		g=126
+		b=225
+		inten=0
+	}
+	dl_color {
+		r=75
+		g=110
+		b=199
+		inten=0
+	}
+	dl_color {
+		r=58
+		g=94
+		b=171
+		inten=0
+	}
+	dl_color {
+		r=39
+		g=84
+		b=141
+		inten=0
+	}
+	dl_color {
+		r=251
+		g=243
+		b=74
+		inten=0
+	}
+	dl_color {
+		r=249
+		g=218
+		b=60
+		inten=0
+	}
+	dl_color {
+		r=238
+		g=182
+		b=43
+		inten=0
+	}
+	dl_color {
+		r=225
+		g=144
+		b=21
+		inten=0
+	}
+	dl_color {
+		r=205
+		g=97
+		b=0
+		inten=0
+	}
+	dl_color {
+		r=255
+		g=176
+		b=255
+		inten=0
+	}
+	dl_color {
+		r=214
+		g=127
+		b=226
+		inten=0
+	}
+	dl_color {
+		r=174
+		g=78
+		b=188
+		inten=0
+	}
+	dl_color {
+		r=139
+		g=26
+		b=150
+		inten=0
+	}
+	dl_color {
+		r=97
+		g=10
+		b=117
+		inten=0
+	}
+	dl_color {
+		r=164
+		g=170
+		b=255
+		inten=0
+	}
+	dl_color {
+		r=135
+		g=147
+		b=226
+		inten=0
+	}
+	dl_color {
+		r=106
+		g=115
+		b=193
+		inten=0
+	}
+	dl_color {
+		r=77
+		g=82
+		b=164
+		inten=0
+	}
+	dl_color {
+		r=52
+		g=51
+		b=134
+		inten=0
+	}
+	dl_color {
+		r=199
+		g=187
+		b=109
+		inten=0
+	}
+	dl_color {
+		r=183
+		g=157
+		b=92
+		inten=0
+	}
+	dl_color {
+		r=164
+		g=126
+		b=60
+		inten=0
+	}
+	dl_color {
+		r=125
+		g=86
+		b=39
+		inten=0
+	}
+	dl_color {
+		r=88
+		g=52
+		b=15
+		inten=0
+	}
+	dl_color {
+		r=153
+		g=255
+		b=255
+		inten=0
+	}
+	dl_color {
+		r=115
+		g=223
+		b=255
+		inten=0
+	}
+	dl_color {
+		r=78
+		g=165
+		b=249
+		inten=0
+	}
+	dl_color {
+		r=42
+		g=99
+		b=228
+		inten=0
+	}
+	dl_color {
+		r=10
+		g=0
+		b=184
+		inten=0
+	}
+	dl_color {
+		r=235
+		g=241
+		b=181
+		inten=0
+	}
+	dl_color {
+		r=212
+		g=219
+		b=157
+		inten=0
+	}
+	dl_color {
+		r=187
+		g=193
+		b=135
+		inten=0
+	}
+	dl_color {
+		r=166
+		g=164
+		b=98
+		inten=0
+	}
+	dl_color {
+		r=139
+		g=130
+		b=57
+		inten=0
+	}
+	dl_color {
+		r=115
+		g=255
+		b=107
+		inten=0
+	}
+	dl_color {
+		r=82
+		g=218
+		b=59
+		inten=0
+	}
+	dl_color {
+		r=60
+		g=180
+		b=32
+		inten=0
+	}
+	dl_color {
+		r=40
+		g=147
+		b=21
+		inten=0
+	}
+	dl_color {
+		r=26
+		g=115
+		b=9
+		inten=0
+	}
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=136
+		y=84
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=224
+		y=86
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs2:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=316
+		y=87
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs3:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=403
+		y=88
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs4:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=494
+		y=88
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs5:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=582
+		y=88
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs6:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=670
+		y=89
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs7:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=755
+		y=88
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)Mcs8:CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=32
+		y=86
+		width=60
+		height=160
+	}
+	control {
+		ctrl="$(pmac)CtlPnlArm"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"choice button" {
+	object {
+		x=137
+		y=37
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=225
+		y=39
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs2:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=317
+		y=40
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs3:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=404
+		y=41
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs4:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=495
+		y=41
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs5:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=583
+		y=41
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs6:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=671
+		y=42
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs7:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"choice button" {
+	object {
+		x=756
+		y=41
+		width=60
+		height=30
+	}
+	control {
+		ctrl="$(pmac)Mcs8:CtlPnlCmbEna"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	stacking="row"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=142
+		y=262
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="1"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=230
+		y=264
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="2"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=322
+		y=265
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="4"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=409
+		y=266
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="8"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=500
+		y=266
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="16"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=588
+		y=266
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="32"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=676
+		y=267
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="64"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=761
+		y=266
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)Mcs1:CtlPnlTgr"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="128"
+	release_msg=""
+	clrmod="static"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="outline"
+		width=0
+	}
+}
+"message button" {
+	object {
+		x=38
+		y=264
+		width=50
+		height=20
+	}
+	control {
+		ctrl="$(pmac)CtlPnlTgr.PROC"
+		clr=14
+		bclr=4
+	}
+	label="Trigger"
+	press_msg="1"
+	release_msg=""
+	clrmod="static"
+}
+"text update" {
+	object {
+		x=31
+		y=538
+		width=2
+		height=2
+	}
+	monitor {
+		rdbk="TAC:Mcs5:CtlPnlRqsWrd"
+		clr=14
+		bclr=4
+	}
+	clrmod="static"
+	align="horiz. left"
+	format="hexadecimal"
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=216
+		y=5
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=747
+		y=5
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=661
+		y=5
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=573
+		y=6
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=485
+		y=6
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=396
+		y=6
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=307
+		y=6
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=127
+		y=4
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=2
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+rectangle {
+	object {
+		x=22
+		y=5
+		width=80
+		height=300
+	}
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=147
+		y=7
+		width=42
+		height=23
+	}
+	textix="1"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=236
+		y=7
+		width=42
+		height=23
+	}
+	textix="2"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=326
+		y=7
+		width=42
+		height=23
+	}
+	textix="3"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=413
+		y=7
+		width=42
+		height=23
+	}
+	textix="4"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=500
+		y=7
+		width=42
+		height=23
+	}
+	textix="5"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=591
+		y=7
+		width=42
+		height=23
+	}
+	textix="6"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=677
+		y=7
+		width=42
+		height=23
+	}
+	textix="7"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=763
+		y=7
+		width=42
+		height=23
+	}
+	textix="8"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}
+text {
+	object {
+		x=31
+		y=10
+		width=60
+		height=20
+	}
+	textix="Combined"
+	align="horiz. centered"
+}
+"basic attribute" {
+	attr {
+		clr=14
+		style="solid"
+		fill="solid"
+		width=0
+	}
+}

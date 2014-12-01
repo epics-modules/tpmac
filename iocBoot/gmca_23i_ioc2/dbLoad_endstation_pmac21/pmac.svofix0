@@ -1,6 +1,0 @@
-file "$(TPMAC)/pmacDb/svofix0.db"
-{
-	pattern { pmac, C }
-
-        { 23i:pmac21:, 1 }
-}

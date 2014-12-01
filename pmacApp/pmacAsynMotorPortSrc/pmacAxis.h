@@ -29,7 +29,6 @@ class pmacAxis : public asynMotorAxis
   asynStatus stop(double acceleration);
   asynStatus poll(bool *moving);
   asynStatus setPosition(double position);
-  asynStatus setClosedLoop(bool closedLoop);
   
   private:
   pmacController *pC_;
@@ -56,10 +55,6 @@ class pmacAxis : public asynMotorAxis
   int fatal_following_;
   int encoder_axis_;
   int limitsCheckDisable_;
-  epicsTimeStamp nowTime_;
-  epicsFloat64 nowTimeSecs_;
-  epicsFloat64 lastTimeSecs_;
-  bool printNextError_;
 
   friend class pmacController;
 };

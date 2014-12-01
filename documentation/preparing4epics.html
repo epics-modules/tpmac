@@ -9,12 +9,12 @@
 <H2><CENTER>Steps to prepare Turbo PMAC VME working with EPICS</CENTER></H2>
 
 <p>This document describes how to setup Turbo PMAC VME working with the
-EPICS system implemented at four sectors (19:SBC-CAT, 18:Bio-CAT, 23:GMCA-CAT,
+EPICS system implemented at four sectors (19:SBC-CAT, 18:Bio-CAT, 23:GMCA,
 21:LS-CAT). These groups use a set of standard EPICS records (ai, ao, bi, bo,
 calc, fanout) interacting with each other in order to achieve flexible mapping
 into EPICS of the complex PMAC functionality where one deals with coordinated
 motions of 1,2,3,4,... and etc motors. This extensive set (about 100 records
-per motor at GMCA-CAT and LS-CAT and considerably more in the older systems
+per motor at GMCA and LS-CAT and considerably more in the older systems
 used at SBC and BioCAT) is introduced instead of a single
 <a href="http://www.aps.anl.gov/bcda/synApps/motor/">Motor
 Record</a> per motor because the latter is not flexible enough to map the PMAC

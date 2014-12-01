@@ -1,0 +1,814 @@
+
+file {
+	name="/home/gmca/epics/gmcaApp/adl/kill_kbm.adl"
+	version=030101
+}
+display {
+	object {
+		x=561
+		y=24
+		width=300
+		height=400
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+text {
+	object {
+		x=1
+		y=5
+		width=60
+		height=18
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="KILL"
+	align="horiz. centered"
+}
+composite {
+	object {
+		x=165
+		y=5
+		width=60
+		height=350
+	}
+	"composite name"=""
+	children {
+		oval {
+			object {
+				x=181
+				y=30
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mhy1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=63
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mhy2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=129
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mhz2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=162
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mhz3:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=195
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mvy1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=228
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mvy2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=261
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mvz1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=294
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mvz2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=181
+				y=327
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mvz3:AmpEna"
+			}
+		}
+		text {
+			object {
+				x=165
+				y=5
+				width=60
+				height=18
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Enabled"
+			align="horiz. centered"
+		}
+		oval {
+			object {
+				x=181
+				y=96
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=15
+			}
+			"dynamic attribute" {
+				vis="if not zero"
+				chan="$(P)KB:mhz1:AmpEna"
+			}
+		}
+	}
+}
+composite {
+	object {
+		x=84
+		y=5
+		width=60
+		height=350
+	}
+	"composite name"=""
+	children {
+		oval {
+			object {
+				x=100
+				y=30
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mhy1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=63
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mhy2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=129
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mhz2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=162
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mhz3:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=195
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mvy1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=228
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mvy2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=261
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mvz1:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=294
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mvz2:AmpEna"
+			}
+		}
+		oval {
+			object {
+				x=100
+				y=327
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mvz3:AmpEna"
+			}
+		}
+		text {
+			object {
+				x=84
+				y=5
+				width=60
+				height=18
+			}
+			"basic attribute" {
+				clr=14
+			}
+			textix="Disabled"
+			align="horiz. centered"
+		}
+		oval {
+			object {
+				x=100
+				y=96
+				width=28
+				height=28
+			}
+			"basic attribute" {
+				clr=30
+			}
+			"dynamic attribute" {
+				vis="if zero"
+				chan="$(P)KB:mhz1:AmpEna"
+			}
+		}
+	}
+}
+text {
+	object {
+		x=238
+		y=5
+		width=60
+		height=18
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Enable"
+	align="horiz. centered"
+}
+"message button" {
+	object {
+		x=5
+		y=30
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhy1:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="HY1"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=63
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhy2:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="HY2"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=129
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz2:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="HZ2"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=162
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz3:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="HZ3"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=195
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvy1:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="VY1"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=228
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvy2:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="VY2"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=261
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz1:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="VZ1"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=294
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz2:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="VZ2"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=327
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz3:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="VZ3"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=5
+		y=96
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz1:StrCmd"
+		clr=14
+		bclr=32
+	}
+	label="HZ1"
+	press_msg="K"
+}
+"message button" {
+	object {
+		x=243
+		y=30
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhy1:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="HY1"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=63
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhy2:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="HY2"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=129
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz2:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="HZ2"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=162
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz3:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="HZ3"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=195
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvy1:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="VY1"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=228
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvy2:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="VY2"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=261
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz1:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="VZ1"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=294
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz2:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="VZ2"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=327
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mvz3:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="VZ3"
+	press_msg="O0 J/"
+}
+"message button" {
+	object {
+		x=243
+		y=96
+		width=50
+		height=28
+	}
+	control {
+		chan="$(P)KB:mhz1:StrCmd"
+		clr=14
+		bclr=62
+	}
+	label="HZ1"
+	press_msg="O0 J/"
+}
+polyline {
+	object {
+		x=6
+		y=360
+		width=288
+		height=2
+	}
+	"basic attribute" {
+		clr=14
+		width=2
+	}
+	"dynamic attribute" {
+		chan="$(P)KB:mhy1:StrCmd"
+	}
+	points {
+		(7,361)
+		(293,361)
+	}
+}
+"shell command" {
+	object {
+		x=5
+		y=367
+		width=133
+		height=27
+	}
+	command[0] {
+		label="LILL ALL"
+		name="kill_kbm.pl"
+		args="$(P)"
+	}
+	clr=14
+	bclr=32
+	label="KILL ALL"
+}
+"shell command" {
+	object {
+		x=162
+		y=367
+		width=133
+		height=27
+	}
+	command[0] {
+		label="LILL ALL"
+		name="kill_kbm.pl"
+		args="$(P) -reverse"
+	}
+	clr=14
+	bclr=62
+	label="ENABLE ALL"
+}

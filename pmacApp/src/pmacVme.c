@@ -78,21 +78,21 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
 
 /* VxWorks Includes */
 
-#include	<vxWorks.h>
-#include	<vxLib.h>
-#include	<sysLib.h>
-#include	<taskLib.h>
-#include	<iv.h>
-#include	<math.h>
-#include	<stdio.h>	/* Sergey */
-#include	<string.h>	/* Sergey */
+#include <vxWorks.h>
+#include <vxLib.h>
+#include <sysLib.h>
+#include <taskLib.h>
+#include <iv.h>
+#include <math.h>
+#include <stdio.h>	 /* Sergey */
+#include <string.h>	 /* Sergey */
 #define __PROTOTYPE_5_0         /* Sergey */
-#include        <logLib.h>      /* Sergey */
+#include <logLib.h>      /* Sergey */
 
 /* EPICS Includes */
 
-#include 	<devLib.h>
-#include 	<errMdef.h>
+#include <devLib.h>
+#include <errMdef.h>
 
 #include <pmacVme.h>
 
@@ -142,19 +142,16 @@ volatile int	pmacVmeDebug = 0;		/* must be > 0 to see messages */
  * LOCALS
  */
 
-           int          pmacVmeConfigLock = 0;
-PMAC_LOCAL int          pmacVmeNumCtlrs = 0;
-PMAC_LOCAL PMAC_CTLR    pmacVmeCtlr[PMAC_MAX_CTLRS];
+           int       pmacVmeConfigLock = 0;
+PMAC_LOCAL int       pmacVmeNumCtlrs = 0;
+PMAC_LOCAL PMAC_CTLR pmacVmeCtlr[PMAC_MAX_CTLRS];
 
-void pmacVmeReport( int card, int level )
-{
-    PMAC_CTLR	*pCtlr = &pmacVmeCtlr[card];
+void pmacVmeReport (int card, int level) {
+  PMAC_CTLR *pCtlr = &pmacVmeCtlr[card];
 
-    printf ("    vmebusBase = 0x%lX  hostBase = %p  vmebusDpram = 0x%lX  hostDpram = %p\n",
-	    pCtlr->vmebusBase, pCtlr->pBase,
-	    pCtlr->vmebusDpram, pCtlr->pDpramBase);
-    printf ("    irqVector = 0x%X  irqLevel = %d\n",
-	    pCtlr->irqVector, pCtlr->irqLevel);
+  printf ("    vmebusBase = 0x%lX  hostBase = %p  vmebusDpram = 0x%lX  hostDpram = %p\n",
+    pCtlr->vmebusBase, pCtlr->pBase, pCtlr->vmebusDpram, pCtlr->pDpramBase);
+  printf ("    irqVector = 0x%X  irqLevel = %d\n", pCtlr->irqVector, pCtlr->irqLevel);
 }
 
 /*******************************************************************************
@@ -167,245 +164,187 @@ void pmacVmeReport( int card, int level )
  * By default there are no controllers configured.
  *
  */
-long pmacVmeConfig
-(
-	int		ctlrNumber,
-	unsigned long	addrBase,
-	unsigned long	addrDpram,
-	unsigned int	irqVector,
-	unsigned int	irqLevel
-)
-{
-	char *		MyName = "pmacVmeConfig";
-	int		i;
-	long		val;
-	char		block;
-	volatile char	*pBlock;
-	long		status;
-	PMAC_CTLR *	pPmacCtlr;
-	
-	if (pmacVmeConfigLock != 0)
-	{
-		printf ( "%s: Cannot change configuration after initialization -- request ignored.\n",
-			MyName);
-		return (ERROR);
-	}
-  
-	if ( pmacVmeNumCtlrs == 0 )
-	{
-		for (i=0; i < PMAC_MAX_CTLRS; i++ )
-		{
-			pmacVmeCtlr[i].configured = FALSE;
-		}
-	}
-	
-	if ( (ctlrNumber < 0) | (ctlrNumber >= PMAC_MAX_CTLRS) )
-	{
-		printf ("%s: Controller number %d invalid -- must be 0 to %d.\n",
-			MyName, ctlrNumber, PMAC_MAX_CTLRS - 1);
-		return(ERROR);
-	}
-  
-	if (pmacVmeCtlr[ctlrNumber].configured)
-	{
-		printf ("%s: Controller %d already configured -- request ignored.\n",
-			MyName, ctlrNumber);
-		return(ERROR);
-	}
-	
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Initializing controller %d.\n", MyName, ctlrNumber);
-	)
+long pmacVmeConfig (int ctlrNumber, unsigned long addrBase, unsigned long addrDpram, unsigned int irqVector, unsigned int irqLevel) {
+  char  	*MyName = "pmacVmeConfig";
+  int		i;
+  long  	val;
+  char  	block;
+  volatile char *pBlock;
+  long  	status;
+  PMAC_CTLR	*pPmacCtlr;
 
-	pPmacCtlr = &pmacVmeCtlr[ctlrNumber];
-	pPmacCtlr->ctlr = ctlrNumber;
-	pPmacCtlr->vmebusBase = addrBase;
-	pPmacCtlr->irqVector = irqVector;
-	pPmacCtlr->irqLevel = irqLevel;
-	
-	pPmacCtlr->enabled = FALSE;
-	pPmacCtlr->present = FALSE;
-	pPmacCtlr->active = FALSE;
-	pPmacCtlr->enabledBase = TRUE;
-	pPmacCtlr->presentBase = FALSE;
-	pPmacCtlr->activeBase = FALSE;
-	pPmacCtlr->enabledDpram = TRUE;
-	pPmacCtlr->presentDpram = FALSE;
-	pPmacCtlr->activeDpram = FALSE;
-	pPmacCtlr->enabledGather = TRUE;
-	pPmacCtlr->activeGather = FALSE;
+  if (pmacVmeConfigLock != 0) {
+    printf ( "%s: Cannot change configuration after initialization -- request ignored.\n", MyName);
+    return ERROR;
+  }
+  
+  if (pmacVmeNumCtlrs == 0) {
+    for (i=0; i < PMAC_MAX_CTLRS; i++ ) {
+      pmacVmeCtlr[i].configured = FALSE;
+    }
+  }
 
-	pPmacCtlr->vmebusDpram = addrDpram;
-	if ( addrDpram == 0 )
-	{
-		pPmacCtlr->enabledDpram = FALSE;
-	}
-			
-	status = devRegisterAddress ("PMAC BASE", atVMEA24,
-				pPmacCtlr->vmebusBase, PMAC_MEM_SIZE_BASE,
-				(void *) &(pPmacCtlr->pBase));
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure registering controller %d base address A24 %#010x.\n",
-			MyName, pPmacCtlr->ctlr, (int)pPmacCtlr->vmebusBase);
-		return (status);
-	}
-	
-	/*Oleg: selecting lines A19-A14 for the DPRAM */
-	/* pPmacCtlr->pBase->mailbox.MB[144].data = 0x3F & (pPmacCtlr->vmebusBase>>14); */
-		
+  if ((ctlrNumber < 0) | (ctlrNumber >= PMAC_MAX_CTLRS)) {
+    printf ("%s: Controller number %d invalid -- must be 0 to %d.\n",
+      MyName, ctlrNumber, PMAC_MAX_CTLRS - 1);
+    return ERROR;
+  }
+  
+  if (pmacVmeCtlr[ctlrNumber].configured) {
+    printf ("%s: Controller %d already configured -- request ignored.\n", MyName, ctlrNumber);
+    return ERROR;
+  }
+
+  PMAC_DEBUG (1, printf ("%s: Initializing controller %d.\n", MyName, ctlrNumber);)
+
+  pPmacCtlr = &pmacVmeCtlr[ctlrNumber];
+  pPmacCtlr->ctlr = ctlrNumber;
+  pPmacCtlr->vmebusBase = addrBase;
+  pPmacCtlr->irqVector = irqVector;
+  pPmacCtlr->irqLevel = irqLevel;
+
+  pPmacCtlr->enabled = FALSE;
+  pPmacCtlr->present = FALSE;
+  pPmacCtlr->active = FALSE;
+  pPmacCtlr->enabledBase = TRUE;
+  pPmacCtlr->presentBase = FALSE;
+  pPmacCtlr->activeBase = FALSE;
+  pPmacCtlr->enabledDpram = TRUE;
+  pPmacCtlr->presentDpram = FALSE;
+  pPmacCtlr->activeDpram = FALSE;
+  pPmacCtlr->enabledGather = TRUE;
+  pPmacCtlr->activeGather = FALSE;
+
+  pPmacCtlr->vmebusDpram = addrDpram;
+  if ( addrDpram == 0 ) {
+    pPmacCtlr->enabledDpram = FALSE;
+  }
+  		  
+  status = devRegisterAddress ("PMAC BASE", atVMEA24,
+    pPmacCtlr->vmebusBase, PMAC_MEM_SIZE_BASE, (void *) &(pPmacCtlr->pBase));
+  if (!RTN_SUCCESS(status)) {
+    printf ("%s: Failure registering controller %d base address A24 %#010x.\n",
+      MyName, pPmacCtlr->ctlr, (int)pPmacCtlr->vmebusBase);
+    return status;
+  }
+
+  /*Oleg: selecting lines A19-A14 for the DPRAM */
+  /* pPmacCtlr->pBase->mailbox.MB[144].data = 0x3F & (pPmacCtlr->vmebusBase>>14); */
+  	  
 #if 0
   ajf: This line causes an MVME-5500 to hang.
 
-	status = vxMemProbe ((char*) &pPmacCtlr->pBase->mailbox.MB[0].data,
-				VX_READ, 1, (char*)&val);
-	if (status != OK)
-	{
-		printf ("%s: Failure probing for base address.\n",
-			MyName);
-		return (status);
-	}
+  status = vxMemProbe ((char*) &pPmacCtlr->pBase->mailbox.MB[0].data,
+  			  VX_READ, 1, (char*)&val);
+  if (status != OK) {
+    printf ("%s: Failure probing for base address.\n", MyName);
+    return status;
+  }
 #endif
 
-	pPmacCtlr->presentBase = TRUE;
+  pPmacCtlr->presentBase = TRUE;
 
-	if ( pPmacCtlr->enabledDpram )
-	{
-		status = devRegisterAddress ("PMAC DPRAM", atVMEA24,
-					pPmacCtlr->vmebusDpram, PMAC_MEM_SIZE_DPRAM,
-					(void *) &(pPmacCtlr->pDpramBase));
-		if (!RTN_SUCCESS(status))
-		{
-			printf ("%s: Failure registering controller %d DPRAM address A24 %#010x.\n",
-				MyName, (int)pPmacCtlr->ctlr, (int)pPmacCtlr->vmebusDpram);
-			return (status);
-		}
-	
-		block = (char) ((pPmacCtlr->vmebusDpram & 0x000fc000) >> 14);
-		pBlock = ((char *) pPmacCtlr->pBase) + 0x121;
+  if (pPmacCtlr->enabledDpram) {
+    status = devRegisterAddress ("PMAC DPRAM", atVMEA24,
+      pPmacCtlr->vmebusDpram, PMAC_MEM_SIZE_DPRAM, (void *) &(pPmacCtlr->pDpramBase));
+    if (!RTN_SUCCESS(status)) {
+      printf ("%s: Failure registering controller %d DPRAM address A24 %#010x.\n",
+  	MyName, (int)pPmacCtlr->ctlr, (int)pPmacCtlr->vmebusDpram);
+      return status;
+    }
 
-		PMAC_DEBUG
-		(	1,
-			printf ("%s: Setting DPRAM mapping addr %#010lx val %d\n",
-				MyName, (long)pBlock, block);
-		)
-			
-		*pBlock = block;
-			
-		status = vxMemProbe ( (char *) pPmacCtlr->pDpramBase, VX_READ, 2, (char*)&val);
-		if (status != OK)
-		{
-			printf ("%s: Failure probing for DPRAM address: 0x%x\n",
-				MyName, (int) pPmacCtlr->pDpramBase);
-			return (status);
-		}
-		pPmacCtlr->presentDpram = TRUE;
-	}
-	
-	pPmacCtlr->ioMbxReceiptSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioMbxReceiptSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating ioMbxReceiptSem binary semaphore.\n",
-			MyName);
-		return (status);
-	}
+    block = (char) ((pPmacCtlr->vmebusDpram & 0x000fc000) >> 14);
+    pBlock = (char *) pPmacCtlr->pBase + 0x121;
 
-	pPmacCtlr->ioMbxReadmeSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioMbxReadmeSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating ioMbxReadmeSem binary semaphore.\n",
-			MyName);
-		return (status);
-	}
+    PMAC_DEBUG (1,
+      printf ("%s: Setting DPRAM mapping addr %#010lx val %d\n", MyName, (long)pBlock, block);
+    )
+  	    
+    *pBlock = block;
+  	    
+    status = vxMemProbe ( (char *) pPmacCtlr->pDpramBase, VX_READ, 2, (char*)&val);
+    if (status != OK) {
+      printf ("%s: Failure probing for DPRAM address: 0x%x\n",
+  	MyName, (int) pPmacCtlr->pDpramBase);
+      return status;
+    }
+    pPmacCtlr->presentDpram = TRUE;
+  }
 
-	pPmacCtlr->ioMbxLockSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
-	if ( pPmacCtlr->ioMbxLockSem == NULL)
-	{
-		status = S_dev_internal;
-		printf ("%s: Failure creating ioMbxLockSem binary semaphore.\n",
-			MyName);
-		return (status);
-	}
-			
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Connecting to interrupt vector %d\n",
-				MyName, pPmacCtlr->irqVector - 1);
-	)
+  pPmacCtlr->ioMbxReceiptSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
+  if (pPmacCtlr->ioMbxReceiptSem == NULL) {
+    status = S_dev_internal;
+    printf ("%s: Failure creating ioMbxReceiptSem binary semaphore.\n", MyName);
+    return status;
+  }
 
-	status = devConnectInterruptVME (pPmacCtlr->irqVector - 1,
-				(void *)pmacMbxReceiptISR, (void *) pPmacCtlr);
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure to connect interrupt.\n",
-			MyName);
-		return (status);
-	}
-			
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Connecting to interrupt vector %d\n",
-				MyName, pPmacCtlr->irqVector);
-	)
+  pPmacCtlr->ioMbxReadmeSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
+  if (pPmacCtlr->ioMbxReadmeSem == NULL) {
+    status = S_dev_internal;
+    printf ("%s: Failure creating ioMbxReadmeSem binary semaphore.\n", MyName);
+    return status;
+  }
 
-	status = devConnectInterruptVME (pPmacCtlr->irqVector,
-				(void *)pmacMbxReadmeISR, (void *) pPmacCtlr);
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure to connect interrupt.\n",
-			MyName);
-		return (status);
-	}
+  pPmacCtlr->ioMbxLockSem = semBCreate (SEM_Q_FIFO, SEM_EMPTY);
+  if (pPmacCtlr->ioMbxLockSem == NULL) {
+    status = S_dev_internal;
+    printf ("%s: Failure creating ioMbxLockSem binary semaphore.\n", MyName);
+    return status;
+  }
+  		  
+  PMAC_DEBUG (1,
+    printf ("%s: Connecting to interrupt vector %d\n", MyName, pPmacCtlr->irqVector - 1);
+  )
 
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: Enabling interrupt level %d\n",
-				MyName, pPmacCtlr->irqLevel);
-	)
+  status = devConnectInterruptVME (pPmacCtlr->irqVector - 1,
+  			  (void *)pmacMbxReceiptISR, (void *) pPmacCtlr);
+  if (!RTN_SUCCESS(status)) {
+    printf ("%s: Failure to connect interrupt.\n", MyName);
+    return status;
+  }
+  		  
+  PMAC_DEBUG (1,
+    printf ("%s: Connecting to interrupt vector %d\n", MyName, pPmacCtlr->irqVector);
+  )
 
-        status = devEnableInterruptLevel (intVME, pPmacCtlr->irqLevel);
-	if (!RTN_SUCCESS(status))
-	{
-		printf ("%s: Failure to enable interrupt level.\n",
-			MyName);
-		return (status);
-	}
-			
-	pPmacCtlr->present = pPmacCtlr->presentBase | pPmacCtlr->presentDpram;
-	pPmacCtlr->enabled = pPmacCtlr->enabledBase | pPmacCtlr->enabledDpram;
-	pPmacCtlr->configured = TRUE;
-	pmacVmeNumCtlrs++;
-	
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: presentbase = %d, presentDpram=%d, therfore present=%d\n",
-				MyName,
-			        pPmacCtlr->presentBase,
-			        pPmacCtlr->presentDpram,
-			        pPmacCtlr->present);
-	)
+  status = devConnectInterruptVME (pPmacCtlr->irqVector,
+  			  (void *)pmacMbxReadmeISR, (void *) pPmacCtlr);
+  if (!RTN_SUCCESS(status)) {
+    printf ("%s: Failure to connect interrupt.\n", MyName);
+    return status;
+  }
 
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: enabledBase = %d, enabledDpram=%d, therefore enabled=%d\n",
-				MyName,
-			        pPmacCtlr->enabledBase,
-			        pPmacCtlr->enabledDpram,
-			        pPmacCtlr->enabled);
-	)
+  PMAC_DEBUG (1,
+    printf ("%s: Enabling interrupt level %d\n", MyName, pPmacCtlr->irqLevel);
+  )
 
-	PMAC_DEBUG
-	(	1,
-		printf ("%s: pmacVmeNumCtlrs =  %d and  PMAC_MAX_CTLRS = %d\n",
-			       	MyName,
-			       	pmacVmeNumCtlrs,
-			        PMAC_MAX_CTLRS);
-	)
+  status = devEnableInterruptLevel (intVME, pPmacCtlr->irqLevel);
+  if (!RTN_SUCCESS(status)) {
+    printf ("%s: Failure to enable interrupt level.\n", MyName);
+    return status;
+  }
+  		  
+  pPmacCtlr->present = pPmacCtlr->presentBase | pPmacCtlr->presentDpram;
+  pPmacCtlr->enabled = pPmacCtlr->enabledBase | pPmacCtlr->enabledDpram;
+  pPmacCtlr->configured = TRUE;
+  pmacVmeNumCtlrs++;
 
-	return(0);
+  PMAC_DEBUG (1,
+    printf ("%s: presentbase = %d, presentDpram=%d, therefore present=%d\n",
+      MyName, pPmacCtlr->presentBase, pPmacCtlr->presentDpram, pPmacCtlr->present);
+  )
+
+  PMAC_DEBUG (1,
+    printf ("%s: enabledBase = %d, enabledDpram=%d, therefore enabled=%d\n",
+      MyName, pPmacCtlr->enabledBase, pPmacCtlr->enabledDpram, pPmacCtlr->enabled);
+  )
+
+  PMAC_DEBUG (1,
+    printf ("%s: pmacVmeNumCtlrs =  %d and  PMAC_MAX_CTLRS = %d\n",
+      MyName, pmacVmeNumCtlrs, PMAC_MAX_CTLRS);
+  )
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -413,48 +352,41 @@ long pmacVmeConfig
  * pmacVmeInit - Initialize PMAC-VME Hardware Configuration
  *
  */
-PMAC_LOCAL long pmacVmeInit (void)
-{
-	/* char *	MyName = "pmacVmeInit"; */
-	int		i;
-	PMAC_CTLR	*pPmacCtlr;
-	STATUS		semStatus;
-	
-	pmacVmeConfigLock = 1;
+PMAC_LOCAL long pmacVmeInit (void) {
+  /* char   *MyName = "pmacVmeInit"; */
+  int	    i;
+  PMAC_CTLR *pPmacCtlr;
+  STATUS    semStatus;
 
-	if ( pmacVmeNumCtlrs == 0 )
-	{
-		return (0);
-	}
-	
-	for ( i=0; i < PMAC_MAX_CTLRS; i++)
-	{
-		pPmacCtlr = &pmacVmeCtlr[i];
+  pmacVmeConfigLock = 1;
 
-		if ( pPmacCtlr->configured )
-		{
-			if ( pPmacCtlr->presentBase & pPmacCtlr->enabledBase )
-			{
-				semStatus=semGive (pPmacCtlr->ioMbxLockSem);
-				printf ("pmacVmeInit: semStatus=%d, card=%d \n",semStatus, i);	
-				pPmacCtlr->activeBase = TRUE;
-			}
-			
-			if ( pPmacCtlr->presentDpram & pPmacCtlr->enabledDpram )
-			{
-				pPmacCtlr->activeDpram = TRUE;
-			}
+  if (pmacVmeNumCtlrs == 0) {
+    return 0;
+  }
 
-			if ( pPmacCtlr->activeDpram & pPmacCtlr->enabledGather )
-			{
-				pPmacCtlr->activeGather = TRUE;
-			}
+  for (i=0; i < PMAC_MAX_CTLRS; i++) {
+    pPmacCtlr = &pmacVmeCtlr[i];
 
-			pPmacCtlr->active = pPmacCtlr->activeBase | pPmacCtlr->activeDpram;
-		}
-	}	
+    if (pPmacCtlr->configured) {
+      if (pPmacCtlr->presentBase & pPmacCtlr->enabledBase) {
+  	semStatus=semGive (pPmacCtlr->ioMbxLockSem);
+  	printf ("pmacVmeInit: semStatus=%d, card=%d \n",semStatus, i);  
+  	pPmacCtlr->activeBase = TRUE;
+      }
+  
+      if (pPmacCtlr->presentDpram & pPmacCtlr->enabledDpram) {
+  	pPmacCtlr->activeDpram = TRUE;
+      }
 
-	return (0);
+      if (pPmacCtlr->activeDpram & pPmacCtlr->enabledGather) {
+  	pPmacCtlr->activeGather = TRUE;
+      }
+
+      pPmacCtlr->active = pPmacCtlr->activeBase | pPmacCtlr->activeDpram;
+    }
+  }	  
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -462,25 +394,20 @@ PMAC_LOCAL long pmacVmeInit (void)
  * pmacMbxReceiptISR - interrupt service routine for mailbox receipt acknowledge
  *
  */
-PMAC_LOCAL void pmacMbxReceiptISR
-(
-	PMAC_CTLR	*pPmacCtlr
-)
-{
-	char *	MyName = "pmacMbxReceiptISR";
-	STATUS	semStatus;
+PMAC_LOCAL void pmacMbxReceiptISR (PMAC_CTLR *pPmacCtlr) {
+  char *  MyName = "pmacMbxReceiptISR";
+  STATUS  semStatus;
 
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ MbxReceipt for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	)
-	
-	semStatus=semGive (pPmacCtlr->ioMbxReceiptSem);
-	if ( semStatus ) {
-	   PMAC_MESSAGE ("%s: semStatus=%d card=%d\n", MyName, semStatus, pPmacCtlr->ctlr,0,0,0); 
-	}
-	
-	return;
+  PMAC_DEBUG (10,
+    PMAC_MESSAGE ("%s: PMAC IRQ MbxReceipt for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+  )
+
+  semStatus=semGive (pPmacCtlr->ioMbxReceiptSem);
+  if ( semStatus ) {
+    PMAC_MESSAGE ("%s: semStatus=%d card=%d\n", MyName, semStatus, pPmacCtlr->ctlr,0,0,0); 
+  }
+
+  return;
 }
 
 /*******************************************************************************
@@ -488,21 +415,16 @@ PMAC_LOCAL void pmacMbxReceiptISR
  * pmacMbxReadmeISR - interrupt service routine for mailbox message arrival
  *
  */
-PMAC_LOCAL void pmacMbxReadmeISR
-(
-	PMAC_CTLR	*pPmacCtlr
-)
-{
-	char *	MyName = "pmacMbxReadmeISR";
+PMAC_LOCAL void pmacMbxReadmeISR (PMAC_CTLR *pPmacCtlr) {
+  char *  MyName = "pmacMbxReadmeISR";
 
-	PMAC_DEBUG
-	(	10,
-		PMAC_MESSAGE ("%s: PMAC IRQ MbxReadme for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	)
-	
-	semGive (pPmacCtlr->ioMbxReadmeSem);
-	
-	return;
+  PMAC_DEBUG (10,
+    PMAC_MESSAGE ("%s: PMAC IRQ MbxReadme for ctlr %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+  )
+
+  semGive (pPmacCtlr->ioMbxReadmeSem);
+
+  return;
 }
 
 /*******************************************************************************
@@ -510,43 +432,35 @@ PMAC_LOCAL void pmacMbxReadmeISR
  * pmacMbxOut - put characters in PMAC mailbox
  *
  */
-PMAC_LOCAL char pmacMbxOut
-(
-	int	ctlr,
-	char	*writebuf
-)
-{
-    /* char *	MyName = "pmacMbxOut"; */
-    int		i;
-    int		length;
-    char	firstcharacter;
-    char	termination;
-    PMAC_CTLR	*pPmacCtlr;
+PMAC_LOCAL char pmacMbxOut (int ctlr, char *writebuf) {
+  /* char   *MyName = "pmacMbxOut"; */
+  int	    i;
+  int	    length;
+  char      firstcharacter;
+  char      termination;
+  PMAC_CTLR *pPmacCtlr;
 
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    termination = 0;
-    length = strlen (writebuf);
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  termination = 0;
+  length = strlen (writebuf);
 
-    firstcharacter = writebuf[0];
+  firstcharacter = writebuf[0];
 
-    for (i = 1; (i < length) && (i < PMAC_BASE_MBX_REGS_OUT); i++)
-    {
-	pPmacCtlr->pBase->mailbox.MB[i+1].data = writebuf[i];
-    }
+  for (i = 1; (i < length) && (i < PMAC_BASE_MBX_REGS_OUT); i++) {
+    pPmacCtlr->pBase->mailbox.MB[i+1].data = writebuf[i];
+  }
 
-    if ((i == length) && (i < PMAC_BASE_MBX_REGS_OUT))
-    {
-	termination = PMAC_TERM_CR;
-	pPmacCtlr->pBase->mailbox.MB[i+1].data = PMAC_TERM_CR;
-    }
-    else if (i > length)
-    {
-	termination = PMAC_TERM_CR;
-	firstcharacter = PMAC_TERM_CR;
-    }
-    pPmacCtlr->pBase->mailbox.MB[0].data = firstcharacter;
+  if ((i == length) && (i < PMAC_BASE_MBX_REGS_OUT)) {
+    termination = PMAC_TERM_CR;
+    pPmacCtlr->pBase->mailbox.MB[i+1].data = PMAC_TERM_CR;
+  }
+  else if (i > length) {
+    termination = PMAC_TERM_CR;
+    firstcharacter = PMAC_TERM_CR;
+  }
+  pPmacCtlr->pBase->mailbox.MB[0].data = firstcharacter;
 
-    return (termination);
+  return termination;
 
 }   
 
@@ -555,59 +469,44 @@ PMAC_LOCAL char pmacMbxOut
  * pmacMbxIn - get characters from PMAC mailbox
  *
  */
-PMAC_LOCAL char pmacMbxIn
-(
-	int	ctlr,
-	char	*readbuf,
-	char	*errmsg
-)
-{
-    /* char *	MyName = "pmacMbxIn"; */
-    int		i;
-    int		j;
-    char	chr;
-    char	terminator;
-    char	terminext;
-    PMAC_CTLR	*pPmacCtlr;
+PMAC_LOCAL char pmacMbxIn (int ctlr, char *readbuf, char *errmsg) {
+  /* char   *MyName = "pmacMbxIn"; */
+  int	    i;
+  int	    j;
+  char      chr;
+  char      terminator;
+  char      terminext;
+  PMAC_CTLR *pPmacCtlr;
 
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    terminator = 0;
-    terminext = 0;
-    errmsg[0] = '\0';
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  
+  terminator = 0;
+  terminext = 0;
+  errmsg[0] = '\0';
 
-    for (i = 0; (i < PMAC_BASE_MBX_REGS_IN) && (terminator == 0); i++)
-    {
-	chr = pPmacCtlr->pBase->mailbox.MB[i].data;
+  for (i = 0; (i < PMAC_BASE_MBX_REGS_IN) && (terminator == 0); i++) {
+    chr = pPmacCtlr->pBase->mailbox.MB[i].data;
 
-	if (chr == PMAC_TERM_CR || chr == PMAC_TERM_ACK || chr == PMAC_TERM_BELL)
-	{
-	    terminator = chr;
-	    readbuf[i] = '\0';
-	    if (terminator == PMAC_TERM_BELL)
-	    {
-		for (j=0, i++; (i < PMAC_BASE_MBX_REGS_IN) && (terminext == 0); j++, i++)
-		{
-		    chr = pPmacCtlr->pBase->mailbox.MB[i].data;
-		    if (chr == PMAC_TERM_CR)
-		    {
-			terminext = chr;
-			errmsg[j] = '\0';
-		    }
-		    else
-		    {
-			errmsg[j] = chr;
-		    }
-		}
-	    }
-	}
-	else
-	{
-	     readbuf[i] = chr;
-	}
+    if (chr == PMAC_TERM_CR || chr == PMAC_TERM_ACK || chr == PMAC_TERM_BELL) {
+      terminator = chr;
+      readbuf[i] = '\0';
+      if (terminator == PMAC_TERM_BELL) {
+        for (j=0, i++; (i < PMAC_BASE_MBX_REGS_IN) && (terminext == 0); j++, i++) {
+          chr = pPmacCtlr->pBase->mailbox.MB[i].data;
+          if (chr == PMAC_TERM_CR) {
+            terminext = chr;
+            errmsg[j] = '\0';
+          } else {
+            errmsg[j] = chr;
+          }
+        }
+      }
+    } else {
+    	 readbuf[i] = chr;
     }
+  }
 
-    return (terminator);
+  return terminator;
 }
 
 
@@ -617,34 +516,27 @@ PMAC_LOCAL char pmacMbxIn
  * pmacMbxRead - read response from PMAC mailbox
  *
  */
-PMAC_LOCAL char pmacMbxRead
-(
-	int	ctlr,
-	char	*readbuf,
-	char	*errmsg
-)
-{
-    char *	MyName = "pmacMbxRead";/*  */
-    int		i;
-    char	terminator;
-    PMAC_CTLR	*pPmacCtlr;
-    STATUS stat;
-    
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-    
-    i = 0;
-    terminator = 0;
+PMAC_LOCAL char pmacMbxRead (int ctlr, char *readbuf, char *errmsg) {
+  char      *MyName = "pmacMbxRead";
+  int	    i;
+  char      terminator;
+  PMAC_CTLR *pPmacCtlr;
+  STATUS    stat;
+  
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  
+  i = 0;
+  terminator = 0;
 
-    while ( terminator == 0)
-    {
-	pPmacCtlr->pBase->mailbox.MB[1].data = 0;
-	stat = semTake( pPmacCtlr->ioMbxReadmeSem, WAIT_TIMEOUT);
-	if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX README FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	terminator = pmacMbxIn (ctlr, &readbuf[i], errmsg);
-	i += PMAC_BASE_MBX_REGS_IN;
-    }
+  while ( terminator == 0) {
+    pPmacCtlr->pBase->mailbox.MB[1].data = 0;
+    stat = semTake( pPmacCtlr->ioMbxReadmeSem, WAIT_TIMEOUT);
+    if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX README FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+    terminator = pmacMbxIn (ctlr, &readbuf[i], errmsg);
+    i += PMAC_BASE_MBX_REGS_IN;
+  }
 
-    return (terminator);
+  return terminator;
 }
 
 
@@ -654,32 +546,26 @@ PMAC_LOCAL char pmacMbxRead
  * pmacMbxWrite - write command to PMAC mailbox
  *
  */
-PMAC_LOCAL char pmacMbxWrite
-(
-	int	ctlr,
-	char	*writebuf
-)
-{
-    char *	MyName = "pmacMbxWrite";/*  */
-    int		i;
-    char	terminator;
-    PMAC_CTLR	*pPmacCtlr;
-    STATUS stat;
-    
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
+PMAC_LOCAL char pmacMbxWrite (int ctlr, char *writebuf) {
+  char      *MyName = "pmacMbxWrite";/*  */
+  int	    i;
+  char      terminator;
+  PMAC_CTLR *pPmacCtlr;
+  STATUS    stat;
+  
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
 
-    i = 0;
-    terminator = 0;
+  i = 0;
+  terminator = 0;
 
-    while ( terminator == 0 ) 
-    {
-	terminator = pmacMbxOut (ctlr, &writebuf[i]);
-	stat = semTake (pPmacCtlr->ioMbxReceiptSem, WAIT_TIMEOUT);
-	if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX RECEIPT FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	i += PMAC_BASE_MBX_REGS_OUT;
-    }
+  while (terminator == 0) {
+    terminator = pmacMbxOut (ctlr, &writebuf[i]);
+    stat = semTake (pPmacCtlr->ioMbxReceiptSem, WAIT_TIMEOUT);
+    if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX RECEIPT FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+    i += PMAC_BASE_MBX_REGS_OUT;
+  }
 
-    return (terminator);
+  return terminator;
 
 }   
 
@@ -688,24 +574,19 @@ PMAC_LOCAL char pmacMbxWrite
  * pmacMbxLock - Lock PMAC mailbox for ctlr
  *
  */
-long pmacMbxLock
-(
-	int	ctlr
-)
-{
-    char *	MyName = "pmacMbxLock";
-    STATUS stat;
-    PMAC_CTLR	*pPmacCtlr;
+long pmacMbxLock (int ctlr) {
+  char      *MyName = "pmacMbxLock";
+  STATUS    stat;
+  PMAC_CTLR *pPmacCtlr;
 
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-	PMAC_DEBUG
-	(	7,
-		PMAC_MESSAGE ("%s: PMAC MBX LOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	)
-    
-    stat = semTake (pPmacCtlr->ioMbxLockSem, WAIT_TIMEOUT);
-    if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX LOCK FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-    return (0);
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  PMAC_DEBUG (7,
+    PMAC_MESSAGE ("%s: PMAC MBX LOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+  )
+
+  stat = semTake (pPmacCtlr->ioMbxLockSem, WAIT_TIMEOUT);
+  if (stat == S_objLib_OBJ_TIMEOUT) PMAC_MESSAGE ("%s: PMAC MBX LOCK FAILED, controller: %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+  return 0;
 }
 
 /*******************************************************************************
@@ -713,22 +594,17 @@ long pmacMbxLock
  * pmacMbxUnlock - Unlock PMAC mailbox for ctlr
  *
  */
-long pmacMbxUnlock
-(
-	int	ctlr
-)
-{
-    char *	MyName = "pmacMbxUnlock";
-    PMAC_CTLR	*pPmacCtlr;
+long pmacMbxUnlock (int ctlr) {
+  char      *MyName = "pmacMbxUnlock";
+  PMAC_CTLR *pPmacCtlr;
 
-    pPmacCtlr = &pmacVmeCtlr[ctlr];
-	PMAC_DEBUG
-	(	7,
-		PMAC_MESSAGE ("%s: PMAC MBX UNLOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
-	)
-    
-    semGive (pPmacCtlr->ioMbxLockSem);
-    return (0);
+  pPmacCtlr = &pmacVmeCtlr[ctlr];
+  PMAC_DEBUG (7,
+    PMAC_MESSAGE ("%s: PMAC MBX UNLOCK %d\n", MyName, pPmacCtlr->ctlr,0,0,0,0);
+  )
+  
+  semGive (pPmacCtlr->ioMbxLockSem);
+  return 0;
 }
 
 /*******************************************************************************
@@ -736,14 +612,9 @@ long pmacMbxUnlock
  * pmacVmeWriteC - write character
  *
  */
-char pmacVmeWriteC
-(
-	char *addr,
-	char val
-)
-{
-	*addr = val;
-	return 0;
+char pmacVmeWriteC (char *addr, char val) {
+  *addr = val;
+  return 0;
 }
 
 /*******************************************************************************
@@ -751,12 +622,8 @@ char pmacVmeWriteC
  * pmacVmeReadC - read character
  *
  */
-char pmacVmeReadC
-(
-	char *addr
-)
-{
-	return (*addr);
+char pmacVmeReadC (char *addr) {
+  return *addr;
 }
 
 /*******************************************************************************
@@ -764,33 +631,26 @@ char pmacVmeReadC
  * pmacRamAddr - get DPRAM address
  *
  */
-PMAC_DPRAM * pmacRamAddr
-(
-	int	ctlr,
-	int	offset
-)
-{
-	PMAC_CTLR *	pCtlr = &pmacVmeCtlr[ctlr];
-	PMAC_DPRAM *	pDpram = (PMAC_DPRAM *) (pCtlr->pDpramBase + offset);
-	
-	PMAC_DEBUG
-	(	2,
-		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
-			      ctlr, pCtlr->pDpramBase, offset, pDpram,0,0);
-	)
+PMAC_DPRAM * pmacRamAddr (int ctlr, int offset) {
+  PMAC_CTLR  *pCtlr = &pmacVmeCtlr[ctlr];
+  PMAC_DPRAM *pDpram = (PMAC_DPRAM *) (pCtlr->pDpramBase + offset);
+
+  PMAC_DEBUG (2,
+    PMAC_MESSAGE ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
+      ctlr, pCtlr->pDpramBase, offset, pDpram,0,0);
+  )
 /* This is a workaround to restore PMAC clock synchronization in case of 2 PMACS -- Sergey, Oleg 2006.01.30 */
 /* (At the end of IOC startup script set pmacVmeDebug=1 for about 2s and 6s after booting IOC) */
-	PMAC_DEBUG
-	(	1,
-		PMAC_MESSAGE ("pmacRamAddr:  Controller #%d\n",ctlr,0,0,0,0,0);
-		/* PMAC_MESSAGE ("\n",0,0,0,0,0,0); */
-		/* printf ("pmacRamAddr:  Controller #%d\n",ctlr); */
-		/* printf ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
-			      ctlr, (int)pCtlr->pDpramBase, offset, (int)pDpram); */
-	)
+  PMAC_DEBUG (1,
+    PMAC_MESSAGE ("pmacRamAddr:  Controller #%d\n",ctlr,0,0,0,0,0);
+    /* PMAC_MESSAGE ("\n",0,0,0,0,0,0); */
+    /* printf ("pmacRamAddr:  Controller #%d\n",ctlr); */
+    /* printf ("pmacRamAddr:  Controller #%d, at base %#X with offset %#X = address a24 %#010X \n",
+         ctlr, (int)pCtlr->pDpramBase, offset, (int)pDpram); */
+  )
 
 
-	return (pDpram);
+  return pDpram;
 }
 	
 /*******************************************************************************
@@ -798,27 +658,22 @@ PMAC_DPRAM * pmacRamAddr
  * pmacRamGet16 - get DPRAM 16 bits
  *
  */
-PMAC_LOCAL long pmacRamGet16
-(
-	PMAC_DPRAM *	pDpram,
-	long *		pVal
-)
-{
-	union {
-	      char	ram[4];
-	      long	val0;
-	} lval;
-	
-	/* Read PMAC DPRAM */
-	lval.ram[0] = (char)0;
-	lval.ram[1] = (char)0;
-	lval.ram[2] = pDpram[1];
-	lval.ram[3] = pDpram[0];
-	
-	/* Return value */
-	*pVal = lval.val0;
-	
-	return (0);
+PMAC_LOCAL long pmacRamGet16 (PMAC_DPRAM *pDpram, long *pVal) {
+  union {
+    char ram[4];
+    long val0;
+  } lval;
+
+  /* Read PMAC DPRAM */
+  lval.ram[0] = (char)0;
+  lval.ram[1] = (char)0;
+  lval.ram[2] = pDpram[1];
+  lval.ram[3] = pDpram[0];
+
+  /* Return value */
+  *pVal = lval.val0;
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -826,25 +681,20 @@ PMAC_LOCAL long pmacRamGet16
  * pmacRamPut16 - put DPRAM 16 bits
  *
  */
-PMAC_LOCAL long pmacRamPut16
-(
-	PMAC_DPRAM *	pDpram,
-	long 		val
-)
-{
-	union {
-	      char	ram[4];
-	      long	val0;
-	} lval;
-	
-	/* User value */
-	lval.val0 = val;
-	
-	/* Write PMAC DPRAM */
-	pDpram[1] = lval.ram[2];
-	pDpram[0] = lval.ram[3];
-	
-	return (0);
+PMAC_LOCAL long pmacRamPut16 (PMAC_DPRAM *pDpram, long val) {
+  union {
+    char ram[4];
+    long val0;
+  } lval;
+
+  /* User value */
+  lval.val0 = val;
+
+  /* Write PMAC DPRAM */
+  pDpram[1] = lval.ram[2];
+  pDpram[0] = lval.ram[3];
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -852,27 +702,22 @@ PMAC_LOCAL long pmacRamPut16
  * pmacRamGet24U - get DPRAM 24 bits unsigned
  *
  */
-PMAC_LOCAL long pmacRamGet24U
-(
-	PMAC_DPRAM *	pDpram,
-	long * 		pVal
-)
-{
-	union {
-	      char	ram[4];
-	      long	val0;
-	} lval;
+PMAC_LOCAL long pmacRamGet24U (PMAC_DPRAM *pDpram, long *pVal) {
+  union {
+    char ram[4];
+    long val0;
+  } lval;
 
-	/* Read PMAC DPRAM */
-	lval.ram[0] = (char)0;
-	lval.ram[1] = pDpram[2];
-	lval.ram[2] = pDpram[1];
-	lval.ram[3] = pDpram[0];
-		
-	/* Return value */
-	*pVal = lval.val0;
-	
-	return (0);
+  /* Read PMAC DPRAM */
+  lval.ram[0] = (char)0;
+  lval.ram[1] = pDpram[2];
+  lval.ram[2] = pDpram[1];
+  lval.ram[3] = pDpram[0];
+  	  
+  /* Return value */
+  *pVal = lval.val0;
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -880,23 +725,18 @@ PMAC_LOCAL long pmacRamGet24U
  * pmacRamGet24 - get DPRAM 24 bits
  *
  */
-PMAC_LOCAL long pmacRamGet24
-(
-	PMAC_DPRAM *	pDpram,
-	long *		pVal
-)
-{
-	long	val0;
+PMAC_LOCAL long pmacRamGet24 (PMAC_DPRAM *pDpram, long *pVal) {
+  long val0;
 
-	/* Read PMAC DPRAM */
-	pmacRamGet24U (pDpram, &val0);
+  /* Read PMAC DPRAM */
+  pmacRamGet24U (pDpram, &val0);
 
-	if (val0 & 0x800000) val0 |= 0xff000000;
-		
-	/* Return value */
-	*pVal = val0;
-	
-	return (0);
+  if (val0 & 0x800000) val0 |= 0xff000000;
+  	  
+  /* Return value */
+  *pVal = val0;
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -904,28 +744,23 @@ PMAC_LOCAL long pmacRamGet24
  * pmacRamPut32 - put DPRAM 32 bits
  *
  */
-PMAC_LOCAL long pmacRamPut32
-(
-	PMAC_DPRAM *	pDpram,
-	long 		val
-)
-{
-	union {
-	      char	ram[4];
-	      long	val0;
-	} lval;
+PMAC_LOCAL long pmacRamPut32 (PMAC_DPRAM *pDpram, long val) {
+  union {
+    char ram[4];
+    long val0;
+  } lval;
 
-	/* User value */
-	lval.val0 = val;	
+  /* User value */
+  lval.val0 = val;	  
 
-	
-	/* Write PMAC DPRAM */
-	pDpram[3] = lval.ram[0];
-	pDpram[2] = lval.ram[1];
-	pDpram[1] = lval.ram[2];
-	pDpram[0] = lval.ram[3];
 
-	return (0);
+  /* Write PMAC DPRAM */
+  pDpram[3] = lval.ram[0];
+  pDpram[2] = lval.ram[1];
+  pDpram[1] = lval.ram[2];
+  pDpram[0] = lval.ram[3];
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -933,27 +768,22 @@ PMAC_LOCAL long pmacRamPut32
  * pmacRamGetF - get DPRAM F word
  *
  */
-PMAC_LOCAL long pmacRamGetF
-(
-	PMAC_DPRAM *	pDpram,
-	double *	pVal
-)
-{
-	union {
-	      char	ram[4];
-	      float	valF;
-	} lval;
+PMAC_LOCAL long pmacRamGetF (PMAC_DPRAM *pDpram, double *pVal) {
+  union {
+    char  ram[4];
+    float valF;
+  } lval;
 
-	/* Read PMAC DPRAM */
-	lval.ram[0] = pDpram[3];
-	lval.ram[1] = pDpram[2];
-	lval.ram[2] = pDpram[1];
-	lval.ram[3] = pDpram[0];
+  /* Read PMAC DPRAM */
+  lval.ram[0] = pDpram[3];
+  lval.ram[1] = pDpram[2];
+  lval.ram[2] = pDpram[1];
+  lval.ram[3] = pDpram[0];
 
-	/* Return value */
-	*pVal = (double) lval.valF;
+  /* Return value */
+  *pVal = (double) lval.valF;
 
-	return (0);
+  return 0;
 }
 
 /*******************************************************************************
@@ -961,27 +791,22 @@ PMAC_LOCAL long pmacRamGetF
  * pmacRamPutF - put DPRAM F word
  *
  */
-PMAC_LOCAL long pmacRamPutF
-(
-	PMAC_DPRAM *	pDpram,
-	double		val
-)
-{
-	union {
-	      char	ram[4];
-	      float	valF;
-	} lval;
+PMAC_LOCAL long pmacRamPutF (PMAC_DPRAM *pDpram, double val) {
+  union {
+    char  ram[4];
+    float valF;
+  } lval;
 
-	/* User value */
-	lval.valF = (float) val;
-	
-	/* Write PMAC DPRAM */
-	pDpram[3] = lval.ram[0];
-	pDpram[2] = lval.ram[1];
-	pDpram[1] = lval.ram[2];
-	pDpram[0] = lval.ram[3];
+  /* User value */
+  lval.valF = (float) val;
 
-	return (0);
+  /* Write PMAC DPRAM */
+  pDpram[3] = lval.ram[0];
+  pDpram[2] = lval.ram[1];
+  pDpram[1] = lval.ram[2];
+  pDpram[0] = lval.ram[3];
+
+  return 0;
 }
 
 /*******************************************************************************
@@ -989,24 +814,18 @@ PMAC_LOCAL long pmacRamPutF
  * pmacRamGetD - get DPRAM D word
  *
  */
-PMAC_LOCAL long pmacRamGetD
-(
-	PMAC_DPRAM *	pDpram,
-	double *	pVal
-)
-{
+PMAC_LOCAL long pmacRamGetD (PMAC_DPRAM *pDpram, double *pVal) {
+  long val0;
+  long val1;
 
-	long	val0;
-	long	val1;
-	
-	pmacRamGet24U (pDpram, &val0);
-	pmacRamGet24 (&(pDpram[4]), &val1);
+  pmacRamGet24U (pDpram, &val0);
+  pmacRamGet24 (&(pDpram[4]), &val1);
 
-	/* Convert 48 bit fixed-point format */
-	/* Return value */
-	*pVal = ((double)val1) * 0x1000000 + (double) val0;
+  /* Convert 48 bit fixed-point format */
+  /* Return value */
+  *pVal = ((double)val1) * 0x1000000 + (double) val0;
 
-	return (0);
+  return 0;
 }
 
 /*******************************************************************************
@@ -1015,37 +834,29 @@ PMAC_LOCAL long pmacRamGetD
  *
  * mantissa/2^35 * 2^(exp-$7ff)
  */
-PMAC_LOCAL long pmacRamGetL
-(
-	PMAC_DPRAM *	pDpram,
-	double *	pVal
-)
-{
-	long	val0;
-	long	val1;
-	double		mantissa	= 0.0;
-	long int	exponent	= 0;
-	double	valD;
+PMAC_LOCAL long pmacRamGetL (PMAC_DPRAM *pDpram, double *pVal) {
+  long     val0;
+  long     val1;
+  double   mantissa = 0.0;
+  long int exponent = 0;
+  double   valD;
 
-	/* Read PMAC DPRAM */
-	pmacRamGet24U (pDpram, &val0);
-	pmacRamGet24U (&(pDpram[4]), &val1);
-	
-	/* Convert 48 bit floating point format */
-	mantissa = ((double)(val1 & 0x00000fff)) * 0x1000000 + (double) val0;
-	exponent = ((val1 >> 12) & 0x00000fff) - 2082;  /* 0x7ff + 35 */
-	
-	if (mantissa == 0.0)
-	{
-		valD = 0.0;
-	}
-	else
-	{
-		valD = mantissa * pow (2.0, (double) exponent);
-	}
+  /* Read PMAC DPRAM */
+  pmacRamGet24U (pDpram, &val0);
+  pmacRamGet24U (&(pDpram[4]), &val1);
 
-	/* Return value */
-	*pVal = valD;
+  /* Convert 48 bit floating point format */
+  mantissa = ((double)(val1 & 0x00000fff)) * 0x1000000 + (double) val0;
+  exponent = ((val1 >> 12) & 0x00000fff) - 2082;  /* 0x7ff + 35 */
 
-	return (0);
+  if (mantissa == 0.0) {
+    valD = 0.0;
+  } else {
+    valD = mantissa * pow (2.0, (double) exponent);
+  }
+
+  /* Return value */
+  *pVal = valD;
+
+  return 0;
 }

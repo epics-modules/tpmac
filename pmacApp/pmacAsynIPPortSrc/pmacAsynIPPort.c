@@ -54,14 +54,13 @@
 #include <osiSock.h>
 #include <iocsh.h>
 
+#include <epicsExport.h>
 #include "asynDriver.h"
 #include "asynOctet.h"
 #include "pmacAsynIPPort.h"
 #include "asynInterposeEos.h"
 #include "drvAsynIPPort.h"
 #include "epicsThread.h"
-#include <epicsExport.h>
-
 
 #define ETHERNET_DATA_SIZE 1492
 #define MAX_BUFFER_SIZE 2097152
@@ -169,7 +168,7 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser );
 static int pmacAsynIPPortCommon(const char *portName, int addr, pmacPvt **pPmacPvt, asynInterface **plowerLevelInterface, asynUser **pasynUser);
-epicsShareFunc int pmacAsynIPPortConfigureEos(const char *portName,int addr);
+static int pmacAsynIPPortConfigureEos(const char *portName,int addr);
 static asynStatus sendPmacGetBuffer(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t maxchars,size_t *nbytesTransfered);
 
 /**
@@ -406,7 +405,7 @@ static asynStatus readResponse(pmacPvt *pPmacPvt, asynUser *pasynUser, size_t ma
 static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
 {
     ethernetCmd cmd;
-    char data[2] = {0};
+    unsigned char data[2] = {0};
     asynStatus status;
     size_t thisRead = 0;
     size_t nbytesTransfered = 0;
@@ -450,7 +449,7 @@ static int pmacReadReady(pmacPvt *pPmacPvt, asynUser *pasynUser )
 static int pmacFlush(pmacPvt *pPmacPvt, asynUser *pasynUser )
 {
     ethernetCmd cmd;
-    char data[2];
+    unsigned char data[2];
     asynStatus status = asynSuccess;
     size_t thisRead;
     size_t nbytesTransfered = 0;
