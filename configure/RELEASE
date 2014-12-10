@@ -7,10 +7,13 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 #Sergey:
 EPICS_BASE= /dls_sw/epics/R3.14.12.3/base
 
+#AJFWORK=    /home/ajf67/work/R3.14.12.3/support
 SUPPORT=    /dls_sw/prod/R3.14.12.3/support
 
-ASYN=       $(SUPPORT)/asyn/4-22
-MOTOR=      $(SUPPORT)/motor/6-8-1dls3-1
+#ASYN=       $(AJFWORK)/asyn
+#MOTOR=      $(AJFWORK)/motor
+ASYN=       $(SUPPORT)/asyn/4-21
+MOTOR=      $(SUPPORT)/motor/6-8-1dls4
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
