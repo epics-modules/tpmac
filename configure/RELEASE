@@ -12,8 +12,8 @@ SUPPORT=    /dls_sw/prod/R3.14.12.3/support
 
 #ASYN=       $(AJFWORK)/asyn
 #MOTOR=      $(AJFWORK)/motor
-ASYN=       $(SUPPORT)/asyn/4-21
-MOTOR=      $(SUPPORT)/motor/6-8-1dls4
+ASYN=       $(SUPPORT)/asyn/4-22
+MOTOR=      $(SUPPORT)/motor/6-8-1dls4-1
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
