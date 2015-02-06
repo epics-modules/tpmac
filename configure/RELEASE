@@ -9,11 +9,13 @@ EPICS_BASE= /dls_sw/epics/R3.14.12.3/base
 
 #AJFWORK=    /home/ajf67/work/R3.14.12.3/support
 SUPPORT=    /dls_sw/prod/R3.14.12.3/support
+GKLOCAL=    /dls_sw/work/R3.14.12.3/support/BL14I-WORKAREA
 
 #ASYN=       $(AJFWORK)/asyn
 #MOTOR=      $(AJFWORK)/motor
-ASYN=       $(SUPPORT)/asyn/4-22
-MOTOR=      $(SUPPORT)/motor/6-8-1dls4-1
+ASYN=       $(SUPPORT)/asyn/4-21
+#MOTOR=      $(SUPPORT)/motor/6-8-1dls4-1
+MOTOR=      $(GKLOCAL)/motor
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=/usr/local/epics/seq
