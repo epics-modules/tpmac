@@ -235,3 +235,6 @@ class PmacNamedUi(PmacUi):
         self.source.displayFile(fileName)
         self.source.centreOn(lineNumber)
 
+    def breakLine(self, fileName, lineNumber, on):
+        self.source.breakLine(fileName, lineNumber, on)
+

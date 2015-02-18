@@ -15,6 +15,12 @@ class BreakPoint(object):
     def getName(self):
         return self.name
 
+    def getFileName(self):
+        return self.fileName
+
+    def getLineNumber(self):
+        return self.lineNumber
+
 class Buffer(object):
 
     def __init__(self):
@@ -828,16 +834,20 @@ class Pmac(object):
         if on:
             if bp.getName() not in self.breakPoints:
                 self.breakPoints[bp.getName()] = bp
-            getUi(self).displayLine(fileName, lineNumber)
+                getUi(self).breakLine(fileName, lineNumber, True)
         else:
             if bp.getName() in self.breakPoints:
+                getUi(self).breakLine(fileName, lineNumber, False)
                 del self.breakPoints[bp.getName()]
+
 
     def cmdDebugBreakList(self, user):
         for name, bp in self.breakPoints.iteritems():
             getUi(self).output('Break point: %s\n' % name)
 
     def cmdDebugBreakClear(self, user):
+        for key,bp in self.breakPoints.iteritems():
+            getUi(self).breakLine(bp.getFileName(), bp.getLineNumber(), False)
         self.breakPoints = {}
 
     def cmdDebugContinue(self, user):

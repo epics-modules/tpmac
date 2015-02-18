@@ -551,7 +551,7 @@ class PmacParser(object):
                 else:
                     self.unsupported(['debug', 'trace', 'program', token])
             elif token == 'off':
-                self.pmacCmdDebugTraceOff(self)
+                self.pmac.cmdDebugTraceOff()
             elif token == 'log':
                 fileName = self.getToken()
                 if self.tokenIsString(fileName):
