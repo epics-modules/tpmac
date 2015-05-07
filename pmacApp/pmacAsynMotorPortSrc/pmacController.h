@@ -15,6 +15,7 @@
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
 #include "pmacAxis.h"
+#include "pmacCsGroups.h"
 
 #define PMAC_C_FirstParamString "PMAC_C_FIRSTPARAM"
 #define PMAC_C_LastParamString "PMAC_C_LASTPARAM"
@@ -71,6 +72,9 @@ class pmacController : public asynMotorController {
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam__
 
+ public:
+  pmacCsGroups *pGroupList;
+
  private:
   pmacAxis *pAxisZero;
   asynUser* lowLevelPortUser_;
@@ -80,6 +84,7 @@ class pmacController : public asynMotorController {
   epicsFloat64 lastTimeSecs_;
   bool printNextError_;
   bool feedRatePoll_;
+
   asynStatus lowLevelWriteRead(const char *command, char *response);
   asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
 
@@ -173,7 +178,7 @@ class pmacController : public asynMotorController {
   static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
 
   friend class pmacAxis;
-
+  friend class pmacCsGroups;
 };
 
 #define NUM_PMAC_PARAMS (&LAST_PMAC_PARAM - &FIRST_PMAC_PARAM + 1)

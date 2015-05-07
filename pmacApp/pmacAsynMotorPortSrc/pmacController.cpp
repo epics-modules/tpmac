@@ -176,6 +176,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   //Create dummy axis for asyn address 0. This is used for controller parameters.
   pAxisZero = new pmacAxis(this, 0);
+  pGroupList = new pmacCsGroups(this);
 
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString,       asynParamInt32, &PMAC_C_FirstParam_);
@@ -188,7 +189,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FirstParamString,       asynParamInt32, &PMAC_C_LastParam_);
 
   //Connect our Asyn user to the low level port that is a parameter to this constructor
-  if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_, "\006", "\r") != asynSuccess) {
+  if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_,
+		  (char*)"\006", (char*)"\r") != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName, lowLevelPortName);
     setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
   } else {
@@ -537,13 +539,13 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 //
 //    status = pAxis->setClosedLoop(closedLoop);
 //  }
-
-  if (!status) {
-    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
-    return asynError;
-  } else {
-    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
-  }
+//
+//  if (!status) {
+//    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
+//    return asynError;
+//  } else {
+//    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
+//  }
 
   return asynSuccess;
 
@@ -1049,6 +1051,67 @@ asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int enco
   return pC->pmacSetOpenLoopEncoderAxis(axis, encoder_axis);
 }
 
+/**
+ * Creates a Coordinate System Group to allow us to switch axes into coordinate systems
+ *
+ * @param controller The Asyn port name for the PMAC controller.
+ * @param group number for this CS group
+ * @param number of axes in this CS group
+ */
+asynStatus pmacCreateCsGroup(const char *controller, int groupNo, char* groupName, int axisCount)
+{
+	pmacController *pC;
+	static const char *functionName = "pmacCreateCsGroup";
+
+	pC = (pmacController*) findAsynPortDriver(controller);
+	if (!pC)
+	{
+		printf("%s:%s: Error port %s not found\n",
+			   driverName, functionName, controller);
+		return asynError;
+	}
+
+	pC->pGroupList->addGroup(groupNo, groupName, axisCount);
+
+	return asynSuccess;
+}
+
+/**
+ * Adds an axis to a Coordinate System Group
+ *
+ * @param controller The Asyn port name for the PMAC controller.
+ * @param group number for this CS group
+ * @param axis number to add
+ * @param axis definition for this axis
+ * @param coordinate system no. for this axis definition
+ *
+ */
+asynStatus pmacCsGroupAddAxis(const char *controller, int groupNo, int axisNo, char *mapping, int coordinateSysNo)
+{
+	pmacController *pC;
+	static const char *functionName = "pmacCsGroupAddAxis";
+
+	pC = (pmacController*) findAsynPortDriver(controller);
+	if (!pC)
+	{
+		printf("%s:%s: Error port %s not found\n",
+			   driverName, functionName, controller);
+		return asynError;
+	}
+
+	pC->pGroupList->addAxisToGroup(groupNo, axisNo, mapping, coordinateSysNo);
+
+	//TODO remove- THIS IS JUST A TEST HARDCODED
+	if(axisNo == 6)
+	{
+		pC->pGroupList->switchToGroup(1);
+	}
+
+	return asynSuccess;
+}
+
+
+
 /* Code for iocsh registration */
 
 /* pmacCreateController */
@@ -1140,6 +1203,40 @@ static void configpmacSetOpenLoopEncoderAxisCallFunc(const iocshArgBuf *args)
   pmacSetOpenLoopEncoderAxis(args[0].sval, args[1].ival, args[2].ival);
 }
 
+/* pmacCreateCsGroup */
+static const iocshArg pmacCreateCsGroupArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacCreateCsGroupArg1 = {"Group number", iocshArgInt};
+static const iocshArg pmacCreateCsGroupArg2 = {"Group name", iocshArgString};
+static const iocshArg pmacCreateCsGroupArg3 = {"Axis count", iocshArgInt};
+static const iocshArg * const pmacCreateCsGroupArgs[] = {&pmacCreateCsGroupArg0,
+								  &pmacCreateCsGroupArg1,
+								  &pmacCreateCsGroupArg2,
+								  &pmacCreateCsGroupArg3};
+static const iocshFuncDef configpmacCreateCsGroup = {"pmacCreateCsGroup", 4, pmacCreateCsGroupArgs};
+
+static void configpmacCreateCsGroupCallFunc(const iocshArgBuf *args)
+{
+	pmacCreateCsGroup(args[0].sval, args[1].ival, args[2].sval, args[3].ival);
+}
+
+/* pmacCsGroupAddAxis */
+static const iocshArg pmacCsGroupAddAxisArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacCsGroupAddAxisArg1 = {"Group number", iocshArgInt};
+static const iocshArg pmacCsGroupAddAxisArg2 = {"Axis number", iocshArgInt};
+static const iocshArg pmacCsGroupAddAxisArg3 = {"Axis CS definition", iocshArgString};
+static const iocshArg pmacCsGroupAddAxisArg4 = {"CS number", iocshArgInt};
+static const iocshArg * const pmacCsGroupAddAxisArgs[] = {&pmacCsGroupAddAxisArg0,
+								  &pmacCsGroupAddAxisArg1,
+								  &pmacCsGroupAddAxisArg2,
+								  &pmacCsGroupAddAxisArg3,
+								  &pmacCsGroupAddAxisArg4};
+static const iocshFuncDef configpmacCsGroupAddAxis = {"pmacCsGroupAddAxis", 5, pmacCsGroupAddAxisArgs};
+
+static void configpmacCsGroupAddAxisCallFunc(const iocshArgBuf *args)
+{
+	pmacCsGroupAddAxis(args[0].sval, args[1].ival, args[2].ival, args[3].sval, args[4].ival);
+}
+
 
 static void pmacControllerRegister(void)
 {
@@ -1149,6 +1246,8 @@ static void pmacControllerRegister(void)
   iocshRegister(&configpmacDisableLimitsCheck, configpmacDisableLimitsCheckCallFunc);
   iocshRegister(&configpmacSetAxisScale, configpmacSetAxisScaleCallFunc);
   iocshRegister(&configpmacSetOpenLoopEncoderAxis, configpmacSetOpenLoopEncoderAxisCallFunc);
+  iocshRegister(&configpmacCreateCsGroup, configpmacCreateCsGroupCallFunc);
+  iocshRegister(&configpmacCsGroupAddAxis, configpmacCsGroupAddAxisCallFunc);
 }
 epicsExportRegistrar(pmacControllerRegister);
 

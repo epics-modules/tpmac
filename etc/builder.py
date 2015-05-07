@@ -10,7 +10,6 @@ class Tpmac(Device):
     Dependencies = (Asyn, MotorLib)
     AutoInstantiate = True
 
-
 class DeltaTauCommsPort(AsynPort):
     "AsynPort that communicates with a delta tau motor controller"
     pass
@@ -152,6 +151,44 @@ class _GeoBrickChannel:
             records.motor, 'asynMotor', 'OUT',
             '@asyn(%s,%d)' % (device, channel + 1))
 
+class GeoBrick3(DeltaTau):
+    """This will create an asyn motor port for a GeoBrick that we can attach
+    motor records to using the model 3 driver"""
+    LibFileList = ['pmacAsynMotorPort']
+    DbdFileList = ['pmacAsynMotorPort']
+    Dependencies = (Tpmac,)
+    _Cards = []
+
+    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 500,
+            MovingPoll = 50):
+        # First create an asyn IP port to connect to
+        self.PortName = Port.DeviceName()
+        # Now add self to list of cards
+        self.Card = len(self._Cards)
+        self._Cards.append(self)
+        if name is None:
+            name = "BRICK%d" % (self.Card + 1)
+        self.name = name
+        # Store other attributes
+        self.NAxes = NAxes
+        self.IdlePoll = IdlePoll
+        self.MovingPoll = MovingPoll
+        # init the AsynPort superclass
+        self.__super.__init__(name)
+
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple('Name to use for the asyn port', str),
+        Port       = Ident('pmacAsynIPPort/pmacVmeConfig to connect to', DeltaTauCommsPort),
+        NAxes      = Simple('Number of axes', int),
+        IdlePoll   = Simple('Idle Poll Period in ms', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))
+
+    def Initialise(self):
+        print '# Configure Model 3 Controller Driver (Controler Port,Asyn Motor Port, ADDR, Axes, MOVE_POLL, IDLE_POLL)'
+        print 'pmacCreateController("%(name)s", "%(PortName)s", 0, %(NAxes)d, %(MovingPoll)d, %(IdlePoll)d)' % self.__dict__
+        print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
+        print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
 
 class PMAC(GeoBrick):
     """This will create an asyn motor port for a PMAC that we can attach
@@ -159,6 +196,15 @@ class PMAC(GeoBrick):
     def __init__(self, NAxes = 32, MovingPoll = 200, **args):
         self.__super.__init__(NAxes = NAxes, MovingPoll=MovingPoll, **args)
     ArgInfo = GeoBrick.ArgInfo + makeArgInfo(__init__,
+        NAxes      = Simple('Number of axes', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))
+    
+class PMAC3(GeoBrick3):
+    """This will create an asyn motor port for a PMAC that we can attach
+    motor records to"""
+    def __init__(self, NAxes = 32, MovingPoll = 200, **args):
+        self.__super.__init__(NAxes = NAxes, MovingPoll=MovingPoll, **args)
+    ArgInfo = GeoBrick3.ArgInfo + makeArgInfo(__init__,
         NAxes      = Simple('Number of axes', int),
         MovingPoll = Simple('Moving Poll Period in ms', int))
 
@@ -170,9 +216,15 @@ class pmacSetAxisScale(Device):
         self.__super.__init__()
         # store args
         self.__dict__.update(locals())
-        self.Card = Controller.Card
-    def Initialise(self):
-        print "pmacSetAxisScale(%(Card)d, %(Axis)d, %(Scale)d)" % self.__dict__
+    def Initialise(self):                
+        if type(self.Controller) is GeoBrick3:
+            # model 3 version of pmacSetAxisScale uses port instead of card 
+            self.ControllerPort = self.Controller.DeviceName() 
+            print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 1)' % self.__dict__
+            print "pmacSetAxisScale(%(ControllerPort)s, %(Axis)d, %(Scale)d)" % self.__dict__
+        else: 
+            self.Card = Controller.Card
+            print "pmacSetAxisScale(%(Card)d, %(Axis)d, %(Scale)d)" % self.__dict__
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
@@ -185,17 +237,68 @@ class pmacDisableLimitsCheck(Device):
 
     def __init__(self, Controller, Axis = None):
         self.__super.__init__()
-        self.Card = Controller.Card
+        self.Controller = Controller
         self.Axis = Axis
 
     def Initialise(self):
         if self.Axis is None:
-            print 'pmacDisableLimitsCheck(%(Card)d, 0, 1)' % self.__dict__
-        else:
-            print 'pmacDisableLimitsCheck(%(Card)d, %(Axis)d, 0)' % \
-                self.__dict__
+            self.Axis = 0
+        
+        if type(self.Controller) is GeoBrick3:
+            # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+            self.ControllerPort = self.Controller.DeviceName() 
+            print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 1)' % self.__dict__
+        else: 
+            self.Card = Controller.Card
+            print 'pmacDisableLimitsCheck(%(Card)d, %(Axis)d, 0)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
         Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
         Axis       = Simple(
             'Axis number to disable limit check, defaults to all', int))
+
+class pmacCreateCsGroup(Device):
+    Dependencies = (Tpmac,)
+
+    def __init__(self, Controller, GroupNumber, GroupName, AxisCount):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.GroupNumber = GroupNumber
+        self.AxisCount = AxisCount
+        self.GroupName = GroupName
+
+    def Initialise(self):        
+        assert type(self.Controller) is GeoBrick3 or type(self.Controller) is PMAC3, \
+            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
+            # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        print 'pmacCreateCsGroup("%(Controller)s", %(GroupNumber)d, "%(GroupName)s", %(AxisCount)d)' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+        Controller = Ident ('Underlying PMAC3 or GeoBrick3 object', DeltaTau),
+        GroupNumber = Simple('Unique Group number to describe this group', int),
+        GroupName = Simple('Description of the group', str),
+        AxisCount = Simple('Number of CS axes in this group', int))
+
+class pmacCsGroupAddAxis(Device):
+    Dependencies = (Tpmac,)
+
+    def __init__(self, Controller, GroupNumber, AxisNumber, AxisDef, CoordSysNumber):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.GroupNumber = GroupNumber
+        self.AxisNumber = AxisNumber
+        self.AxisDef = AxisDef
+        self.CoordSysNumber = CoordSysNumber
+
+    def Initialise(self):        
+        assert type(self.Controller) is GeoBrick3 or type(self.Controller) is PMAC3, \
+            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
+            # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        print 'pmacCsGroupAddAxis(%(Controller)s, %(GroupNumber)d, %(AxisNumber)d, %(AxisDef)s, %(CoordSysNumber)d)' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+        Controller = Ident ('Underlying PMAC3 or GeoBrick3 object', DeltaTau),
+        GroupNumber = Simple('Unique Group number to describe this group', int),
+        AxisNumber = Simple('Axis number of axis to add to the group', int),
+        AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may inlcude linear equations)', str),
+        CoordSysNumber = Simple('Axis number of axis to add to the group', int))
