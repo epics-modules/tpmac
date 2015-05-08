@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <asynDriver.h>
 #include <map>
 
 class pmacController;
@@ -25,7 +26,7 @@ public:
 
 	void addGroup(int id, char* name, int axisCount);
 	void addAxisToGroup(int id, int axis, char* axisDef, int coordSysNumber);
-	void switchToGroup(int id);
+	asynStatus switchToGroup(int id);
 
 private:
 	struct pmacCsAxisDef

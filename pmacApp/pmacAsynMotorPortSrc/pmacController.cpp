@@ -125,7 +125,8 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRE
 //C function prototypes, for the functions that can be called on IOC shell.
 //Some of these functions are provided to ease transition to the model 3 driver. Some of these
 //functions could be handled by the parameter library.
-extern "C" {
+extern "C"
+{
   asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 					 int numAxes, int movingPollPeriod, int idlePollPeriod);
   
@@ -186,7 +187,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FeedRateLimitString,    asynParamInt32, &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString,     asynParamInt32, &PMAC_C_FeedRatePoll_);
   createParam(PMAC_C_FeedRateProblemString,  asynParamInt32, &PMAC_C_FeedRateProblem_);
-  createParam(PMAC_C_FirstParamString,       asynParamInt32, &PMAC_C_LastParam_);
+  createParam(PMAC_C_CoordSysGroup,  		 asynParamInt32, &PMAC_C_CoordSysGroup_);
+  createParam(PMAC_C_LastParamString,        asynParamInt32, &PMAC_C_LastParam_);
 
   //Connect our Asyn user to the low level port that is a parameter to this constructor
   if (lowLevelPortConnect(lowLevelPortName, lowLevelPortAddress, &lowLevelPortUser_,
@@ -523,6 +525,9 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     }
     this->movesDeferred_ = value;
   }
+  else if (function == PMAC_C_CoordSysGroup_) {
+	  status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
+  }
   
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
@@ -534,18 +539,18 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
   }
 
-//  if (function == motorSetClosedLoop_) {
-//    bool closedLoop = (value == 0) ? 0 : 1;
-//
-//    status = pAxis->setClosedLoop(closedLoop);
-//  }
-//
-//  if (!status) {
-//    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
-//    return asynError;
-//  } else {
-//    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
-//  }
+  if (function == motorClosedLoop_) {
+    bool closedLoop = (value == 0) ? 0 : 1;
+
+    status = pAxis->setClosedLoop(closedLoop);
+  }
+
+  if (!status) {
+    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_ERROR_);
+    return asynError;
+  } else {
+    setIntegerParam(pAxis->axisNo_, this->motorStatusCommsError_, PMAC_OK_);
+  }
 
   return asynSuccess;
 
@@ -1100,12 +1105,6 @@ asynStatus pmacCsGroupAddAxis(const char *controller, int groupNo, int axisNo, c
 	}
 
 	pC->pGroupList->addAxisToGroup(groupNo, axisNo, mapping, coordinateSysNo);
-
-	//TODO remove- THIS IS JUST A TEST HARDCODED
-	if(axisNo == 6)
-	{
-		pC->pGroupList->switchToGroup(1);
-	}
 
 	return asynSuccess;
 }

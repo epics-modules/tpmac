@@ -12,13 +12,14 @@
 #include "pmacCsGroups.h"
 #include "pmacController.h"
 
-pmacCsGroups::pmacCsGroups(pmacController *pController):
-	pC_(pController)
+pmacCsGroups::pmacCsGroups(pmacController *pController) :
+		pC_(pController)
 {
 }
 
 pmacCsGroups::~pmacCsGroups()
 {
+	delete pC_;
 }
 
 void pmacCsGroups::addGroup(int id, char* name, int axisCount)
@@ -30,7 +31,8 @@ void pmacCsGroups::addGroup(int id, char* name, int axisCount)
 	csGroups[id] = group;
 }
 
-void pmacCsGroups::addAxisToGroup(int id, int axis, char* axisDef, int coordSysNumber)
+void pmacCsGroups::addAxisToGroup(int id, int axis, char* axisDef,
+		int coordSysNumber)
 {
 	pmacCsAxisDef def;
 	def.axisDefinition = axisDef;
@@ -40,18 +42,36 @@ void pmacCsGroups::addAxisToGroup(int id, int axis, char* axisDef, int coordSysN
 	csGroups[id].axisDefs.push_back(def);
 }
 
-void pmacCsGroups::switchToGroup(int id)
+asynStatus pmacCsGroups::switchToGroup(int id)
 {
-	char command[PMAC_MAXBUF] = {0};
-	char response[PMAC_MAXBUF] = {0};
-	int cmdStatus = 0;
+	static const char *functionName = "pmacCsGroups::switchToGroup";
+	char command[PMAC_MAXBUF];
+	char response[PMAC_MAXBUF];
+	asynStatus cmdStatus;
 
-	pmacCsAxisDefList *pAxisDefs = & csGroups[id].axisDefs;
-
-	for(size_t i=0; i<pAxisDefs->size(); i++)
+	if (csGroups.count(id) != 1)
 	{
-		sprintf(command, "&%d #%d->%s", (*pAxisDefs)[i].coordSysNumber, (*pAxisDefs)[i].axisNo, (*pAxisDefs)[i].axisDefinition.c_str());
-		cmdStatus = pC_->lowLevelWriteRead(command, response);
+		cmdStatus = asynError;
+		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Invalid Coordinate System Group Number\n", functionName);
 	}
+	else
+	{
+		pmacCsAxisDefList *pAxisDefs = &csGroups[id].axisDefs;
+
+		sprintf(command, "undefine all");
+		cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+		if (cmdStatus == asynSuccess)
+		{
+			for (size_t i = 0; i < pAxisDefs->size(); i++)
+			{
+				sprintf(command, "&%d #%d->%s", (*pAxisDefs)[i].coordSysNumber,
+						(*pAxisDefs)[i].axisNo,
+						(*pAxisDefs)[i].axisDefinition.c_str());
+				cmdStatus = pC_->lowLevelWriteRead(command, response);
+			}
+		}
+	}
+	return cmdStatus;
 }
 

@@ -1,4 +1,4 @@
-from iocbuilder import Device, records, RecordFactory, SetSimulation
+from iocbuilder import Device, AutoSubstitution, records, RecordFactory, SetSimulation
 from iocbuilder.arginfo import *
 from iocbuilder.modules.asyn import AsynPort, Asyn
 from iocbuilder.modules.motor import MotorLib
@@ -189,6 +189,25 @@ class GeoBrick3(DeltaTau):
         print 'pmacCreateController("%(name)s", "%(PortName)s", 0, %(NAxes)d, %(MovingPoll)d, %(IdlePoll)d)' % self.__dict__
         print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
         print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
+
+class _GeoBrick3GlobalControlT(AutoSubstitution):
+    """Creates some PVs for global control of the pmac controller, 
+    namely global feed rate and axis coordinate system assignment"""
+    TemplateFile = "pmacController.template"
+    Dependencies = (GeoBrick3,)
+    
+class GeoBrick3GlobalControl(_GeoBrick3GlobalControlT, Device):
+    """Creates some PVs for global control of the pmac controller, 
+    namely global feed rate and axis coordinate system assignment"""
+    # this does not currently need to be split into Autosubstitution and Device derived classes
+    # but this is a placeholder for future changes where this will become useful (i.e. adding macros
+    # not defined in the template)
+    def __init__(self, **args):
+        self.__super.__init__(**args)
+        self.__dict__.update(**args)
+        
+    # __init__ arguments
+    ArgInfo = _GeoBrick3GlobalControlT.ArgInfo
 
 class PMAC(GeoBrick):
     """This will create an asyn motor port for a PMAC that we can attach

@@ -27,10 +27,12 @@
 #define PMAC_C_FeedRateLimitString    "PMAC_C_FEEDRATE_LIMIT"
 #define PMAC_C_FeedRatePollString     "PMAC_C_FEEDRATE_POLL"
 #define PMAC_C_FeedRateProblemString  "PMAC_C_FEEDRATE_PROBLEM"
+#define PMAC_C_CoordSysGroup  		  "COORDINATE_SYS_GROUP"
 
 #define PMAC_MAXBUF 1024
 
-class pmacController : public asynMotorController {
+class pmacController : public asynMotorController
+{
 
  public:
   pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, int numAxes, double movingPollPeriod, 
@@ -69,6 +71,7 @@ class pmacController : public asynMotorController {
   int PMAC_C_FeedRateLimit_;
   int PMAC_C_FeedRatePoll_;
   int PMAC_C_FeedRateProblem_;
+  int PMAC_C_CoordSysGroup_;
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam__
 
