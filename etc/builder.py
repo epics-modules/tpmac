@@ -160,7 +160,9 @@ class GeoBrick3(DeltaTau):
     _Cards = []
 
     def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 500,
-            MovingPoll = 50):
+            MovingPoll = 50):        
+        # init a list of groupnames for each pmacCreateCsGroup to add to
+        self.CsGroupNamesList = {}
         # First create an asyn IP port to connect to
         self.PortName = Port.DeviceName()
         # Now add self to list of cards
@@ -198,17 +200,26 @@ class _GeoBrick3GlobalControlT(AutoSubstitution):
     
 class GeoBrick3GlobalControl(_GeoBrick3GlobalControlT, Device):
     """Creates some PVs for global control of the pmac controller, 
-    namely global feed rate and axis coordinate system assignment"""
-    # this does not currently need to be split into Autosubstitution and Device derived classes
-    # but this is a placeholder for future changes where this will become useful (i.e. adding macros
-    # not defined in the template)
-    def __init__(self, **args):
+    namely global feed rate and axis coordinate system assignment
+    IMPORTANT - add this after pmacCreatCSGroup"""
+    def __init__(self, **args):        
         self.__super.__init__(**args)
         self.__dict__.update(**args)
-        
-    # __init__ arguments
-    ArgInfo = _GeoBrick3GlobalControlT.ArgInfo
-
+    
+    # Remove from Arginfo, the (AutoSubstitution) CSG macros since these will be taken from 
+    # instances of pmacCreateCsGroup
+    removeThese = [ 'CSG%d' % i for i in range(8) ]    
+    # Also Instruct Arginfo that PORT is a Geobrick or PMac Controller Port
+    ArgInfo = makeArgInfo(__init__,
+                          PORT = Ident ('Underlying PMAC or GeoBrick object', DeltaTau)) + \
+                          _GeoBrick3GlobalControlT.ArgInfo.filtered(without = removeThese + ['PORT'])  
+    
+    def Finalise(self):
+        # create the args needed for the gui - these are taken from instances of pmacCreateCsGroup
+        for i in GeoBrick3GlobalControl.removeThese:
+            if i in self.PORT.CsGroupNamesList:
+                self.args[i] = self.PORT.CsGroupNamesList[i]
+                    
 class PMAC(GeoBrick):
     """This will create an asyn motor port for a PMAC that we can attach
     motor records to"""
@@ -291,6 +302,10 @@ class pmacCreateCsGroup(Device):
             "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
             # model 3 version of pmacDisableLimitsCheck uses port instead of card 
         print 'pmacCreateCsGroup("%(Controller)s", %(GroupNumber)d, "%(GroupName)s", %(AxisCount)d)' % self.__dict__
+        
+    def Finalise(self):
+        # add groupname to the controller's list
+        self.Controller.CsGroupNamesList['CSG%d' % self.GroupNumber] = self.GroupName
 
     ArgInfo = makeArgInfo(__init__,
         Controller = Ident ('Underlying PMAC3 or GeoBrick3 object', DeltaTau),
@@ -319,5 +334,5 @@ class pmacCsGroupAddAxis(Device):
         Controller = Ident ('Underlying PMAC3 or GeoBrick3 object', DeltaTau),
         GroupNumber = Simple('Unique Group number to describe this group', int),
         AxisNumber = Simple('Axis number of axis to add to the group', int),
-        AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may inlcude linear equations)', str),
+        AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may include linear equations)', str),
         CoordSysNumber = Simple('Axis number of axis to add to the group', int))
