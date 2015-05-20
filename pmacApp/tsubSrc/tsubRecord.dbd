@@ -22,7 +22,6 @@ recordtype(tsub) {
 	field(SADR,DBF_NOACCESS) {
 		prompt("Subroutine Address")
 		special(SPC_NOMOD)
-		special(SPC_NOMOD)
 		interest(2)
 		extra("long (*sadr)(struct tsubRecord *)")
 	}

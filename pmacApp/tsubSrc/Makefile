@@ -11,7 +11,7 @@ LIBRARY_IOC += tsub
 LIB_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 ### tsub record
-OBJLIB_SRCS  += tsubRecord.c
+tsub_SRCS  += tsubRecord.c
 
 ### tsubRecord.h will be created from tsubRecord.dbd
 DBDINC += tsubRecord
@@ -20,32 +20,30 @@ DBDINC += tsubRecord
 DBD += tsubInclude.dbd
 
 ### Tsub functions sources
-OBJLIB_SRCS  += tsubSeq.c
-OBJLIB_SRCS  += tsubBD.c
-OBJLIB_SRCS  += tsubBD3.c
-OBJLIB_SRCS  += tsubCCD2009.c
-# OBJLIB_SRCS  += tsubCCD.c
-# OBJLIB_SRCS  += tsubCCD_bm_no_extern_offset.c
-OBJLIB_SRCS  += tsubCS.c
-# OBJLIB_SRCS  += tsubDN.c
-OBJLIB_SRCS  += tsubHS.c
-OBJLIB_SRCS  += tsubMD.c
-OBJLIB_SRCS  += tsubMI.c
-OBJLIB_SRCS  += tsubMO_2mtr_cry2down.c
-# OBJLIB_SRCS  += tsubMO_3mtr_cry2up.c
-# OBJLIB_SRCS  += tsubMO_3mtr_cry2down.c
-OBJLIB_SRCS  += tsubSH.c
-OBJLIB_SRCS  += tsubTB.c
-# OBJLIB_SRCS  += tsubA.c
-OBJLIB_SRCS  += tsubX.c
-# OBJLIB_SRCS  += tsubX_bm_extern_offset.c
-OBJLIB_SRCS  += tsubXY.c
-OBJLIB_SRCS  += tsubXYZ.c
-OBJLIB_SRCS  += tsubXYZ_frac.c
-OBJLIB_SRCS  += tsubAcc65e.c
-OBJLIB_SRCS  += tsubCollimator.c
-
-tsub_SRCS += $(OBJLIB_SRCS)
+tsub_SRCS  += tsubSeq.c
+tsub_SRCS  += tsubBD.c
+tsub_SRCS  += tsubBD3.c
+tsub_SRCS  += tsubCCD2009.c
+# tsub_SRCS  += tsubCCD.c
+# tsub_SRCS  += tsubCCD_bm_no_extern_offset.c
+tsub_SRCS  += tsubCS.c
+# tsub_SRCS  += tsubDN.c
+tsub_SRCS  += tsubHS.c
+tsub_SRCS  += tsubMD.c
+tsub_SRCS  += tsubMI.c
+tsub_SRCS  += tsubMO_2mtr_cry2down.c
+# tsub_SRCS  += tsubMO_3mtr_cry2up.c
+# tsub_SRCS  += tsubMO_3mtr_cry2down.c
+tsub_SRCS  += tsubSH.c
+tsub_SRCS  += tsubTB.c
+# tsub_SRCS  += tsubA.c
+tsub_SRCS  += tsubX.c
+# tsub_SRCS  += tsubX_bm_extern_offset.c
+tsub_SRCS  += tsubXY.c
+tsub_SRCS  += tsubXYZ.c
+tsub_SRCS  += tsubXYZ_frac.c
+tsub_SRCS  += tsubAcc65e.c
+tsub_SRCS  += tsubCollimator.c
 
 include $(TOP)/configure/RULES
 #----------------------------------------

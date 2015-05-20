@@ -5,6 +5,8 @@
 #include <epicsExport.h>
 #include <iocsh.h>
 
+#define OK 0
+
 #define TIMEOUT 6.0
 
 int asynUploadFile( char * filename, char * asynPort, char * out_term, char * inp_term )

@@ -1,7 +1,0 @@
-#
-# 23o:scan1.VAL
-
-% file digital_IO_16_bo.req P=23o:bo0:ch
-% file digital_IO_24_bo.req P=23o:pmac20:acc65e:bo
-% file digital_IO_24_bo.req P=23o:pmac21:acc65e:bo
-

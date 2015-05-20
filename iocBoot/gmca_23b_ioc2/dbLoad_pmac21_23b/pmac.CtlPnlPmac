@@ -1,6 +1,0 @@
-file "$(TPMAC)/pmacDb/CtlPnlPmac.db"
-{
-	pattern { pmac, C }
-
-        { 23b:pmac21:, 3 }
-}

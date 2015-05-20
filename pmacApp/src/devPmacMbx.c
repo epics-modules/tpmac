@@ -75,50 +75,50 @@ OWNED RIGHTS.
 
 /* VxWorks Includes */
 
-#include	<vxWorks.h>
-#include 	<stdlib.h>	/* Sergey */
-#include	<types.h>
-#include	<stdioLib.h>
-#include	<string.h>
+#include <vxWorks.h>
+#include <stdlib.h>	 /* Sergey */
+#include <types.h>
+#include <stdioLib.h>
+#include <string.h>
 #define __PROTOTYPE_5_0		/* Sergey */
-#include	<logLib.h>	/* Sergey */
+#include <logLib.h>	/* Sergey */
 
 /* EPICS Includes */
 
-#include	<alarm.h>
-#include	<cvtTable.h>
-#include	<dbAccess.h>
-#include	<dbDefs.h>
-#include        <recSup.h>
-#include	<devSup.h>
-#include	<dbScan.h>
-#include	<link.h>
-#include	<module_types.h>
-#include	<callback.h>
-#include	<cantProceed.h>
+#include <alarm.h>
+#include <cvtTable.h>
+#include <dbAccess.h>
+#include <dbDefs.h>
+#include <recSup.h>
+#include <devSup.h>
+#include <dbScan.h>
+#include <link.h>
+#include <module_types.h>
+#include <callback.h>
+#include <cantProceed.h>
 
-#include	<aiRecord.h>
-#include	<biRecord.h>
-#include	<longinRecord.h>
-#include	<mbbiRecord.h>
+#include <aiRecord.h>
+#include <biRecord.h>
+#include <longinRecord.h>
+#include <mbbiRecord.h>
 #ifdef STATUS_RECORD
-#include	<statusRecord.h>
+#include <statusRecord.h>
 #endif
-#include	<aoRecord.h>
-#include	<boRecord.h>
-#include	<longoutRecord.h>
-#include	<mbboRecord.h>
-#include	<stringinRecord.h>
-#include	<stringoutRecord.h>
-#include	<waveformRecord.h>
+#include <aoRecord.h>
+#include <boRecord.h>
+#include <longoutRecord.h>
+#include <mbboRecord.h>
+#include <stringinRecord.h>
+#include <stringoutRecord.h>
+#include <waveformRecord.h>
 #ifdef LOAD_RECORD
-#include	<loadRecord.h>
+#include <loadRecord.h>
 #endif
 
 /* local includes */
 
-#include	<drvPmac.h>
-#include	<pmacError.h>
+#include <drvPmac.h>
+#include <pmacError.h>
 #include "recGbl.h"
 #include "epicsExport.h"
 /*
@@ -148,146 +148,132 @@ OWNED RIGHTS.
 /*
  * TYPEDEFS
  */
-typedef struct  /* PMAC_DSET_AI */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
-	DEVSUPFUN	special_linconv;
+typedef struct {  /* PMAC_DSET_AI */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
+  DEVSUPFUN special_linconv;
 } PMAC_DSET_AI;
 
-typedef struct  /* PMAC_DSET_AO */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
-	DEVSUPFUN	special_linconv;
+typedef struct {  /* PMAC_DSET_AO */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
+  DEVSUPFUN special_linconv;
 } PMAC_DSET_AO;
 
-typedef struct  /* PMAC_DSET_BI */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
+typedef struct {  /* PMAC_DSET_BI */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
 } PMAC_DSET_BI;
 
-typedef struct  /* PMAC_DSET_BO */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
+typedef struct {  /* PMAC_DSET_BO */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
 } PMAC_DSET_BO;
 
-typedef struct  /* PMAC_DSET_LI */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
+typedef struct {  /* PMAC_DSET_LI */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
 } PMAC_DSET_LI;
 
-typedef struct  /* PMAC_DSET_LO */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
+typedef struct {  /* PMAC_DSET_LO */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
 } PMAC_DSET_LO;
 
-typedef struct  /* PMAC_DSET_MBBI */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
+typedef struct {  /* PMAC_DSET_MBBI */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
 } PMAC_DSET_MBBI;
 
-typedef struct  /* PMAC_DSET_MBBO */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
+typedef struct {  /* PMAC_DSET_MBBO */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
 } PMAC_DSET_MBBO;
 
 #ifdef STATUS_RECORD
-typedef struct  /* PMAC_DSET_STATUS */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
+typedef struct {  /* PMAC_DSET_STATUS */
+  long      number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
 } PMAC_DSET_STATUS;
 #endif
 
-typedef struct  /* PMAC_DSET_SI */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	read;
+typedef struct {  /* PMAC_DSET_SI */
+  long      number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN read;
 } PMAC_DSET_SI;
 
-typedef struct  /* PMAC_DSET_SO */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
+typedef struct {  /* PMAC_DSET_SO */
+  long	   number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
 } PMAC_DSET_SO;
 
-typedef struct  /* PMAC_DSET_WF */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	write;
+typedef struct {  /* PMAC_DSET_WF */
+  long      number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN write;
 } PMAC_DSET_WF;
 
 #ifdef LOAD_RECORD
-typedef struct  /* PMAC_DSET_LOAD */
-{
-	long		number;
-	DEVSUPFUN	report;
-	DEVSUPFUN	init;
-	DEVSUPFUN	init_record;
-	DEVSUPFUN	get_ioint_info;
-	DEVSUPFUN	proc;
+typedef struct {  /* PMAC_DSET_LOAD */
+  long      number;
+  DEVSUPFUN report;
+  DEVSUPFUN init;
+  DEVSUPFUN init_record;
+  DEVSUPFUN get_ioint_info;
+  DEVSUPFUN proc;
 } PMAC_DSET_LOAD;
 #endif
 
 
-typedef struct  /* PMAC_MBX_DPVT */
-{
-	PMAC_MBX_IO	MbxIo;
+typedef struct {  /* PMAC_MBX_DPVT */
+  PMAC_MBX_IO	MbxIo;
 } PMAC_MBX_DPVT;
 
 /*
@@ -351,142 +337,130 @@ LOCAL void devPmacMbxCallback (CALLBACK * pCallback);
 char * devPmacMbxVersion = "@(#) devPmacMbx.c 2.1 2004/02/27";
 
 #if PMAC_DIAGNOSTICS
-volatile int devPmacMbxDebug = 0;
+  volatile int devPmacMbxDebug = 0;
 #endif
 
-PMAC_DSET_AI devPmacMbxAi =
-{
-	6,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxAi_init,
-	NULL,
-	devPmacMbxAi_read,
-	NULL
+PMAC_DSET_AI devPmacMbxAi = {
+  6,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxAi_init,
+  NULL,
+  devPmacMbxAi_read,
+  NULL
 };
 
-PMAC_DSET_AO devPmacMbxAo =
-{
-	6,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxAo_init,
-	NULL,
-	devPmacMbxAo_write,
-	NULL
+PMAC_DSET_AO devPmacMbxAo = {
+  6,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxAo_init,
+  NULL,
+  devPmacMbxAo_write,
+  NULL
 };
 
-PMAC_DSET_BI devPmacMbxBi =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxBi_init,
-	NULL,
-	devPmacMbxBi_read
+PMAC_DSET_BI devPmacMbxBi = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxBi_init,
+  NULL,
+  devPmacMbxBi_read
 };
 
-PMAC_DSET_BO devPmacMbxBo =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxBo_init,
-	NULL,
-	devPmacMbxBo_write};
-
-PMAC_DSET_LI devPmacMbxLi =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxLi_init,
-	NULL,
-	devPmacMbxLi_read
+PMAC_DSET_BO devPmacMbxBo = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxBo_init,
+  NULL,
+  devPmacMbxBo_write
 };
 
-PMAC_DSET_LO devPmacMbxLo =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxLo_init,
-	NULL,
-	devPmacMbxLo_write
+PMAC_DSET_LI devPmacMbxLi = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxLi_init,
+  NULL,
+  devPmacMbxLi_read
 };
 
-PMAC_DSET_MBBI devPmacMbxMbbi =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxMbbi_init,
-	NULL,
-	devPmacMbxMbbi_read
+PMAC_DSET_LO devPmacMbxLo = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxLo_init,
+  NULL,
+  devPmacMbxLo_write
 };
 
-PMAC_DSET_MBBO devPmacMbxMbbo =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxMbbo_init,
-	NULL,
-	devPmacMbxMbbo_write
+PMAC_DSET_MBBI devPmacMbxMbbi = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxMbbi_init,
+  NULL,
+  devPmacMbxMbbi_read
+};
+
+PMAC_DSET_MBBO devPmacMbxMbbo = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxMbbo_init,
+  NULL,
+  devPmacMbxMbbo_write
 };
 
 #ifdef STATUS_RECORD
-PMAC_DSET_STATUS devPmacMbxStatus =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxStatus_init,
-	NULL,
-	devPmacMbxStatus_read
+PMAC_DSET_STATUS devPmacMbxStatus = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxStatus_init,
+  NULL,
+  devPmacMbxStatus_read
 };
 epicsExportAddress(dset,devPmacMbxStatus);
 #endif
 
-PMAC_DSET_SI devPmacMbxSi =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxSi_init,
-	NULL,
-	devPmacMbxSi_read
+PMAC_DSET_SI devPmacMbxSi = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxSi_init,
+  NULL,
+  devPmacMbxSi_read
 };
 
-PMAC_DSET_SO devPmacMbxSo =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxSo_init,
-	NULL,
-	devPmacMbxSo_write
+PMAC_DSET_SO devPmacMbxSo = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxSo_init,
+  NULL,
+  devPmacMbxSo_write
 };
 
-PMAC_DSET_WF devPmacMbxWf =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxWf_init,
-	NULL,
-	devPmacMbxWf_write
+PMAC_DSET_WF devPmacMbxWf = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxWf_init,
+  NULL,
+  devPmacMbxWf_write
 };
 
 #ifdef LOAD_RECORD
-PMAC_DSET_LOAD devPmacMbxLoad =
-{
-	5,
-	NULL,
-	devPmacMbx_init,
-	devPmacMbxLoad_init,
-	NULL,
-	devPmacMbxLoad_proc
+PMAC_DSET_LOAD devPmacMbxLoad = {
+  5,
+  NULL,
+  devPmacMbx_init,
+  devPmacMbxLoad_init,
+  NULL,
+  devPmacMbxLoad_proc
 };
 epicsExportAddress(dset,devPmacMbxLoad);
 #endif
@@ -1746,31 +1720,23 @@ LOCAL long devPmacMbxLoad_proc
  * devPmacMbxCallback - EPICS device support Callback
  *
  */
-LOCAL void devPmacMbxCallback
-(
-	CALLBACK *	pCallback
-)
-{
-	char *	MyName = "devPmacMbxCallback";
-	/* long	status = 0; */
+LOCAL void devPmacMbxCallback (CALLBACK *pCallback) {
+  char            *MyName = "devPmacMbxCallback";
+  /* long         status = 0; */
 
-	struct dbCommon *	pRec;
-	struct rset *		pRset;
+  struct dbCommon *pRec;
+  struct rset     *pRset;
 
-	callbackGetUser (pRec, pCallback);
+  callbackGetUser (pRec, pCallback);
 
-	pRset = pRec->rset;
+  pRset = pRec->rset;
 
-	PMAC_TRACE
-	(	2,
-		PMAC_MESSAGE ("%s: CALLBACK [%s].\n", MyName, pRec->name,0,0,0,0);
-	)
+  PMAC_TRACE (2, PMAC_MESSAGE ("%s: CALLBACK [%s].\n", MyName, pRec->name,0,0,0,0);)
 /*OAM*/
-	logMsg("%s: pRec = 0x%x, pRset = 0x%x \n", (int)MyName, (int)pRec,(int)pRset,0,0,0);
-        dbScanLock (pRec);
-	(*(pRset->process))(pRec);
-        dbScanUnlock (pRec);
-
-	return;
+  logMsg("%s: pRec = 0x%x, pRset = 0x%x \n", (int)MyName, (int)pRec,(int)pRset,0,0,0);
+  dbScanLock (pRec);
+  (*(pRset->process))(pRec);
+  dbScanUnlock (pRec);
+  return;
 }
 

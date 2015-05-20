@@ -1,9 +1,0 @@
-%
-% BURT Request File
-%
-% $(P)BP:Vf:  BPM after VFM
-%
-file assy.req ASSY=$(P)BP:Vf
-file mtr1.req MTR1=$(P)BP:mvf
-file drv1.req DRV1=$(P)BP:VFZ
-

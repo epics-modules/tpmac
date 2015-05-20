@@ -17,7 +17,8 @@ if { [ file exists /etc/passwd ] } {
 } else {
    set SYSTEM WIN32
 #  set tclGMCA  {c:\\gmca\\gmcaApp\\tcl\\}
-   set tclGMCA  {c:/gmca/gmcaApp/tcl/}
+#  set tclGMCA  {c:/gmca/gmcaApp/tcl/}
+   set tclGMCA  {./}
 ### Set this system-wide:
 #  set env(DISPLAY) "locaslhost:0.0"
    set xwin  [exec perl ${tclGMCA}xwin_detect.pl]
