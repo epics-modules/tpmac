@@ -15,11 +15,11 @@
 #include "ellLib.h"
 
 #include "drvSup.h"
-#include "epicsExport.h"
 #define DEFINE_MOTOR_PROTOTYPES 1
 #include "motor_interface.h"
 #include "asynDriver.h"
 #include "asynOctetSyncIO.h"
+#include "epicsExport.h"
 
 #define PMAC_BUFFER_SIZE 2097152
 
@@ -185,6 +185,8 @@ typedef struct motorAxisHandle
     int fatal_following;
     int encoder_axis;
     int limitsCheckDisable;
+    int errorPrintFlag;
+    int errorPrintCount;
 } motorAxis;
 
 static PMACDRV_ID pFirstDrv = NULL;
@@ -228,7 +230,6 @@ static void motorAxisReport( int level )
             motorAxisReportAxis( &(pDrv->axis[i]), level );
     }
 }
-
 
 static int motorAxisInit( void )
 {
@@ -585,33 +586,67 @@ static int motorAxisSetDouble( AXIS_HDL pAxis, motorAxisParam_t function, double
             }
             case motorAxisPGain:
             {
-                sprintf( command, "I%d30=%f", pAxis->axis, value );
+            	/* This is not a correct implementation of the PGAIN parameter	*/ 
+            	/* control and is removed. The motor record scales 0.0 to 1.0.	*/
+            	/* The Turbo SRM Pg 90 tells us that the PGAIN range is		*/
+            	/* +/-8,388,608. DLS also maintains the system gains in a 	*/
+            	/* control file in the motion team. Exposing the gains to the 	*/
+            	/* motor record interface is less than ideal			*/
+                /*sprintf( command, "I%d30=%f", pAxis->axis, value );
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Setting PMAC card %d, axis %d pgain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value );*/
+                pAxis->print( pAxis->logParam, TRACE_ERROR,
+                              "Setting PMAC card %d, axis %d pgain **REFUSED** (%f)\n",
                               pAxis->pDrv->card, pAxis->axis, value );
                 break;
             }
             case motorAxisIGain:
             {
-                sprintf( command, "I%d33=%f", pAxis->axis, value );
+            	/* See comments above */
+                /*sprintf( command, "I%d33=%f", pAxis->axis, value );
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Setting PMAC card %d, axis %d igain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value ); */
+                pAxis->print( pAxis->logParam, TRACE_ERROR,
+                              "Setting PMAC card %d, axis %d igain **REFUSED** (%f)\n",
                               pAxis->pDrv->card, pAxis->axis, value );
                 break;
             }
             case motorAxisDGain:
             {
-                sprintf( command, "I%d31=%f", pAxis->axis, value );
+            	/* See comments above */
+                /* sprintf( command, "I%d31=%f", pAxis->axis, value );
                 pAxis->print( pAxis->logParam, TRACE_FLOW,
                               "Setting PMAC card %d, axis %d dgain (%f)\n",
+                              pAxis->pDrv->card, pAxis->axis, value ); */
+                pAxis->print( pAxis->logParam, TRACE_ERROR,
+                              "Setting PMAC card %d, axis %d dgain **REFUSED** (%f)\n",
                               pAxis->pDrv->card, pAxis->axis, value );
                 break;
             }
             case motorAxisClosedLoop:
             {
-                pAxis->print( pAxis->logParam, TRACE_FLOW,
-                              "Cannot set PMAC card %d, axis %d closed loop (%s)\n",
+                if (value == 1) /* Enable axis servo loop */
+                {
+                    sprintf( command, "#%dJ/", pAxis->axis );
+                    pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d CNEN (%s)\n",
                               pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
+                }
+                else if (value == 0) /* Kill axis */
+                {
+                    sprintf( command, "#%dk", pAxis->axis );
+                    pAxis->print( pAxis->logParam, TRACE_FLOW,
+                              "Setting PMAC card %d, axis %d CNEN (%s)\n",
+                              pAxis->pDrv->card, pAxis->axis, (value!=0?"ON":"OFF") );
+                }
+                else /* Should never happen */
+                {
+                    pAxis->print( pAxis->logParam, TRACE_ERROR,
+                                  "Cannot set PMAC card %d, axis %d closed loop (%i)\n",
+                                  pAxis->pDrv->card, pAxis->axis, value );
+                }
                 break;
             }
             case motorAxisDeferMoves:
@@ -958,24 +993,19 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
     epicsUInt32 status[2];
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
-    static int errorPrintFlag[33];
-    static int errorPrintCount;
-    int errorPrintMin = 10000;
-    int i=0;
+    int errorPrintMin = 1000;
 
     if (epicsMutexLock( pAxis->axisMutex ) == epicsMutexLockOK)
     {
         /*Set any global status bits.*/
 
       /* Keep error messages from being printed each poll.*/
-      if (errorPrintCount == errorPrintMin) {
-	errorPrintCount = 0;
-	for (i=0; i<33; i++) {
-	  errorPrintFlag[i] = 0;
+	if (pAxis->errorPrintCount > errorPrintMin) {
+	  pAxis->errorPrintCount = 0;
+	  pAxis->errorPrintFlag = 0;
 	}
-      }
-      errorPrintCount++;
-            
+	pAxis->errorPrintCount++;
+      
         /*Combine several general errors for the motor record problem error bit.*/
         motorParam->setInteger( pAxis->params, motorAxisProblem, ((globalStatus & PMAC_HARDWARE_PROB) != 0) );
       
@@ -994,7 +1024,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 
         cmdStatus = motorAxisWriteRead( pAxis, command, sizeof(response), response, 1 );
         nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &enc_position );
-
+		
         if ( cmdStatus || nvals != 4)
         {
             asynPrint(pasynUser, ASYN_TRACE_ERROR,
@@ -1056,6 +1086,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 		  done = 1;
 		}
             }
+            
             motorParam->setInteger( pAxis->params, motorAxisDone,          done );
             motorParam->setInteger( pAxis->params, motorAxisHighHardLimit, ((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) );
             /*motorParam->setInteger( pAxis->params, motorAxisHomeSignal,    homeSignal );*/
@@ -1066,6 +1097,12 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	    motorParam->setInteger( pAxis->params, motorAxisFollowingError,((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0) );
 	    pAxis->fatal_following = ((status[1] & PMAC_STATUS2_ERR_FOLLOW_ERR)!=0);
 
+            /* Need to make sure that we can write the CNEN flag, by setting the gain support flag in the status word */
+            motorParam->setInteger( pAxis->params, motorAxisHasClosedLoop,  1 );
+
+            /* Reflect PMAC_STATUS1_OPEN_LOOP in the CNEN Flag. CNEN can be set from the (user) motor record via the motorAxisClosedLoop command */
+            motorParam->setInteger( pAxis->params, motorAxisPowerOn, !(status[0] & PMAC_STATUS1_OPEN_LOOP));
+            
 	    axisProblemFlag = 0;
 	    /*Set any axis specific general problem bits.*/
 	    if ( ((status[0] & PMAX_AXIS_GENERAL_PROB1) != 0) || ((status[1] & PMAX_AXIS_GENERAL_PROB2) != 0) ) {
@@ -1084,9 +1121,9 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 		  limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
 		  if (limitsDisabledBit) {
 		    axisProblemFlag = 1;
-		    if (errorPrintFlag[pAxis->axis] == 0) {
+		    if (pAxis->errorPrintFlag == 0) {
 		      asynPrint(pasynUser, TRACE_ERROR, "*** WARNING *** Limits are disabled on card %d, axis %d\n", pAxis->pDrv->card, pAxis->axis);
-		      errorPrintFlag[pAxis->axis] = 1;
+		      pAxis->errorPrintFlag = 1;
 		    }
 		  }
 		}
@@ -1096,7 +1133,7 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 
 	    /* Clear error print flag for this axis if problem has been removed.*/
 	    if (axisProblemFlag == 0) {
-		errorPrintFlag[pAxis->axis] = 0;
+		pAxis->errorPrintFlag = 0;
 	    }
 	    
 
@@ -1118,6 +1155,12 @@ static void drvPmacGetAxisStatus( AXIS_HDL pAxis, asynUser * pasynUser, epicsUIn
 	  pAxis->amp_enabled = 0;
 	}
 
+/* Added by AJF and AJG, after investigating problem on I04, SCIN-01:Y, of DMOV never being set TRUE after hitting a real
+ * limit switch.
+ */
+	if (((status[0] & PMAC_STATUS1_POS_LIMIT_SET) != 0) || ((status[0] & PMAC_STATUS1_NEG_LIMIT_SET) != 0)) {
+	  motorParam->forceCallback( pAxis->params );
+	}
 	motorParam->callCallback( pAxis->params );           
 
         epicsMutexUnlock( pAxis->axisMutex );
@@ -1193,12 +1236,8 @@ static void drvPmacTask( PMACDRV_ID pDrv )
   float timeout = 0.0;
   float factor = 0.0;
   float skipglobal = 0.0;
-  float skips[pDrv->nAxes];
+  float *skips = (float *)calloc(pDrv->nAxes, sizeof(float));
   epicsUInt32 globalStatus = 0;
-
-  for (i=0; i<pDrv->nAxes; i++) {
-    skips[i] = 0;
-  }
 
   while ( 1 ) 
   {
@@ -1247,6 +1286,7 @@ static void drvPmacTask( PMACDRV_ID pDrv )
 
     }
   }
+  free(skips);
 }
 
 /**
@@ -1315,6 +1355,8 @@ int pmacAsynMotorCreate( char *port, int addr, int card, int nAxes )
                         pDrv->axis[i].scale = 1;
                         pDrv->axis[i].encoder_axis = 0;
 			pDrv->axis[i].limitsCheckDisable = 0;
+			pDrv->axis[i].errorPrintFlag = 0;
+			pDrv->axis[i].errorPrintCount = 0;
 
 /*                        sprintf( command, "I%d00=1", pDrv->axis[i].axis );
                         motorAxisWriteRead( &(pDrv->axis[i]), command, sizeof(reply), reply, 1 );*/
