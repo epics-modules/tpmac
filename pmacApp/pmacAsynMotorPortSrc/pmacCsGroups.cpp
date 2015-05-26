@@ -102,7 +102,8 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 	{
 		pmacCsAxisDefList *pAxisDefs = &csGroups[id].axisDefs;
 
-		sprintf(command, "undefine all");
+		// abort all motion and programs and undefine all cs mappings
+		sprintf(command, "%c\nundefine all",0x01);
 		cmdStatus = pC_->lowLevelWriteRead(command, response);
 
 		if (cmdStatus == asynSuccess)
@@ -147,7 +148,6 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 	static const char *functionName = "pmacCsGroups::processDeferredCoordMoves";
 	int coordSysNumber = 0;
 	pmacCsaxisNamesToQ moveList;
-	float accel = 100, veloc = 100; // TODO hard coded for the moment
 	float maxTimeToMove = 0;
 
 	asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
@@ -232,26 +232,35 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 				{
 					std::string axisDef = csGroups[currentGroup].axisDefs[axis].axisDefinition;
 					sprintf(moveStr, "%s Q%d=%f", moveStr, axisNamesToQ[axisDef[0]], pAxis->previous_position_);
+					if(pAxis->moving_)
+					{
+						status = asynError;
+						asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+								"%s Error: illegal deferred coordinated move - real axis %d in CS %d is already moving\n",
+								functionName, axis, coordSysNumber);
+					}
 				}
 			}
 		}
 
-		sprintf(command, "I%d87=%f I%d89=%f ", CSVAR(coordSysNumber), accel, CSVAR(coordSysNumber), veloc);
-		sprintf(command, "%s &%d Q70=%f %s B101R", command, coordSysNumber, maxTimeToMove, moveStr);
+		if(status == asynSuccess)
+		{
+			sprintf(command, "%s &%d Q70=%f %s B101R", command, coordSysNumber, maxTimeToMove, moveStr);
 
-		//Execute the deferred move
-		printf("#### deferred move = %s\n", command);
-		if (pC_->lowLevelWriteRead(command, response) != asynSuccess)
-		{
-			asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-					"%s ERROR Sending Deferred Move Command.\n", functionName);
-			pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_ERROR_);
-			status = asynError;
-		}
-		else
-		{
-			pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_OK_);
-			status = asynSuccess;
+			//Execute the deferred move
+			printf("#### deferred move = %s\n", command);
+			if (pC_->lowLevelWriteRead(command, response) != asynSuccess)
+			{
+				asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+						"%s ERROR Sending Deferred Move Command.\n", functionName);
+				pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_ERROR_);
+				status = asynError;
+			}
+			else
+			{
+				pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_OK_);
+				status = asynSuccess;
+			}
 		}
 	}
 
@@ -261,12 +270,7 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 		pAxis = pC_->getAxis(axis);
 		if (pAxis != NULL)
 		{
-			if (pAxis->deferredMove_)
-			{
-				pAxis->deferredMove_ = 0;
-				// TODO this is temporary
-				pAxis->deferredPosition_ = 0;
-			}
+			pAxis->deferredMove_ = 0;
 		}
 	}
 	return status;

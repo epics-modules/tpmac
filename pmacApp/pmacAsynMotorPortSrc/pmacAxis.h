@@ -61,6 +61,7 @@ class pmacAxis : public asynMotorAxis
   epicsFloat64 nowTimeSecs_;
   epicsFloat64 lastTimeSecs_;
   bool printNextError_;
+  bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
 
   friend class pmacController;
   friend class pmacCsGroups;

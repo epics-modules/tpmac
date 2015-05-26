@@ -86,6 +86,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   nowTimeSecs_ = 0.0;
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
+  moving_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -189,7 +190,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   } else { /* deferred moves */
     sprintf(command, "%s%s", vel_buff, acc_buff);
     deferredPosition_ = position/scale_;
-    deferredMove_ = 1;
+    deferredMove_ = pC_->movesDeferred_;
     deferredRelative_ = relative;
     distance = relative ? fabs(position) : fabs(previous_position_ - position);
     deferredTime_ = (max_velocity != 0) ? fabs(distance/max_velocity) * 1000 : 0;
@@ -525,11 +526,13 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       previous_position_ = position;
       previous_direction_ = direction;
 
-      if(deferredMove_) {
+      if(deferredMove_ == DEFERRED_COORDINATED_MOVES) {
     	  // NOTE This changed from done=0 to allow multiple move requests per axis in a given deferred move.
     	  // This means there is no 'moving' feedback on deferred axes, but is preferable to having
     	  // further moves buffered and executed after the deferred move completes
     	  done = 1;
+      } else if(deferredMove_ == DEFERRED_FAST_MOVES) {
+    	  done = 0;
       } else {
 	done = (((status[1] & pC_->PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) == 0)); 
 	/*If we are not done, but amp has been disabled, then set done (to stop when we get following errors).*/
@@ -539,9 +542,9 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       }
 
       if (!done) {
-	*moving = true;
+    	  moving_ = *moving = true;
       } else {
-	*moving = false;
+    	  moving_ = *moving = false;
       }
 
       setIntegerParam(pC_->motorStatusDone_, done);
