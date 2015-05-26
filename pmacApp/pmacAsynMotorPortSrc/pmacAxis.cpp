@@ -75,6 +75,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   deferredPosition_ = 0.0;
   deferredMove_ = 0;
   deferredRelative_ = 0;
+  deferredTime_ = 0;
   scale_ = 1;
   previous_position_ = 0.0;
   previous_direction_ = 0;
@@ -161,10 +162,12 @@ pmacAxis::~pmacAxis()
  */
 asynStatus pmacAxis::move(double position, int relative, double min_velocity, double max_velocity, double acceleration)
 {
+  double distance = 0;
   asynStatus status = asynError;
   static const char *functionName = "pmacAxis::move";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
+  printf("#### axis %d move to %f at min %f, max %f, relative=%d\n", this->axisNo_, position, min_velocity, max_velocity, relative);
 
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
@@ -188,6 +191,8 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
     deferredPosition_ = position/scale_;
     deferredMove_ = 1;
     deferredRelative_ = relative;
+    distance = relative ? fabs(position) : fabs(previous_position_ - position);
+    deferredTime_ = (max_velocity != 0) ? fabs(distance/max_velocity) * 1000 : 0;
   }
         
 #ifdef REMOVE_LIMITS_ON_HOME
@@ -374,6 +379,7 @@ asynStatus pmacAxis::stop(double acceleration)
   /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
     we don't want to power on axes that have been powered off for a reason.*/
   if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
+	pC_->pGroupList->abortMotion(axisNo_);
     sprintf(command, "#%d J/ M%d40=1",  axisNo_, axisNo_ );
   } else {
     /*Just set the inposition bit in this case.*/
@@ -520,7 +526,10 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       previous_direction_ = direction;
 
       if(deferredMove_) {
-	done = 0; 
+    	  // NOTE This changed from done=0 to allow multiple move requests per axis in a given deferred move.
+    	  // This means there is no 'moving' feedback on deferred axes, but is preferable to having
+    	  // further moves buffered and executed after the deferred move completes
+    	  done = 1;
       } else {
 	done = (((status[1] & pC_->PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) == 0)); 
 	/*If we are not done, but amp has been disabled, then set done (to stop when we get following errors).*/

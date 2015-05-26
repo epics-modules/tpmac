@@ -26,7 +26,10 @@ public:
 
 	void addGroup(int id, char* name, int axisCount);
 	void addAxisToGroup(int id, int axis, char* axisDef, int coordSysNumber);
+	int getAxisCoordSys(int axis);
 	asynStatus switchToGroup(int id);
+	asynStatus processDeferredCoordMoves(void);
+	asynStatus abortMotion(int axis);
 
 private:
 	struct pmacCsAxisDef
@@ -36,7 +39,7 @@ private:
 		int	coordSysNumber;
 	};
 
-	typedef std::vector <pmacCsAxisDef> pmacCsAxisDefList;
+	typedef std::map <int, pmacCsAxisDef> pmacCsAxisDefList;
 	struct pmacCsGroup
 	{
 		std::string	name;
@@ -44,11 +47,15 @@ private:
 	};
 
 	typedef std::map <int, pmacCsGroup> pmacCsGroupList;
+	typedef std::map <char, int> pmacCsaxisNamesToQ;
 
-	pmacCsGroupList	csGroups;
 	pmacController *pC_;
+	pmacCsGroupList	csGroups;
+	pmacCsaxisNamesToQ axisNamesToQ;
+	int currentGroup;
 
 	friend class pmacController;
+	friend class pmacAxis;
 };
 
 #endif /* PMACAPP_PMACASYNMOTORPORTSRC_PMACCSGROUPS_H_ */

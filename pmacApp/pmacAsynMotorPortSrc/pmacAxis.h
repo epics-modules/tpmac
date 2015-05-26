@@ -49,6 +49,7 @@ class pmacAxis : public asynMotorAxis
   double deferredPosition_;
   int deferredMove_;
   int deferredRelative_;
+  double deferredTime_;
   int scale_;
   double previous_position_;
   int previous_direction_;
@@ -62,6 +63,7 @@ class pmacAxis : public asynMotorAxis
   bool printNextError_;
 
   friend class pmacController;
+  friend class pmacCsGroups;
 };
 
 

@@ -171,3 +171,41 @@ record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
    field(SVST, "$(CSG7=)")
    field(SVVL, "7")
 }
+
+# ///
+# /// Control deferred moves on the controller
+# ///
+# ///
+# /// Select a group of coordinate systems into the controller.
+# ///
+record(mbbo, "$(P):MOTOR_DEFER_MOVES")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(ZRST, "GO")
+    field(ONST, "Defer Fast Moves")
+    field(TWST, "Defer Coordinated")
+}
+
+# ///
+# /// Read back the current group of coordinate systems into the controller.
+# ///
+record(mbbi, "$(P):MOTOR_DEFER_MOVES_RBV")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(ZRST, "GO")
+    field(ONST, "Defer Fast Moves")
+    field(TWST, "Defer Coordinated")
+}
+

@@ -520,8 +520,11 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   }
   else if (function == motorDeferMoves_) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
-    if (value == 0 && this->movesDeferred_ != 0) {
+    if (value == 0 && this->movesDeferred_ == DEFERRED_FAST_MOVES) {
       status = (this->processDeferredMoves() == asynSuccess) && status;
+    }
+    else if (value == 0 && this->movesDeferred_ == DEFERRED_COORDINATED_MOVES) {
+    	status = (pGroupList->processDeferredCoordMoves() == asynSuccess) && status;
     }
     this->movesDeferred_ = value;
   }

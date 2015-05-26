@@ -288,6 +288,8 @@ class pmacDisableLimitsCheck(Device):
             'Axis number to disable limit check, defaults to all', int))
 
 class pmacCreateCsGroup(Device):
+    """Create a group of axis mappings to coordinate systems. Instantating a GeoBrick3GlobalControl
+    will create a PV for switching between these groups"""
     Dependencies = (Tpmac,)
 
     def __init__(self, Controller, GroupNumber, GroupName, AxisCount):

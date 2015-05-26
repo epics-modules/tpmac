@@ -31,6 +31,9 @@
 
 #define PMAC_MAXBUF 1024
 
+#define DEFERRED_FAST_MOVES 1
+#define DEFERRED_COORDINATED_MOVES 2
+
 class pmacController : public asynMotorController
 {
 
