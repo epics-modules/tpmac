@@ -152,7 +152,7 @@ record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
 {
    field(PINI, "YES")
    field(DTYP, "asynInt32")
-   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))COORDINATE_SYS_GROUP")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
    field(SCAN, "I/O Intr")
    field(ZRST, "$(CSG0=)")
    field(ZRVL, "0")

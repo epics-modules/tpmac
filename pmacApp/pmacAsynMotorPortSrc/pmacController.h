@@ -27,7 +27,7 @@
 #define PMAC_C_FeedRateLimitString    "PMAC_C_FEEDRATE_LIMIT"
 #define PMAC_C_FeedRatePollString     "PMAC_C_FEEDRATE_POLL"
 #define PMAC_C_FeedRateProblemString  "PMAC_C_FEEDRATE_PROBLEM"
-#define PMAC_C_CoordSysGroup  		  "COORDINATE_SYS_GROUP"
+#define PMAC_C_CoordSysGroup  		  "PMAC_C_COORDINATE_SYS_GROUP"
 
 #define PMAC_MAXBUF 1024
 

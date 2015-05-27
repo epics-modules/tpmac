@@ -168,7 +168,6 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   static const char *functionName = "pmacAxis::move";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
-  printf("#### axis %d move to %f at min %f, max %f, relative=%d\n", this->axisNo_, position, min_velocity, max_velocity, relative);
 
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
