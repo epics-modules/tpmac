@@ -125,7 +125,7 @@ record(mbbo, "$(P):COORDINATE_SYS_GROUP")
 {
    field(PINI, "YES")
    field(DTYP, "asynInt32")
-   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))COORDINATE_SYS_GROUP")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
    field(VAL, "0")
    field(ZRST, "$(CSG0=)")
    field(ZRVL, "0")
