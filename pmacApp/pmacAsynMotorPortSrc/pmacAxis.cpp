@@ -525,12 +525,7 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
       previous_position_ = position;
       previous_direction_ = direction;
 
-      if(deferredMove_ == DEFERRED_COORDINATED_MOVES) {
-    	  // NOTE This changed from done=0 to allow multiple move requests per axis in a given deferred move.
-    	  // This means there is no 'moving' feedback on deferred axes, but is preferable to having
-    	  // further moves buffered and executed after the deferred move completes
-    	  done = 1;
-      } else if(deferredMove_ == DEFERRED_FAST_MOVES) {
+      if(deferredMove_ != 0) {
     	  done = 0;
       } else {
 	done = (((status[1] & pC_->PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) == 0)); 

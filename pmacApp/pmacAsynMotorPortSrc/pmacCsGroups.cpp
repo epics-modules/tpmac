@@ -47,7 +47,7 @@ pmacCsGroups::pmacCsGroups(pmacController *pController) :
 	// PINI of the $(P):COORDINATE_SYS_GROUP will set the cs group later
 
 	// set up a map of axis names and the number of the Q variable used
-	// to control it (in DLS standard prog10)
+	// to control it (in prog 101)
 	axisNamesToQ['A'] = 71;
 	axisNamesToQ['B'] = 72;
 	axisNamesToQ['C'] = 73;
@@ -140,7 +140,7 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 {
 	static const char *functionName = "pmacCsGroups::switchToGroup";
 	char command[PMAC_MAXBUF] = {0};
-	char response[PMAC_MAXBUF]= {0};
+	char response[PMAC_MAXBUF] = {0};
 	asynStatus cmdStatus;
 
 	if (csGroups.count(id) != 1)
@@ -312,7 +312,7 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 
 		if(status == asynSuccess)
 		{
-			sprintf(command, "%s &%d Q70=%f %s B101R", command, coordSysNumber, maxTimeToMove, moveStr);
+			sprintf(command, "&%d Q70=%f %s B101R", coordSysNumber, maxTimeToMove, moveStr);
 
 			//Execute the deferred move
 			asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
