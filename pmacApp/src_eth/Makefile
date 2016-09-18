@@ -7,7 +7,8 @@ include $(TOP)/configure/CONFIG
 CROSS_COMPILER_TARGET_ARCHS=
 #=============================
 # build a support library
-LIBRARY = pmac-eth
+LIBRARY_Linux = pmac-eth
+LIBRARY_vxWorks = pmac-eth
 
 
 DBD += pmac-ethSupport.dbd
