@@ -4,7 +4,6 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
 DB += pmacAsynMotor.db
-SCRIPTS=pmacAsynMotor.boot
 
 PROD_IOC = pmacAsynMotor
 

@@ -95,6 +95,7 @@ OWNED RIGHTS.
 #include <link.h>
 #include <module_types.h>
 #include <callback.h>
+#include <epicsVersion.h>
 
 #include <aiRecord.h>
 #include <aoRecord.h>
@@ -137,6 +138,13 @@ OWNED RIGHTS.
 #define PMAC_DEBUG(level,code)      ;
 #define PMAC_TRACE(level,code)      ;
 #endif
+
+/* Less than EPICS base version test.*/
+#ifndef EPICS_VERSION_INT
+#define VERSION_INT(V,R,M,P) ( ((V)<<24) | ((R)<<16) | ((M)<<8) | (P))
+#define EPICS_VERSION_INT VERSION_INT(EPICS_VERSION, EPICS_REVISION, EPICS_MODIFICATION, EPICS_PATCH_LEVEL)
+#endif
+#define LT_EPICSBASE(V,R,M,P) (EPICS_VERSION_INT < VERSION_INT((V),(R),(M),(P)))
 
 #define NO_ERR_STATUS   (-1)
 
@@ -1072,7 +1080,11 @@ LOCAL long devPmacRamEvent_read (struct eventRecord *pRec) {
 
   pDpvt = (PMAC_RAM_DPVT *) pRec->dpvt;
 
+#if LT_EPICSBASE(3,15,0,0)
   pRec->val = (short) (0x0000ffff & pDpvt->dpramData.ramLong);
+#else
+  sprintf(pRec->val, "event %d", pDpvt->dpramData.ramLong);
+#endif
   pRec->udf = FALSE;
 
   return(0);

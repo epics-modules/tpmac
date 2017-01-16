@@ -2,10 +2,12 @@
 TOP = .
 include $(TOP)/configure/CONFIG
 DIRS := $(DIRS) $(filter-out $(DIRS), configure)
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *app))
+#DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
+#DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *app))
 #DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocBoot))
 #DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard iocboot))
+DIRS += pmacApp
+DIRS += testApp
 DIRS += pmc
 DIRS += example
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard etc))

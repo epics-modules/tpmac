@@ -5,9 +5,6 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
 
-SCRIPTS=testPmacAsynIP.boot
-
-
 PROD_IOC += testPmacAsynIP
 
 DBD += testPmacAsynIPPort.dbd

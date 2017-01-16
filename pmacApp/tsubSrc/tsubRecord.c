@@ -66,11 +66,19 @@
 #include	<special.h>
 #include	<registryFunction.h>
 #include	<epicsExport.h>
+#include  <epicsVersion.h>
 #include	<recGbl.h>
 
 #define GEN_SIZE_OFFSET
 #include	<tsubRecord.h>
 #undef  GEN_SIZE_OFFSET
+
+/* Less than EPICS base version test.*/
+#ifndef EPICS_VERSION_INT
+#define VERSION_INT(V,R,M,P) ( ((V)<<24) | ((R)<<16) | ((M)<<8) | (P))
+#define EPICS_VERSION_INT VERSION_INT(EPICS_VERSION, EPICS_REVISION, EPICS_MODIFICATION, EPICS_PATCH_LEVEL)
+#endif
+#define LT_EPICSBASE(V,R,M,P) (EPICS_VERSION_INT < VERSION_INT((V),(R),(M),(P)))
 
 /* Create RSET - Record Support Entry Table*/
 #define report NULL
@@ -78,7 +86,11 @@
 static long init_record(tsubRecord *, int);
 static long process(tsubRecord *);
 #define special NULL
+#if LT_EPICSBASE(3,15,0,0)
 static long get_value(tsubRecord *, valueDes *);
+#else
+static long get_value(int, int);
+#endif
 #define cvt_dbaddr NULL
 #define get_array_info NULL
 #define put_array_info NULL
@@ -249,6 +261,8 @@ static long process(tsubRecord *ptsub)
         return(status);
 }
 
+/* getValue is not used in 3.15.0 and higher, and valueDes structure is not defined */
+#if LT_EPICSBASE(3,15,0,0)
 static long get_value(tsubRecord *ptsub, valueDes *pvdes)
 {
     pvdes->field_type = DBF_DOUBLE;
@@ -258,6 +272,11 @@ static long get_value(tsubRecord *ptsub, valueDes *pvdes)
     pvdes->pvalue = (double *)(&ptsub->val);
     return(0);
 }
+#else
+static long get_value(int ptsub, int pvdes) {
+    return 0;
+}
+#endif
 
 
 static long get_units(DBADDR *paddr, char *units)

@@ -61,6 +61,7 @@
 #include	<dbDefs.h>
 #include	<dbAccess.h>
 #include	<dbFldTypes.h>
+#include  <epicsVersion.h>
 #include	<errMdef.h>
 #include	<recSup.h>
 #include	<dbEvent.h>		/* Sergey */
@@ -122,6 +123,13 @@ static void monitor();
 #define INP_ARG_MAX 80
 #define OUT_ARG_MAX 70
 /* Fldnames should have as many as INP_ARG_MAX */
+
+/* Less than EPICS base version test.*/
+#ifndef EPICS_VERSION_INT
+#define VERSION_INT(V,R,M,P) ( ((V)<<24) | ((R)<<16) | ((M)<<8) | (P))
+#define EPICS_VERSION_INT VERSION_INT(EPICS_VERSION, EPICS_REVISION, EPICS_MODIFICATION, EPICS_PATCH_LEVEL)
+#endif
+#define LT_EPICSBASE(V,R,M,P) (EPICS_VERSION_INT < VERSION_INT((V),(R),(M),(P)))
 
 
 static long init_record(ptsub,pass)
@@ -219,6 +227,8 @@ static long process(ptsub)
         return(status);
 }
 
+/* getValue is not used in 3.15.0 and higher, and valueDes structure is not defined */
+#if LT_EPICSBASE(3,15,0,0)
 static long get_value(ptsub,pvdes)
     struct tsubRecord		*ptsub;
     struct valueDes	*pvdes;
@@ -230,6 +240,11 @@ static long get_value(ptsub,pvdes)
     pvdes->pvalue = (double *)(&ptsub->val);
     return(0);
 }
+#else
+static long get_value(int ptsub, int pvdes) {
+    return 0;
+}
+#endif
 
 static long get_units(paddr,units)
     struct dbAddr *paddr;
