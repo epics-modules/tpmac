@@ -621,6 +621,9 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
     first_axis = &pDrv->axis[0];
     last_axis = &pDrv->axis[NAXES-1];
     
+    /* Get the co-ordinate system status */
+    drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
+
     /* Read all the positions for this co-ordinate system in one go */
     sprintf( command, "&%d", first_axis->coord_system);
     for (i = first_axis->axis; i <= last_axis->axis; i++) {
@@ -629,9 +632,6 @@ static void drvPmacGetAxesStatus( PMACDRV_ID pDrv, epicsUInt32 *status)
     }
 
     cmdStatus = motorAxisWriteRead( first_axis, command, sizeof(pos_response), pos_response, 1 );
-
-    /* Get the co-ordinate system status */
-    drvPmacGetCoordStatus(first_axis, pDrv->pasynUser, status);
 
     for (i = 0; i < NAXES; i++) {
         pAxis = &pDrv->axis[i];
