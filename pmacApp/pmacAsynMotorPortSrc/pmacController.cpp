@@ -327,19 +327,23 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
   //Use the controller-wide param PMAC_C_CommsError_
   getIntegerParam(PMAC_C_CommsError_, &commsError);
   
-  if (!commsError) {
-    status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
+  status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
 					 command, strlen(command),
 					 response, PMAC_MAXBUF_,
 					 PMAC_TIMEOUT_,
 					 &nwrite, &nread, &eomReason );
     
-    if (status) {
-      asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
-      setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
-    } else {
-      setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
-    }
+  if (status) {
+    asynInterface *pasynInterface = pasynManager->findInterface(lowLevelPortUser_,
+                                                                asynCommonType, true);
+    asynCommon *pasynCommon = (asynCommon*) pasynInterface->pinterface;
+
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s, status=%d\n", functionName, command, status);
+    setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
+    pasynCommon->disconnect(pasynInterface->drvPvt, lowLevelPortUser_);
+
+  } else {
+    setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
   
   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
