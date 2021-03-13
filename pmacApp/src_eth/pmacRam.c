@@ -89,6 +89,7 @@ DEVELOPMENT CENTER AT ARGONNE NATIONAL LABORATORY (630-252-2000).
  
 #include <math.h>
 #include <stdio.h>	 /* Sergey */
+#include <stdlib.h>
 #include <string.h>	 /* Sergey */
 #include <pthread.h>
 #define __PROTOTYPE_5_0         /* Sergey */
