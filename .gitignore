@@ -1,7 +1,7 @@
 O.*
 bin/
 data/
-db/
+/db/
 dbd/
 include/
 lib/
